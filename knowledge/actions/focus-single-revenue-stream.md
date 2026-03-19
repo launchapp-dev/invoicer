@@ -1,5 +1,5 @@
 ---
-title: "Focus on a single revenue stream before expanding"
+title: "Adopt AO-first revenue plan and defer the rest"
 priority: critical
 status: proposed
 effort: small
@@ -8,36 +8,39 @@ source_question: knowledge/questions/can-a-solo-founder-execute-nine-revenue-str
 owner: unassigned
 target_repos: []
 generated_by: action-extractor
-generated_at: 2026-03-18
+generated_at: 2026-03-19
 ---
 
 ## Context
 
-The revenue roadmap lists 9 distinct revenue streams across 4 phases. With a single owner and no hiring plans, attempting all 9 simultaneously risks spreading effort so thin that none reach viability. The revenue roadmap already ranks SaaS template sales as #1 — but no formal decision has been made to defer the other 8. AO itself also has strong unique positioning ("180 PRs in 7 days") and could alternatively be the sole focus.
+The corrected answer establishes that there are two founders, not one, but that nine revenue streams is still too many. The same answer and the demand-signal answer both point in the same direction: AO has the strongest organic pull and should lead. Template sales can remain as the only secondary bootstrap revenue stream. Everything else should be explicitly deferred.
 
 Derived from: "Can a solo founder realistically execute 9 revenue streams simultaneously?" and "Do we have any evidence real users want what we're building?"
 
 ## Scope
 
-1. Formally pick ONE revenue stream to validate first (SaaS template sales or AO Pro — whichever has strongest signal)
-2. Document the decision and the reasoning in knowledge/revenue/roadmap.md
-3. Explicitly defer all other revenue streams with a "revisit after" date or milestone
-4. Commit 100% of non-coding effort (marketing, support, community) to the chosen stream for 90 days
-5. Only expand to a second stream after hitting a concrete milestone (e.g., 10 paying customers, $1K MRR)
+1. Document AO Pro early access as the primary revenue focus for the next 90 days
+2. Keep template sales as the only approved secondary revenue track for bootstrap cash flow
+3. Explicitly defer the other revenue ideas until AO Pro and template sales hit concrete milestones
+4. Assign founder responsibilities for the active tracks: pipeline, onboarding, customer interviews, support, and follow-up
+5. Update the revenue roadmap so it reflects the active plan rather than the nine-stream menu
+6. Define the unlock condition for reactivating any deferred stream (for example: AO Pro cohort target hit, first template revenue, or a specific MRR milestone)
 
 ## Dependencies
 
-- Needs the demand validation action (run-demand-validation-saas-template) to inform which stream to pick
-- Should be decided before investing in payment infrastructure or marketplace builds
+- Informed by [launch-ao-pro-early-access.md](launch-ao-pro-early-access.md)
+- Informed by [set-up-checkout-and-license-system.md](set-up-checkout-and-license-system.md)
+- Should be documented before any other revenue stream is reactivated
 
 ## Success Criteria
 
-- A single revenue stream is chosen and documented
-- All other streams are explicitly deferred with revisit conditions
-- After 90 days, the chosen stream has measurable traction data (customers, revenue, or validated kill criteria)
+- The roadmap names AO Pro as the lead revenue motion and template sales as the only secondary track
+- Every other revenue stream has an explicit deferred state and re-entry condition
+- Founder responsibilities for the active revenue tracks are documented
+- The org can explain, in one sentence, what it is trying to sell right now
 
 ## Notes
 
-- The AI workforce creates a false sense of execution capacity — AI ships code but can't do customer development, marketing, or support
-- Consider whether AO (with its unique market positioning) should be the sole focus rather than templates
-- This decision unblocks or blocks several other actions (plugin marketplace, consulting, design system pro)
+- This action replaces vague "pick one someday" thinking with an executable near-term plan
+- AO should get the best sales and narrative effort first because it has the strongest current proof of demand
+- Template revenue should stay deliberately narrow so it does not become another sprawling portfolio inside the portfolio

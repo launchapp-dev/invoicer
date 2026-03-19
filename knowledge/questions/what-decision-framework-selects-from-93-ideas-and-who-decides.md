@@ -1,7 +1,7 @@
 ---
 title: "What decision framework selects from 93 ideas — and who decides?"
 priority: critical
-status: answered
+status: actioned
 answered_by: Sami (Shooksie)
 answered_at: 2026-03-19
 category: operations

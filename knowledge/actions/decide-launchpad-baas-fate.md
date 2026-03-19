@@ -1,52 +1,51 @@
 ---
-title: "Make a definitive decision on LaunchPad BaaS: sunset, open-source, or selectively revive"
-priority: high
+title: "Re-architect LaunchPad SDKs as the foundation for templates"
+priority: critical
 status: proposed
-effort: small
-category: product-strategy
+effort: medium
+category: architecture
 source_question: knowledge/questions/should-we-sunset-open-source-or-revive-launchpad-baas.md
 owner: unassigned
 target_repos:
-  - launchpad-db-engine
-  - launchpad-identity-sdk
+  - saas-template-launch-app-test
+  - launchpad-auth-sdk
+  - launchpad-db-sdk
   - launchpad-payments-sdk
   - launchpad-storage-sdk
 generated_by: action-extractor
-generated_at: 2026-03-18
+generated_at: 2026-03-19
 ---
 
 ## Context
 
-LaunchPad BaaS represents a significant engineering investment (19+ SDKs, 7+ servers, custom DB engine with 191 tests) but has been inactive since January 2026. It's explicitly listed as "Stale / Lower Priority" and ranked last in revenue opportunities. The flagship SaaS template already has its own internal packages (@repo/auth, @repo/billing, etc.) that don't use BaaS SDKs, making the BaaS code largely redundant. The code sits in limbo — not developed, not archived, not monetized — consuming cognitive overhead on every knowledge base review.
+The answered question made the strategic choice: LaunchPad BaaS should be revived, but only through a re-architecture that makes `@launchpad/*` the reusable foundation beneath templates instead of a parallel stack. Right now the flagship template still runs on `@repo/*` packages while the LaunchPad SDKs sit partially idle. That duplication has to be collapsed into one canonical foundation.
 
 Derived from: "Should we sunset, open-source, or revive the LaunchPad BaaS SDKs?"
 
 ## Scope
 
-1. Compare @repo/auth vs @launchpad/auth, @repo/billing vs @launchpad/payments to confirm redundancy
-2. Count open Renovate PRs, Dependabot alerts, and security advisories across all BaaS repos (quantify maintenance cost of limbo)
-3. Choose one of three paths:
-   - **Sunset**: Archive all BaaS repos, remove from knowledge base, redirect any links
-   - **Open-source**: Make all repos public, write a brief announcement post, measure community interest over 30 days
-   - **Selectively revive**: Pick 2-3 most valuable SDKs (db-engine, payments, storage) and integrate into flagship template
-4. Execute the chosen path within 2 weeks
-5. Update knowledge base to reflect the decision
+1. Define the canonical SDK surface that templates should consume for auth, database, payments, storage, and any shared utilities
+2. Remove the GitHub git-reference packaging bottleneck by publishing or otherwise distributable-versioning the shared core pieces
+3. Create a migration plan from `@repo/*` packages in the flagship template to `@launchpad/*` equivalents, including compatibility gaps and missing features
+4. Migrate one template path end-to-end as the proof that the SDK foundation is viable
+5. Deprecate or collapse duplicated internal packages once the template path is stable
+6. Update product and architecture docs so templates are clearly described as running on the LaunchPad SDK layer
 
 ## Dependencies
 
-- The focus-single-revenue-stream decision should inform this — if BaaS isn't the chosen focus, sunset or open-source are the only rational options
-- If open-sourcing, need to audit repos for any secrets or proprietary content
+- Depends on [resolve-repo-vs-launchpad-sdk-divergence.md](resolve-repo-vs-launchpad-sdk-divergence.md) to map the migration gaps
+- Depends on [publish-launchpad-core-to-npm-registry.md](publish-launchpad-core-to-npm-registry.md) to remove the packaging blocker
+- Should be validated by [build-cross-sdk-integration-test-suite.md](build-cross-sdk-integration-test-suite.md) before broad rollout
 
 ## Success Criteria
 
-- A documented decision with clear reasoning
-- All BaaS repos moved to their chosen state (archived, public, or actively integrated)
-- Knowledge base updated — no more "stale" references
-- Zero ongoing cognitive overhead from BaaS indecision
+- The flagship template consumes `@launchpad/*` SDKs for the core backend primitives
+- `@repo/*` duplication is reduced to zero or to clearly justified compatibility shims
+- Shared SDK packages are installable and versioned in a way templates can consume reliably
+- The knowledge base describes one canonical backend foundation instead of two competing stacks
 
 ## Notes
 
-- The worst outcome is continued limbo — any decision is better than no decision
-- Open-sourcing is a low-effort, high-learning option: make repos public and see if anyone cares
-- launchpad-db-engine (already public, 191 tests) is the most standalone-valuable piece
-- Supabase has 4M+ developers and $5B valuation — competing head-on in BaaS is not viable for a solo founder
+- This is not a "revive everything exactly as it was" decision
+- The output should be a cleaner foundation for templates, not a bigger maintenance surface
+- Avoid preserving old architecture just to protect sunk cost

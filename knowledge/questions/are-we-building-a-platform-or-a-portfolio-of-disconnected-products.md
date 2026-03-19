@@ -1,7 +1,7 @@
 ---
 title: "Are we building a platform or a portfolio of disconnected products?"
 priority: critical
-status: answered
+status: actioned
 answered_by: Sami (Shooksie)
 answered_at: 2026-03-19
 category: product-strategy

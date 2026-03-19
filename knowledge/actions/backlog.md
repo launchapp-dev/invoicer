@@ -8,14 +8,17 @@ Last updated: 2026-03-19
 
 | Action | Effort | Category | Source Question |
 |--------|--------|----------|----------------|
+| [Set up AO landing page with "180 PRs in 7 days" hero story](set-up-ao-landing-page-with-180-prs-hero-story.md) | Small | Revenue | Evidence of real users |
 | [Implement founder review gate for ideas](implement-founder-review-gate-for-ideas.md) | Small | Operations | Decision framework for 93 ideas |
 | [Audit AO-generated code quality](audit-ao-generated-code-quality.md) | Small | Technical Debt | Quality-gating AI-generated code |
-| [Focus on a single revenue stream](focus-single-revenue-stream.md) | Small | Product Strategy | Solo founder / 9 revenue streams |
-| [Resolve @repo/* vs @launchpad/* SDK divergence](resolve-repo-vs-launchpad-sdk-divergence.md) | Small | Product Strategy | Flagship template duplicates Launchpad SDKs |
+| [Adopt AO-first revenue plan and defer the rest](focus-single-revenue-stream.md) | Small | Product Strategy | Solo founder / 9 revenue streams |
+| [Map @repo/* to @launchpad/* migration gaps in flagship template](resolve-repo-vs-launchpad-sdk-divergence.md) | Small | Architecture | Flagship template duplicates Launchpad SDKs |
 | [Run demand validation for SaaS template](run-demand-validation-saas-template.md) | Small | Product Strategy | Evidence of real users |
 | [Publish @launchpad/core to npm registry](publish-launchpad-core-to-npm-registry.md) | Small | Architecture | SDK core dependency is GitHub-only |
+| [Launch AO Pro early access with a waitlist, pricing, and founder-led onboarding](launch-ao-pro-early-access.md) | Medium | Revenue | Evidence of real users |
 | [Implement CI quality gates for AO merges](implement-ci-quality-gates-for-ao-merges.md) | Medium | Technical Debt | Quality-gating AI-generated code |
-| [Run platform coherence assessment](run-platform-coherence-assessment.md) | Medium | Product Strategy | Platform vs. portfolio of disconnected products |
+| [Document the cohesive LaunchApp portfolio and cross-product path](run-platform-coherence-assessment.md) | Medium | Product Strategy | Platform vs. portfolio of disconnected products |
+| [Re-architect LaunchPad SDKs as the foundation for templates](decide-launchpad-baas-fate.md) | Medium | Architecture | Sunset/revive LaunchPad BaaS |
 | [Adopt integrate-first strategy for BaaS components](adopt-integrate-first-strategy-for-baas.md) | Medium | Architecture | Should LaunchPad integrate before building custom BaaS |
 | [Build AO Cloud playground MVP](build-ao-cloud-playground-mvp.md) | Medium | Competitive | AO Cloud timing vs. hosted agent market |
 
@@ -28,7 +31,6 @@ Last updated: 2026-03-19
 | [Cap integration portfolio and adopt recipes approach](cap-integration-portfolio-and-adopt-recipes-approach.md) | Small | Operations | Hidden maintenance cost of 22 integrations |
 | [Conduct capacity audit for non-coding work](conduct-capacity-audit.md) | Small | Operations | Solo founder / 9 revenue streams |
 | [Create one-click AO cloud deploy template](create-one-click-ao-cloud-deploy.md) | Small | Competitive | AO Cloud timing vs. hosted agent market |
-| [Decide LaunchPad BaaS fate](decide-launchpad-baas-fate.md) | Small | Product Strategy | Sunset/revive LaunchPad BaaS |
 | [Define brand architecture decision](define-brand-architecture-decision.md) | Small | Product Strategy | Platform vs. portfolio of disconnected products |
 | [Draft EULA for digital products](draft-eula-for-digital-products.md) | Small | Revenue | IP protection for one-time-purchase templates |
 | [Run external validation of product priorities](run-external-validation-of-product-priorities.md) | Small | Product Strategy | AI-generated ideas biased toward AO ecosystem |
@@ -38,13 +40,14 @@ Last updated: 2026-03-19
 | [Verify plugin pack implementations](verify-plugin-pack-implementations.md) | Small | Product Strategy | Plugin packs — working code or scaffolds? |
 | [Build minimum viable support and docs](build-minimum-viable-support-and-docs.md) | Medium | Operations | Customer support and docs for paying users |
 | [Build cross-SDK integration test suite](build-cross-sdk-integration-test-suite.md) | Medium | Technical Debt | No cross-SDK integration testing |
+| [Build checkout for template sales to bootstrap revenue](set-up-checkout-and-license-system.md) | Medium | Revenue | IP protection for one-time-purchase templates |
 | [Consolidate marketplace proposals into one](consolidate-marketplace-proposals-into-one.md) | Medium | Product Strategy | Three marketplaces cannibalize each other |
 | [Consolidate MCP server implementations](consolidate-mcp-server-implementations.md) | Medium | Architecture | Four MCP servers compete for same surface |
 | [Consolidate SaaS template repos](consolidate-saas-template-repos.md) | Medium | Product Strategy | Parallel SaaS template variants diluting effort |
 | [Implement AO daemon circuit breakers and rollback](implement-ao-daemon-circuit-breakers-and-rollback.md) | Medium | Architecture | AO daemon blast radius risk |
-| [Set up checkout and license system](set-up-checkout-and-license-system.md) | Medium | Revenue | IP protection for one-time-purchase templates |
 | [Audit plugin packs and test free adoption](audit-and-test-plugin-pack-viability.md) | Medium | Revenue | Paid plugin marketplace viability |
 | [Audit Better Auth coupling and create abstraction](audit-better-auth-coupling-and-create-abstraction.md) | Medium | Architecture | Better Auth divergence risk |
+| [Use AO to provision three sellable template verticals from one shared foundation](use-ao-to-provision-three-template-verticals.md) | Large | Product Strategy | Platform vs. portfolio of disconnected products |
 
 ## Medium Priority
 
@@ -55,37 +58,36 @@ Last updated: 2026-03-19
 
 ## Recommended Execution Order
 
-1. **Implement founder review gate for ideas** — no dependencies, prevents further unfiltered idea accumulation, critical process fix
-2. **Triage and archive the 93-idea catalog** — depends on review gate; founders pick 3-5 ideas, archive the rest
-3. **Audit AO-generated code quality** — no dependencies, immediate risk assessment, informs urgency of CI gates
-4. **Implement CI quality gates for AO merges** — depends on audit findings, blocks safe continued AO operation
-5. **Archive abandoned public repos** — no dependencies, immediate credibility win, do before any public launch
-6. **Conduct capacity audit** — no dependencies, immediate clarity on constraints
-7. **Check public repo metrics** — no dependencies, quick data collection
-8. **Run external validation of product priorities** — no dependencies, calibrates AI-biased roadmap before major investment decisions
-9. **Validate AO Guard market demand** — no dependencies, determines if highest-rated idea has real demand
-10. **Cap integration portfolio at 5 packages** — no dependencies, prevents premature commitment to 22 maintenance liabilities
-11. **Run pricing research and raise launch price** — no dependencies, must happen before prices go public
-12. **Validate React Router 7 market demand** — search volume analysis has no dependencies, informs template strategy
-13. **Run demand validation** — informs the revenue focus decision
-14. **Focus on single revenue stream** — depends on #6-13 for data
-15. **Resolve @repo/* vs @launchpad/* SDK divergence** — clarifies whether two stacks exist intentionally, informs BaaS fate
-16. **Run platform coherence assessment** — strategic decision that shapes everything downstream
-17. **Define brand architecture** — follows from platform coherence decision
-18. **Define kill criteria** — applies to deferred streams after focus decision
-19. **Decide LaunchPad BaaS fate** — informed by revenue focus, SDK divergence finding, and platform decisions
-20. **Adopt integrate-first strategy for BaaS** — executes the "how" after BaaS fate decision; wraps existing services instead of building custom
-21. **Publish @launchpad/core to npm** — only if BaaS SDKs survive the fate decision; unblocks SDK distribution
-22. **Build cross-SDK integration test suite** — only if BaaS SDKs survive; verifies ecosystem actually works
-23. **Consolidate MCP server implementations** — audit and document hierarchy, deprecate redundant servers
-24. **Verify plugin pack implementations** — quick audit to check if packs are scaffolds or real code
-25. **Audit and test plugin packs** — depends on verification results; tests market viability
-26. **Consolidate marketplace proposals into one** — depends on plugin pack viability; single marketplace instead of three
-27. **Build minimum viable support and docs** — must complete before first sale
-28. **Consolidate SaaS template repos** — execute after deciding templates are the focus
-29. **Draft EULA for digital products** — needed before first sale
-30. **Set up checkout and license system** — blocks revenue Phase 1, depends on EULA
-31. **Implement AO daemon circuit breakers and rollback** — important safety net, depends on CI gates being in place
-32. **Create one-click AO cloud deploy** — reduces adoption friction immediately
-33. **Build AO Cloud playground MVP** — validates hosted demand, depends on AO being a focus
-34. **Audit Better Auth coupling** — independent but lower urgency
+1. **Set up AO landing page with "180 PRs in 7 days" hero story** — immediate top-of-funnel asset for every AO conversation
+2. **Launch AO Pro early access** — converts the current AO demand signal into a real pipeline and first cohort
+3. **Adopt AO-first revenue plan and defer the rest** — locks scope so the org does not reopen nine revenue tracks
+4. **Conduct capacity audit** — validates what the two founders can actually support across AO Pro and template sales
+5. **Build minimum viable support and docs** — required before the first AO cohort or template buyers arrive
+6. **Implement founder review gate for ideas** — prevents the approved focus from being diluted by new auto-generated ideas
+7. **Triage and archive the 93-idea catalog** — keep only the approved, vision-aligned bets visible
+8. **Build checkout for template sales** — creates the second, narrower bootstrap revenue path
+9. **Document the cohesive LaunchApp portfolio and cross-product path** — turns the answered strategy into an operational product map
+10. **Consolidate SaaS template repos** — ensures one canonical template foundation exists before expanding the catalog
+11. **Map @repo/* to @launchpad/* migration gaps** — creates the concrete migration checklist for the SDK foundation work
+12. **Publish @launchpad/core to npm** — removes the packaging blocker for template consumption
+13. **Re-architect LaunchPad SDKs as the foundation for templates** — collapses the parallel stack problem into one canonical backend layer
+14. **Build cross-SDK integration test suite** — verifies the re-architecture actually works end-to-end
+15. **Use AO to provision three template verticals** — scale the template catalog only after the foundation is stable
+16. **Audit AO-generated code quality** — sample current output quality to quantify operational risk
+17. **Implement CI quality gates for AO merges** — harden the AO delivery loop after audit findings
+18. **Archive abandoned public repos** — remove public trust damage before wider launch activity
+19. **Create one-click AO cloud deploy** — lower adoption friction for teams that want hosted self-serve quickly
+20. **Build AO Cloud playground MVP** — validate hosted demand after the AO sales story is live
+21. **Define brand architecture** — formalize naming once the product map is documented
+22. **Define kill criteria** — apply strict revisit rules to every deferred revenue idea
+23. **Run external validation of product priorities** — pressure-test the roadmap with outside signal
+24. **Check public repo metrics** — establish a baseline for future demand tracking
+25. **Run pricing research and raise launch price** — calibrate pricing before volume grows
+26. **Validate React Router 7 market demand** — tighten template positioning before scaling template sales
+27. **Cap integration portfolio at 5 packages** — avoid reopening a maintenance-heavy platform surface
+28. **Consolidate MCP server implementations** — remove internal platform ambiguity
+29. **Verify plugin pack implementations** — confirm whether the packs are productizable or just scaffolds
+30. **Audit and test plugin packs** — only after implementation quality is known
+31. **Consolidate marketplace proposals into one** — avoid fragmented marketplace bets
+32. **Implement AO daemon circuit breakers and rollback** — important safety work that benefits from CI hardening first
+33. **Audit Better Auth coupling** — lower urgency, but useful before wider platform coupling deepens

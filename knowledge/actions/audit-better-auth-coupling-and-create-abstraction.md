@@ -33,7 +33,7 @@ Derived from: "What is our risk exposure if Better Auth's direction diverges fro
 
 ## Dependencies
 
-- The decide-launchpad-baas-fate action may reduce scope here — if BaaS is sunset, fewer repos need auditing
+- The LaunchPad SDK re-architecture track in [decide-launchpad-baas-fate.md](decide-launchpad-baas-fate.md) may expand or narrow the audit scope depending on which auth surfaces stay canonical
 - The abstraction layer work should align with the flagship template's existing @repo/auth package
 
 ## Success Criteria

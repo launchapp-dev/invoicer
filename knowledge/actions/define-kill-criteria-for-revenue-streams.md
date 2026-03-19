@@ -13,7 +13,7 @@ generated_at: 2026-03-18
 
 ## Context
 
-The revenue roadmap lists 9 revenue streams but no failure criteria for any of them. Without explicit kill criteria, underperforming initiatives become zombies — consuming attention and resources without producing results, but never formally killed because "maybe it just needs more time." This is especially dangerous for a solo founder where every hour of attention is scarce.
+The revenue roadmap lists 9 revenue streams but no failure criteria for any of them. Without explicit kill criteria, underperforming initiatives become zombies — consuming attention and resources without producing results, but never formally killed because "maybe it just needs more time." This is especially dangerous for a small founding team where every hour of attention is scarce.
 
 Derived from: "Can a solo founder realistically execute 9 revenue streams simultaneously?"
 

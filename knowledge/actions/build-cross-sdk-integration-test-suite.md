@@ -38,7 +38,7 @@ Derived from: "Is there any cross-SDK integration testing to verify the Launchpa
 ## Dependencies
 
 - Depends on publish-launchpad-core-to-npm-registry — SDKs must be installable before they can be integration-tested
-- Depends on decide-launchpad-baas-fate — if BaaS is sunset, this action is unnecessary
+- Depends on [decide-launchpad-baas-fate.md](decide-launchpad-baas-fate.md), which now drives the LaunchPad SDK re-architecture track
 - Backend servers must be runnable locally (docker or direct)
 
 ## Success Criteria
@@ -50,7 +50,7 @@ Derived from: "Is there any cross-SDK integration testing to verify the Launchpa
 
 ## Notes
 
-- This action is contingent on the BaaS SDKs surviving the decide-launchpad-baas-fate action
+- This action is part of proving the LaunchPad SDK re-architecture is production-credible
 - The transport mismatch (SSE vs WebSocket) is the highest-risk finding — if confirmed, the realtime SDK and server literally cannot communicate
 - `launchpad-db-engine` with 191 tests is the most battle-tested component — start integration testing from there
-- If the smoke test reveals fundamental incompatibilities, this finding should escalate the BaaS fate decision toward sunset
+- If the smoke test reveals fundamental incompatibilities, the re-architecture scope should be reduced until one stable path works end-to-end

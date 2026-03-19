@@ -17,7 +17,7 @@ generated_at: 2026-03-18
 
 ## Context
 
-Four SaaS template repos serve overlapping purposes with the same core stack (RR7 + Hono + Better Auth + Drizzle). AO is generating 180+ PRs/week into saas-template-launch-app-test, but it's unclear how (or if) features propagate to launchapp-lite variants. For a solo founder, maintaining multiple near-identical products multiplies support, documentation, and update burden. The pricing model implies tiers (Lite $149, Pro $299, Team $599, Agency $1,199) but the relationship between repos and tiers is undefined.
+Four SaaS template repos serve overlapping purposes with the same core stack (RR7 + Hono + Better Auth + Drizzle). AO is generating 180+ PRs/week into saas-template-launch-app-test, but it's unclear how (or if) features propagate to launchapp-lite variants. For a small founding team, maintaining multiple near-identical products multiplies support, documentation, and update burden. The pricing model implies tiers (Lite $149, Pro $299, Team $599, Agency $1,199) but the relationship between repos and tiers is undefined.
 
 Derived from: "Is parallel development of 3+ SaaS template variants diluting engineering effort?"
 
@@ -34,8 +34,8 @@ Derived from: "Is parallel development of 3+ SaaS template variants diluting eng
 
 ## Dependencies
 
-- Depends on decide-launchpad-baas-fate for the launchpad-saas-template decision
-- Should align with the focus-single-revenue-stream decision (if templates are the focus, this becomes urgent)
+- Depends on [decide-launchpad-baas-fate.md](decide-launchpad-baas-fate.md) so the canonical template foundation matches the SDK re-architecture direction
+- Should align with [focus-single-revenue-stream.md](focus-single-revenue-stream.md), which keeps template sales as the only approved secondary revenue track
 - Requires understanding which features differentiate tiers
 
 ## Success Criteria

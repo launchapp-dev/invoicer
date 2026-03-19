@@ -1,5 +1,5 @@
 ---
-title: "Run platform coherence assessment across all 7 product lines"
+title: "Document the cohesive LaunchApp portfolio and cross-product path"
 priority: critical
 status: proposed
 effort: medium
@@ -8,45 +8,42 @@ source_question: knowledge/questions/are-we-building-a-platform-or-a-portfolio-o
 owner: unassigned
 target_repos: []
 generated_by: action-extractor
-generated_at: 2026-03-18
+generated_at: 2026-03-19
 ---
 
 ## Context
 
-The org operates 7 product lines across ~90 repos with no unified product identity, no single account system, no cross-sell path, and no shared analytics. Competitors like Supabase and Vercel have evolved into platforms by bundling related products under a unified identity. The org needs to decide whether it is building a platform or a portfolio — and either way, make the decision explicit and act on it. Without this decision, effort is scattered across products that may never reinforce each other.
+The strategic answer is no longer "we need to decide." The org answered that it is building a cohesive portfolio: templates are the launch point, LaunchPad SDKs are the backend layer, AO is the workforce, Better Auth is the auth layer, the design system is the UI layer, and plugin packs extend the workforce. What is missing now is the operational documentation that makes this product story legible internally and externally.
 
 Derived from: "Are we building a platform or a portfolio of disconnected products?"
 
 ## Scope
 
-1. Map customer personas for each product line — who buys templates, who uses AO, who needs BaaS, who buys plugins
-2. Identify persona overlaps: do template buyers want AO? Do AO users want templates?
-3. Evaluate two architectures:
-   - **Platform**: unified "LaunchApp" brand, shared account/billing, cross-sell paths, bundled pricing
-   - **Portfolio**: independent products, separate brands, each with own GTM and pricing
-4. For the platform option: estimate cost of shared Stripe customer portal + license management
-5. For the portfolio option: identify which 2 products to focus on (informed by focus-single-revenue-stream action)
-6. Document the decision in knowledge/products/overview.md with rationale
-7. If platform: define a phased integration roadmap (shared auth → shared billing → unified dashboard)
-8. If portfolio: explicitly kill or defer products outside the top 2
+1. Write a one-page product map showing how AO, templates, LaunchPad SDKs, Better Auth, the design system, and plugin packs reinforce the same mission
+2. Define the customer journey between products:
+   - AO buyer path
+   - Template buyer path
+   - Where cross-sell should happen
+3. Document which products are customer-facing offers versus internal leverage layers
+4. Specify the near-term portfolio stack: AO as the lead offer, templates as bootstrap revenue, LaunchPad SDKs as the template foundation
+5. Update the relevant knowledge docs so the portfolio story is consistent in product, revenue, and GTM documentation
+6. Create a simple cross-product roadmap showing what gets built first and what is explicitly deferred
 
 ## Dependencies
 
-- Should be informed by the demand validation action (run-demand-validation-saas-template)
-- Should be decided in conjunction with focus-single-revenue-stream action
-- Better Auth coupling audit informs shared auth feasibility
+- Informed by [focus-single-revenue-stream.md](focus-single-revenue-stream.md), which now captures the AO-first revenue plan
+- Informed by [decide-launchpad-baas-fate.md](decide-launchpad-baas-fate.md), which now captures the LaunchPad SDK re-architecture track
+- Should be reflected in the messaging work from [set-up-ao-landing-page-with-180-prs-hero-story.md](set-up-ao-landing-page-with-180-prs-hero-story.md)
 
 ## Success Criteria
 
-- A clear "platform" or "portfolio" decision is documented with rationale
-- Product lines are either integrated (platform) or triaged (portfolio — keep, defer, or kill)
-- Brand architecture is defined (branded house vs. house of brands)
-- If platform: integration roadmap exists with milestones
-- If portfolio: deferred products are explicitly paused
+- The portfolio narrative is documented in one place and referenced consistently across the knowledge base
+- The role of each product line is explicit: lead offer, supporting layer, or deferred item
+- Cross-sell and sequencing are documented instead of implied
+- Internal planning no longer treats the portfolio as either seven disconnected bets or one monolith
 
 ## Notes
 
-- The "portfolio" option is safer for a solo founder — fewer integration costs, clearer focus
-- The "platform" option has higher ceiling but requires shared infrastructure investment
-- This decision should be made before investing in checkout, billing, or marketplace infrastructure
-- Vercel's evolution (Next.js → hosting → analytics → KV → Postgres → AI) took years and hundreds of millions in funding — the org should be realistic about what's achievable at current scale
+- The immediate objective is clarity, not a shared account system
+- This action should make it obvious why AO, templates, and LaunchPad SDKs belong in the same portfolio
+- Brand architecture can stay as a follow-on decision once the portfolio map is documented

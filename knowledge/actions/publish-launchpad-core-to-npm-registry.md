@@ -22,7 +22,7 @@ generated_at: 2026-03-19
 
 ## Context
 
-All 7 Launchpad feature SDKs depend on `@launchpad/core` via a GitHub git reference — not a published npm package. This means no downstream consumer (including the org's own templates) can reliably `npm install` any SDK. Git references break lockfile determinism, CI reproducibility, and semantic versioning. This is a hard blocker for any distribution strategy — whether public npm, private registry, or bundled in templates. If the BaaS SDKs are kept (per the decide-launchpad-baas-fate action), this must be fixed first.
+All 7 Launchpad feature SDKs depend on `@launchpad/core` via a GitHub git reference — not a published npm package. This means no downstream consumer (including the org's own templates) can reliably `npm install` any SDK. Git references break lockfile determinism, CI reproducibility, and semantic versioning. This is a hard blocker for the approved LaunchPad SDK re-architecture track, because templates cannot adopt the SDKs cleanly until the shared core is consumable.
 
 Derived from: "Can Launchpad SDKs ship to npm when every package depends on @launchpad/core via GitHub git reference?"
 
@@ -38,7 +38,7 @@ Derived from: "Can Launchpad SDKs ship to npm when every package depends on @lau
 
 ## Dependencies
 
-- Must be decided after the decide-launchpad-baas-fate action — if SDKs are sunset, this action is unnecessary
+- Depends on [decide-launchpad-baas-fate.md](decide-launchpad-baas-fate.md), which now commits the org to using LaunchPad SDKs as the template foundation
 - Requires npm org scope `@launchpad` to be claimed (or alternative registry chosen)
 - Feature SDKs should pin a specific semver range, not float on latest
 
@@ -51,7 +51,7 @@ Derived from: "Can Launchpad SDKs ship to npm when every package depends on @lau
 
 ## Notes
 
-- This action is contingent on the BaaS SDKs surviving the decide-launchpad-baas-fate action — if sunset, skip this entirely
+- This action is a prerequisite for any credible template migration onto `@launchpad/*`
 - Public npm is the simplest option for distribution but requires the packages to be ready for public visibility
 - GitHub Packages is a middle ground — private by default but requires auth tokens for consumers
 - Consider a monorepo publish workflow (Changesets, Lerna, or Turborepo) to keep core and SDKs in sync

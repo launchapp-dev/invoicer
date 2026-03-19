@@ -46,7 +46,7 @@ Derived from: "Which MCP server should agents connect to when four implementatio
 
 - No hard dependencies — this is an audit and documentation task
 - Should be done before creating new plugin packs or agent configurations
-- Results inform the decide-launchpad-baas-fate action (if Launchpad MCP servers are deprecated, that's a signal)
+- Results can inform [decide-launchpad-baas-fate.md](decide-launchpad-baas-fate.md) if any LaunchPad-era MCP surfaces prove redundant
 
 ## Success Criteria
 
@@ -60,5 +60,5 @@ Derived from: "Which MCP server should agents connect to when four implementatio
 
 - `ao-cli`'s built-in MCP server is likely the canonical choice given active development, but this needs verification
 - `worktree-manager` (47 tools, v1.0.0, public) may have been superseded by `ao-cli`'s worktree management — check for feature parity
-- `launchpad-task-orchestrator` and `launchpad-mcp-server` may be Launchpad BaaS-era artifacts — their fate ties to the BaaS decision
+- `launchpad-task-orchestrator` and `launchpad-mcp-server` may be LaunchPad-era artifacts — their fate should align with the SDK re-architecture track
 - Tool name conflicts are a real risk: if two servers expose `create_task` with different schemas, agents will break silently

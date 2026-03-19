@@ -1,7 +1,7 @@
 ---
 title: "Can a solo founder realistically execute 9 revenue streams simultaneously?"
 priority: critical
-status: answered
+status: actioned
 answered_by: Sami (Shooksie)
 answered_at: 2026-03-19
 category: operations

@@ -17,7 +17,7 @@ generated_at: 2026-03-19
 
 ## Context
 
-The ideas backlog proposes building 6 major LaunchPad BaaS components from scratch (Realtime, Functions, Storage, Jobs, Vector, Webhooks). However, integration idea I22 explicitly states that integrating Inngest/Trigger.dev "gets 80% of the value in 10% of the time" vs building from scratch — and this logic applies to every proposed component. The flagship template already uses S3, Upstash, Resend, and PostHog instead of LaunchPad SDKs. LaunchPad BaaS repos have been stale since Jan 2026. Supabase has 4M+ developers and $5B valuation building these same features with large teams — a solo founder with an AI workforce cannot compete on custom infrastructure.
+The ideas backlog proposes building 6 major LaunchPad BaaS components from scratch (Realtime, Functions, Storage, Jobs, Vector, Webhooks). However, integration idea I22 explicitly states that integrating Inngest/Trigger.dev "gets 80% of the value in 10% of the time" vs building from scratch — and this logic applies to every proposed component. The flagship template already uses S3, Upstash, Resend, and PostHog instead of LaunchPad SDKs. LaunchPad BaaS repos have been stale since Jan 2026. Supabase has 4M+ developers and $5B valuation building these same features with large teams — a small founding team with an AI workforce cannot compete on custom infrastructure.
 
 Derived from: "Should LaunchPad integrate existing solutions before building custom BaaS components?"
 
@@ -38,7 +38,7 @@ Derived from: "Should LaunchPad integrate existing solutions before building cus
 
 ## Dependencies
 
-- Related to decide-launchpad-baas-fate — this action provides a concrete "how" if the fate decision is "selectively revive"
+- Related to [decide-launchpad-baas-fate.md](decide-launchpad-baas-fate.md) — this action describes how the SDK re-architecture should prefer integration over rebuilding commodity backend pieces
 - Depends on resolve-repo-vs-launchpad-sdk-divergence — need to know which SDK namespace survives before building wrappers
 - The 10 SDK-CONSISTENCY issues (filed 2026-03-18) should be resolved for whichever SDK approach is chosen
 

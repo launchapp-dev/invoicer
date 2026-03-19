@@ -8,7 +8,7 @@ source_question: knowledge/questions/are-we-building-a-platform-or-a-portfolio-o
 owner: unassigned
 target_repos: []
 generated_by: action-extractor
-generated_at: 2026-03-18
+generated_at: 2026-03-19
 ---
 
 ## Context
@@ -22,7 +22,7 @@ Derived from: "Are we building a platform or a portfolio of disconnected product
 1. Document the current brand landscape: list all product names, domains, and social accounts
 2. Evaluate two options:
    - **Branded house** ("LaunchApp"): AO becomes "LaunchApp AO," templates become "LaunchApp Templates," all under launchapp.dev
-   - **House of brands**: AO stays independent (ao.dev or similar), LaunchApp for templates, LaunchPad sunsetted
+   - **House of brands**: AO stays independent (ao.dev or similar), LaunchApp remains the template brand, and LaunchPad is either retired from customer-facing branding or kept as an internal SDK label
 3. For each option, assess: domain availability, SEO impact, marketing simplicity, customer confusion risk
 4. Make a decision and document it in knowledge/products/overview.md
 5. If branded house: create a brand guidelines doc covering naming conventions, visual identity, and tone
@@ -30,9 +30,9 @@ Derived from: "Are we building a platform or a portfolio of disconnected product
 
 ## Dependencies
 
-- Should follow the platform coherence assessment (run-platform-coherence-assessment)
-- Informed by the revenue focus decision (focus-single-revenue-stream)
-- If LaunchPad BaaS is sunsetted (decide-launchpad-baas-fate), that simplifies the brand landscape
+- Should follow [run-platform-coherence-assessment.md](run-platform-coherence-assessment.md), which now documents the cohesive portfolio model
+- Informed by [focus-single-revenue-stream.md](focus-single-revenue-stream.md), which now captures the AO-first revenue plan
+- Informed by [decide-launchpad-baas-fate.md](decide-launchpad-baas-fate.md), which should clarify whether LaunchPad remains customer-facing branding or becomes an internal SDK layer
 
 ## Success Criteria
 
@@ -44,6 +44,6 @@ Derived from: "Are we building a platform or a portfolio of disconnected product
 ## Notes
 
 - The "LaunchPad" vs "LaunchApp" naming is already confusing — resolving this is overdue
-- A solo founder benefits from a single brand (one social account, one blog, one newsletter) over multiple
+- A small founding team benefits from a single brand system (one social account, one blog, one newsletter) over multiple
 - The brand decision should be made before any Product Hunt or Show HN launch to avoid fragmenting launch buzz
 - AO has the strongest standalone identity ("180 PRs in 7 days") — it may warrant its own brand regardless of the overall decision

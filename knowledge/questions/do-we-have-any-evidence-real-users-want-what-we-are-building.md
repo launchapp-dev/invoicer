@@ -1,7 +1,7 @@
 ---
 title: "Do we have any evidence that real users want what we're building?"
 priority: critical
-status: answered
+status: actioned
 answered_by: Sami (Shooksie)
 answered_at: 2026-03-19
 category: product-strategy
