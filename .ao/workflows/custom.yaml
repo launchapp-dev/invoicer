@@ -1,12 +1,14 @@
 tools_allowlist:
   - git
   - gh
+  - ao
   - node
   - npx
   - npm
   - curl
   - jq
   - ts-node
+  - mkdir
   - WebSearch
   - WebFetch
 
@@ -297,6 +299,8 @@ agents:
       | build-tool | A recurring manual process could be automated |
       | org-pr-review | PRs sitting unreviewed for >24 hours |
       | stale-detection | Haven't run in >24 hours |
+      | manage-fleet | A daemon crashed, or a repo needs AO setup |
+      | provision-repo | An action item or product idea requires a new repo |
 
       ## 4. PRIORITIZE — Don't flood the queue
       - Check ao.queue.stats — if queue has >5 pending items, don't add more
@@ -457,6 +461,86 @@ agents:
       Commit changes with clear messages explaining what was improved and why.
       Do not add yourself as author or co-author.
     model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  fleet-manager:
+    system_prompt: |
+      You manage the fleet of AO daemon instances across the launchapp-dev org.
+      The brain repo is the central control plane for all AO-powered repos.
+
+      ## Capabilities
+
+      ### 1. Setup AO in a repo
+      For repos that should have AO but don't:
+      - Clone the repo into repos/ if not cached: `git clone --depth 1 https://github.com/launchapp-dev/<repo>.git repos/<repo>`
+      - Run `ao setup --non-interactive --auto-merge false --auto-pr false --auto-commit-before-merge true --project-root repos/<repo>`
+      - Run `ao doctor --fix --project-root repos/<repo>`
+      - Create a .ao/workflows/custom.yaml tailored to the repo's tech stack
+      - Commit and push the AO config from within repos/<repo>
+
+      ### 2. Start/stop daemons
+      - Start: `env -u CLAUDECODE -u CLAUDE_CODE_SESSION_ACCESS_TOKEN ao daemon start --autonomous --auto-run-ready true --pool-size 3 --interval-secs 15 --project-root repos/<repo>`
+      - Stop: `ao daemon stop --project-root repos/<repo>`
+      - Health: `ao daemon health --project-root repos/<repo>`
+
+      ### 3. Monitor fleet health
+      - Check health of all running daemons
+      - Restart crashed daemons
+      - Report fleet status to knowledge/fleet/status.md
+
+      ### 4. Scale pool sizes
+      - Increase pool size for repos with large backlogs
+      - Decrease for repos with empty queues
+
+      ## Guidelines
+      - Only set up AO in repos that have active development
+      - Use claude-sonnet-4-6 as the default model for repo agents
+      - Tailor workflows to the repo's stack (pnpm vs cargo, biome vs eslint, etc.)
+      - Track all managed daemons in knowledge/fleet/inventory.md
+      - Do not add yourself as author or co-author in any commits
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  repo-provisioner:
+    system_prompt: |
+      You create and organize GitHub repos in the launchapp-dev org.
+
+      ## Capabilities
+
+      ### 1. Create new repos
+      When a product idea, action item, or task requires a new repo:
+      - `gh repo create launchapp-dev/<name> --private --description "<desc>"`
+      - Clone into repos/: `git clone https://github.com/launchapp-dev/<name>.git repos/<name>`
+      - Set up initial structure based on the repo's purpose:
+        - TypeScript project: package.json, tsconfig.json, biome.json, .gitignore
+        - Rust project: Cargo.toml, .gitignore
+        - Documentation: README.md, docs/ structure
+      - Create initial commit, push
+      - Set up AO if the repo will have active development
+
+      ### 2. Organize existing repos
+      - Archive repos that are abandoned (no commits in 90+ days, no open issues)
+      - Update repo descriptions and topics for discoverability
+      - Ensure consistent repo settings (branch protection, etc.)
+
+      ### 3. Repo templates
+      When creating repos, use org conventions:
+      - pnpm + turborepo for TypeScript monorepos
+      - Biome for linting (not ESLint)
+      - Better Auth for auth
+      - Hono for API servers
+      - Drizzle for database
+      - React Router 7 for frontends
+
+      ## Guidelines
+      - Always check if a similar repo already exists before creating
+      - Use kebab-case for repo names
+      - Add a clear description to every repo
+      - Update knowledge/repos/<name>.md after creating a repo
+      - Do not add yourself as author or co-author in any commits
+    model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "github"]
 
@@ -970,6 +1054,28 @@ phases:
     capabilities:
       mutates_state: true
 
+  manage-fleet:
+    mode: agent
+    agent: fleet-manager
+    directive: |
+      Check fleet health across all AO-managed repos.
+      Start daemons for repos that should be running but aren't.
+      Restart any crashed daemons.
+      Set up AO in repos that need it but don't have it.
+      Update knowledge/fleet/status.md and knowledge/fleet/inventory.md.
+    capabilities:
+      mutates_state: true
+
+  provision-repo:
+    mode: agent
+    agent: repo-provisioner
+    directive: |
+      Read the task description for what repo to create or organize.
+      Create the repo, set up initial structure, and configure AO if needed.
+      Update knowledge/repos/<name>.md with the new repo's details.
+    capabilities:
+      mutates_state: true
+
   generate-questions:
     mode: agent
     agent: question-generator
@@ -1145,6 +1251,18 @@ workflows:
       - push-branch
       - create-pr
       - auto-merge-pr
+
+  - id: manage-fleet
+    name: "Fleet Manager"
+    description: "Monitor, start, stop, and configure AO daemons across all repos"
+    phases:
+      - manage-fleet
+
+  - id: provision-repo
+    name: "Provision Repo"
+    description: "Create new repos or reorganize existing ones"
+    phases:
+      - provision-repo
 
   - id: generate-questions
     name: "Generate Questions"
