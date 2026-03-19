@@ -33,7 +33,7 @@ apps/
   docs/         # Documentation website with component pages + live previews
 
 src/
-  components/   # ~52 atomic primitives (Button, Input, Card, Form, DataTable, …)
+  components/   # ~52 atomic primitives (Button, Input, Card, Form, DataTable, SearchableDataTable, …)
   blocks/
     auth/       # LoginForm, SignUpForm, ForgotPasswordForm, OTPVerification
     navigation/ # AppSidebar, TopNav, MobileNavDrawer
@@ -47,14 +47,23 @@ src/
   index.ts      # Flat public re-exports for everything above
 ```
 
+## Release Automation
+
+Verified on the default branch at commit `93211d8` (2026-03-19):
+
+- `.release-it.json` — release configuration for automated versioning and changelog generation
+- `CHANGELOG.md` — manually curated release history
+- GitHub release/pages workflows — automated CI/CD for publishing npm package and documentation
+- `.npmignore` — controls which files are packaged when published to npm
+
 ## AO Workflow Automation
 
-Verified on the default branch at commit `735383c` (2026-03-19):
+Verified on the default branch at commit `93211d8` (2026-03-19):
 
-- `.ao/workflows/custom.yaml` now includes a dependency-update phase, workflow, and 6-hour cron schedule.
-- An `updater` agent uses Context7 + `package-version` MCP for dependency scanning.
-- Context7 was wired to reviewer, product-owner, and component-author agents.
-- `package-version` was wired to product-owner and component-author agents.
+- `.ao/workflows/custom.yaml` includes a dependency-update phase, workflow, and 6-hour cron schedule
+- An `updater` agent uses Context7 + `package-version` MCP for dependency scanning
+- Context7 was wired to reviewer, product-owner, and component-author agents
+- `package-version` was wired to product-owner and component-author agents
 
 ## Ecommerce Block Module (`src/blocks/ecommerce`)
 
@@ -80,7 +89,22 @@ import {
 } from "@audiogenius/design-system";
 ```
 
-## Notes
+## SearchableDataTable Component
+
+Added 2026-03-19 as a new primitive in `src/components/`. A searchable, filterable data table component with live Storybook story. Builds on the existing `DataTable` component, adding:
+
+- Full-text search across table columns
+- Dynamic filtering UI
+- Responsive design matching existing table variants
+
+Exported directly from the package root alongside other atomic components.
+
+## Documentation
+
+Updated 2026-03-19:
+- README.md rewritten to clarify design system purpose, usage, and component categories
+- CONTRIBUTING.md added with guidelines for component development and testing
+- Storybook stories updated to include SearchableDataTable live preview
 
 - The `@audiogenius/` namespace (vs `@launchpad/`) suggests it predates or serves both the AI product line and the BaaS platform
 - No public README available

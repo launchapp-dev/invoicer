@@ -190,5 +190,6 @@ This repo is deeply integrated with the AO Agent Orchestrator:
 - PR #290, #291, #294: Railway and Vercel deployment configurations + guides added
 - **Cloudflare Workers deployment support**: `wrangler.toml`, `workers/app.ts` entry point, and comprehensive deployment guide with Hyperdrive + R2 integration (merged 2026-03-19)
 - PR #292: Email verification flow added after user registration
+- `c5c7029` (latest, 2026-03-19): cleanup — removed remaining stale `@repo/jobs` references from `CLAUDE.md`; updated package manifests and lockfile to reflect removal of the jobs package
 
 This repo is the primary development vehicle for the launchapp-lite product, with AO automating multiple feature tasks daily. Three deployment targets (Railway, Vercel, Cloudflare Workers) now have full configuration and documentation support.
