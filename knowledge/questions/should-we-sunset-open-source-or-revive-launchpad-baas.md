@@ -1,7 +1,9 @@
 ---
 title: "Should we sunset, open-source, or revive the LaunchPad BaaS SDKs?"
 priority: high
-status: open
+status: answered
+answered_by: Sami (Shooksie)
+answered_at: 2026-03-19
 category: product-strategy
 source_files:
   - knowledge/products/01-launchpad-baas.md
@@ -53,4 +55,10 @@ No decision has been made. The code sits in limbo — not actively developed, no
 
 ## Answer
 
-_To be filled in by the team or an investigating agent._
+**Revive — but open to replanning the architecture.**
+
+LaunchPad BaaS is core to the vision of making it easy to launch apps. The SDKs provide the backend primitives (auth, db, storage, realtime, payments) that templates need. Without them, every template reinvents the wheel with `@repo/*` packages.
+
+However, the current architecture may need rethinking. The SDKs depend on `@launchpad/core` via GitHub git references (not npm), the flagship template uses its own `@repo/*` packages instead of `@launchpad/*`, and several SDKs haven't been touched since Dec 2025.
+
+**Decision**: Revive, but with a re-architecture phase first. The goal is to make `@launchpad/*` SDKs the foundation that templates build on — not a parallel stack competing with `@repo/*`.

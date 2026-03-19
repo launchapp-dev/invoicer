@@ -1,7 +1,9 @@
 ---
 title: "Are we building a platform or a portfolio of disconnected products?"
 priority: critical
-status: open
+status: answered
+answered_by: Sami (Shooksie)
+answered_at: 2026-03-19
 category: product-strategy
 source_files:
   - knowledge/products/overview.md
@@ -51,4 +53,18 @@ The org operates 7 product lines across ~90 repos: LaunchPad BaaS, AO Agent Orch
 
 ## Answer
 
-_To be filled in by the team or an investigating agent._
+**A cohesive portfolio — not disconnected, but not a monolithic platform either.**
+
+The vision is: **make it easy to launch apps. Rocket-launch businesses through software enablement.**
+
+Every product in the org exists to serve that mission:
+- **LaunchApp templates** — the starting point for launching an app
+- **LaunchPad BaaS/SDKs** — the backend infrastructure that powers those apps
+- **AO** — the AI workforce that builds, maintains, and ships those apps
+- **Better Auth** — the auth layer across all of them
+- **Design System** — the UI layer across all of them
+- **Plugin packs** — extend the AI workforce's capabilities
+
+The portfolio of repos is either: (a) the team attempting to build parts of this vision, or (b) early client/project work from LaunchApp's first engagements.
+
+Products should be cohesive — they reinforce each other. But they're not one giant monolith. Each can stand alone while being better together.

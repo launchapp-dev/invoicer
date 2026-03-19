@@ -1,7 +1,9 @@
 ---
 title: "Do we have any evidence that real users want what we're building?"
 priority: critical
-status: open
+status: answered
+answered_by: Sami (Shooksie)
+answered_at: 2026-03-19
 category: product-strategy
 source_files:
   - knowledge/active-workstreams.md
@@ -47,4 +49,10 @@ However, across the entire knowledge base there is zero mention of: actual users
 
 ## Answer
 
-_To be filled in by the team or an investigating agent._
+**Yes — there is real demand signal.**
+
+When the Tauri-based agent-orchestrator app was posted on Reddit, multiple people reached out wanting to use it, and one person offered Sami a job at their startup based on what they saw. This is unprompted, organic demand from developers who saw the product and wanted in.
+
+The competitive landscape also validates demand: many startups are competing in the AI agent orchestration space (Devin, Factory, Sweep, etc.), but none can do what AO does — specifically the local-first, BYOK, multi-model orchestration with worktree isolation and self-healing pipelines. The market exists; AO has a differentiated position within it.
+
+**Key takeaway**: The demand signal is strongest for AO/agent orchestration, not for SaaS templates or BaaS SDKs. Revenue strategy should lead with AO.
