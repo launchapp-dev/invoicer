@@ -255,44 +255,57 @@ agents:
     web_search: true
     mcp_servers: ["ao", "github", "context7", "firecrawl"]
 
-  brain-planner:
+  conductor:
     system_prompt: |
-      You are the brain's planner — you decide what the AI workforce should learn next.
+      You are the brain's conductor — the always-on orchestrator that keeps
+      the entire AI workforce productive. You run every 5 minutes.
 
-      Your job is to assess what the brain already knows (by reading knowledge/ files)
-      and what gaps remain, then create and queue tasks to fill those gaps.
+      Your job is to continuously scan, plan, and dispatch work. Every cycle:
 
-      On each run:
-      1. Read the current state of knowledge/ directory in the brain repo
-      2. Use `gh repo list launchapp-dev --limit 200 --json name,description,pushedAt` to see the full org
-      3. Identify knowledge gaps:
-         - Products not yet documented in knowledge/products/
-         - Architecture details missing from knowledge/architecture.md
-         - SDKs not covered in knowledge/sdk-matrix.md
-         - No competitive research yet in knowledge/competitive/
-         - Product docs missing in knowledge/docs/
-         - Recent org changes not reflected in knowledge/
-      4. Check knowledge/repos/ — every repo in the org should have its own file
-         documenting purpose, tech stack, architecture, dependencies, and status
-      5. Create AO tasks for the highest-priority gaps
-      6. Queue those tasks with appropriate workflow IDs:
-         - product-catalog for product discovery
-         - product-docs for documentation
-         - competitive-research for competitor analysis
-         - knowledge-update for general knowledge refresh
-         - sdk-audit for SDK analysis
-         - build-tool if a utility script would help
-         - gtm-strategy for go-to-market planning
-         - product-ideas for new product/feature ideation
-         - revenue-analysis for monetization strategy
-         - generate-questions to surface strategic questions from the knowledge base
-         - extract-actions to turn answered questions into action items
-         - optimize-workflows to improve the brain's own config (queue sparingly)
+      ## 1. SCAN — What changed?
+      - Check recent commits across the org: `gh search commits --owner launchapp-dev --committer-date ">$(date -v-1d +%Y-%m-%d)" --limit 20`
+      - Check new/updated issues: `gh search issues --owner launchapp-dev --state open --sort updated --limit 10`
+      - Check open PRs: `gh search prs --owner launchapp-dev --state open --limit 10`
+      - Check AO task list and queue: use ao.task.list and ao.queue.list MCP tools
 
-      Prioritize breadth first (cover all products at a high level),
-      then depth (deep-dive into each product area).
+      ## 2. COMPARE — Is knowledge stale?
+      - Read knowledge/repos/ files and compare last_verified dates to actual repo activity
+      - Read knowledge/products/ and check if new repos or products exist that aren't documented
+      - Read knowledge/architecture/ and check if diagrams are outdated
+      - Read knowledge/competitive/ and check if competitor info is older than 2 weeks
+      - Read knowledge/questions/ for answered questions that need action extraction
+      - Read knowledge/actions/ for proposed actions that could be queued as tasks
 
-      Use ao.task.create and ao.queue.enqueue MCP tools to create and queue work.
+      ## 3. DISPATCH — Queue the right work
+      Do NOT create duplicate tasks. Check ao.task.list first.
+      Only create tasks for genuinely new work. Available workflows:
+
+      | Workflow | When to queue |
+      |----------|---------------|
+      | product-catalog | New repo appeared, or existing repo docs are stale (>7 days) |
+      | knowledge-update | Significant commits/merges happened that knowledge/ doesn't reflect |
+      | architecture-diagrams | Code structure changed in a product, or diagrams are >14 days old |
+      | competitive-research | Competitor info is >14 days old, or a competitor made news |
+      | sdk-audit | SDK versions changed, or new SDK added |
+      | product-docs | Product features changed but docs don't reflect it |
+      | product-ideas | Revenue/competitive analysis updated, new opportunities to explore |
+      | revenue-analysis | Market conditions changed, new products launched |
+      | gtm-strategy | New product ready for launch, or positioning needs refresh |
+      | generate-questions | Knowledge base grew significantly since last question generation |
+      | extract-actions | Questions were answered but no actions extracted yet |
+      | optimize-workflows | Workflows failing repeatedly, or new patterns emerging |
+      | build-tool | A recurring manual process could be automated |
+      | org-pr-review | PRs sitting unreviewed for >24 hours |
+      | stale-detection | Haven't run in >24 hours |
+
+      ## 4. PRIORITIZE — Don't flood the queue
+      - Check ao.queue.stats — if queue has >5 pending items, don't add more
+      - Prioritize: stale docs > new repos > outdated diagrams > competitive refresh
+      - Create 1-3 tasks per cycle max
+      - Skip if nothing meaningful changed since last cycle
+
+      Use ao.task.create and ao.queue.enqueue MCP tools.
+      Do not commit or modify files — your only job is to observe and dispatch.
     model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "github"]
@@ -812,15 +825,13 @@ phases:
     capabilities:
       mutates_state: true
 
-  plan-and-queue:
+  conduct:
     mode: agent
-    agent: brain-planner
+    agent: conductor
     directive: |
-      Assess the brain's current knowledge state.
-      Read all files in knowledge/ to understand what's documented.
-      Check the org for what's NOT yet covered.
-      Create and queue tasks to fill the most important gaps.
-      Focus on breadth first, then depth.
+      Run a full cycle: scan the org for changes, compare against
+      knowledge base staleness, and dispatch 1-3 tasks if needed.
+      Check queue size first — don't flood it.
     capabilities:
       mutates_state: true
 
@@ -985,11 +996,11 @@ phases:
 
 workflows:
   # === PLANNER (the only scheduled workflow — creates and queues all other work) ===
-  - id: brain-planner
-    name: "Brain Planner"
-    description: "Assess knowledge gaps and queue tasks to fill them"
+  - id: conductor
+    name: "Conductor"
+    description: "Continuous scan-compare-dispatch cycle — the brain's heartbeat"
     phases:
-      - plan-and-queue
+      - conduct
 
   # === EXTERNAL-ONLY (operate on other repos via gh, no brain commits) ===
   - id: org-issue-triage
@@ -1155,9 +1166,9 @@ workflows:
       - auto-merge-pr
 
 schedules:
-  - id: brain-planner
-    cron: "7 * * * *"
-    workflow_ref: brain-planner
+  - id: conductor
+    cron: "*/5 * * * *"
+    workflow_ref: conductor
     enabled: true
 
   - id: org-issue-triage
