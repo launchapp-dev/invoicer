@@ -752,10 +752,10 @@ phases:
 
   auto-merge-pr:
     mode: command
-    directive: "Auto-merge the PR created by this workflow"
+    directive: "Merge the PR created by this workflow"
     command:
       program: gh
-      args: ["pr", "merge", "--squash", "--auto", "--delete-branch"]
+      args: ["pr", "merge", "--squash", "--delete-branch"]
       cwd_mode: task_root
       timeout_secs: 60
 
