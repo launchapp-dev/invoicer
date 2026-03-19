@@ -490,6 +490,33 @@ agents:
     mcp_servers: ["ao", "github", "context7"]
 
 phases:
+  push-branch:
+    mode: command
+    directive: "Push the branch to origin"
+    command:
+      program: git
+      args: ["push", "-u", "origin", "HEAD"]
+      cwd_mode: task_root
+      timeout_secs: 60
+
+  create-pr:
+    mode: command
+    directive: "Create a PR against master"
+    command:
+      program: gh
+      args: ["pr", "create", "--fill", "--base", "master"]
+      cwd_mode: task_root
+      timeout_secs: 60
+
+  pr-review:
+    mode: agent
+    agent: pr-reviewer-org
+    directive: |
+      Review this PR for the brain repo. Check that the knowledge content
+      is accurate, well-structured, and adds value.
+      If the content looks good, merge with `gh pr merge --squash`.
+      If issues found, request changes with specific feedback.
+
   scan-org-issues:
     mode: agent
     agent: issue-triager
