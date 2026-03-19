@@ -33,36 +33,71 @@ AO is the only product with real external demand signal (Reddit users reaching o
 - **Modern TypeScript** — React Router 7, Hono, Drizzle, Biome
 - **Ships daily** — AO agents maintain everything 24/7
 
+## The Flywheel: AO Builds Templates, Templates Fund AO
+
+AO's superpower isn't just building one template — it can **mass-produce templates** for every vertical. AO provisions a new SaaS starter in days, not months. Each template:
+
+1. **Proves AO works** — "this entire app was built by an AI workforce"
+2. **Generates revenue** — template sales bootstrap the business ($149-$299 each)
+3. **Expands the catalog** — more verticals = more customers = more proof
+4. **Improves AO** — each template stress-tests AO's workflows, surfacing bugs and improvements
+
+The flywheel: AO builds templates → templates sell → revenue funds AO development → AO gets better → AO builds more templates faster.
+
+### Template Verticals AO Can Provision
+
+- SaaS starter (exists — the flagship)
+- AI SaaS (LLM integration, RAG, streaming chat)
+- Marketplace / two-sided platform
+- E-commerce storefront
+- Healthcare / HIPAA-compliant
+- Fintech / payments-heavy
+- Developer tools / API platform
+- Community / social platform
+- Internal tools / admin dashboard
+
+Each is a `create-launchapp --template <vertical>` that AO can scaffold, customize, and maintain autonomously.
+
 ## Product Evolution
 
 ### Phase 1: Foundation (Current)
 - Prove AO can autonomously build and maintain production codebases
-- The SaaS template and design system are the test cases
-- Validate demand (Reddit response confirmed interest in AO, not the templates)
+- The SaaS template is the first test case — more verticals coming
+- Validate demand (Reddit response confirmed interest in AO)
 
-### Phase 2: Revenue
-- AO Pro/Team for developers who want orchestration — this is the primary revenue stream
-- Template sales as secondary revenue (the product exists, needs checkout)
+### Phase 2: Bootstrap Revenue
+- Sell templates built by AO ($149-$299 per vertical) — bootstrap cash
+- AO Pro/Team for developers who want orchestration — primary recurring revenue
+- Use AO to provision 3-5 template verticals rapidly
 - Open-source what should be open, monetize AO's unique capabilities
 
 ### Phase 3: Platform
 - AO Cloud for teams who don't want to self-host
 - LaunchPad becomes the SDK layer that all templates share
+- Template marketplace — AO-built templates for every vertical
 - Marketplace for AO plugins, agent personas, and workflow packs
 
-### Phase 4: Ecosystem
+### Phase 4: Cloud Platform
+- **LaunchApp Cloud** — the unified platform combining AO Cloud + LaunchPad BaaS
+- Hosted AO orchestration (no self-hosting required)
+- Hosted LaunchPad backend (managed auth, db, storage, realtime, payments)
+- One-click template deployment — pick a vertical, deploy to cloud, launch
+- The full vision: "I have an idea" → click → running business with AI workforce
+
+### Phase 5: Ecosystem
 - Third-party AO workflows and skill packs
 - Third-party templates built on LaunchPad (powered by AO)
-- LaunchApp becomes the platform others build on — AO is the engine
+- AO becomes the engine others build on
+- "Powered by AO" becomes the quality stamp
 
 ## The Portfolio
 
 Every repo in launchapp-dev serves the mission:
-- **The product** — AO CLI, ao-skills, agent-orchestrator (archived, superseded by ao-cli)
-- **Proof of capability** — SaaS templates, design system (built by AO to demonstrate AO)
+- **The product** — AO CLI, ao-skills, brain repo
+- **Revenue bootstrap** — SaaS templates (built by AO, sold to fund AO development)
 - **Infrastructure** — LaunchPad BaaS SDKs, Better Auth, worktree-manager
-- **Ecosystem** — Claude Code plugin packs, brain repo
+- **Capability proofs** — design system, plugin packs (built by AO to demonstrate AO)
 - **Early client work** — projects from LaunchApp's first engagements
 - **Experiments** — explorations that may or may not become products
 
-The templates are not the business. AO is the business. The templates are the demo.
+AO is the business. Templates are the bootstrap revenue AND the demo. The brain orchestrates it all.
