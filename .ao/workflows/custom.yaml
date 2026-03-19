@@ -301,6 +301,7 @@ agents:
       | stale-detection | Haven't run in >24 hours |
       | manage-fleet | A daemon crashed, or a repo needs AO setup |
       | provision-repo | An action item or product idea requires a new repo |
+      | rebase-and-retry | A brain repo PR has merge conflicts (check with gh pr list --state open) |
 
       ## 4. PRIORITIZE — Don't flood the queue
       - Check ao.queue.stats — if queue has >5 pending items, don't add more
@@ -1214,10 +1215,7 @@ workflows:
       - update-knowledge-base
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: competitive-research
     name: "Competitive Research"
@@ -1226,10 +1224,7 @@ workflows:
       - research-competitors
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: product-catalog
     name: "Product Catalog"
@@ -1238,10 +1233,7 @@ workflows:
       - catalog-products
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: product-docs
     name: "Product Documentation"
@@ -1250,10 +1242,7 @@ workflows:
       - write-product-docs
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: product-ideas
     name: "Product Ideation"
@@ -1262,10 +1251,7 @@ workflows:
       - generate-product-ideas
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: revenue-analysis
     name: "Revenue Analysis"
@@ -1274,10 +1260,7 @@ workflows:
       - analyze-revenue
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: optimize-workflows
     name: "Workflow Optimizer"
@@ -1286,10 +1269,7 @@ workflows:
       - optimize-workflows
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: gtm-strategy
     name: "GTM Strategy"
@@ -1298,10 +1278,7 @@ workflows:
       - create-gtm-strategy
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: architecture-diagrams
     name: "Architecture Diagrams"
@@ -1310,10 +1287,7 @@ workflows:
       - diagram-architecture
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: manage-fleet
     name: "Fleet Manager"
@@ -1334,10 +1308,7 @@ workflows:
       - generate-questions
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: extract-actions
     name: "Extract Actions"
@@ -1346,10 +1317,7 @@ workflows:
       - extract-actions
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
 
   - id: build-tool
     name: "Build Tool"
@@ -1358,10 +1326,14 @@ workflows:
       - build-tool
       - push-branch
       - create-pr
-      - auto-merge-pr:
-          on_verdict:
-            rework:
-              target: rebase-and-merge
+      - auto-merge-pr
+
+  # === CONFLICT RECOVERY (standalone workflow queued when merge fails) ===
+  - id: rebase-and-retry
+    name: "Rebase and Retry"
+    description: "Rebase a conflicting branch onto master and merge"
+    phases:
+      - rebase-and-merge
 
 schedules:
   - id: conductor
