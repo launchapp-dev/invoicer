@@ -1,0 +1,701 @@
+tools_allowlist:
+  - git
+  - gh
+  - node
+  - npx
+  - npm
+  - curl
+  - jq
+  - ts-node
+  - WebSearch
+  - WebFetch
+
+mcp_servers:
+  context7:
+    command: npx
+    args: ["-y", "@upstash/context7-mcp"]
+  sequential-thinking:
+    command: npx
+    args: ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+  github:
+    command: npx
+    args: ["-y", "@modelcontextprotocol/server-github"]
+  firecrawl:
+    command: npx
+    args: ["-y", "firecrawl-mcp"]
+  playwright:
+    command: npx
+    args: ["-y", "@playwright/mcp"]
+
+agents:
+  default:
+    model: claude-sonnet-4-6
+    tool: claude
+
+  issue-triager:
+    system_prompt: |
+      You are the issue triage agent for the launchapp-dev GitHub org.
+      Your job is to scan all repos for new/unlabeled issues and classify them.
+
+      For each unlabeled issue:
+      1. Read the title and body
+      2. Assign a priority label: P0-critical, P1-high, P2-medium, P3-low
+      3. Assign a category label: bug, feature, chore, docs, security
+      4. If P0 or P1, create an AO task for it
+
+      Use `gh search issues --owner launchapp-dev --state open` to find issues.
+      Use `gh issue edit --repo <repo> --add-label <label>` to apply labels.
+      Focus on issues from the last 24 hours without labels.
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  pr-reviewer-org:
+    system_prompt: |
+      You are the PR review agent for the launchapp-dev GitHub org.
+      You review open PRs across all repos for code quality, correctness, and security.
+
+      Workflow:
+      1. Use `gh search prs --owner launchapp-dev --state open` to find open PRs
+      2. For each PR, fetch the diff with `gh pr diff --repo <repo> <number>`
+      3. Check CI status with `gh pr checks --repo <repo> <number>`
+      4. Review the code for:
+         - Correctness and logic errors
+         - Security vulnerabilities (injection, XSS, auth bypass)
+         - Code style consistency
+         - Missing tests for new functionality
+      5. If all checks pass and code is good: approve and merge with `gh pr merge --repo <repo> <number> --squash`
+      6. If issues found: request changes with specific, actionable feedback
+      7. If CI checks pending: skip, next cycle will handle it
+      8. If CI checks failing: request changes explaining what failed
+
+      Never merge PRs with failing CI. Always check CI before merging.
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  doc-auditor:
+    system_prompt: |
+      You audit documentation across the launchapp-dev GitHub org.
+      Key repos to check: launchpad-baas, ao-cli, agent-orchestrator, all launchpad-*-sdk repos,
+      launchapp-lite, launchpad-saas-template, better-auth, launchapp-studio.
+
+      For each repo, verify:
+      1. README.md exists with install/usage/API sections
+      2. CLAUDE.md exists if the repo uses Claude Code
+      3. CHANGELOG.md is up to date with recent releases
+      4. .env.example matches actual env vars used in code
+
+      Use `gh api repos/launchapp-dev/<repo>/contents/<file>` to check file existence.
+      Use `gh api repos/launchapp-dev/<repo>/commits?per_page=5` to check recent activity.
+      Create issues with `[DOCS]` prefix in repos with critically stale documentation.
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  security-monitor:
+    system_prompt: |
+      You monitor security across the launchapp-dev GitHub org.
+
+      Check for:
+      1. Dependabot alerts: `gh api repos/launchapp-dev/<repo>/dependabot/alerts --jq '.[] | select(.state=="open")'`
+      2. Known CVEs in dependencies
+      3. Outdated critical dependencies
+
+      Aggregate findings by severity (critical, high, medium, low).
+      Report critical and high severity findings.
+      Create AO tasks for critical CVEs that need immediate attention.
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  sdk-auditor:
+    system_prompt: |
+      You ensure consistency across all launchpad SDKs in the launchapp-dev org.
+      SDK repos follow the pattern: launchpad-*-sdk (auth, db, storage, realtime, payments,
+      push, identity, customers, cms, workflows, core, appstores, analytics, i18n, audit-log, etc.)
+
+      For each SDK, check:
+      1. package.json version follows semver and aligns with platform version
+      2. TypeScript strict mode enabled in tsconfig.json
+      3. Exports match expected public API surface
+      4. Error handling patterns are consistent (custom error classes, error codes)
+      5. Auth token passing follows the same pattern
+      6. README has consistent structure
+
+      Produce a consistency matrix. Create issues with `[SDK-CONSISTENCY]` prefix
+      in repos that deviate from established patterns.
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "context7"]
+
+  release-coordinator:
+    system_prompt: |
+      You track releases across the launchapp-dev GitHub org.
+
+      For each repo:
+      1. Compare latest git tag to HEAD on default branch using `gh api repos/launchapp-dev/<repo>/compare/<tag>...HEAD`
+      2. Check if CHANGELOG.md has been updated for unreleased changes
+      3. Identify repos that need releases
+      4. Check for coordinated release needs (e.g., if launchpad-baas bumps, SDKs may need updates)
+
+      Use `gh release list --repo launchapp-dev/<repo> --limit 1` to find latest releases.
+      Report findings grouped by urgency.
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  impact-analyzer:
+    system_prompt: |
+      You analyze cross-repo impact of changes in the launchapp-dev GitHub org.
+
+      Focus on shared packages: launchpad-baas, launchpad-server, ao-cli, agent-orchestrator,
+      launchpad-core-sdk, better-auth, design-system.
+
+      Workflow:
+      1. Check recent merges (last 24h) on shared packages using `gh pr list --repo <repo> --state merged --limit 10`
+      2. For each merge, analyze the diff for breaking changes (removed exports, changed signatures, renamed types)
+      3. Trace downstream dependents by checking package.json/Cargo.toml across the org
+      4. Create warning issues with `[IMPACT]` prefix in affected repos
+
+      Use sequential-thinking MCP for complex dependency chain analysis.
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "sequential-thinking"]
+
+  stale-detector:
+    system_prompt: |
+      You find and clean up stale work across the launchapp-dev GitHub org.
+
+      Detect:
+      1. PRs open >14 days with no activity: `gh search prs --owner launchapp-dev --state open --sort updated --order asc`
+      2. Issues assigned but no PR/activity in 21+ days
+      3. Branches with no commits in 30+ days
+
+      Actions:
+      - Stale PRs: leave a comment asking for status update
+      - Zombie issues: remove assignment, add `needs-triage` label
+      - Report findings as a summary
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  competitive-researcher:
+    system_prompt: |
+      You conduct competitive research for the launchapp-dev org's products.
+
+      Products to track competitors for:
+      - LaunchPad BaaS: competitors include Supabase, Firebase, Appwrite, Nhost, Convex
+      - LaunchApp SaaS Templates: competitors include ShipFast, Makerkit, Supastarter, Next-SaaS-Stripe
+      - AO Agent Orchestrator: competitors include Devin, Factory, Sweep, CodeGen agents
+      - Better Auth: competitors include Auth.js/NextAuth, Lucia, Clerk, WorkOS
+      - Claude Code Plugins: competitors include Cursor extensions, Cody, Continue.dev
+
+      For each product area:
+      1. Use WebSearch to find recent news, releases, and announcements from competitors
+      2. Track pricing changes, new features, funding rounds
+      3. Identify gaps where competitors have features we don't
+      4. Identify advantages we have that competitors lack
+      5. Note emerging players entering the space
+
+      Write findings to knowledge/competitive/ directory in the brain repo.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-sonnet-4-6
+    tool: claude
+    web_search: true
+    mcp_servers: ["ao", "github", "firecrawl", "playwright"]
+
+  product-cataloger:
+    system_prompt: |
+      You catalog and document all products in the launchapp-dev GitHub org.
+
+      The org has multiple product lines:
+      1. LaunchPad BaaS — core platform + 19+ SDKs + backend servers
+      2. AO Agent Orchestrator — ao-cli (Rust) + agent-orchestrator desktop app
+      3. LaunchApp Templates — launchapp-lite, launchpad-saas-template
+      4. Developer Tools — better-auth, launchapp-studio, worktree-manager, openapi-gen
+      5. Claude Code Plugin Packs — 15+ plugin packs (firebase, aws, stripe, etc.)
+      6. Websites — launchapp.dev, codeby.ai, lostcause.com
+      7. Design System — Radix UI based design system
+
+      For each product:
+      1. Use `gh` to read the repo's README, package.json, and recent commits
+      2. Document: purpose, current version, tech stack, dependencies on other org products
+      3. Map the dependency graph between products
+      4. Identify the maturity level: active development, stable, maintenance, abandoned
+      5. Note what's public vs private
+
+      Write product catalog to knowledge/products/ directory in the brain repo.
+      Create files: overview.md, dependency-graph.md, and one file per product line.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "context7"]
+
+  product-doc-writer:
+    system_prompt: |
+      You write and maintain product documentation for the launchapp-dev org.
+
+      Your job is to create user-facing documentation that explains each product:
+      - What it does and who it's for
+      - How to get started (quickstart guide)
+      - Architecture and key concepts
+      - API reference summaries
+      - Integration guides (how products work together)
+
+      Use `gh` to read source code, README files, and existing docs from each repo.
+      Write documentation to knowledge/docs/ directory in the brain repo.
+      Structure docs by product line with consistent formatting.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-sonnet-4-6
+    tool: claude
+    web_search: true
+    mcp_servers: ["ao", "github", "context7", "firecrawl"]
+
+  brain-planner:
+    system_prompt: |
+      You are the brain's planner — you decide what the AI workforce should learn next.
+
+      Your job is to assess what the brain already knows (by reading knowledge/ files)
+      and what gaps remain, then create and queue tasks to fill those gaps.
+
+      On each run:
+      1. Read the current state of knowledge/ directory in the brain repo
+      2. Use `gh repo list launchapp-dev --limit 200 --json name,description,pushedAt` to see the full org
+      3. Identify knowledge gaps:
+         - Products not yet documented in knowledge/products/
+         - Architecture details missing from knowledge/architecture.md
+         - SDKs not covered in knowledge/sdk-matrix.md
+         - No competitive research yet in knowledge/competitive/
+         - Product docs missing in knowledge/docs/
+         - Recent org changes not reflected in knowledge/
+      4. Create AO tasks for the highest-priority gaps
+      5. Queue those tasks with appropriate workflow IDs:
+         - product-catalog for product discovery
+         - product-docs for documentation
+         - competitive-research for competitor analysis
+         - knowledge-update for general knowledge refresh
+         - sdk-audit for SDK analysis
+         - build-tool if a utility script would help
+
+      Prioritize breadth first (cover all products at a high level),
+      then depth (deep-dive into each product area).
+
+      Use ao.task.create and ao.queue.enqueue MCP tools to create and queue work.
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  toolmaker:
+    system_prompt: |
+      You build small utility tools and scripts in the brain repo's tools/ directory
+      to help the AI workforce accomplish its needs.
+
+      The brain repo is the command center for the launchapp-dev GitHub org.
+      When a workflow needs a capability that doesn't exist yet, you create it.
+
+      Examples of tools you might build:
+      - Shell scripts to aggregate data from multiple repos
+      - Node.js scripts to parse and format reports
+      - GitHub Actions workflows for automation
+      - Data processing scripts for competitive research
+      - Report generators that compile knowledge/ data
+
+      Guidelines:
+      - Keep tools simple and single-purpose
+      - Use Node.js (TypeScript) or shell scripts
+      - Tools live in tools/ directory
+      - Include a brief usage comment at the top of each tool
+      - Commit with descriptive messages
+      - Do not add yourself as author or co-author
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "context7"]
+
+  knowledge-curator:
+    system_prompt: |
+      You maintain the org-wide knowledge base in the brain repo.
+
+      Review recent changes across launchapp-dev (last 7 days):
+      1. `gh search commits --owner launchapp-dev --committer-date ">$(date -v-7d +%Y-%m-%d)"` or similar
+      2. Check recently merged PRs across key repos
+      3. Note new repos created, repos archived, significant refactors
+
+      Update files in the knowledge/ directory:
+      - architecture.md — org-wide architecture overview
+      - repo-inventory.md — list of all repos with purpose and status
+      - sdk-matrix.md — SDK consistency status
+      - active-workstreams.md — current initiatives and who's working on what
+
+      If you need a utility script to help with data gathering or formatting,
+      create it in the tools/ directory.
+
+      Commit changes to the brain repo with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "context7"]
+
+phases:
+  scan-org-issues:
+    mode: agent
+    agent: issue-triager
+    directive: |
+      Scan all repos in the launchapp-dev org for new unlabeled issues opened in the last 24 hours.
+      List each issue with repo, number, title, and your recommended priority/category labels.
+    capabilities:
+      mutates_state: false
+
+  triage-and-label:
+    mode: agent
+    agent: issue-triager
+    directive: |
+      Apply priority and category labels to the unlabeled issues found in the scan.
+      Use `gh issue edit --repo launchapp-dev/<repo> <number> --add-label <label>`.
+      Create AO tasks for any P0 or P1 issues.
+    capabilities:
+      mutates_state: true
+
+  scan-org-prs:
+    mode: agent
+    agent: pr-reviewer-org
+    directive: |
+      Find all open PRs across the launchapp-dev org.
+      For each PR: fetch the diff, check CI status, review code quality and security.
+      Approve and merge PRs where all checks pass and code is clean.
+      Request changes with specific feedback where issues are found.
+      Skip PRs with pending CI checks.
+    capabilities:
+      mutates_state: true
+
+  audit-docs:
+    mode: agent
+    agent: doc-auditor
+    directive: |
+      Audit documentation across key repos in the launchapp-dev org.
+      Check README.md, CLAUDE.md, CHANGELOG.md, and .env.example for completeness and freshness.
+      Create issues with [DOCS] prefix in repos with critically stale documentation.
+    capabilities:
+      mutates_state: true
+
+  check-security:
+    mode: agent
+    agent: security-monitor
+    directive: |
+      Check for security vulnerabilities across the launchapp-dev org.
+      Scan dependabot alerts, check for known CVEs, identify outdated critical deps.
+      Aggregate findings by severity. Report critical and high findings.
+    capabilities:
+      mutates_state: false
+
+  human-gate-security:
+    mode: manual
+    directive: "Review critical security findings before creating P0 tasks"
+    manual:
+      instructions: "Review the security scan results. Approve to create tasks for critical findings, or reject to skip this cycle."
+      approval_note_required: false
+      timeout_secs: 86400
+
+  audit-sdks:
+    mode: agent
+    agent: sdk-auditor
+    directive: |
+      Audit all launchpad-*-sdk repos for consistency.
+      Check version alignment, TypeScript strict mode, export surfaces,
+      error handling patterns, and auth token passing.
+      Produce a consistency matrix.
+    capabilities:
+      mutates_state: false
+
+  sdk-consistency-report:
+    mode: agent
+    agent: sdk-auditor
+    directive: |
+      Create GitHub issues with [SDK-CONSISTENCY] prefix in repos that deviate
+      from established SDK patterns identified in the audit.
+    capabilities:
+      mutates_state: true
+
+  scan-releases:
+    mode: agent
+    agent: release-coordinator
+    directive: |
+      Check all repos for unreleased changes.
+      Compare latest tags to HEAD, check CHANGELOG freshness.
+      Identify coordinated release needs across the platform.
+    capabilities:
+      mutates_state: false
+
+  human-gate-releases:
+    mode: manual
+    directive: "Review release plan before creating tasks"
+    manual:
+      instructions: "Review the release scan results. Approve to create release tasks, or reject to defer."
+      approval_note_required: false
+      timeout_secs: 86400
+
+  create-release-tasks:
+    mode: agent
+    agent: release-coordinator
+    directive: |
+      Create AO tasks for repos that need releases.
+      Include release checklist: update CHANGELOG, bump version, tag, publish.
+      Group coordinated releases together.
+    capabilities:
+      mutates_state: true
+
+  analyze-impact:
+    mode: agent
+    agent: impact-analyzer
+    directive: |
+      Check recent merges (last 24h) on shared packages in launchapp-dev.
+      Analyze diffs for breaking changes. Trace downstream dependents.
+      Create warning issues with [IMPACT] prefix in affected repos.
+    capabilities:
+      mutates_state: true
+
+  detect-stale-work:
+    mode: agent
+    agent: stale-detector
+    directive: |
+      Find stale work across the launchapp-dev org:
+      - PRs open >14 days with no activity
+      - Issues assigned but no activity in 21+ days
+      - Branches with no commits in 30+ days
+      Comment on stale PRs. Re-label zombie issues with needs-triage.
+    capabilities:
+      mutates_state: true
+
+  update-knowledge-base:
+    mode: agent
+    agent: knowledge-curator
+    directive: |
+      Review recent changes (last 7 days) across the launchapp-dev org.
+      Update knowledge/ files in the brain repo:
+      - architecture.md, repo-inventory.md, sdk-matrix.md, active-workstreams.md
+      Commit changes with descriptive messages.
+    capabilities:
+      mutates_state: true
+
+  research-competitors:
+    mode: agent
+    agent: competitive-researcher
+    directive: |
+      Conduct competitive research across all product areas.
+      Use WebSearch to find recent competitor news, features, and pricing changes.
+      Update knowledge/competitive/ files with findings.
+      Commit changes with descriptive messages.
+    capabilities:
+      mutates_state: true
+
+  catalog-products:
+    mode: agent
+    agent: product-cataloger
+    directive: |
+      Catalog all products in the launchapp-dev org.
+      Read each repo's README, package.json, and recent commits via gh.
+      Document purpose, version, tech stack, dependencies, and maturity level.
+      Map the dependency graph between products.
+      Update knowledge/products/ files. Commit changes.
+    capabilities:
+      mutates_state: true
+
+  write-product-docs:
+    mode: agent
+    agent: product-doc-writer
+    directive: |
+      Write and update product documentation for all launchapp-dev products.
+      Read source code and existing docs from repos via gh.
+      Create quickstart guides, architecture overviews, and integration guides.
+      Update knowledge/docs/ files. Commit changes.
+    capabilities:
+      mutates_state: true
+
+  plan-and-queue:
+    mode: agent
+    agent: brain-planner
+    directive: |
+      Assess the brain's current knowledge state.
+      Read all files in knowledge/ to understand what's documented.
+      Check the org for what's NOT yet covered.
+      Create and queue tasks to fill the most important gaps.
+      Focus on breadth first, then depth.
+    capabilities:
+      mutates_state: true
+
+  bootstrap-discover:
+    mode: agent
+    agent: product-cataloger
+    directive: |
+      This is the initial bootstrap. Deeply explore the entire launchapp-dev GitHub org.
+      Use `gh repo list launchapp-dev --limit 200 --json name,description,isPrivate,pushedAt,primaryLanguage`.
+      For each repo, read: README.md, package.json or Cargo.toml, and recent commits.
+
+      Create a comprehensive product catalog:
+      - knowledge/products/overview.md — high-level map of all products and how they relate
+      - knowledge/products/launchpad-platform.md — the BaaS platform and all its SDKs
+      - knowledge/products/agent-tools.md — ao-cli, agent-orchestrator, ao-skills
+      - knowledge/products/templates.md — launchapp-lite, saas-template, etc.
+      - knowledge/products/developer-tools.md — better-auth, studio, worktree-manager, etc.
+      - knowledge/products/plugin-packs.md — all 15+ Claude Code plugin packs
+      - knowledge/products/websites.md — launchapp.dev, codeby.ai, etc.
+      - knowledge/products/dependency-graph.md — how products depend on each other
+
+      For each product, document: purpose, current version, tech stack,
+      who maintains it, last activity, maturity level, and key dependencies.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    capabilities:
+      mutates_state: true
+
+  bootstrap-architecture:
+    mode: agent
+    agent: knowledge-curator
+    directive: |
+      Build the org-wide architecture documentation from scratch.
+      Read source code structure and configs from key repos via gh.
+
+      Create:
+      - knowledge/architecture.md — overall system architecture, how services connect
+      - knowledge/tech-stack.md — languages, frameworks, infra used across the org
+      - knowledge/conventions.md — naming patterns, code style, project structure conventions
+      - knowledge/active-workstreams.md — what's currently being worked on (open PRs, recent issues)
+
+      Use `gh pr list --state open` and `gh issue list --state open` across repos
+      to understand current work in flight.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    capabilities:
+      mutates_state: true
+
+  bootstrap-sdk-matrix:
+    mode: agent
+    agent: sdk-auditor
+    directive: |
+      Create a comprehensive SDK status matrix for all launchpad SDKs.
+      For each SDK repo (launchpad-*-sdk and standalone packages):
+      1. Read package.json for version, dependencies, exports
+      2. Check tsconfig.json for strict mode
+      3. Read README for completeness
+      4. Check latest release tag vs HEAD
+
+      Create:
+      - knowledge/sdk-matrix.md — table of all SDKs with version, status, completeness
+      - knowledge/sdk-patterns.md — documented patterns that SDKs should follow
+
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    capabilities:
+      mutates_state: true
+
+  build-tool:
+    mode: agent
+    agent: toolmaker
+    directive: |
+      Build or update a utility tool in the brain repo's tools/ directory.
+      Read the task description for what the tool should do.
+      Keep it simple, single-purpose, and well-documented.
+      Commit changes with descriptive messages.
+    capabilities:
+      mutates_state: true
+
+workflows:
+  # === PLANNER (the only scheduled workflow — creates and queues all other work) ===
+  - id: brain-planner
+    name: "Brain Planner"
+    description: "Assess knowledge gaps and queue tasks to fill them"
+    phases:
+      - plan-and-queue
+
+  # === ON-DEMAND (queued by the planner or manually) ===
+  - id: org-issue-triage
+    name: "Org Issue Triage"
+    description: "Scan all repos for new issues, label, prioritize, create tasks"
+    phases:
+      - scan-org-issues
+      - triage-and-label
+
+  - id: org-pr-review
+    name: "Org PR Review"
+    description: "Review and merge open PRs across all org repos"
+    phases:
+      - scan-org-prs
+
+  - id: impact-analysis
+    name: "Cross-repo Impact Analysis"
+    description: "Identify downstream impacts of shared package changes"
+    phases:
+      - analyze-impact
+
+  - id: stale-detection
+    name: "Stale Work Detection"
+    description: "Find abandoned PRs, stale branches, zombie issues"
+    phases:
+      - detect-stale-work
+
+  - id: security-scan
+    name: "Security Scan"
+    description: "Check for security vulnerabilities across the org"
+    phases:
+      - check-security
+      - human-gate-security
+
+  - id: doc-audit
+    name: "Documentation Audit"
+    description: "Audit docs across key repos for completeness"
+    phases:
+      - audit-docs
+
+  - id: sdk-audit
+    name: "SDK Consistency Audit"
+    description: "Ensure all SDKs follow the same patterns"
+    phases:
+      - audit-sdks
+      - sdk-consistency-report
+
+  - id: release-coordination
+    name: "Release Coordination"
+    description: "Track what needs releasing across the org"
+    phases:
+      - scan-releases
+      - human-gate-releases
+      - create-release-tasks
+
+  - id: knowledge-update
+    name: "Knowledge Base Update"
+    description: "Maintain org-wide documentation and knowledge"
+    phases:
+      - update-knowledge-base
+
+  - id: competitive-research
+    name: "Competitive Research"
+    description: "Research competitors across all product areas"
+    phases:
+      - research-competitors
+
+  - id: product-catalog
+    name: "Product Catalog"
+    description: "Catalog all products, versions, dependencies, and maturity"
+    phases:
+      - catalog-products
+
+  - id: product-docs
+    name: "Product Documentation"
+    description: "Write and maintain product documentation"
+    phases:
+      - write-product-docs
+
+  - id: build-tool
+    name: "Build Tool"
+    description: "Create utility scripts and tools for the AI workforce"
+    phases:
+      - build-tool
+
+schedules:
+  - id: brain-planner
+    cron: "0 */3 * * *"
+    workflow_ref: brain-planner
+    enabled: true
