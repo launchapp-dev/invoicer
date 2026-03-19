@@ -1,6 +1,6 @@
 # AO Agent Orchestrator — Competitive Landscape
 
-> Last updated: 2026-03-18
+> Last updated: 2026-03-19
 
 ## Competitors Tracked
 
@@ -8,6 +8,10 @@
 - Factory (Droids)
 - Sweep
 - General CodeGen Agents
+- Rust AI Agent Ecosystem (ZeroClaw, OpenFang, Rig, AutoAgents, IronClaw, Screenpipe)
+- Declarative Workflow DSLs (Julep, Kestra, Oracle Agent Spec, ChatDev 2.0, MS Agent Framework, AgentForge)
+
+> See **[ao-rust-ecosystem-deep-dive.md](./ao-rust-ecosystem-deep-dive.md)** for the full 40+ tool comparison (2026-03-19)
 
 ---
 
@@ -115,3 +119,25 @@
 | AO differentiates on workflow orchestration, not just code generation | Daemon + queue + multi-phase workflows are unique |
 | No competitor tracks task states across phases with human oversight checkpoints | AO's workflow phases + gate pattern is distinctive |
 | Local-first / self-hosted orchestration | Underserved vs. cloud-only Devin/Factory |
+
+## Declarative Workflow DSL — AO's Unique Position (2026-03-19)
+
+AO's `custom.yaml` is the only tool that combines all 9 of these in a single declarative file:
+1. Agent profiles (34) with model/tool/MCP bindings and full system prompts
+2. Phase pipelines (50 phases, 3 modes: agent/command/manual)
+3. Workflow composition (49 workflows as ordered phase lists)
+4. Decision contracts (typed verdicts with confidence thresholds and risk levels)
+5. Output contracts (required fields per phase)
+6. Model routing (by task type × complexity, embedded in agent prompts)
+7. Cron schedules (23 schedules in the same file)
+8. Fallback model chains (GLM → MiniMax → Claude)
+9. Post-success hooks (merge strategy, auto-merge, worktree cleanup)
+
+**No other tool covers all 9.** Closest: Julep (3-4), Kestra (3), Oracle Agent Spec (2-3).
+
+### Rust Ecosystem Positioning
+- **ZeroClaw** (28k stars): Lightweight agent runtime, not orchestration. AO is deeper on workflows; ZeroClaw is more portable
+- **OpenFang** (15k stars): Closest architectural sibling (14 crates, daemon, RBAC). General-purpose (40 channel adapters) vs AO's software-delivery focus
+- **Rig** (6.6k stars): Framework for building agents, not running them. 20+ providers vs AO's 5
+
+Confidence: 95% that the combined declarative surface is unique. Individual features exist elsewhere.

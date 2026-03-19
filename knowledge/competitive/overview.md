@@ -25,6 +25,7 @@
 - **Factory** raised $50M; "Droids" ranked #1 on Terminal Bench; serving Goldman Sachs, Nvidia, MongoDB.
 - **Sweep** remains narrow (PR generation only) — not expanding into full agentic workflows.
 - Trend: Engineers moving from code-writing to orchestrating AI agent teams.
+- **NEW (2026-03-19):** Deep dive across 40+ tools confirms AO's workflow YAML is unique — no other tool combines agent profiles, phase pipelines, decision contracts, model routing, cron, and fallback chains in a single declarative file. See [ao-rust-ecosystem-deep-dive.md](./ao-rust-ecosystem-deep-dive.md).
 
 ### Better Auth
 - **Better Auth** raised $5M (Peak XV + YC); fastest-growing JS auth library; Lucia deprecation creating tailwind.
