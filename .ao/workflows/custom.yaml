@@ -285,6 +285,8 @@ agents:
          - gtm-strategy for go-to-market planning
          - product-ideas for new product/feature ideation
          - revenue-analysis for monetization strategy
+         - generate-questions to surface strategic questions from the knowledge base
+         - extract-actions to turn answered questions into action items
          - optimize-workflows to improve the brain's own config (queue sparingly)
 
       Prioritize breadth first (cover all products at a high level),
@@ -464,6 +466,88 @@ agents:
     model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "github", "context7"]
+
+  question-generator:
+    system_prompt: |
+      You scan the brain's knowledge base and generate strategic questions
+      the org should be asking but isn't.
+
+      On each run:
+      1. Read ALL files in knowledge/ — products, architecture, competitive,
+         revenue, ideas, gtm, sdk-matrix, active-workstreams, repos/
+      2. Read existing questions in knowledge/questions/ to avoid duplicates
+      3. Identify gaps, contradictions, risks, and blind spots:
+         - What assumptions are we making that might be wrong?
+         - What data are we missing to make good decisions?
+         - What risks are we not tracking?
+         - What competitors are doing that we haven't responded to?
+         - What products are stale and should we sunset or revive them?
+         - What cross-repo dependencies create fragility?
+         - Where are we spending effort with unclear ROI?
+         - What market shifts should we be watching?
+         - What technical debt is accumulating across the org?
+         - What do our users actually want that we're not building?
+      4. Generate questions as individual .md files in knowledge/questions/
+
+      Each question file should contain:
+      - Title: the question itself
+      - Context: why this question matters now
+      - What we know: relevant facts from the knowledge base
+      - What we don't know: the specific gap this question exposes
+      - Suggested investigation: how to find the answer
+      - Priority: critical / high / medium / low
+      - Status: open (default)
+
+      Name files descriptively: e.g., should-we-sunset-launchpad-baas.md,
+      what-is-our-auth-moat-vs-clerk.md, etc.
+
+      Generate 3-5 high-quality questions per run. Prefer depth over breadth.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "sequential-thinking"]
+
+  action-extractor:
+    system_prompt: |
+      You review answered questions and extract concrete action items
+      the org should execute.
+
+      On each run:
+      1. Read all files in knowledge/questions/ — look for questions with
+         status: answered or that have been updated with answers
+      2. Read knowledge/actions/ to avoid duplicate action items
+      3. For each answered question, extract actionable next steps:
+         - What should we build, change, or stop doing?
+         - Who should own this action?
+         - What's the priority and urgency?
+         - What's the expected outcome?
+         - What dependencies exist?
+
+      Create action item files in knowledge/actions/ with:
+      - Title: clear, imperative action (e.g., "Sunset LaunchPad BaaS SDKs")
+      - Source question: link to the question file that prompted this
+      - Context: why this action matters
+      - Scope: what specifically needs to happen
+      - Priority: critical / high / medium / low
+      - Effort: small (days) / medium (weeks) / large (months)
+      - Owner: suggested team or person
+      - Dependencies: what must happen first
+      - Success criteria: how we know this is done
+      - Status: proposed (default)
+
+      Also maintain knowledge/actions/backlog.md — a prioritized list of all
+      action items sorted by priority and effort.
+
+      Name files descriptively: e.g., sunset-launchpad-baas-sdks.md,
+      add-stripe-billing-to-launchapp-lite.md, etc.
+
+      Generate thorough, specific action items. Vague actions are useless.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "sequential-thinking"]
 
   knowledge-curator:
     system_prompt: |
@@ -828,6 +912,27 @@ phases:
     capabilities:
       mutates_state: true
 
+  generate-questions:
+    mode: agent
+    agent: question-generator
+    directive: |
+      Scan the entire knowledge base. Identify gaps, risks, contradictions,
+      and blind spots. Generate 3-5 strategic questions as .md files in
+      knowledge/questions/. Each question should expose something the org
+      needs to investigate or decide.
+    capabilities:
+      mutates_state: true
+
+  extract-actions:
+    mode: agent
+    agent: action-extractor
+    directive: |
+      Review answered questions in knowledge/questions/.
+      Extract concrete, specific action items into knowledge/actions/.
+      Maintain a prioritized backlog in knowledge/actions/backlog.md.
+    capabilities:
+      mutates_state: true
+
   build-tool:
     mode: agent
     agent: toolmaker
@@ -970,6 +1075,24 @@ workflows:
     description: "Create go-to-market strategies for products"
     phases:
       - create-gtm-strategy
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
+  - id: generate-questions
+    name: "Generate Questions"
+    description: "Scan knowledge base and surface strategic questions the org should answer"
+    phases:
+      - generate-questions
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
+  - id: extract-actions
+    name: "Extract Actions"
+    description: "Turn answered questions into concrete org action items"
+    phases:
+      - extract-actions
       - push-branch
       - create-pr
       - auto-merge-pr
