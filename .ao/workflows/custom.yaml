@@ -49,7 +49,7 @@ agents:
       Use `gh issue edit --repo <repo> --add-label <label>` to apply labels.
       Focus on issues from the last 24 hours without labels.
     model: claude-sonnet-4-6
-    tool: claude
+    tool: codex
     mcp_servers: ["ao", "github"]
 
   pr-reviewer-org:
@@ -92,7 +92,7 @@ agents:
       Use `gh api repos/launchapp-dev/<repo>/commits?per_page=5` to check recent activity.
       Create issues with `[DOCS]` prefix in repos with critically stale documentation.
     model: claude-sonnet-4-6
-    tool: claude
+    tool: codex
     mcp_servers: ["ao", "github"]
 
   security-monitor:
@@ -144,7 +144,7 @@ agents:
       Use `gh release list --repo launchapp-dev/<repo> --limit 1` to find latest releases.
       Report findings grouped by urgency.
     model: claude-sonnet-4-6
-    tool: claude
+    tool: codex
     mcp_servers: ["ao", "github"]
 
   impact-analyzer:
@@ -179,7 +179,7 @@ agents:
       - Zombie issues: remove assignment, add `needs-triage` label
       - Report findings as a summary
     model: claude-sonnet-4-6
-    tool: claude
+    tool: codex
     mcp_servers: ["ao", "github"]
 
   competitive-researcher:
@@ -357,7 +357,7 @@ agents:
       Use ao.task.create and ao.queue.enqueue MCP tools.
       Do not commit or modify knowledge/ files other than logs — your only job is to observe, cache, dispatch, and log.
     model: claude-sonnet-4-6
-    tool: claude
+    tool: codex
     mcp_servers: ["ao", "github"]
 
   product-ideator:
