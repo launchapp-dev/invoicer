@@ -6,13 +6,13 @@ status: current
 source_repos:
   - saas-template-launch-app-test
 generated_by: architecture-diagrammer
-generated_at: 2026-03-18
+generated_at: 2026-03-19
 last_verified: 2026-03-19
 ---
 
 ## Overview
 
-How the SaaS template is deployed — local development with Docker Compose, production infrastructure via Pulumi on AWS, and CI/CD via GitHub Actions. The AO Agent Orchestrator automates PR creation and task execution.
+How the SaaS template is deployed — local development with Docker Compose, production infrastructure via Pulumi on AWS, background job processing via Trigger.dev and QStash, and CI/CD via GitHub Actions. The AO Agent Orchestrator automates PR creation and task execution.
 
 ## Diagram
 
@@ -55,6 +55,14 @@ graph TD
         POSTHOG[PostHog]
     end
 
+    subgraph "Background Jobs"
+        QSTASH[Upstash QStash<br/>Job Queue + Delivery]
+        TRIGGERDEV[Trigger.dev Cloud<br/>Task Runtime]
+        ECS -->|POST /jobs/enqueue| QSTASH
+        QSTASH -->|POST /jobs/process<br/>signed callback| ECS
+        TRIGGERDEV -->|Runs @repo/jobs tasks| RESEND
+    end
+
     DEPLOY --> ALB
     ECS --> STRIPE
     ECS --> RESEND
@@ -76,3 +84,6 @@ graph TD
 - AO CLI automates feature development: creates ao/task-* branches and auto-merges PRs
 - Turborepo handles the build DAG with proper env var cache invalidation via globalEnv
 - docker-compose.prod.yml available for production-like local testing
+- Background jobs use a two-layer architecture: QStash (Upstash) handles job queuing, delivery, and retries; Trigger.dev provides the task runtime for @repo/jobs handlers
+- QStash signature verification protects the /jobs/process endpoint from unauthorized callbacks
+- In dev mode, job enqueuing is a no-op when QSTASH_TOKEN is not set

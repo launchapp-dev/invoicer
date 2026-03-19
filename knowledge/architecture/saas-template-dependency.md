@@ -6,13 +6,13 @@ status: current
 source_repos:
   - saas-template-launch-app-test
 generated_by: architecture-diagrammer
-generated_at: 2026-03-18
+generated_at: 2026-03-19
 last_verified: 2026-03-19
 ---
 
 ## Overview
 
-Internal package dependency graph for the saas-template-launch-app-test monorepo. Shows how the 15 internal @repo/* packages depend on each other, forming a clear layered architecture from foundational config through domain packages to the web app.
+Internal package dependency graph for the saas-template-launch-app-test monorepo. Shows how the 16 internal @repo/* packages depend on each other, forming a clear layered architecture from foundational config through domain packages to the web app. Includes the new @repo/jobs package for background task processing.
 
 ## Diagram
 
@@ -34,6 +34,7 @@ graph BT
     APIHOOKS["@repo/api-hooks"]
     MCP["@repo/mcp"]
     UIKIT["@repo/ui-kit"]
+    JOBS["@repo/jobs"]
 
     CONFIG --> TS
     DB --> CONFIG
@@ -46,6 +47,9 @@ graph BT
     BILLING --> CORE
     EMAIL --> CONFIG
     STORAGE --> CONFIG
+
+    JOBS --> CONFIG
+    JOBS --> EMAIL
 
     API --> AI
     API --> AUTH
@@ -74,6 +78,7 @@ graph BT
     style AUTH fill:#89b4fa,stroke:#1e66f5
     style API fill:#a6e3a1,stroke:#40a02b
     style WEB fill:#cba6f7,stroke:#8839ef
+    style JOBS fill:#fab387,stroke:#fe640b
 ```
 
 ## Notes
@@ -86,3 +91,5 @@ graph BT
 - @repo/api-hooks is auto-generated from the OpenAPI spec via orval (dashed line = generated dependency)
 - @repo/analytics, @repo/i18n, @repo/ui-kit are independent packages with no internal deps
 - apps/web depends directly on @repo/api (not via api-hooks); does not depend on i18n, ui-kit, or api-hooks
+- @repo/jobs depends on @repo/config and @repo/email; uses @trigger.dev/sdk as external dep for task definitions
+- @repo/api gained @upstash/qstash and @upstash/redis as external deps for job queuing (not shown as internal deps since QStash is an external service)

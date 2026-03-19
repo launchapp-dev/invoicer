@@ -6,13 +6,13 @@ status: current
 source_repos:
   - saas-template-launch-app-test
 generated_by: architecture-diagrammer
-generated_at: 2026-03-18
+generated_at: 2026-03-19
 last_verified: 2026-03-19
 ---
 
 ## Overview
 
-How data moves through the SaaS template — from browser requests through SSR rendering, API routing, authentication, billing, and back. Covers the key flows: page rendering, API requests, auth, billing checkout, and file uploads.
+How data moves through the SaaS template — from browser requests through SSR rendering, API routing, authentication, billing, background job queuing, and back. Covers the key flows: page rendering, API requests, auth, billing checkout, file uploads, and async job processing.
 
 ## Diagram
 
@@ -26,6 +26,9 @@ sequenceDiagram
     participant PG as PostgreSQL
     participant BL as @repo/billing
     participant ST as Stripe/Polar.sh
+    participant QS as Upstash QStash
+    participant JB as @repo/jobs (Trigger.dev)
+    participant EM as @repo/email (Resend)
 
     Note over B,PG: Page Request Flow
     B->>W: GET /dashboard
@@ -60,6 +63,18 @@ sequenceDiagram
     A->>BL: Process webhook
     BL->>DB: Update subscription
     DB->>PG: INSERT/UPDATE subscriptions
+
+    Note over A,EM: Background Job Flow
+    A->>QS: POST /jobs/enqueue (url, body, delay, retries)
+    QS-->>A: messageId
+    QS->>A: POST /jobs/process (signed callback)
+    A->>A: Verify QStash signature
+    A-->>QS: 200 OK
+
+    Note over JB,EM: Trigger.dev Task Execution
+    JB->>EM: send-welcome-email task
+    EM-->>JB: Email sent
+    JB->>JB: process-webhook task (Stripe/Polar events)
 ```
 
 ## Notes
@@ -69,3 +84,5 @@ sequenceDiagram
 - OpenAPI spec is generated from Zod schemas; @repo/api-hooks auto-generates typed React Query hooks from it
 - File uploads use presigned S3 URLs — the API generates the URL, the browser uploads directly to S3
 - PostHog analytics events fire client-side (posthog-js) and server-side (posthog-node)
+- Job enqueuing via QStash: the API posts to /jobs/enqueue which publishes to QStash with optional delay/retries; QStash calls back to /jobs/process with signature verification
+- @repo/jobs defines Trigger.dev tasks that run asynchronously: send-welcome-email (sends via @repo/email) and process-webhook (handles Stripe/Polar webhook events)

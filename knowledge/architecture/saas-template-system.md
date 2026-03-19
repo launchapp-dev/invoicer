@@ -6,13 +6,13 @@ status: current
 source_repos:
   - saas-template-launch-app-test
 generated_by: architecture-diagrammer
-generated_at: 2026-03-18
+generated_at: 2026-03-19
 last_verified: 2026-03-19
 ---
 
 ## Overview
 
-High-level system architecture of the flagship SaaS template (launchapp-lite). Shows the Turborepo monorepo structure with apps/web as the SSR frontend, the Hono API server, and all external service integrations connected through provider abstractions.
+High-level system architecture of the flagship SaaS template (launchapp-lite). Shows the Turborepo monorepo structure with apps/web as the SSR frontend, the Hono API server, the new background jobs package (Trigger.dev), QStash-based job queuing in the API, and all external service integrations connected through provider abstractions.
 
 ## Diagram
 
@@ -42,6 +42,7 @@ graph TD
             MCP["@repo/mcp<br/>MCP Server"]
             UIKIT["@repo/ui-kit<br/>Component Library"]
             CORE["@repo/core<br/>Lazy-init utilities"]
+            JOBS["@repo/jobs<br/>Trigger.dev Tasks"]
         end
     end
 
@@ -54,17 +55,20 @@ graph TD
         POSTHOG[PostHog Analytics]
         OPENAI[OpenAI API]
         ANTHROPIC[Anthropic API]
+        QSTASH[Upstash QStash]
+        TRIGGERDEV[Trigger.dev Cloud]
     end
 
     CLIENT -->|HTTP/SSR| WEB
     WEB --> API
     WEB --> AUTH
-    WEB --> API
     API --> AUTH
     API --> DB
     API --> BILLING
     API --> AI
     API --> STORAGE
+    API -->|Job queuing| QSTASH
+    QSTASH -->|Callback| API
     AUTH --> DB
     DB --> PG
     BILLING -->|Provider Abstraction| STRIPE
@@ -77,6 +81,9 @@ graph TD
     MCP --> AUTH
     MCP --> DB
     API --> EMAIL
+    JOBS --> EMAIL
+    JOBS --> CONFIG
+    JOBS --> TRIGGERDEV
 ```
 
 ## Notes
@@ -86,3 +93,6 @@ graph TD
 - The API uses @hono/zod-openapi for spec generation; orval auto-generates @repo/api-hooks from the spec
 - Internal packages use the @repo/* namespace convention
 - Biome replaces ESLint+Prettier for linting/formatting
+- @repo/jobs defines background tasks (send-welcome-email, process-webhook) using Trigger.dev SDK
+- @repo/api integrates QStash (Upstash) for job enqueuing via POST /api/jobs/enqueue and webhook processing via POST /api/jobs/process with signature verification
+- Job queuing uses QStash as the transport layer; Trigger.dev provides the task runtime
