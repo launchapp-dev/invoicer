@@ -104,6 +104,32 @@ Each is a `create-launchapp --template <vertical>` that AO can scaffold, customi
 | **AO Enterprise** | Companies, regulated industries | Custom pricing | On-prem/private cloud, SSO/SAML, audit logs, RBAC, compliance controls, SLA support, custom model policies |
 | **AO Cloud** | Everyone (managed) | Usage-based | Hosted orchestration, no CLI needed, API access, integrations |
 
+## Content & Tutorials
+
+Tutorials serve two purposes: **acquisition** (free content brings developers in) and **revenue** (paid content for advanced use cases).
+
+### Free Tutorials (Acquisition)
+- Getting started with AO CLI
+- Your first autonomous workflow
+- Setting up AO in an existing repo
+- How AO worktrees keep parallel agents safe
+- Building a brain repo for your org
+- AO + Claude Code integration guide
+
+### Paid Tutorials / Courses
+- **"Ship a SaaS in a Weekend with AO"** — full course ($49-99)
+- **"Enterprise AO: Fleet Management at Scale"** — advanced course ($149-299)
+- **"Building Custom AO Workflows"** — deep-dive ($79)
+- **"AO + LaunchPad: Full-Stack AI Development"** — comprehensive ($199)
+
+### Content Strategy
+- Blog posts and tutorials on launchapp.dev
+- YouTube/video walkthroughs of AO building things live
+- "AO built this" case studies showing real repos
+- Community guides contributed by users
+
+The brain can generate tutorial drafts via the product-doc-writer agent. AO itself can be used to maintain and update tutorials as features change.
+
 ## The Portfolio
 
 Every repo in launchapp-dev serves the mission:
