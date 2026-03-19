@@ -2,47 +2,43 @@
 
 **Repo**: `launchapp-dev/launchpad-auth-sdk`
 **Package**: `@launchpad/auth`
-**Version**: 0.1.0
+**Version**: `0.1.0`
 **Visibility**: Private
 **Language**: TypeScript
 **Last updated**: 2025-12-18
 
 ## Purpose
 
-Authentication SDK for Launchpad BaaS. Provides React hooks and components for handling sign-in, sign-up, session management, and auth state within React applications.
+Authentication SDK for LaunchPad BaaS — provides React hooks and components for user authentication, session state, and login flows. Built on top of `@launchpad/core`.
 
 ## Tech Stack
 
-- TypeScript (ESM)
-- React 18+ (peer dependency)
-- Build: tsup
-- Test: Vitest + Testing Library
-- Lint: Biome
+- **Runtime**: Node.js, ESM-only
+- **Bundler**: tsup
+- **Test**: Vitest + @testing-library/react + jsdom
+- **Lint**: Biome
+- **Peer deps**: React ≥18
 
-## API Surface
+## Key Features
 
-Exports React hooks and components for authentication flows. Likely includes:
-- Auth state hooks (`useSession`, `useUser`, `useAuth`)
-- Sign in/sign up/sign out actions
-- Session persistence and refresh
+- React hooks for auth state (`useAuth`, `useSession`, etc.)
+- Login/logout/signup components
+- Session management via `@launchpad/core`
 
 ## Dependencies on Org Products
 
-- `@launchpad/core` (GitHub git reference) — HTTP client and React provider foundation
+- `@launchpad/core` — base HTTP client and session management
 
-## What Depends On This
+## Maturity
 
-- `launchpad-saas-template` — primary consumer
-- `launchapp-lite` — likely consumer
+**Active Development (pre-1.0)** — Last substantive commit 2025-12-18 (CI fixes for pnpm v10 and vitest alias workaround). No feature commits in months.
 
-## Maturity: Scaffolded / Early
+## Open Issues
 
-- Initial implementation Dec 2025
-- Most recent activity (Dec 18) was CI/CD infrastructure fixes (pnpm v10, resolve.alias bug)
-- No README in repo — API surface not formally documented
-- Not published to npm registry
+- **#2 [SDK-CONSISTENCY]**: Missing README and `test:coverage` script
 
 ## Notes
 
-- Auth is backed by `better-auth` on the server side (`launchpad-baas` monorepo)
-- Client SDK wraps the server's auth endpoints via `@launchpad/core`
+- No README exists (open SDK-CONSISTENCY issue)
+- Missing `test:coverage` script compared to SDK standard (flagged in issue)
+- Installed by consumers via `github:AudioGenius-ai/launchpad-auth-sdk`

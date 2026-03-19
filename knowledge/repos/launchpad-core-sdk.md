@@ -2,64 +2,44 @@
 
 **Repo**: `launchapp-dev/launchpad-core-sdk`
 **Package**: `@launchpad/core`
-**Version**: 0.1.0
+**Version**: `0.1.0`
 **Visibility**: Private
 **Language**: TypeScript
 **Last updated**: 2025-12-18
 
 ## Purpose
 
-The foundational SDK for all Launchpad BaaS client-side packages. Provides the HTTP client, session management, configuration, and React context that every other `@launchpad/*` SDK depends on.
+Foundation SDK for the entire LaunchPad BaaS client ecosystem. Provides the HTTP client, session management, multi-tenant support, and optional React integration that all other `@launchpad/*` SDKs depend on.
 
 ## Tech Stack
 
-- TypeScript (ESM)
-- React 18+ (optional peer dependency)
-- Build: tsup
-- Test: Vitest + Testing Library
-- Lint: Biome
+- **Runtime**: Node.js ≥18, ESM-only
+- **Bundler**: tsup
+- **Test**: Vitest + @vitest/coverage-v8
+- **Lint**: Biome
+- **Peer deps**: React ≥18 (optional)
+- **Exports**: `.` (core) and `./react` (React integration)
 
-## API Surface
+## Key Features
 
-Two entry points:
-- `.` — core utilities, HTTP client, session management (framework-agnostic)
-- `./react` — React provider, hooks, and context integration
-
-Key exports:
-- `LaunchpadClient` — HTTP client with `getApiUrl()` and session handling
-- `LaunchpadProvider` — React context provider wrapping the client
-- `LaunchpadConfig` — configuration type (`baseUrl`, `apiKey`)
+- `LaunchpadClient` — typed HTTP client with `getApiUrl()` helper
+- Session management and multi-tenant context
+- React provider (`LaunchpadProvider`) for context injection
 
 ## Dependencies on Org Products
 
-None. This is the root of the dependency tree.
+- None (leaf dependency — no `@launchpad/*` runtime deps)
 
-## What Depends On This
+## Maturity
 
-Every feature SDK installs it via GitHub reference:
-```
-"@launchpad/core": "github:AudioGenius-ai/launchpad-core-sdk"
-```
-- `@launchpad/auth`
-- `@launchpad/db`
-- `@launchpad/cms`
-- `@launchpad/customers`
-- `@launchpad/identity`
-- `@launchpad/realtime`
-- `@launchpad/storage`
-- `@launchpad/workflows`
-- `@launchpad/push`
-- `@launchpad/offline`
-- `@launchpad/testing`
+**Active Development (pre-1.0)** — Last functional commit 2025-12-10. CI/CD pipeline added 2025-12-18. No new feature commits since.
 
-## Maturity: Active / Stable
+## Open Issues
 
-- Initial implementation Dec 10, 2025
-- CI/CD workflow added Dec 18, 2025
-- Not published to npm registry (GitHub dependency reference)
-- No README in repo (only package.json present)
+- **#2 [SDK-CONSISTENCY]**: Missing README documentation
 
 ## Notes
 
-- React peer dependency is **optional** — supports both React and non-React environments
-- All downstream SDKs lock to this via GitHub git URL, not semver ranges
+- All other `@launchpad/*` SDKs install this via `github:AudioGenius-ai/launchpad-core-sdk` (GitHub dep, not npm registry)
+- `publishConfig.access: "public"` set — intended for future npm publish
+- No README exists yet (open SDK-CONSISTENCY issue)

@@ -12,6 +12,8 @@ The goal is to provide a "Firebase alternative" built on Postgres and open stand
 
 All packages are at `v0.1.0`. The platform is functional and in use by templates, but not yet publicly released.
 
+As of 2026-03-19, SDK-CONSISTENCY issues have been filed across 10 of 11 client SDKs covering: missing READMEs, `tsconfig.json` deviations, `package.json` packaging gaps (missing `publishConfig`, `test:coverage` script), and import extension inconsistencies. `launchpad-storage-sdk` is the only client SDK with no open issues.
+
 ## Visibility: Private (except launchpad-db-engine)
 
 ---
