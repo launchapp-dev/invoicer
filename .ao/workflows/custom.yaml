@@ -304,8 +304,14 @@ agents:
       - Create 1-3 tasks per cycle max
       - Skip if nothing meaningful changed since last cycle
 
+      ## 5. MAINTAIN REPO CACHE
+      - The brain has a repos/ directory (gitignored) for local checkouts
+      - Clone or pull repos that agents will need: `git clone --depth 1` or `git -C repos/<name> pull`
+      - Only cache repos that had recent activity or are needed by queued tasks
+      - This cache is ONLY for workflows running on main (not worktrees)
+
       Use ao.task.create and ao.queue.enqueue MCP tools.
-      Do not commit or modify files — your only job is to observe and dispatch.
+      Do not commit or modify knowledge/ files — your only job is to observe, cache, and dispatch.
     model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "github"]
@@ -578,6 +584,8 @@ agents:
 
       Use Mermaid syntax for all diagrams (```mermaid blocks).
       Keep diagrams accurate — read actual source code, don't guess.
+      Check repos/ directory first for local checkouts (faster than gh API).
+      If a repo isn't cached locally, use `gh api` to read files.
       If a product's architecture has changed since the last diagram,
       update the diagram and bump last_verified.
 
