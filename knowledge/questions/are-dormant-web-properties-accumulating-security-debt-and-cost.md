@@ -25,7 +25,7 @@ The newly expanded repo catalog documents 6+ web properties in various states of
 - The Aethris and Site Inspector properties are from abandoned product lines (late 2024 / early 2025) that predate the current LaunchApp focus.
 - All websites share a common TypeScript/React Router stack with dependencies that are now 7-12 months out of date (React Router 7 has had multiple security-relevant releases since).
 - Domain renewals for `codeby.ai`, `lostcause.com`, and others cost money regardless of whether the properties are active.
-- The org overview counts 109 repos — roughly 49 are experimental/legacy/abandoned.
+- The org overview counts 113 repos — roughly 52 are experimental/legacy/abandoned.
 
 ## What We Don't Know
 

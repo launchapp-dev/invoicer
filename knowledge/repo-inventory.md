@@ -1,7 +1,7 @@
 # Repository Inventory
 
 > Last updated: 2026-03-19 by knowledge-curator agent.
-> Snapshot: 109 repos in `launchapp-dev`; 25 pushed in the last 30 days, 23 created since 2026-03-12, 14 public, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-19 against live org metadata.
+> Snapshot: 113 repos in `launchapp-dev`; 25 pushed in the last 30 days, 23 created since 2026-03-12, 15 public, 98 private, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-19 against live org metadata.
 
 ## Notable Changes
 

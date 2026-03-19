@@ -5,9 +5,9 @@
 ## Organization
 
 **GitHub org:** `launchapp-dev` (previously also `AudioGenius-ai`)
-**Total repos:** 109 (as of 2026-03-19 conductor cycle)
+**Total repos:** 113 (as of 2026-03-19 conductor cycle)
 - Active / recently updated: ~60
-- Experimental / legacy / abandoned: ~49
+- Experimental / legacy / abandoned: ~52
 
 ## Product Lines
 
@@ -45,8 +45,9 @@ The primary technology stack is TypeScript (Node.js/Bun), with Rust used for the
 
 ## Visibility
 
-- **Public repos** (15): ao, ao-skills, launchpad-db-engine, worktree-manager, better-auth, openapi-gen, create-launchpad, create-launchapp, launchapp-studio, pr-review-responder, react-router-presets, supabase-to-hooks, figma-tailwind-plugin, supabase-railway-template
-- **Private repos**: Everything else (ao-cli implementation, most of the BaaS platform, templates, websites, plugin packs, legacy experiments)
+- **Public repos** (15): ao, ao-skills, aethris-client-plugins, better-auth, create-launchapp, create-launchpad, figma-tailwind-plugin, launchapp-studio, launchpad-db-engine, openapi-gen, pr-review-responder, react-router-presets, supabase-railway-template, supabase-to-hooks, worktree-manager
+- **Private repos** (98): ao-cli implementation, most of the BaaS platform, templates, websites, plugin packs, legacy experiments
+- **Archived repos** (1): agent-orchestrator
 
 ## Notable Legacy Context
 
