@@ -49,40 +49,51 @@ Each includes: auth (Better Auth), billing (Stripe + Polar), database (Drizzle +
 
 **Differentiator**: Every template ships with AO configured. Buyers get an AI workforce that maintains their fork — dependency updates, security patches, feature additions. No competitor offers this.
 
-### Phase 2: Cover Backend Frameworks (Weeks 8-16)
+### Phase 2: SSR TypeScript Framework Variants (Weeks 8-16)
 
-| Template | Framework | Why | Compete With |
+Same SaaS features, different SSR TypeScript meta-frameworks:
+
+| Template | Framework | SSR Approach | Why |
 |---|---|---|---|
-| **launchapp-django** | Django + HTMX or React | Massive Python community | SaaS Pegasus |
-| **launchapp-rails** | Rails 8 | Enterprise trust, Hotwire | Bullet Train |
-| **launchapp-laravel** | Laravel 12 | Huge PHP market | Larafast, SaaSykit |
-| **launchapp-fastapi** | FastAPI + React | AI/ML startups | FastAPI templates |
+| **launchapp-tanstack** | TanStack Start | Full-stack React, Vinxi | Newest contender, file-based routing, growing fast |
+| **launchapp-solid** | SolidStart | Solid.js SSR | Blazing fast, reactive, TypeScript-native |
+| **launchapp-astro** | Astro + React islands | Content-first SSR | Best for content-heavy SaaS, marketing sites |
+| **launchapp-remix** | Remix (React Router 7) | Already exists as our flagship | Our home turf — React Router 7 + Hono |
 
 ### Phase 3: Vertical-Specific Templates (Weeks 16-24)
 
-| Template | Vertical | Why |
-|---|---|---|
-| **launchapp-ai-saas** | AI/LLM apps | Hottest vertical, 30% of new SaaS |
-| **launchapp-marketplace** | Two-sided platforms | Complex auth + payments |
-| **launchapp-ecommerce** | Storefronts | High demand, proven market |
-| **launchapp-internal** | Admin/internal tools | Enterprise need |
-| **launchapp-mobile** | React Native + web | Zero competition in mobile SaaS kits |
+All TypeScript SSR, different verticals:
+
+| Template | Vertical | Base Framework | Why |
+|---|---|---|---|
+| **launchapp-ai-saas** | AI/LLM apps | Next.js or RR7 | Hottest vertical, 30% of new SaaS |
+| **launchapp-marketplace** | Two-sided platforms | Next.js | Complex auth + payments |
+| **launchapp-ecommerce** | Storefronts | Next.js or Nuxt | High demand, proven market |
+| **launchapp-internal** | Admin/internal tools | React Router 7 | Enterprise need |
 
 ### Phase 4: The Full Catalog
 
-Every template in the `create-launchapp` CLI:
+Every template in the `create-launchapp` CLI — all pure SSR TypeScript:
 ```
-create-launchapp --template nextjs
-create-launchapp --template nuxt
-create-launchapp --template sveltekit
-create-launchapp --template django
-create-launchapp --template rails
-create-launchapp --template laravel
-create-launchapp --template fastapi
-create-launchapp --template ai-saas
-create-launchapp --template marketplace
-create-launchapp --template ecommerce
+create-launchapp --template react-router    # Our flagship (Hono + Better Auth)
+create-launchapp --template nextjs          # App Router + RSC
+create-launchapp --template nuxt            # Vue 3 + Nitro
+create-launchapp --template sveltekit       # Svelte 5 + SSR
+create-launchapp --template tanstack        # TanStack Start + Vinxi
+create-launchapp --template solid           # SolidStart
+create-launchapp --template astro           # Astro + React islands
+create-launchapp --template ai-saas         # AI vertical (any framework)
+create-launchapp --template marketplace     # Two-sided (any framework)
+create-launchapp --template ecommerce       # Storefront (any framework)
 ```
+
+### Why Pure SSR TypeScript Only
+
+- **One language, full stack** — TypeScript everywhere, no context switching
+- **SSR is table stakes** — SEO, performance, streaming, RSC/server components
+- **AO works best with TypeScript** — type-safe code generation, better agent output
+- **Market consolidation** — 90%+ of new SaaS startups use TypeScript
+- **No Django/Rails/Laravel/PHP** — different ecosystems, different toolchains, fragmented effort. Focus wins.
 
 ## Pricing Strategy
 
