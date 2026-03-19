@@ -7,23 +7,23 @@ source_repos:
   - design-system
 generated_by: architecture-diagrammer
 generated_at: 2026-03-18
-last_verified: 2026-03-18
+last_verified: 2026-03-19
 ---
 
 ## Overview
 
-System architecture of the @audiogenius/design-system — a Radix UI-based React component library with 51 components, built with CVA + Tailwind CSS, documented via Storybook v10, and bundled with tsup.
+System architecture of the @audiogenius/design-system — a Radix UI-based React component library with 52 components, built with CVA + Tailwind CSS, documented via Storybook v10, and bundled with tsup.
 
 ## Diagram
 
 ```mermaid
 graph TD
     subgraph "Design System Package"
-        subgraph "src/components/ (51 components)"
-            FOUND["Foundation<br/>Button, Input, Label,<br/>Badge, Separator, Skeleton"]
+        subgraph "src/components/ (52 components)"
+            FOUND["Foundation<br/>Button, Input, Label,<br/>Badge, Separator, Skeleton,<br/>VisuallyHidden"]
             LAYOUT["Layout<br/>Card, AspectRatio,<br/>Resizable, ScrollArea"]
-            OVERLAY["Overlays<br/>Dialog, Sheet, AlertDialog,<br/>Popover, Tooltip, DropdownMenu"]
-            NAV["Navigation<br/>NavigationMenu, Menubar,<br/>Breadcrumb, Tabs, Toolbar"]
+            OVERLAY["Overlays<br/>Dialog, Sheet, AlertDialog,<br/>Popover, Tooltip, DropdownMenu,<br/>FocusScope, Portal"]
+            NAV["Navigation<br/>NavigationMenu, Menubar,<br/>Breadcrumb, Tabs, Toolbar,<br/>Pagination"]
             FORM["Forms<br/>Checkbox, RadioGroup, Select,<br/>Switch, Slider, Textarea,<br/>Combobox, MultiSelect, Form"]
             DATA["Data Display<br/>Table, DataTable, Chart,<br/>KPICard, StatDisplay,<br/>Calendar, DatePicker"]
             FEED["Feedback<br/>Alert, Toast, Sonner,<br/>Progress, Accordion"]
@@ -45,7 +45,7 @@ graph TD
     end
 
     subgraph "Primitives"
-        RADIX["Radix UI<br/>27 @radix-ui/* packages"]
+        RADIX["Radix UI<br/>28 @radix-ui/* packages"]
         CVA["class-variance-authority<br/>Variant styling"]
         TM["tailwind-merge<br/>Class merging"]
     end
@@ -75,8 +75,8 @@ graph TD
 
 ## Notes
 
-- 51 components spanning foundation, layout, overlays, navigation, forms, data display, and feedback
-- Built on 27 @radix-ui/* primitive packages for accessibility and behavior
+- 52 components spanning foundation, layout, overlays, navigation, forms, data display, and feedback
+- Built on 28 @radix-ui/* primitive packages for accessibility and behavior
 - CVA (class-variance-authority) handles component variant styling
 - Dual ESM/CJS output via tsup for maximum compatibility
 - Storybook v10 for component documentation and visual testing

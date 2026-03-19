@@ -9,7 +9,7 @@ source_repos:
   - lostcause.com
 generated_by: architecture-diagrammer
 generated_at: 2026-03-18
-last_verified: 2026-03-18
+last_verified: 2026-03-19
 ---
 
 ## Overview

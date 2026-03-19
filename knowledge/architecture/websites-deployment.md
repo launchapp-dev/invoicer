@@ -9,7 +9,7 @@ source_repos:
   - lostcause.com
 generated_by: architecture-diagrammer
 generated_at: 2026-03-18
-last_verified: 2026-03-18
+last_verified: 2026-03-19
 ---
 
 ## Overview
@@ -73,7 +73,7 @@ graph TD
 - All repos are private
 - Supabase provides managed PostgreSQL for all sites
 - launchapp-landing-v2 is the actively developed landing page (updated 2026-01)
-- codeby.ai (last updated 2025-06) and lostcause.com (last updated 2025-08) are in maintenance mode
+- codeby.ai (last updated 2025-10) and lostcause.com (last updated 2025-09) are in maintenance mode
 - No visible CI/CD configuration (GitHub Actions) in the repos
 - Docker support possible via the template but not confirmed in use
 - Each site likely has its own Supabase project (separate databases)

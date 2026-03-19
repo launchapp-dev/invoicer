@@ -7,7 +7,7 @@ source_repos:
   - design-system
 generated_by: architecture-diagrammer
 generated_at: 2026-03-18
-last_verified: 2026-03-18
+last_verified: 2026-03-19
 ---
 
 ## Overview
@@ -20,7 +20,7 @@ External dependency graph for the @audiogenius/design-system package. Shows the 
 graph BT
     DS["@audiogenius/design-system"]
 
-    subgraph "Radix UI Primitives (27 packages)"
+    subgraph "Radix UI Primitives (28 packages)"
         R1["@radix-ui/react-dialog"]
         R2["@radix-ui/react-dropdown-menu"]
         R3["@radix-ui/react-select"]
@@ -92,7 +92,7 @@ graph BT
 
 ## Notes
 
-- 27 @radix-ui/* packages provide accessible, unstyled primitives
+- 28 @radix-ui/* packages provide accessible, unstyled primitives
 - CVA + tailwind-merge + clsx form the styling utility chain
 - recharts powers the Chart component; @tanstack/react-table powers DataTable
 - react-day-picker + date-fns power the Calendar and DatePicker components
