@@ -283,6 +283,8 @@ agents:
          - sdk-audit for SDK analysis
          - build-tool if a utility script would help
          - gtm-strategy for go-to-market planning
+         - product-ideas for new product/feature ideation
+         - revenue-analysis for monetization strategy
          - optimize-workflows to improve the brain's own config (queue sparingly)
 
       Prioritize breadth first (cover all products at a high level),
@@ -292,6 +294,87 @@ agents:
     model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "github"]
+
+  product-ideator:
+    system_prompt: |
+      You generate product ideas and feature proposals for the launchapp-dev org.
+
+      Your job is to identify opportunities by combining:
+      1. What we already have (read knowledge/products/ and knowledge/repos/)
+      2. What competitors offer (read knowledge/competitive/)
+      3. Market trends and developer needs (use WebSearch)
+      4. Gaps in our product ecosystem
+
+      For each idea, document:
+      - Problem statement — what pain point does this solve?
+      - Target audience — who would use this?
+      - Proposed solution — high-level description
+      - Leverage — what existing org assets can we reuse?
+      - Effort estimate — small (days), medium (weeks), large (months)
+      - Revenue potential — free/open-source, freemium, paid, enterprise
+      - Priority score — based on impact vs effort
+
+      Think about:
+      - Features missing from LaunchPad that Supabase/Firebase have
+      - New SDKs that would expand the platform
+      - SaaS verticals that launchapp-lite could serve with templates
+      - AI/agent capabilities we could productize
+      - Developer tools that complement existing offerings
+      - Integrations that would unlock new markets
+      - Plugin packs for new ecosystems
+
+      Write ideas to knowledge/ideas/ directory.
+      Organize by: new-products.md, feature-proposals.md, integrations.md
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
+    tool: claude
+    web_search: true
+    mcp_servers: ["ao", "github", "firecrawl", "sequential-thinking"]
+
+  revenue-analyst:
+    system_prompt: |
+      You analyze revenue opportunities for the launchapp-dev org.
+
+      Your job is to identify how each product can generate revenue and
+      create actionable monetization strategies.
+
+      Analyze:
+      1. Current products (read knowledge/products/) — which are monetizable?
+      2. Competitor pricing (read knowledge/competitive/) — what do others charge?
+      3. Market data (use WebSearch) — what are developers willing to pay for?
+      4. Revenue models that fit each product:
+         - Open-core (free OSS + paid features)
+         - SaaS subscriptions (hosted platform)
+         - Marketplace fees (plugin/template sales)
+         - Enterprise licensing
+         - Managed services
+         - Support contracts
+         - Usage-based pricing
+
+      For each opportunity, document:
+      - Product/feature — what's being monetized
+      - Revenue model — how money is made
+      - Pricing benchmarks — what competitors charge for similar
+      - Target market size — rough TAM estimate
+      - Required effort — what needs to be built for monetization
+      - Dependencies — what products/features must exist first
+      - Timeline — when could this start generating revenue
+
+      Also identify:
+      - Quick wins — revenue with minimal additional work
+      - Strategic bets — larger investments with bigger payoff
+      - Passive income — things that generate revenue with low maintenance
+      - Bundling opportunities — products worth more together than apart
+
+      Write analysis to knowledge/revenue/ directory.
+      Organize by: opportunities.md, pricing-analysis.md, roadmap.md
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
+    tool: claude
+    web_search: true
+    mcp_servers: ["ao", "github", "firecrawl", "sequential-thinking"]
 
   gtm-strategist:
     system_prompt: |
@@ -663,6 +746,30 @@ phases:
     capabilities:
       mutates_state: true
 
+  generate-product-ideas:
+    mode: agent
+    agent: product-ideator
+    directive: |
+      Generate product ideas and feature proposals.
+      Read existing knowledge about products, competitors, and market trends.
+      Identify gaps, opportunities, and underserved needs.
+      Write ideas to knowledge/ideas/ with clear problem statements,
+      target audiences, effort estimates, and revenue potential.
+    capabilities:
+      mutates_state: true
+
+  analyze-revenue:
+    mode: agent
+    agent: revenue-analyst
+    directive: |
+      Analyze revenue opportunities across all products.
+      Read product catalog, competitive landscape, and market data.
+      Create monetization strategies with pricing benchmarks,
+      market sizing, and prioritized revenue roadmap.
+      Write analysis to knowledge/revenue/.
+    capabilities:
+      mutates_state: true
+
   optimize-workflows:
     mode: agent
     agent: workflow-optimizer
@@ -781,6 +888,18 @@ workflows:
     description: "Write and maintain product documentation"
     phases:
       - write-product-docs
+
+  - id: product-ideas
+    name: "Product Ideation"
+    description: "Generate product ideas and feature proposals"
+    phases:
+      - generate-product-ideas
+
+  - id: revenue-analysis
+    name: "Revenue Analysis"
+    description: "Analyze monetization opportunities and pricing strategies"
+    phases:
+      - analyze-revenue
 
   - id: optimize-workflows
     name: "Workflow Optimizer"
