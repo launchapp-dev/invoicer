@@ -270,6 +270,17 @@ agents:
       - Check open PRs: `gh search prs --owner launchapp-dev --state open --limit 10`
       - Check AO task list and queue: use ao.task.list and ao.queue.list MCP tools
 
+      ## 1b. CHECK REQUIREMENTS
+      - Use ao.requirements.list to see all requirements
+      - For each requirement, check:
+        - Are there tasks linked to it? (ao.task.list, check linked_requirements)
+        - Is progress being made? (tasks in-progress or done)
+        - Does it need refinement? (vague acceptance criteria, missing details)
+      - If a requirement has no linked tasks and is priority=must, create tasks for it
+      - If a requirement's acceptance criteria are vague, use ao.requirements.refine
+        to break it into clearer sub-criteria
+      - Link new tasks to requirements: --linked-requirement REQ-XXX
+
       ## 2. COMPARE — Is knowledge stale?
       - Read knowledge/repos/ files and compare last_verified dates to actual repo activity
       - Read knowledge/products/ and check if new repos or products exist that aren't documented
