@@ -67,15 +67,19 @@ Each is a `create-launchapp --template <vertical>` that AO can scaffold, customi
 
 ### Phase 2: Bootstrap Revenue
 - Sell templates built by AO ($149-$299 per vertical) — bootstrap cash
-- AO Pro/Team for developers who want orchestration — primary recurring revenue
+- **AO Pro** for indie devs and small teams — primary recurring revenue
 - Use AO to provision 3-5 template verticals rapidly
 - Open-source what should be open, monetize AO's unique capabilities
 
-### Phase 3: Platform
+### Phase 3: Platform + Enterprise
+- **AO Enterprise** — on-prem/private cloud deployment for companies that can't use SaaS
+  - SSO/SAML, audit logs, RBAC, compliance controls
+  - Fleet management across org repos (what the brain does, but for their org)
+  - Custom model routing policies (approved models only, cost controls)
+  - SLA-backed support
 - AO Cloud for teams who don't want to self-host
 - LaunchPad becomes the SDK layer that all templates share
 - Template marketplace — AO-built templates for every vertical
-- Marketplace for AO plugins, agent personas, and workflow packs
 
 ### Phase 4: Cloud Platform
 - **LaunchApp Cloud** — the unified platform combining AO Cloud + LaunchPad BaaS
@@ -89,6 +93,16 @@ Each is a `create-launchapp --template <vertical>` that AO can scaffold, customi
 - Third-party templates built on LaunchPad (powered by AO)
 - AO becomes the engine others build on
 - "Powered by AO" becomes the quality stamp
+
+## AO Product Tiers
+
+| Tier | Target | Price | Key Features |
+|------|--------|-------|--------------|
+| **AO Open Source** | Individual devs | Free | CLI, single-repo, community workflows |
+| **AO Pro** | Indie hackers, small teams | $29-49/seat/mo | Multi-repo, scheduled workflows, priority model routing, brain-like planner |
+| **AO Team** | Startups, small companies | $99-149/seat/mo | Fleet management, shared workflow library, team dashboards, plugin marketplace access |
+| **AO Enterprise** | Companies, regulated industries | Custom pricing | On-prem/private cloud, SSO/SAML, audit logs, RBAC, compliance controls, SLA support, custom model policies |
+| **AO Cloud** | Everyone (managed) | Usage-based | Hosted orchestration, no CLI needed, API access, integrations |
 
 ## The Portfolio
 
