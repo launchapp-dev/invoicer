@@ -761,10 +761,19 @@ phases:
 
   create-pr:
     mode: command
-    directive: "Create a PR against master"
+    directive: "Create a PR against master (skip if one already exists for this branch)"
     command:
-      program: gh
-      args: ["pr", "create", "--fill", "--base", "master"]
+      program: bash
+      args:
+        - "-c"
+        - |
+          BRANCH=$(git branch --show-current)
+          EXISTING=$(gh pr list --head "$BRANCH" --json number -q '.[0].number' 2>/dev/null)
+          if [ -n "$EXISTING" ]; then
+            echo "PR #$EXISTING already exists for branch $BRANCH — skipping"
+          else
+            gh pr create --fill --base master
+          fi
       cwd_mode: task_root
       timeout_secs: 60
 
@@ -779,10 +788,20 @@ phases:
 
   auto-merge-pr:
     mode: command
-    directive: "Merge the PR created by this workflow"
+    directive: "Merge the PR created by this workflow (skip if already merged)"
     command:
-      program: gh
-      args: ["pr", "merge", "--squash", "--delete-branch"]
+      program: bash
+      args:
+        - "-c"
+        - |
+          STATE=$(gh pr view --json state -q '.state' 2>/dev/null)
+          if [ "$STATE" = "MERGED" ]; then
+            echo "PR already merged — skipping"
+          elif [ "$STATE" = "OPEN" ]; then
+            gh pr merge --squash --delete-branch
+          else
+            echo "No open PR found (state: ${STATE:-none}) — skipping"
+          fi
       cwd_mode: task_root
       timeout_secs: 60
 
