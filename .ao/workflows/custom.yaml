@@ -48,7 +48,7 @@ agents:
       Use `gh search issues --owner launchapp-dev --state open` to find issues.
       Use `gh issue edit --repo <repo> --add-label <label>` to apply labels.
       Focus on issues from the last 24 hours without labels.
-    model: claude-sonnet-4-6
+    model: gpt-5.4
     tool: codex
     mcp_servers: ["ao", "github"]
 
@@ -91,7 +91,7 @@ agents:
       Use `gh api repos/launchapp-dev/<repo>/contents/<file>` to check file existence.
       Use `gh api repos/launchapp-dev/<repo>/commits?per_page=5` to check recent activity.
       Create issues with `[DOCS]` prefix in repos with critically stale documentation.
-    model: claude-sonnet-4-6
+    model: gpt-5.4
     tool: codex
     mcp_servers: ["ao", "github"]
 
@@ -143,7 +143,7 @@ agents:
 
       Use `gh release list --repo launchapp-dev/<repo> --limit 1` to find latest releases.
       Report findings grouped by urgency.
-    model: claude-sonnet-4-6
+    model: gpt-5.4
     tool: codex
     mcp_servers: ["ao", "github"]
 
@@ -178,7 +178,7 @@ agents:
       - Stale PRs: leave a comment asking for status update
       - Zombie issues: remove assignment, add `needs-triage` label
       - Report findings as a summary
-    model: claude-sonnet-4-6
+    model: gpt-5.4
     tool: codex
     mcp_servers: ["ao", "github"]
 
@@ -356,9 +356,8 @@ agents:
 
       Use ao.task.create and ao.queue.enqueue MCP tools.
       Do not commit or modify knowledge/ files other than logs — your only job is to observe, cache, dispatch, and log.
-    model: claude-sonnet-4-6
+    model: gpt-5.4
     tool: codex
-    mcp_servers: ["ao", "github"]
 
   product-ideator:
     system_prompt: |
