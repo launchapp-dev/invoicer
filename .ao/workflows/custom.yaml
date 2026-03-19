@@ -330,6 +330,9 @@ agents:
       | manage-fleet | A daemon crashed, or a repo needs AO setup |
       | provision-repo | An action item or product idea requires a new repo |
       | rebase-and-retry | A brain repo PR has merge conflicts (check with gh pr list --state open) |
+      | quality-audit | A repo had >5 PRs merged in the last 7 days, or no quality audit exists in knowledge/quality/ for it |
+      | cross-repo-execute | Approved actions exist in knowledge/actions/ with no corresponding tasks/PRs in target repos |
+      | decision-pipeline | >5 proposed actions accumulated since last decision batch (check knowledge/decisions/pending/) |
 
       ## 3b. CLEANUP — Fix stale tasks
       Each cycle, also check for tasks stuck in 'ready' status. A task is
@@ -760,6 +763,124 @@ agents:
     model: gpt-5.4
     tool: codex
     mcp_servers: ["ao", "github", "context7"]
+
+  quality-runner:
+    system_prompt: |
+      You verify that repos in the launchapp-dev org actually build and pass tests.
+      You do NOT read code and speculate — you RUN it.
+
+      PROCESS:
+      1. Read the task description for which repo to audit
+      2. Clone or pull the repo into repos/:
+         git clone --depth 1 https://github.com/launchapp-dev/<repo>.git repos/<repo>
+         OR git -C repos/<repo> pull origin main
+      3. Detect the package manager and build system:
+         - If package.json exists: pnpm install && pnpm build && pnpm test && pnpm lint
+         - If Cargo.toml exists: cargo build && cargo test && cargo clippy
+      4. Record results for EACH command:
+         - Exit code (0 = pass, non-zero = fail)
+         - First 50 lines of stderr if failed
+         - Time taken
+      5. For failed builds, diagnose:
+         - Missing dependencies? Wrong Node version? Broken imports?
+         - Is the failure from a recent AI-generated PR? (check git log --oneline -10)
+      6. Write a quality report to knowledge/quality/<repo>-audit.md with:
+         - YAML frontmatter: repo, date, build_status, test_status, lint_status
+         - Detailed findings and failure analysis
+         - Recommended fixes as specific action items
+      7. If critical failures found (build broken), create a GitHub issue
+         with [QUALITY] prefix in that repo
+
+      CRITICAL: You must actually RUN commands, not just read files.
+      Do not add yourself as author or co-author.
+    model: gpt-5.4
+    tool: codex
+    mcp_servers: ["ao", "github"]
+
+  decision-packager:
+    system_prompt: |
+      You prepare decision packages for founders (Sami and Rafael) to review.
+
+      PROCESS:
+      1. Read all files in knowledge/actions/ with status: proposed
+      2. Group actions by category and priority
+      3. For each critical/high priority action, create a decision summary:
+         - One-line description
+         - Why it matters (linked to revenue or risk)
+         - Effort estimate
+         - What happens if we don't do it
+         - Recommended decision (approve/reject/defer) with reasoning
+      4. Write to knowledge/decisions/pending/<date>-batch.md
+      5. Format each action as:
+         ## [action-title]
+         **File:** knowledge/actions/<filename>
+         **Recommendation:** approve / reject / defer
+         **Why:** one sentence
+         **Effort:** small/medium/large
+         **Revenue impact:** direct/indirect/none
+         **Decision:** _pending_
+
+      The goal is to make it trivially easy for a founder to scan the list
+      and write "approved" or "rejected" next to each item in 5 minutes.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "sequential-thinking"]
+
+  decision-processor:
+    system_prompt: |
+      You process founder decisions and update action item statuses.
+
+      PROCESS:
+      1. Read knowledge/decisions/pending/ for decision packages
+      2. For each action marked "approved" by a founder:
+         - Update the action file's frontmatter status from "proposed" to "approved"
+      3. For each action marked "rejected":
+         - Update the action file's frontmatter status to "rejected"
+      4. For each action marked "defer":
+         - Update the action file's frontmatter status to "deferred"
+      5. Move the processed decision package to knowledge/decisions/completed/
+      6. Update knowledge/actions/backlog.md to reflect new statuses
+      7. Commit changes
+
+      After processing, the cross-repo-executor can pick up approved items.
+      Do not add yourself as author or co-author.
+    model: gpt-5.4
+    tool: codex
+    mcp_servers: ["ao"]
+
+  cross-repo-executor:
+    system_prompt: |
+      You execute approved action items by making real changes in target repos.
+
+      PROCESS:
+      1. Read knowledge/actions/ for items with status: approved
+      2. For each approved action, read its target_repos and scope
+      3. For each target repo:
+         a. Ensure it's cached: git clone or git -C repos/<name> pull
+         b. Check if the repo has AO: look for repos/<name>/.ao/config.json
+         c. If AO exists: create a task via ao CLI
+            - ao task create --title "<action title>" --description "<scope>" --project-root repos/<name>
+            - ao task status --id <task-id> --status ready --project-root repos/<name>
+            - ao queue enqueue --task-id <task-id> --project-root repos/<name>
+         d. If no AO: work directly in the repo checkout
+            - git checkout -b brain/<action-slug>
+            - Make the changes described in the action's Scope section
+            - Commit, push, create PR via gh
+      4. Update the action's frontmatter status to "in-progress"
+      5. Log to knowledge/actions/execution-log.md:
+         [ISO timestamp] action=<filename> target=<repo> method=<ao-task|direct-pr> result=<ok|error>
+
+      SAFETY:
+      - Never execute actions with status other than "approved"
+      - For destructive actions (archiving repos, deleting code), create PR but don't merge
+      - Always include the source action file path in task/PR descriptions
+      - Check if a task/PR already exists for this action before creating duplicates
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "sequential-thinking"]
 
 phases:
   push-branch:
@@ -1202,6 +1323,57 @@ phases:
     capabilities:
       mutates_state: true
 
+  run-quality-audit:
+    mode: agent
+    agent: quality-runner
+    directive: |
+      Clone/pull the target repo into repos/. Run install, build, test, lint.
+      Record all results with exit codes and stderr. Write quality report
+      to knowledge/quality/<repo>-audit.md. Create fix issues for failures.
+    capabilities:
+      mutates_state: true
+
+  package-decisions:
+    mode: agent
+    agent: decision-packager
+    directive: |
+      Read all proposed action items. Create a decision package for founders.
+      Group by priority, include recommendations. Write to
+      knowledge/decisions/pending/<date>-batch.md.
+    capabilities:
+      mutates_state: true
+
+  founder-review-gate:
+    mode: manual
+    directive: "Review and approve/reject/defer proposed actions"
+    manual:
+      instructions: |
+        A decision package is ready in knowledge/decisions/pending/.
+        For each action item, change "Decision: _pending_" to:
+        "Decision: approved", "Decision: rejected", or "Decision: defer".
+      approval_note_required: true
+      timeout_secs: 604800
+
+  process-decisions:
+    mode: agent
+    agent: decision-processor
+    directive: |
+      Read decision packages in knowledge/decisions/pending/.
+      Update action file statuses based on founder decisions.
+      Move processed packages to knowledge/decisions/completed/.
+    capabilities:
+      mutates_state: true
+
+  execute-cross-repo:
+    mode: agent
+    agent: cross-repo-executor
+    directive: |
+      Read knowledge/actions/ for approved items. For each:
+      create AO tasks in target repos or direct PRs via repos/ checkouts.
+      Update action status to in-progress. Log to execution-log.md.
+    capabilities:
+      mutates_state: true
+
 workflows:
   # === PLANNER (the only scheduled workflow — creates and queues all other work) ===
   - id: conductor
@@ -1392,6 +1564,36 @@ workflows:
     phases:
       - rebase-and-merge
 
+  # === OPERATOR WORKFLOWS (reach into other repos, execute real work) ===
+  - id: quality-audit
+    name: "Quality Audit"
+    description: "Clone a repo, run build/test/lint, report results"
+    phases:
+      - run-quality-audit
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
+  - id: decision-pipeline
+    name: "Founder Decision Pipeline"
+    description: "Package actions for review, wait for approval, process results"
+    phases:
+      - package-decisions
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+      - founder-review-gate
+      - process-decisions
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
+  - id: cross-repo-execute
+    name: "Cross-Repo Executor"
+    description: "Turn approved actions into real tasks/PRs in target repos"
+    phases:
+      - execute-cross-repo
+
 schedules:
   - id: conductor
     cron: "*/10 * * * *"
@@ -1411,4 +1613,9 @@ schedules:
   - id: architecture-diagrams
     cron: "0 7 * * 4"
     workflow_ref: architecture-diagrams
+    enabled: true
+
+  - id: decision-pipeline
+    cron: "0 8 * * 1"
+    workflow_ref: decision-pipeline
     enabled: true
