@@ -49,19 +49,36 @@
 | `@repo/i18n` | i18next | ^25 | Current (upgraded from v24) |
 | | react-i18next | ^16 | Current (upgraded from v15) |
 
-## Launchpad BaaS SDKs (legacy)
+## Launchpad BaaS Client SDKs
 
-> These are standalone SDKs from the older Launchpad BaaS product line. Less actively maintained.
+> Standalone client-side SDKs for the Launchpad BaaS platform. All v0.1.0, private, TypeScript/React. All depend on `@launchpad/core`.
 
-| SDK | Description | Status |
-|---|---|---|
-| `launchpad-identity-sdk` | User directory, SSO, RBAC, org management | Stale (last: Dec 2025) |
-| `launchpad-payments-sdk` | Stripe payments | Stale (last: Jan 2026) |
-| `launchpad-storage-sdk` | File uploads/downloads | Stale (last: Dec 2025) |
-| `launchpad-realtime-sdk` | WebSocket subscriptions | Stale (last: Dec 2025) |
-| `launchpad-workflows-sdk` | Background jobs, scheduled tasks | Stale (last: Dec 2025) |
-| `launchpad-push-sdk` | Web/mobile push notifications | Stale (last: Dec 2025) |
-| `launchpad-db-sdk` | React hooks for data querying (TanStack Query) | Stale (last: Jan 2026) |
+| SDK | Package | Description | Status |
+|---|---|---|---|
+| `launchpad-core-sdk` | `@launchpad/core` | HTTP client, session management, React integration | Stable (last: Dec 2025) |
+| `launchpad-auth-sdk` | `@launchpad/auth` | Auth hooks and components for React | Scaffolded (last: Dec 2025) |
+| `launchpad-db-sdk` | `@launchpad/db` | React hooks for data querying (TanStack Query) | Active (last: Jan 2026) |
+| `launchpad-cms-sdk` | `@launchpad/cms` | Headless CMS — content types, localization, versioning | Scaffolded (last: Dec 2025) |
+| `launchpad-customers-sdk` | `@launchpad/customers` | Customer management, CRM, segmentation | Scaffolded (last: Dec 2025) |
+| `launchpad-identity-sdk` | `@launchpad/identity` | User directory, SSO, RBAC, org management | Scaffolded (last: Dec 2025) |
+| `launchpad-realtime-sdk` | `@launchpad/realtime` | WebSocket subscriptions | Scaffolded (last: Dec 2025) |
+| `launchpad-storage-sdk` | `@launchpad/storage` | File uploads/downloads | Scaffolded (last: Dec 2025) |
+| `launchpad-workflows-sdk` | `@launchpad/workflows` | Background jobs, scheduled tasks | Scaffolded (last: Dec 2025) |
+| `launchpad-push-sdk` | `@launchpad/push` | Web/mobile push notifications | Scaffolded (last: Dec 2025) |
+| `offline-sdk` | `@launchpad/offline` | Offline-first capabilities | Early (last: Dec 2025) |
+| `testing-sdk` | `@launchpad/testing` | Testing utilities | Early (last: Dec 2025) |
+
+## Launchpad BaaS Standalone Packages
+
+| Repo | Package | Description | Status |
+|---|---|---|---|
+| `launchpad-analytics` | `@launchpad/analytics` | Pluggable analytics, event tracking, feature flags | Stable beta (last: Dec 2025) |
+| `launchpad-audit-log` | `@launchpad/audit-log` | Audit logging for system events | Stable beta (last: Dec 2025) |
+| `launchpad-appstores` | `@launchpad/appstores` | Apple App Store + Google Play IAP/receipt validation | Early beta (last: Dec 2025) |
+| `launchpad-i18n` | `@launchpad/i18n` | Internationalization utilities | Early (last: Dec 2025) |
+| `launchpad-payments-server` | `@launchpad/payments-server` | Stripe webhooks + subscription server | Early beta (last: Dec 2025) |
+| `launchpad-push-server` | `@launchpad/push-server` | FCM, APNs, Web Push server | Active (last: Dec 2025) |
+| `renovate-config` | — | Shared Renovate preset for org | Stable (last: Dec 2025) |
 
 ## Design System Package
 
