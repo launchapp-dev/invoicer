@@ -2,11 +2,17 @@
 
 ## Mission
 
-**Make it easy to launch apps. Rocket-launch businesses through software enablement.**
+**Streamline the process for founders to launch businesses and for businesses to grow and manage themselves.**
 
 ## What This Means
 
-LaunchApp exists to remove every barrier between "I have an idea" and "I have a running business." We build the tools, templates, infrastructure, and AI workforce that lets founders ship production software in days, not months.
+LaunchApp solves two problems:
+
+1. **Launch** — Getting from "I have an idea" to "I have a running business" in days, not months. We eliminate the technical barriers that slow founders down: infrastructure, auth, payments, deployment, CI/CD.
+
+2. **Grow & Manage** — Once launched, the business runs and improves itself. AO agents maintain the codebase, ship features, fix bugs, review PRs, and keep dependencies current — 24/7, autonomously. The founder focuses on customers and growth, not code maintenance.
+
+This is the full lifecycle: **launch fast → grow autonomously → scale with AI.**
 
 ## The Core Product: AO Agent Orchestrator
 
