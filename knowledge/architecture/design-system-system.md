@@ -8,6 +8,7 @@ source_repos:
 generated_by: architecture-diagrammer
 generated_at: 2026-03-18
 last_verified: 2026-03-19
+updated_at: 2026-03-19
 ---
 
 ## Overview
@@ -27,6 +28,16 @@ graph TD
             FORM["Forms<br/>Checkbox, RadioGroup, Select,<br/>Switch, Slider, Textarea,<br/>Combobox, MultiSelect, Form"]
             DATA["Data Display<br/>Table, DataTable, Chart,<br/>KPICard, StatDisplay,<br/>Calendar, DatePicker"]
             FEED["Feedback<br/>Alert, Toast, Sonner,<br/>Progress, Accordion"]
+        end
+
+        subgraph "src/blocks/ (composed page blocks)"
+            BAUTH["Auth<br/>LoginForm, SignUpForm,<br/>ForgotPasswordForm, OTPVerification"]
+            BNAV["Navigation<br/>AppSidebar, TopNav,<br/>MobileNavDrawer"]
+            BSET["Settings<br/>ProfileSettings, AccountSettings,<br/>NotificationPreferences, BillingPage"]
+            BMKT["Marketing<br/>HeroSection, FeatureGrid,<br/>PricingTable, TestimonialCarousel"]
+            BDASH["Dashboard<br/>StatsOverview, ActivityFeed,<br/>MetricCards"]
+            BDATA["Data<br/>FullDataTable, KanbanBoard"]
+            BECOM["Ecommerce ✦ new<br/>ProductCard, ProductCardGrid,<br/>ShoppingCart, CheckoutForm"]
         end
 
         LIB["src/lib/<br/>Utility functions"]
@@ -65,6 +76,22 @@ graph TD
     FOUND --> TM
     LIB --> TM
 
+    BAUTH --> FORM
+    BAUTH --> FOUND
+    BNAV --> NAV
+    BNAV --> FOUND
+    BSET --> FORM
+    BSET --> DATA
+    BMKT --> FOUND
+    BMKT --> LAYOUT
+    BDASH --> DATA
+    BDASH --> FOUND
+    BDATA --> DATA
+    BDATA --> FOUND
+    BECOM --> FORM
+    BECOM --> FOUND
+    BECOM --> LAYOUT
+
     INDEX --> TSUP
     STYLES --> TAILWIND
     TSUP -->|dist/index.js + .cjs| SAAS
@@ -75,7 +102,9 @@ graph TD
 
 ## Notes
 
-- 52 components spanning foundation, layout, overlays, navigation, forms, data display, and feedback
+- 52 atomic components spanning foundation, layout, overlays, navigation, forms, data display, and feedback
+- 7 block modules (auth, navigation, settings, marketing, dashboard, data, ecommerce) — page-ready compositions that build on the atomic components
+- Ecommerce block module added 2026-03-19: `ProductCard` (CVA variants: compact/detailed/horizontal), `ProductCardGrid`, `ShoppingCart` (tax + shipping calc), `CheckoutForm` (react-hook-form + zod, card/PayPal payment)
 - Built on 28 @radix-ui/* primitive packages for accessibility and behavior
 - CVA (class-variance-authority) handles component variant styling
 - Dual ESM/CJS output via tsup for maximum compatibility
