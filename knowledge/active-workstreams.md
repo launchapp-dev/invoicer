@@ -4,7 +4,7 @@
 
 ## Summary
 
-As of 2026-03-18, the org has 3 high-velocity active workstreams and 1 recently launched initiative.
+As of 2026-03-18, the org has 3 high-velocity active workstreams, 1 recently launched initiative, and 1 new cross-repo SDK standards initiative.
 
 ---
 
@@ -60,13 +60,16 @@ Completing the Radix UI-based React component library. Currently working through
 
 ---
 
-## 3. AO CLI — Self-Healing Model Pipeline
+## 3. AO CLI — v0.0.11 Release + Self-Healing Model Pipeline
 
 **Repo:** `ao-cli`
 **Owner:** Shooksie
-**Status:** Active — infrastructure improvements ongoing
+**Status:** Active — v0.0.11 release PR open, infrastructure improvements ongoing
 
-The AO CLI is being upgraded with self-healing and multi-owner agent team capabilities.
+The AO CLI is being upgraded with self-healing and multi-owner agent team capabilities. A significant release milestone is in progress.
+
+**Release milestone:**
+- PR #94 opened 2026-03-18: Release v0.0.11 — pending review and merge
 
 **Recent highlights:**
 - Auto-detect and re-route failing model pipelines (reconciler + workflow-optimizer)
@@ -78,7 +81,26 @@ The AO CLI is being upgraded with self-healing and multi-owner agent team capabi
 
 ---
 
-## 4. Brain — Org-Wide AI Workforce Command Center (New)
+## 4. Launchpad SDK Consistency — Cross-Repo Standards Remediation (New)
+
+**Repos:** All `launchpad-*-sdk` repos (identity, payments, storage, realtime, workflows, push, db, email, secrets)
+**Owner:** Shooksie
+**Status:** New initiative — 10 issues filed 2026-03-18
+
+A new cross-repo workstream was started to bring all Launchpad BaaS SDKs up to a consistent standard. 10 `[SDK-CONSISTENCY]` issues were filed across the `launchpad-*-sdk` repos on 2026-03-18, signaling a structured remediation effort.
+
+**Scope:**
+- Standardize SDK conventions, interfaces, and patterns across all Launchpad BaaS SDKs
+- Likely covers: naming conventions, error handling patterns, TypeScript types, versioning, documentation, and test coverage
+- Affects: `launchpad-identity-sdk`, `launchpad-payments-sdk`, `launchpad-storage-sdk`, `launchpad-realtime-sdk`, `launchpad-workflows-sdk`, `launchpad-push-sdk`, `launchpad-db-sdk`, and related repos
+
+**Status as of 2026-03-18:**
+- 10 issues filed; none closed yet — remediation work not yet started
+- Issues labeled `[SDK-CONSISTENCY]` for tracking
+
+---
+
+## 5. Brain — Org-Wide AI Workforce Command Center (New)
 
 **Repo:** `brain`
 **Owner:** Shooksie
@@ -100,7 +122,7 @@ The brain repo was created today as the org-wide coordination layer for all AI a
 
 ---
 
-## 5. launchapp-lite-v2 — Turborepo Conversion
+## 6. launchapp-lite-v2 — Turborepo Conversion
 
 **Repo:** `launchapp-lite-v2`
 **Owner:** Shooksie
@@ -117,7 +139,7 @@ The brain repo was created today as the org-wide coordination layer for all AI a
 
 ## Stale / Lower Priority
 
-- **Launchpad BaaS repos** — Last significant pushes were Dec 2025 – Jan 2026. No active development observed.
+- **Launchpad BaaS repos** — Last significant pushes were Dec 2025 – Jan 2026. No active code development, but 10 `[SDK-CONSISTENCY]` issues filed 2026-03-18 signal pending remediation work (see workstream 4 above).
 - **launchapp-landing-v2** — Static landing page, last push Jan 2026.
 - **launchapp.dev** — Marketing site, last push Feb 2026.
 - **mymoku.net** — Personal/product site, last push Mar 12 2026.
