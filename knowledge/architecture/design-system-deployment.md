@@ -12,14 +12,17 @@ last_verified: 2026-03-19
 
 ## Overview
 
-How the design system is built, documented, and distributed. Built with tsup into dual ESM/CJS bundles, documented via Storybook v10, and consumed as a package by other org repos.
+How the design system is built, documented, and distributed. Built with tsup into dual ESM/CJS bundles, documented via Storybook v10, and consumed as a package by other org repos. The source tree includes both base components and composed blocks (auth, ecommerce, dashboard, etc.), all bundled into a single package export.
 
 ## Diagram
 
 ```mermaid
 graph TD
     subgraph "Source"
-        SRC["src/<br/>components/, lib/, styles/"]
+        COMP["src/components/<br/>52 base components"]
+        BLOCKS["src/blocks/<br/>7 block categories<br/>(auth, ecommerce, dashboard,<br/>data, marketing, navigation,<br/>settings)"]
+        LIB["src/lib/ + src/styles/"]
+        ENTRY["src/index.ts<br/>Re-exports components + blocks"]
         TS["TypeScript 5"]
     end
 
@@ -48,15 +51,23 @@ graph TD
         LPSAAS["launchpad-saas-template"]
     end
 
-    SRC --> TSUP
-    SRC --> POSTCSS
-    SRC --> TCHECK
+    BLOCKS --> COMP
+    ENTRY --> COMP
+    ENTRY --> BLOCKS
+    COMP --> LIB
+    BLOCKS --> LIB
+
+    ENTRY --> TSUP
+    LIB --> POSTCSS
+    COMP --> TCHECK
+    BLOCKS --> TCHECK
     TSUP --> ESM
     TSUP --> CJS
     TSUP --> DTS
     POSTCSS --> CSS
 
-    SRC --> SB
+    COMP --> SB
+    BLOCKS --> SB
     SB --> SBBUILD
 
     ESM --> SAAS
@@ -69,9 +80,11 @@ graph TD
 
 ## Notes
 
+- Single entry point (src/index.ts) re-exports both base components and all block categories into one bundle
 - tsup bundles to both ESM and CJS for maximum compatibility
-- Package exports: "." for JS/types, "./styles.css" for compiled CSS
-- Storybook v10 with @storybook/react-vite for Vite-based dev server
+- Package exports: "." for JS/types, "./styles.css" for compiled CSS — no separate block entry point
+- Blocks are tree-shakeable: consumers only pay for the blocks they import
+- Storybook v10 with @storybook/react-vite for Vite-based dev server — serves both component and block stories
 - Private package (not published to npm) — consumed via workspace references or git
 - The @audiogenius/design-system namespace is used across the org
-- Consumers import components and separately import styles.css
+- Consumers import components and blocks from the same package, separately import styles.css
