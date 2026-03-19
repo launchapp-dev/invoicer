@@ -759,6 +759,26 @@ phases:
       cwd_mode: task_root
       timeout_secs: 60
 
+  rebase-and-merge:
+    mode: agent
+    agent: default
+    directive: |
+      The PR for this task has a merge conflict. Fix it:
+      1. Run `git fetch origin master` to get latest master
+      2. Run `git rebase origin/master`
+      3. For each conflict:
+         - If both sides added content to the same file, keep both
+         - If one side updated and the other deleted, keep the update
+         - For knowledge/ markdown files, combine both versions
+      4. Run `git rebase --continue` after resolving each conflict
+      5. Run `git push --force-with-lease origin HEAD`
+      6. Run `gh pr merge --squash --delete-branch`
+
+      If rebase is too messy (>5 conflicting files), just re-do the work:
+      start fresh from master and regenerate the content.
+    capabilities:
+      mutates_state: true
+
   scan-org-issues:
     mode: agent
     agent: issue-triager
@@ -1186,7 +1206,7 @@ workflows:
       - human-gate-releases
       - create-release-tasks
 
-  # === BRAIN-WRITING (commit to brain repo → push → PR → auto-merge) ===
+  # === BRAIN-WRITING (commit → push → PR → merge, with conflict recovery) ===
   - id: knowledge-update
     name: "Knowledge Base Update"
     description: "Maintain org-wide documentation and knowledge"
@@ -1194,7 +1214,10 @@ workflows:
       - update-knowledge-base
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: competitive-research
     name: "Competitive Research"
@@ -1203,7 +1226,10 @@ workflows:
       - research-competitors
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: product-catalog
     name: "Product Catalog"
@@ -1212,7 +1238,10 @@ workflows:
       - catalog-products
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: product-docs
     name: "Product Documentation"
@@ -1221,7 +1250,10 @@ workflows:
       - write-product-docs
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: product-ideas
     name: "Product Ideation"
@@ -1230,7 +1262,10 @@ workflows:
       - generate-product-ideas
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: revenue-analysis
     name: "Revenue Analysis"
@@ -1239,7 +1274,10 @@ workflows:
       - analyze-revenue
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: optimize-workflows
     name: "Workflow Optimizer"
@@ -1248,7 +1286,10 @@ workflows:
       - optimize-workflows
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: gtm-strategy
     name: "GTM Strategy"
@@ -1257,7 +1298,10 @@ workflows:
       - create-gtm-strategy
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: architecture-diagrams
     name: "Architecture Diagrams"
@@ -1266,7 +1310,10 @@ workflows:
       - diagram-architecture
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: manage-fleet
     name: "Fleet Manager"
@@ -1287,7 +1334,10 @@ workflows:
       - generate-questions
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: extract-actions
     name: "Extract Actions"
@@ -1296,7 +1346,10 @@ workflows:
       - extract-actions
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
   - id: build-tool
     name: "Build Tool"
@@ -1305,7 +1358,10 @@ workflows:
       - build-tool
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - auto-merge-pr:
+          on_verdict:
+            rework:
+              target: rebase-and-merge
 
 schedules:
   - id: conductor
