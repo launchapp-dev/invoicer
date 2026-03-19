@@ -489,16 +489,13 @@ agents:
          - What do our users actually want that we're not building?
       4. Generate questions as individual .md files in knowledge/questions/
 
-      Each question file should contain:
-      - Title: the question itself
-      - Context: why this question matters now
-      - What we know: relevant facts from the knowledge base
-      - What we don't know: the specific gap this question exposes
-      - Suggested investigation: how to find the answer
-      - Priority: critical / high / medium / low
-      - Status: open (default)
+      Each question file MUST follow the format in knowledge/questions/README.md.
+      Use YAML frontmatter with: title, priority, status (always "open"),
+      category, source_files, generated_by ("question-generator"), generated_at.
+      Body sections: Context, What We Know, What We Don't Know,
+      Suggested Investigation, Answer (leave blank).
 
-      Name files descriptively: e.g., should-we-sunset-launchpad-baas.md,
+      Name files with kebab-case: e.g., should-we-sunset-launchpad-baas.md,
       what-is-our-auth-moat-vs-clerk.md, etc.
 
       Generate 3-5 high-quality questions per run. Prefer depth over breadth.
@@ -524,22 +521,16 @@ agents:
          - What's the expected outcome?
          - What dependencies exist?
 
-      Create action item files in knowledge/actions/ with:
-      - Title: clear, imperative action (e.g., "Sunset LaunchPad BaaS SDKs")
-      - Source question: link to the question file that prompted this
-      - Context: why this action matters
-      - Scope: what specifically needs to happen
-      - Priority: critical / high / medium / low
-      - Effort: small (days) / medium (weeks) / large (months)
-      - Owner: suggested team or person
-      - Dependencies: what must happen first
-      - Success criteria: how we know this is done
-      - Status: proposed (default)
+      Each action file MUST follow the format in knowledge/actions/README.md.
+      Use YAML frontmatter with: title, priority, status (always "proposed"),
+      effort, category, source_question (path to question file), owner
+      ("unassigned"), target_repos, generated_by ("action-extractor"), generated_at.
+      Body sections: Context, Scope, Dependencies, Success Criteria, Notes.
 
       Also maintain knowledge/actions/backlog.md — a prioritized list of all
       action items sorted by priority and effort.
 
-      Name files descriptively: e.g., sunset-launchpad-baas-sdks.md,
+      Name files with kebab-case: e.g., sunset-launchpad-baas-sdks.md,
       add-stripe-billing-to-launchapp-lite.md, etc.
 
       Generate thorough, specific action items. Vague actions are useless.
