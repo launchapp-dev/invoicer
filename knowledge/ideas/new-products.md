@@ -538,6 +538,132 @@
 
 ---
 
+---
+
+## New Ideas — Round 4 (2026-03-19)
+
+> Generated from TASK-042 refreshed revenue analysis (commit 2bdb2a0),
+> March 2026 market research (vibe coding breakthrough, MCP security gaps,
+> AI code provenance emergence, multi-agent skill portability, Firebase Studio agentic mode),
+> and strategic question analysis targeting blind spots in the 79-idea portfolio.
+
+---
+
+## 23. MCP Security Scanner — Vulnerability Detection for MCP Servers
+
+**Problem:** Research published in early 2026 found command injection vulnerabilities in **43% of tested MCP implementations**, plus server-side request forgery and arbitrary file access. The MCP ecosystem has 6,400+ servers but zero purpose-built security scanning tools. Organizations deploying MCP servers in production — especially in regulated industries — are flying blind. The 2026 MCP roadmap explicitly lists security as an unsolved priority, but no one is building the scanner.
+
+**Target audience:** Platform teams deploying MCP servers in production, security engineers auditing AI tool integrations, and MCP server authors who want to ship secure implementations.
+
+**Proposed solution:** A standalone CLI + SaaS (`@launchpad/mcp-scan`) that: performs automated security audits of MCP server implementations (command injection, SSRF, path traversal, tool overexposure), runs schema validation against the MCP spec (malformed tool definitions, missing auth), provides a "Security Score" badge for MCP server READMEs (like Snyk badges), integrates with CI/CD to block deployment of vulnerable MCP servers, offers a registry of known-vulnerable MCP server versions, and ships as both a CLI tool and a GitHub Action.
+
+**Leverage:**
+- MCP Gateway (#18) (natural bundle — gateway + scanner = enterprise MCP security)
+- AO Guard (#12) (shared LLM-powered analysis patterns)
+- AO's MCP integration experience (battle-tested client/server patterns)
+- `pr-review-responder` (GitHub App infrastructure)
+
+**Effort:** Medium (weeks) — vulnerability patterns are documented; the tool wraps static analysis + dynamic probing
+
+**Revenue potential:** Open-core — free CLI scanner, $19/month for CI/CD integration and continuous monitoring, $99/month for enterprise (private registry, compliance reports, Slack alerts). Addresses the intersection of MCP ($10B market) and AppSec ($15B market).
+
+**Priority score:** 9/10 — 43% vulnerability rate in MCP servers is a ticking time bomb; first-mover in MCP security scanning; natural bundle with MCP Gateway; near-zero competition
+
+---
+
+## 24. AO Provenance — AI Code Attribution & Traceability
+
+**Problem:** Secure Code Warrior launched SCW Trust Agent: AI on March 17, 2026 — a governance tool that traces which AI models influenced specific commits and correlates that influence with vulnerability exposure. This signals that **AI code provenance** is becoming a new product category. AO already tracks which agent, model, and workflow produced every line of code — but this data isn't exposed as a product. With AI generating 41% of code in 2026 and the EU AI Act requiring traceability for high-risk AI systems, code provenance is shifting from "nice-to-have" to "compliance requirement."
+
+**Target audience:** Engineering teams in regulated industries (fintech, healthcare, govtech) that need to demonstrate AI code traceability for compliance, and any team that wants to understand the AI vs human composition of their codebase.
+
+**Proposed solution:** A standalone dashboard and GitHub App (`ao-provenance`) that: tags every commit with metadata (AI model, agent persona, workflow phase, confidence score, human oversight level), provides a codebase-level "AI Influence Map" showing which files/functions were AI-generated vs human-written, generates compliance reports mapping AI code to EU AI Act risk categories, tracks provenance across model versions (did switching from Sonnet to Opus change defect rates?), integrates with AO Guard (#12) to correlate AI provenance with code quality metrics, and exports to GRC platforms (Vanta, Drata) for audit evidence.
+
+**Leverage:**
+- AO daemon (already logs model, agent, phase for every execution)
+- AO workflow checkpoints (decision-level traceability)
+- AO Guard (#12) (quality metrics to correlate with provenance)
+- AO Compliance Engine (#20) (shared compliance domain — provenance is a core compliance primitive)
+- `pr-review-responder` (GitHub App infrastructure)
+
+**Effort:** Medium (weeks) — AO already captures the raw data; need aggregation, dashboard, and GitHub commit tagging
+
+**Revenue potential:** Freemium SaaS — free for open repos (basic attribution), $39/seat/month Pro (full traceability, compliance reports), $149/seat/month Enterprise (GRC integration, custom risk categories, audit trails). Targets the AI governance market (45.3% CAGR).
+
+**Priority score:** 9/10 — SCW Trust Agent validates the category; AO already has the raw data (no other tool does); natural extension of AO Guard; compliance-driven demand is non-discretionary
+
+---
+
+## 25. LaunchPad Agentic Backend — Purpose-Built BaaS for AI Agent Apps
+
+**Problem:** Firebase Studio just launched full agentic development with Gemini 2.5 Pro. Supabase acquired BKND to build a "Lite offering for agentic workloads." Convex ships built-in RAG components. The BaaS market is pivoting hard toward being the backend for AI-powered applications — not just traditional CRUD apps. LaunchPad's current positioning as a general BaaS misses this trend. What AI agent apps need is different from what traditional SaaS needs: tool-use endpoints (MCP-compatible), conversation/memory persistence, token usage metering, model routing configuration, and agent session management.
+
+**Target audience:** Developers building AI agent applications, chatbots, RAG pipelines, and agentic workflows who need a backend purpose-built for AI workloads rather than adapted from traditional CRUD.
+
+**Proposed solution:** A specialized LaunchPad configuration (`@launchpad/agentic`) that provides: MCP-compatible tool endpoints auto-generated from database schema (agents can query your data via MCP), conversation and memory persistence tables with built-in TTL and context window management, token usage metering and cost attribution per user/agent/session, model routing configuration stored in the database (switch models without redeploying), agent session management with state persistence across conversations, built-in RAG pipeline (extends LaunchPad Vector #10) with document ingestion and retrieval, and webhook endpoints for agent lifecycle events (session start, tool use, completion).
+
+**Leverage:**
+- `launchpad-db-engine` (schema, migrations, type generation)
+- LaunchPad Vector (#10) (embedding storage and similarity search)
+- LaunchPad MCP Server (I7) (MCP-compatible tool endpoints)
+- Better Auth (per-user/per-agent API key management)
+- AO's agent architecture knowledge (understands what agents need)
+
+**Effort:** Medium (weeks) — most primitives exist; this is a curated assembly + agentic-specific schemas and SDKs
+
+**Revenue potential:** Usage-based — free tier (1K agent sessions/month), Pro $49/month (100K sessions, advanced RAG), Enterprise $199/month (unlimited, custom models, SLA). Addresses the fastest-growing BaaS segment.
+
+**Priority score:** 9/10 — Firebase and Supabase are both pivoting to agentic backends; LaunchPad must differentiate or become irrelevant in this space; leverages existing primitives heavily
+
+---
+
+## 26. LaunchPad Vibe — AI App Builder for Non-Developers
+
+**Problem:** MIT named vibe coding one of the "10 Breakthrough Technologies of 2026." 63% of active vibe coding users are non-developers — product managers and founders building full-stack apps using natural language. Tools like Lovable ($25/month), Bolt.new, and Replit Agent generate entire multi-page apps from prompts. But these tools create disposable prototypes on closed platforms. There's no vibe coding tool that generates production-grade apps on an open-source stack with real backend infrastructure. LaunchPad + LaunchApp templates could be the backend and codebase that vibe-coded apps actually deploy on.
+
+**Target audience:** Non-technical founders, product managers, and indie hackers who want to build production SaaS apps via natural language — not just prototypes, but apps with real auth, billing, databases, and deployment.
+
+**Proposed solution:** A web-based AI app builder at vibe.launchapp.dev that: takes a natural language app description and generates a full LaunchApp project (React Router 7 + Hono + Better Auth + database), provides a visual preview with live editing (like Lovable but on LaunchPad's stack), generates production-ready code that users own (not locked to a platform), connects to LaunchPad backend services (auth, database, storage, jobs), supports iterative refinement via chat ("add a billing page", "make it multi-tenant"), and includes one-click deploy to Railway/Vercel.
+
+**Leverage:**
+- LaunchApp templates (the generated code is a real LaunchApp project)
+- `create-launchapp` CLI (scaffolding engine)
+- `launchpad-db-engine` (database schema generation)
+- Better Auth (auth configuration)
+- LaunchPad AI Agent (#7) (backend generation engine)
+- Claude API (powers the generation)
+- Design system (generated UI uses the org's components)
+
+**Effort:** Large (months) — real-time preview, iterative generation, and production deployment pipeline
+
+**Revenue potential:** Freemium SaaS — free for 1 project (adoption driver), $29/month for unlimited projects and premium templates, $99/month for team features and white-label. Addresses the vibe coding market (MIT breakthrough technology, $500M+ in 2026).
+
+**Priority score:** 8/10 — Massive TAM (vibe coding is the fastest-growing developer trend), but large effort and competitive (Lovable, Bolt.new, Replit). Differentiation is "production-grade on open-source stack" vs competitors' disposable prototypes.
+
+---
+
+## 27. Universal Skill Packs — Multi-Agent Plugin Distribution
+
+**Problem:** The Agent Skills specification (released December 2025 by Anthropic) is now an open standard adopted by OpenAI for Codex CLI. Skills work natively across **11 tools**: Claude Code, OpenAI Codex, Gemini CLI, Cursor, Aider, Windsurf, Kilo Code, OpenCode, Augment, Antigravity, and OpenClaw. The org's 15+ Claude Code plugin packs are branded as "Claude Code Plugin Packs" — but the format is now universal. Rebranding and distributing them as multi-agent skill packs dramatically expands the addressable market from 5.2M Claude Code users to the entire AI coding tool ecosystem.
+
+**Target audience:** All developers using any of the 11 compatible AI coding tools who want pre-built, tested skills for common workflows (not just Claude Code users).
+
+**Proposed solution:** Rebrand and expand the plugin pack portfolio as "LaunchApp Universal Skill Packs" that: are tested and certified across all 11 compatible tools, ship with per-tool compatibility badges and known-issues docs, include tool-specific optimizations where beneficial (e.g., Cursor-specific cursor rules alongside Claude Code hooks), are discoverable on the official Anthropic skills marketplace (87K+ stars), SkillsMP.com, and the LaunchApp Marketplace (#4), and support enterprise private marketplace distribution (Anthropic's Enterprise feature).
+
+**Leverage:**
+- 15+ existing plugin packs (already written — need testing across tools)
+- `ao-skills` (skill definitions)
+- Skills marketplace ecosystem (Anthropic's official marketplace, SkillsMP.com)
+- Claude Code Skill Studio (#15) (build skills that work everywhere)
+
+**Effort:** Small (days) — packs already exist; need cross-tool testing and metadata updates
+
+**Revenue potential:** Expanded reach — same pricing model ($5–15/pack/month, $29/month bundle) but 5-10x larger addressable market (all AI coding tool users, not just Claude Code). Estimated $15K–$75K/month at scale (up from $9K–$44K).
+
+**Priority score:** 9/10 — Near-zero effort (packs exist), massive TAM expansion (11 tools vs 1), aligns with industry standardization trend, first-mover in universal skill distribution
+
+---
+
 ## Updated Summary Table (All Rounds)
 
 | # | Product | Effort | Revenue Model | Priority |
@@ -559,8 +685,13 @@
 | 15 | Claude Code Skill Studio | Medium | Freemium SaaS | 8/10 |
 | 16 | LaunchPad Migrate | Medium | Free + paid | 9/10 |
 | 17 | AO Fleet | Large | Enterprise SaaS | 8/10 |
-| **18** | **MCP Gateway** | **Medium** | **Open-core SaaS** | **9/10** |
-| **19** | **LaunchPad Auth Cloud** | **Large** | **SaaS subscription** | **8/10** |
-| **20** | **AO Compliance Engine** | **Large** | **Enterprise SaaS** | **8/10** |
-| **21** | **DevOnboard** | **Large** | **Freemium SaaS** | **7/10** |
-| **22** | **LaunchPad Edge** | **Medium** | **Free + premium** | **8/10** |
+| 18 | MCP Gateway | Medium | Open-core SaaS | 9/10 |
+| 19 | LaunchPad Auth Cloud | Large | SaaS subscription | 8/10 |
+| 20 | AO Compliance Engine | Large | Enterprise SaaS | 8/10 |
+| 21 | DevOnboard | Large | Freemium SaaS | 7/10 |
+| 22 | LaunchPad Edge | Medium | Free + premium | 8/10 |
+| **23** | **MCP Security Scanner** | **Medium** | **Open-core SaaS** | **9/10** |
+| **24** | **AO Provenance** | **Medium** | **Freemium SaaS** | **9/10** |
+| **25** | **LaunchPad Agentic Backend** | **Medium** | **Usage-based** | **9/10** |
+| **26** | **LaunchPad Vibe** | **Large** | **Freemium SaaS** | **8/10** |
+| **27** | **Universal Skill Packs** | **Small** | **Expanded premium** | **9/10** |

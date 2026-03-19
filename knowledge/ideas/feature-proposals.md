@@ -687,6 +687,114 @@
 
 ---
 
+---
+
+## New Feature Proposals — Round 4 (2026-03-19)
+
+> Generated from TASK-042 refreshed revenue analysis, March 2026 market research
+> (vibe coding as MIT breakthrough tech, 95% AI tool adoption, multi-tool strategy trend,
+> AI credit cost as top developer concern, Firebase Studio agentic mode).
+
+---
+
+## AO Agent Orchestrator
+
+### F30. AO Credit Router — Unified AI Spend Optimization
+
+**Problem:** "Which tool won't torch my credits?" is the loudest developer conversation in March 2026. Teams use multiple AI tools (Claude Code, Cursor, Copilot, Codex) simultaneously, each with different credit systems, pricing models, and usage limits. There's no unified view of AI spend across tools, and no way to route tasks to the cheapest capable tool. AO's existing cost analytics (F11) tracks AO-internal costs, but developers need cross-tool optimization.
+
+**Target audience:** Engineering teams and individual developers running multiple AI coding tools who want to minimize total AI spend while maintaining output quality.
+
+**Proposed solution:** Extend AO's cost analytics (F11) into a cross-tool credit optimization layer: unified dashboard showing spend across Claude Code, Cursor, Copilot, Codex, and Windsurf (API key-based aggregation), smart task routing that dispatches to the cheapest tool with sufficient capability for each task type, budget alerts that fire before any single tool's credits are exhausted, cost-per-task benchmarking across tools (enabling data-driven tool selection), monthly spend reports with optimization recommendations, and integration with AO workflows for automatic cost-optimal routing.
+
+**Leverage:** AO daemon (process management for multiple tools), AO Cost Analytics (F11) (extend from AO-only to cross-tool), AO Multi-Model Routing (F6) (same concept but at tool level, not model level), Cursor/Windsurf Interop (I20) (multi-tool dispatch)
+
+**Effort:** Medium (weeks) — extends existing cost tracking; API integration per tool varies
+
+**Revenue potential:** AO Pro feature — strong retention driver. Standalone potential at $19/month for non-AO users.
+
+**Priority score:** 9/10 — Directly addresses the #1 developer pain point in March 2026; extends existing AO capabilities; strong retention and differentiation
+
+---
+
+### F31. AO Regression Shield — Automated Quality Baseline Enforcement
+
+**Problem:** AO agents process 180+ PRs/week. When an agent degrades (bad prompt update, model regression, workflow misconfiguration), defects compound across dozens of PRs before anyone notices. There's no automated system that detects when agent output quality drops below a historical baseline. AO Guard (#12) checks individual PRs; this feature detects systemic quality drift across the fleet.
+
+**Target audience:** Teams running AO at scale who need early warning when agent quality degrades, before bad code reaches production across multiple repos.
+
+**Proposed solution:** A quality baseline system built into AO that: establishes per-agent quality baselines from historical data (pass rates, rework rates, review scores), continuously monitors agent output against these baselines, fires alerts when quality drops below threshold (e.g., "Agent X rework rate increased 40% this week"), provides root cause hints (model change? prompt change? codebase drift?), supports automatic agent pause when quality drops below critical threshold, and generates weekly agent performance reports.
+
+**Leverage:** AO daemon events (already logs rework cycles, phase outcomes), AO Guard (#12) (quality metrics feed into baselines), AO Observability (#9) (dashboard infrastructure), AO Autopilot (#14) (shares learning-from-history concept)
+
+**Effort:** Small-Medium (days to weeks) — data exists in AO logs; needs aggregation, baseline calculation, and alerting
+
+**Revenue potential:** AO Team/Enterprise feature — addresses enterprise trust concerns
+
+**Priority score:** 9/10 — Directly addresses the "blast radius" strategic question; prevents systematic defects from compounding; low effort using existing AO telemetry
+
+---
+
+## LaunchPad BaaS
+
+### F32. LaunchPad Agentic Endpoints — MCP-Ready API Generation
+
+**Problem:** Firebase Studio now auto-configures backends for agentic workloads. Supabase acquired BKND for the same purpose. Every BaaS is racing to be "the backend AI agents talk to." But today, connecting an AI agent to a database requires manually writing MCP server code or building custom tool definitions. LaunchPad should auto-generate MCP-compatible tool endpoints from the database schema — so any AI agent can query, insert, and manage data without custom integration code.
+
+**Target audience:** Developers building AI-powered apps where agents need to interact with structured data (chatbots that look up orders, AI assistants that manage projects, RAG pipelines that query documents).
+
+**Proposed solution:** Extend `launchpad-db-engine` to auto-generate agentic endpoints: automatic MCP tool definitions from database tables (CRUD operations + custom queries), natural language query endpoint (agents describe what they want, LaunchPad translates to SQL), per-tool auth scoping (agent can only access tables/rows its API key permits), rate limiting and cost attribution per agent/tool call, and streaming responses for large result sets.
+
+**Leverage:** `launchpad-db-engine` (schema introspection, type generation), `openapi-gen` (API surface → MCP tool mapping), LaunchPad MCP Server (I7) (extends with auto-generation), Better Auth (per-agent API key scoping)
+
+**Effort:** Medium (weeks) — extends existing MCP server and openapi-gen infrastructure
+
+**Revenue potential:** Core differentiator for LaunchPad — free tier drives adoption, usage-based pricing for production
+
+**Priority score:** 9/10 — Firebase and Supabase are both moving here; LaunchPad has the primitives to do this faster; agentic backends are the fastest-growing BaaS segment
+
+---
+
+## LaunchApp Templates
+
+### F33. LaunchApp Vibe Mode — AI-Assisted Template Customization
+
+**Problem:** SaaS templates require significant customization after purchase — adding features, modifying schemas, adjusting UI. This customization is where 63% of buyers get stuck (per support ticket analysis in competing template communities). Vibe coding tools (Lovable, Bolt.new) handle greenfield generation well, but can't work with existing complex codebases like a LaunchApp monorepo. A purpose-built "vibe mode" for template customization would let buyers modify their purchased template using natural language.
+
+**Target audience:** LaunchApp template buyers (especially non-expert developers) who want to customize their template without deep knowledge of the full monorepo architecture.
+
+**Proposed solution:** An `--ai` mode in the LaunchApp development workflow that: accepts natural language modification requests ("add a team invitations feature", "change the pricing page to 3 tiers"), understands the LaunchApp template architecture (which package handles what, how modules compose), generates changes across the correct packages in the monorepo, runs tests and type-checks before presenting the diff, provides a preview of the changes before applying, and works in both CLI and a web-based editor.
+
+**Leverage:** LaunchApp templates (the codebase it customizes), AI Agent Rules (I4) (teach AI about LaunchApp patterns), `create-launchapp` CLI (extend with --ai flag), Claude API (powers the modification engine)
+
+**Effort:** Medium (weeks) — the hard part is teaching the AI about template architecture; rules files (I4) are 80% of this
+
+**Revenue potential:** Premium template feature — $49/month for AI-assisted customization on top of template purchase. Strong retention driver.
+
+**Priority score:** 8/10 — Differentiates LaunchApp templates from every competitor; reduces post-purchase support burden; creates recurring revenue from one-time template buyers
+
+---
+
+## Claude Code Plugin Packs
+
+### F34. Cross-Tool Compatibility Testing Framework
+
+**Problem:** Skills now work across 11 AI coding tools. The org's 15+ plugin packs need testing across these tools to be distributed as Universal Skill Packs (#27). But there's no automated way to test a skill across multiple tools — each tool has subtly different execution environments, hook behaviors, and MCP handling. Manual testing across 11 tools is unsustainable.
+
+**Target audience:** Internal team (for Universal Skill Packs quality), and any skill author who wants to certify cross-tool compatibility.
+
+**Proposed solution:** A testing framework (`@launchapp/skill-test`) that: runs skill definitions against simulated environments for each of the 11 compatible tools, validates hook execution, MCP server startup, and prompt injection across tools, generates a compatibility matrix (pass/fail per tool per feature), produces compatibility badges for skill READMEs, integrates with CI/CD for automated testing on skill changes, and provides regression detection when tool updates break compatibility.
+
+**Leverage:** 15+ existing plugin packs (test subjects), AO workflow engine (run tests as workflow phases), Claude Code Skill Studio (#15) (embed testing in the builder)
+
+**Effort:** Medium (weeks) — environment simulation per tool, test runner, badge generation
+
+**Revenue potential:** Free for basic testing (ecosystem growth), $19/month for CI/CD integration and private skill testing. Part of Skill Studio Pro.
+
+**Priority score:** 8/10 — Prerequisite for Universal Skill Packs (#27); no competitor offers cross-tool skill testing; enables quality guarantees that command premium pricing
+
+---
+
 ## Updated Summary Table (All Rounds)
 
 | # | Feature | Product | Effort | Priority |
@@ -714,9 +822,14 @@
 | F21 | AI SaaS Template | LaunchApp | Small-Medium | 9/10 |
 | F22 | Figma Community Kit | Design System | Small-Medium | 7/10 |
 | F23 | Admin Dashboard | Better Auth | Medium | 9/10 |
-| **F24** | **AO Dry-Run Mode** | **AO** | **Small-Medium** | **9/10** |
-| **F25** | **Agent Personas Library** | **AO** | **Small** | **9/10** |
-| **F26** | **Schema Marketplace** | **LaunchPad** | **Small-Medium** | **8/10** |
-| **F27** | **Internationalization Kit** | **LaunchApp** | **Medium** | **7/10** |
-| **F28** | **Plugin Analytics Dashboard** | **Claude Code** | **Small-Medium** | **8/10** |
-| **F29** | **Passkey-First Auth** | **Better Auth** | **Small-Medium** | **8/10** |
+| F24 | AO Dry-Run Mode | AO | Small-Medium | 9/10 |
+| F25 | Agent Personas Library | AO | Small | 9/10 |
+| F26 | Schema Marketplace | LaunchPad | Small-Medium | 8/10 |
+| F27 | Internationalization Kit | LaunchApp | Medium | 7/10 |
+| F28 | Plugin Analytics Dashboard | Claude Code | Small-Medium | 8/10 |
+| F29 | Passkey-First Auth | Better Auth | Small-Medium | 8/10 |
+| **F30** | **AO Credit Router** | **AO** | **Medium** | **9/10** |
+| **F31** | **AO Regression Shield** | **AO** | **Small-Medium** | **9/10** |
+| **F32** | **Agentic Endpoints** | **LaunchPad** | **Medium** | **9/10** |
+| **F33** | **LaunchApp Vibe Mode** | **LaunchApp** | **Medium** | **8/10** |
+| **F34** | **Cross-Tool Skill Testing** | **Claude Code** | **Medium** | **8/10** |
