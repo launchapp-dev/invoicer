@@ -290,12 +290,16 @@ agents:
       - Read knowledge/actions/ for proposed actions that could be queued as tasks
 
       ## 3. DISPATCH — Queue the right work
-      STRICT DEDUPLICATION: Before creating ANY task, run ao.task.list and
-      check for existing tasks that target the SAME WORKFLOW. Two tasks are
-      duplicates if they would run the same workflow ID, regardless of title.
-      NEVER create a task if a task for that workflow already exists in
-      backlog, ready, or in-progress status. Cancelled/done tasks are OK
-      to re-create only if there is genuinely new input to process.
+      STRICT DEDUPLICATION: Before creating ANY task, run both ao.task.list
+      and ao.workflow.list. Two tasks are duplicates if they would run the
+      same workflow ID, regardless of title.
+      NEVER create a task if:
+      - a task for that workflow already exists in backlog, ready,
+        in-progress, blocked, or on-hold status
+      - OR a workflow for that workflow_ref is already running or paused
+      Treat paused manual-gate workflows as active work even when ao.queue.list
+      is empty. Cancelled/done tasks are OK to re-create only if there is
+      genuinely new input to process.
 
       For generate-questions and extract-actions specifically:
       - Only create ONE task at a time. Wait for the previous one to reach
@@ -303,10 +307,10 @@ agents:
       - Do not create "round N" variants — the workflow itself handles
         incremental processing by reading existing files.
       - For extract-actions: only create if new questions have status:answered
-        AND no extract-actions task exists in backlog/ready/in-progress.
+        AND no extract-actions task or paused/running workflow exists for it.
       - For generate-questions: only create if knowledge base has had
-        significant new content AND no generate-questions task exists
-        in backlog/ready/in-progress.
+        significant new content AND no generate-questions task or paused/running
+        workflow exists for it.
 
       Available workflows and when to queue them:
 
@@ -894,7 +898,7 @@ phases:
 
   create-pr:
     mode: command
-    directive: "Create a PR against master (skip if one already exists for this branch)"
+    directive: "Create a PR against master (skip if one already exists or the branch has nothing new to publish)"
     command:
       program: bash
       args:
@@ -905,6 +909,27 @@ phases:
           if [ -n "$EXISTING" ]; then
             echo "PR #$EXISTING already exists for branch $BRANCH — skipping"
           else
+            git fetch origin master --quiet >/dev/null 2>&1 || true
+            BASE_REF=origin/master
+            if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+              if git rev-parse --verify master >/dev/null 2>&1; then
+                BASE_REF=master
+              else
+                BASE_REF=
+              fi
+            fi
+            if [ -n "$BASE_REF" ]; then
+              AHEAD_COUNT=$(git rev-list --count "${BASE_REF}..HEAD")
+              if [ "$AHEAD_COUNT" -eq 0 ]; then
+                PROJECT_ROOT=$(dirname "$(git rev-parse --git-common-dir)")
+                TASK_ID=$(printf '%s\n' "$BRANCH" | sed -n 's#^ao/task-\([0-9][0-9]*\)$#TASK-\1#p')
+                echo "No commits ahead of $BASE_REF for branch $BRANCH — skipping PR creation"
+                if [ -n "$TASK_ID" ]; then
+                  ao task status --project-root "$PROJECT_ROOT" --id "$TASK_ID" --status done >/dev/null 2>&1 || true
+                fi
+                exit 0
+              fi
+            fi
             gh pr create --fill --base master
           fi
       cwd_mode: task_root
@@ -1354,6 +1379,46 @@ phases:
       approval_note_required: true
       timeout_secs: 604800
 
+  mark-task-on-hold:
+    mode: command
+    directive: "Mark the current task as on-hold while founder review is pending"
+    command:
+      program: bash
+      args:
+        - "-c"
+        - |
+          BRANCH=$(git branch --show-current)
+          TASK_ID=$(printf '%s\n' "$BRANCH" | sed -n 's#^ao/task-\([0-9][0-9]*\)$#TASK-\1#p')
+          if [ -z "$TASK_ID" ]; then
+            echo "Could not derive task id from branch $BRANCH — skipping status update"
+            exit 0
+          fi
+          PROJECT_ROOT=$(dirname "$(git rev-parse --git-common-dir)")
+          ao task status --project-root "$PROJECT_ROOT" --id "$TASK_ID" --status on-hold >/dev/null
+          echo "Marked $TASK_ID as on-hold while waiting for founder review"
+      cwd_mode: task_root
+      timeout_secs: 60
+
+  mark-task-in-progress:
+    mode: command
+    directive: "Mark the current task as in-progress after founder review resumes"
+    command:
+      program: bash
+      args:
+        - "-c"
+        - |
+          BRANCH=$(git branch --show-current)
+          TASK_ID=$(printf '%s\n' "$BRANCH" | sed -n 's#^ao/task-\([0-9][0-9]*\)$#TASK-\1#p')
+          if [ -z "$TASK_ID" ]; then
+            echo "Could not derive task id from branch $BRANCH — skipping status update"
+            exit 0
+          fi
+          PROJECT_ROOT=$(dirname "$(git rev-parse --git-common-dir)")
+          ao task status --project-root "$PROJECT_ROOT" --id "$TASK_ID" --status in-progress >/dev/null
+          echo "Marked $TASK_ID as in-progress after founder review"
+      cwd_mode: task_root
+      timeout_secs: 60
+
   process-decisions:
     mode: agent
     agent: decision-processor
@@ -1582,7 +1647,9 @@ workflows:
       - push-branch
       - create-pr
       - auto-merge-pr
+      - mark-task-on-hold
       - founder-review-gate
+      - mark-task-in-progress
       - process-decisions
       - push-branch
       - create-pr
