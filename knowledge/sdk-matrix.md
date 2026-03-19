@@ -1,22 +1,23 @@
 # SDK Consistency Matrix
 
-> Last updated: 2026-03-19 by knowledge-curator agent (3rd pass).
+> Last updated: 2026-03-19 by knowledge-curator agent (4th pass).
 > Source repo: `saas-template-launch-app-test` (flagship template).
-> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-19. The current default branch includes `packages/jobs`, QStash-backed job enqueueing in `@repo/api`, Sentry in the web/API surfaces, and the removal of the old `@repo/api-hooks` package.
+> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-19. The current default branch includes `packages/jobs` on `@trigger.dev/sdk` ^4.0.0, QStash-backed job enqueueing in `@repo/api`, project references plus `tsc --build` across the internal package graph, and the removal of the old `@repo/api-hooks` package.
 
 ## Core Framework Versions
 
 | Package | Version | Notes |
 |---|---|---|
 | `react` | ^19.0.0 | React 19 |
-| `react-router` | ^7 | SSR mode via `@react-router/dev` |
+| `react-router` | ^7.5.0 | SSR mode via `@react-router/dev` |
 | `hono` | ^4.7.5 | API server |
 | `better-auth` | ^1.2.7 | Auth |
 | `drizzle-orm` | ^0.45.0 | ORM |
 | `zod` | ^4.3.6 | Validation (shared across all packages) |
-| `typescript` | ^5 | Strict TypeScript |
+| `typescript` | ^5.8.0 | Strict TypeScript |
 | `tailwindcss` | ^4.2.2 | Styling |
 | `turbo` | ^2.8.19 | Monorepo build |
+| `@trigger.dev/sdk` | ^4.0.0 | Async job runtime in `@repo/jobs` |
 | `biome` | — | Linting/formatting |
 | `pnpm` | ^10 | Package manager |
 
@@ -41,7 +42,8 @@
 | | postgres | ^3.4.5 | — |
 | `@repo/billing` | stripe | ^20.0.0 | Current |
 | | @polar-sh/sdk | ^0.46.0 | Polar.sh (alternative) |
-| `@repo/jobs` | @trigger.dev/sdk | ^3.0.0 | New package added 2026-03-19 |
+| `@repo/jobs` | @trigger.dev/sdk | ^4.0.0 | New package added 2026-03-19, upgraded from v3 the same day |
+| | @repo/config | workspace:* | Shared env/config access |
 | | @repo/email | workspace:* | Welcome-email + webhook tasks |
 | `@repo/analytics` | posthog-node | ^5.0.0 | Current (upgraded from v4) |
 | | posthog-js | ^1.57.0 | — |
@@ -52,6 +54,16 @@
 | | @aws-sdk/s3-request-presigner | ^3.1011.0 | — |
 | `@repo/i18n` | i18next | ^25 | Current (upgraded from v24) |
 | | react-i18next | ^16 | Current (upgraded from v15) |
+
+## TypeScript Build Graph Status (`saas-template-launch-app-test`)
+
+| Area | Current State | Notes |
+|---|---|---|
+| Internal buildable packages | `tsc --build` enabled | `@repo/api`, `@repo/auth`, `@repo/billing`, `@repo/database`, `@repo/email`, `@repo/jobs`, `@repo/mcp`, `@repo/storage`, and related packages now participate in the project-reference graph |
+| Referenced package configs | `composite: true` where needed | The graph was tuned after merge to keep incremental `tsc --build` working without breaking CI |
+| `apps/web` | References-only participant | The React Router/Vite app stays non-composite while still depending on the package graph |
+| `packages/jobs` | Server-package tsconfig with JSX enabled | It extends `../typescript-config/base.json`, but keeps `jsx: "react-jsx"` because it imports `@repo/email` TSX templates |
+| Cross-repo consistency | Still unresolved org-wide | The flagship template is now internally more consistent than the older dormant `@launchpad/*` SDK line |
 
 ## Launchpad BaaS Client SDKs
 
@@ -97,7 +109,10 @@
 
 | Change | Detail | Repo / Area |
 |---|---|---|
-| Added | `@trigger.dev/sdk` ^3.0.0 in new `@repo/jobs` package | `saas-template-launch-app-test` |
+| Added | `@repo/jobs` package for async work | `saas-template-launch-app-test` |
+| Upgraded | `@trigger.dev/sdk` ^3.0.0 → ^4.0.0 in `@repo/jobs` | `saas-template-launch-app-test` |
+| Added | `tsc --build` build path + project references across internal packages | `saas-template-launch-app-test` |
+| Fixed | `@repo/jobs` tsconfig now extends `base.json` and keeps JSX for the `@repo/email` dependency chain | `saas-template-launch-app-test` |
 | Added | `@upstash/qstash` ^2.7.21 for async job enqueueing | `saas-template-launch-app-test` (`@repo/api`) |
 | Added | `@sentry/node` ^10.0.0 | `saas-template-launch-app-test` (`@repo/api`) |
 | Added | `@sentry/react` ^10.0.0 | `saas-template-launch-app-test` (`apps/web`) |

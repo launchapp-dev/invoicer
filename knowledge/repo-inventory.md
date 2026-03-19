@@ -1,133 +1,150 @@
 # Repository Inventory
 
 > Last updated: 2026-03-19 by knowledge-curator agent.
-> Snapshot: 109 repos in `launchapp-dev`, 23 created since 2026-03-12, and 1 archived repo (`agent-orchestrator`). Private repo status in this file was freshly verified with authenticated GitHub CLI access.
+> Snapshot: 109 repos in `launchapp-dev`; 25 pushed in the last 30 days, 23 created since 2026-03-12, 14 public, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-19 against live org metadata.
 
-## Active Repos (pushed in last 30 days)
+## Notable Changes
 
-### Core Products
-
-| Repo | Description | Language | Last Push | Status |
-|---|---|---|---|---|
-| `saas-template-launch-app-test` | Full SaaS monorepo: React Router 7, Hono, Better-Auth, Drizzle, Stripe/Polar, Trigger.dev, QStash | TypeScript | 2026-03-19 | Active — 179 merged PRs in 7 days; current launchapp-lite trunk/canary |
-| `design-system` | Radix UI-based React component library, Storybook v10, docs site, shadcn registry compatible | TypeScript | 2026-03-19 | Active — 51 merged PRs in 7 days; ecommerce blocks + AO dependency updater workflow |
-| `ao-cli` | Rust AI agent orchestrator CLI with daemon, worktrees, and task-specialized model routing | Rust | 2026-03-19 | Active — 51 merged PRs in 7 days; v0.0.11 plus Codex/Sonnet/Gemini routing overhaul |
-| `brain` | Org-wide AI workforce command center (AO config, knowledge base, agents, MCP servers) | JavaScript | 2026-03-19 | Active — 54 merged PRs since creation; structured data + typed MCP access added |
-| `ao-skills` | Claude Code plugin pack with 15 AO skills (workflow-authoring, agent-personas, mcp-servers, etc.) | — | 2026-03-19 | Active — published as Claude Code plugin with marketplace.json |
-| `ao-bundled-packs` | Community/first-party extension packs for AO CLI | — | 2026-03-18 | Active |
-| `launchapp-lite-v2` | Lightweight SaaS starter v2: RR7, Hono SSR, Drizzle, Turborepo | TypeScript | 2026-03-17 | Active — recently converted to Turborepo monorepo |
-| `launchapp-lite` | Original lightweight SaaS starter: RR7, Hono, Better Auth, Drizzle, Supabase, Stripe | TypeScript | 2026-03-17 | Active |
-
-### AO Plugin Packs (all pushed 2026-03-16 to 2026-03-17)
-
-| Repo | Description |
+| Change | Detail |
 |---|---|
-| `aws-pack` | Claude Code plugin pack for AWS |
-| `firebase-pack` | Claude Code plugin pack for Firebase |
-| `pdf-pack` | Claude Code plugin pack for PDF operations |
-| `monitoring-pack` | Claude Code plugin pack for monitoring |
-| `ollama-pack` | Claude Code plugin pack for Ollama (local LLMs) |
-| `postgres-pack` | Claude Code plugin pack for PostgreSQL |
-| `figma-pack` | Claude Code plugin pack for Figma |
-| `slack-pack` | Claude Code plugin pack for Slack |
-| `stripe-pack` | Claude Code plugin pack for Stripe |
-| `playwright-pack` | Claude Code plugin pack for Playwright |
-| `linear-pack` | Claude Code plugin pack for Linear |
-| `research-pack` | Claude Code plugin pack for research |
-| `docker-pack` | Claude Code plugin pack for Docker |
-| `supabase-pack` | Claude Code plugin pack for Supabase |
-| `google-workspace-pack` | Claude Code plugin pack for Google Workspace |
-| `claude-plugin-marketplace` | Index of all plugin packs |
+| New repos | 23 repos were created in the last 7 days, including `brain`, `design-system`, `saas-template-launch-app-test`, `launchapp-lite`, `launchapp-lite-v2`, `ao-skills`, `ao-bundled-packs`, `claude-plugin-marketplace`, and the 15 AO plugin-pack repos |
+| Archived repo | `agent-orchestrator` is now archived in GitHub metadata even though it saw a 2026-03-19 push; `ao-cli` remains the active AO runtime |
+| Significant refactors | `saas-template-launch-app-test` added project references + `tsc --build` hardening around `@repo/jobs`; `design-system` expanded AO workflows with lint/typecheck/CI gates, design-token generation, and monthly adoption metrics |
+| Repo coverage | Purpose in the full ledger below comes from GitHub repo descriptions when present; deeper hand-written repo docs live under `knowledge/repos/` |
 
-### Marketing / Landing Pages
+## Velocity Leaders
 
-| Repo | Description | Last Push |
+| Repo | Recent merged PR count | Current note |
 |---|---|---|
-| `launchapp.dev` | launchapp.dev marketing site (TypeScript) | 2026-02-04 |
-| `launchapp-landing-v2` | LaunchApp landing page v2 | 2026-01-13 |
-| `mymoku.net` | Personal/product site (TypeScript) | 2026-03-12 |
+| `saas-template-launch-app-test` | 188 merged PRs since 2026-03-12 | Flagship template trunk/canary; async jobs rollout now paired with project-reference build hardening |
+| `design-system` | 70 merged PRs since 2026-03-12 | Component-library buildout now paired with token/adoption workflow automation |
+| `ao-cli` | 53 merged PRs since 2026-03-12 | v0.0.11 release plus routing changes and post-release runner hardening |
+| `brain` | 55 merged PRs since creation on 2026-03-19 | Structured data + MCP platform now expanded into operator workflows |
 
----
+## Full Inventory
 
-## Status Changes (verified 2026-03-19)
+Canonical source for repo purpose/status is GitHub metadata plus the per-repo docs under `knowledge/repos/`. Status is based on current repo metadata as of 2026-03-19.
 
-| Repo | Change | Notes |
-|---|---|---|
-| `agent-orchestrator` | Archived | Private Tauri desktop shell for AO; GitHub metadata now marks the repo archived even though it saw a 2026-03-19 push |
+### High Velocity Repos
 
----
+| Repo | Visibility | Language | Created | Last Push | Status | Purpose |
+|---|---|---|---|---|---|---|
+| `brain` | Private | JavaScript | 2026-03-19 | 2026-03-19 | High velocity | No GitHub description set |
+| `saas-template-launch-app-test` | Private | TypeScript | 2026-03-17 | 2026-03-19 | High velocity | LaunchApp Lite - Lightweight SaaS template built with React Router 7 |
+| `design-system` | Private | TypeScript | 2026-03-17 | 2026-03-19 | High velocity | Radix UI based design system for AudioGenius |
+| `ao-cli` | Private | Rust | 2026-02-24 | 2026-03-19 | High velocity | No GitHub description set |
+| `ao-skills` | Public | - | 2026-03-17 | 2026-03-19 | High velocity | AI skills for the AO agent orchestrator CLI |
+| `ao-bundled-packs` | Private | - | 2026-03-18 | 2026-03-18 | High velocity | Community and first-party extension packs for AO CLI |
+| `launchapp-lite-v2` | Private | TypeScript | 2026-03-17 | 2026-03-17 | High velocity | Lightweight SaaS starter - React Router 7, Hono, Better Auth, Drizzle, Supabase, Stripe |
+| `launchapp-lite` | Private | TypeScript | 2026-03-17 | 2026-03-17 | High velocity | Lightweight SaaS starter template - React Router 7, Hono, Better Auth, Drizzle, Supabase, Stripe, Tailwind CSS 4 |
+| `claude-plugin-marketplace` | Private | - | 2026-03-17 | 2026-03-17 | High velocity | AudioGenius plugin marketplace - indexes all plugin packs |
+| `firebase-pack` | Private | Shell | 2026-03-16 | 2026-03-17 | High velocity | Claude Code plugin pack: firebase-pack |
+| `aws-pack` | Private | Shell | 2026-03-16 | 2026-03-17 | High velocity | Claude Code plugin pack: aws-pack |
+| `pdf-pack` | Private | Shell | 2026-03-16 | 2026-03-17 | High velocity | Claude Code plugin pack: pdf-pack |
+| `monitoring-pack` | Private | Shell | 2026-03-16 | 2026-03-17 | High velocity | Claude Code plugin pack: monitoring-pack |
+| `ollama-pack` | Private | Shell | 2026-03-16 | 2026-03-17 | High velocity | Claude Code plugin pack: ollama-pack |
+| `postgres-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: postgres-pack |
+| `figma-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: figma-pack |
+| `stripe-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: stripe-pack |
+| `slack-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: slack-pack |
+| `playwright-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: playwright-pack |
+| `linear-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: linear-pack |
+| `research-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: research-pack |
+| `docker-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: docker-pack |
+| `google-workspace-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: google-workspace-pack |
+| `supabase-pack` | Private | Shell | 2026-03-16 | 2026-03-16 | High velocity | Claude Code plugin pack: supabase-pack |
+| `mymoku.net` | Private | TypeScript | 2025-06-16 | 2026-03-12 | High velocity | My Moku.net repo |
 
-## Launchpad BaaS Repos (lower activity, last push Jan 2026 or earlier)
+### Dormant Repos
 
-| Repo | Description | Language | Last Push |
-|---|---|---|---|
-| `launchpad-baas` | Core BaaS platform | TypeScript | 2026-01-14 |
-| `launchpad-ecosystem` | Orchestration workspace for Launchpad BaaS | TypeScript | 2026-01-19 |
-| `launchpad-payments` | Standalone payments SDK (Stripe, subscriptions, invoices) | TypeScript | 2026-01-14 |
-| `launchpad-db-engine` | Custom DB engine with multi-tenancy, migrations, type gen | TypeScript | 2026-01-14 |
-| `launchpad-storage` | Standalone storage SDK (S3, presigned URLs) | TypeScript | 2026-01-04 |
-| `launchpad-email` | Standalone email SDK (Resend, templates, tracking) | TypeScript | 2026-01-04 |
-| `launchpad-workflows` | Standalone workflow engine SDK | TypeScript | 2026-01-03 |
-| `launchpad-payments-sdk` | Payments SDK for Launchpad BaaS (Stripe) | TypeScript | 2026-01-03 |
-| `launchpad-db-sdk` | Database SDK (React hooks, TanStack Query) | TypeScript | 2026-01-03 |
-| `launchpad-git-server` | Agent-optimized git server (worktree-based isolation) | TypeScript | 2026-01-01 |
-| `launchpad-mcp-server` | MCP server for Launchpad platform operations | TypeScript | 2026-01-01 |
-| `launchpad-saas-template` | Production SaaS template (.launchpad/ manifest) | TypeScript | 2026-01-01 |
-| `launchpad-secrets` | Standalone secrets SDK (AES-256-GCM, versioning) | HTML | 2025-12-30 |
-| `launchpad-task-orchestrator` | Machine-consumable task queue for AI agents | TypeScript | 2025-12-20 |
-| `launchpad-realtime-server` | PostgreSQL LISTEN/NOTIFY + Redis pub/sub + SSE | TypeScript | 2025-12-19 |
-| `launchpad-workflows-sdk` | Workflows SDK for Launchpad BaaS | TypeScript | 2025-12-18 |
-| `launchpad-storage-sdk` | Storage SDK for Launchpad BaaS | TypeScript | 2025-12-18 |
-| `launchpad-realtime-sdk` | Realtime SDK (WebSocket subscriptions) | TypeScript | 2025-12-18 |
-| `launchpad-push-sdk` | Push Notifications SDK | TypeScript | 2025-12-18 |
-| `launchpad-identity-sdk` | Identity SDK (user directory, SSO, RBAC, orgs) | TypeScript | 2025-12-18 |
+| Repo | Visibility | Language | Created | Last Push | Status | Purpose |
+|---|---|---|---|---|---|---|
+| `launchapp.dev` | Private | TypeScript | 2025-03-27 | 2026-02-04 | Dormant | No GitHub description set |
+| `launchpad-ecosystem` | Private | TypeScript | 2025-12-10 | 2026-01-19 | Dormant | Orchestration workspace for Launchpad BaaS platform development |
+| `launchpad-baas` | Private | TypeScript | 2025-12-10 | 2026-01-14 | Dormant | Launchpad Backend-as-a-Service platform |
+| `launchpad-payments` | Private | TypeScript | 2025-12-11 | 2026-01-14 | Dormant | Standalone payments SDK with Stripe support, subscriptions, invoices, and metered billing |
+| `launchpad-db-engine` | Public | TypeScript | 2025-12-10 | 2026-01-14 | Dormant | Custom database engine with built-in multi-tenancy, migrations, and type generation |
+| `launchapp-landing-v2` | Private | TypeScript | 2025-06-27 | 2026-01-13 | Dormant | No GitHub description set |
+| `launchpad-storage` | Private | TypeScript | 2025-12-11 | 2026-01-04 | Dormant | Standalone storage SDK with S3 support, presigned URLs, and multi-tenant file management |
+| `launchpad-email` | Private | TypeScript | 2025-12-11 | 2026-01-04 | Dormant | Standalone email SDK with Resend integration, templates, and tracking |
+| `launchpad-payments-sdk` | Private | TypeScript | 2025-12-10 | 2026-01-03 | Dormant | Payments SDK for Launchpad BaaS - Stripe integration, subscriptions, and billing |
+| `launchpad-workflows` | Private | TypeScript | 2025-12-11 | 2026-01-03 | Dormant | Standalone workflow engine SDK with built-in actions, circuit breaker, and state management |
+| `launchpad-db-sdk` | Private | TypeScript | 2025-12-10 | 2026-01-03 | Dormant | Database SDK for Launchpad BaaS - React hooks for data querying with TanStack Query |
+| `launchpad-git-server` | Private | TypeScript | 2025-12-19 | 2026-01-01 | Dormant | Agent-optimized git server with worktree-based isolation for AI coding agents |
+| `launchpad-mcp-server` | Private | TypeScript | 2025-12-19 | 2026-01-01 | Dormant | MCP server exposing Launchpad platform operations for AI coding agents |
+| `launchpad-saas-template` | Private | TypeScript | 2025-12-30 | 2026-01-01 | Dormant | Production-ready SaaS template with auth, billing, and teams - includes .launchpad/ manifest for AI agent extensibility |
+| `launchpad-secrets` | Private | HTML | 2025-12-11 | 2025-12-30 | Dormant | Standalone secrets management SDK with AES-256-GCM encryption, versioning, and rotation |
+| `renovate-config` | Private | - | 2025-12-30 | 2025-12-30 | Dormant | Shared Renovate configuration preset for AudioGenius-ai organization |
+| `worktree-manager` | Public | JavaScript | 2025-12-09 | 2025-12-22 | Dormant | AI-powered parallel development using git worktrees with Claude, Codex, and Gemini |
+| `launchpad-task-orchestrator` | Private | TypeScript | 2025-12-20 | 2025-12-20 | Dormant | Machine-consumable task queue and orchestration system for AI agents |
+| `launchpad-realtime-server` | Private | TypeScript | 2025-12-11 | 2025-12-19 | Dormant | Real-time backend service with PostgreSQL LISTEN/NOTIFY, Redis pub/sub, and SSE endpoints |
+| `launchpad-workflows-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | Workflows SDK for Launchpad BaaS - background jobs, scheduled tasks, and workflow automation |
+| `launchpad-storage-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | Storage SDK for Launchpad BaaS - file uploads, downloads, and management |
+| `launchpad-realtime-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | Realtime SDK for Launchpad BaaS - WebSocket subscriptions and live data |
+| `launchpad-push-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | Push Notifications SDK for Launchpad BaaS - web and mobile push notifications |
+| `launchpad-identity-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | Identity SDK for Launchpad BaaS - user directory, SSO, RBAC, and organization management |
+| `launchpad-customers-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | Customers SDK for Launchpad BaaS - customer management, CRM, segmentation, and engagement |
+| `launchpad-auth-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | Auth SDK for Launchpad BaaS - Authentication hooks and components for React |
+| `launchpad-cms-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | CMS SDK for Launchpad BaaS - headless CMS with content types, localization, and versioning |
+| `launchpad-core-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-18 | Dormant | Core SDK for Launchpad BaaS - HTTP client, session management, and React integration |
+| `launchpad-push-server` | Private | TypeScript | 2025-12-11 | 2025-12-18 | Dormant | Push notification service with FCM, APNs, and Web Push support |
+| `launchpad-server` | Private | TypeScript | 2025-12-15 | 2025-12-16 | Dormant | Type-safe HTTP server framework with OpenAPI and Zod support for Launchpad BaaS |
+| `launchpad-ai` | Private | TypeScript | 2025-12-11 | 2025-12-12 | Dormant | Standalone AI SDK with provider abstraction, streaming, tool execution, and function calling |
+| `launchpad-analytics` | Private | TypeScript | 2025-12-11 | 2025-12-12 | Dormant | @launchpad/analytics - Pluggable analytics package for event tracking and feature flags |
+| `launchpad-audit-log` | Private | TypeScript | 2025-12-11 | 2025-12-12 | Dormant | Audit logging service for tracking system events and user actions |
+| `launchpad-i18n` | Private | TypeScript | 2025-12-11 | 2025-12-11 | Dormant | Internationalization and localization utilities for Launchpad applications |
+| `launchpad-appstores` | Private | TypeScript | 2025-12-11 | 2025-12-11 | Dormant | App store integrations with Apple App Store Connect and Google Play for receipt validation, subscriptions, and in-app purchases |
+| `launchpad-payments-server` | Private | TypeScript | 2025-12-11 | 2025-12-11 | Dormant | Backend payments server with Stripe webhooks, subscription management API, and usage-based billing endpoints |
+| `offline-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-10 | Dormant | @launchpad/offline SDK - Offline-first capabilities for Launchpad applications |
+| `testing-sdk` | Private | TypeScript | 2025-12-10 | 2025-12-10 | Dormant | @launchpad/testing SDK - Testing utilities for Launchpad applications |
+| `launchpad` | Private | TypeScript | 2025-11-09 | 2025-12-10 | Dormant | No GitHub description set |
+| `wyman-launchapp` | Private | TypeScript | 2025-06-04 | 2025-12-01 | Dormant | No GitHub description set |
+| `bluelight-poc` | Private | TypeScript | 2025-11-22 | 2025-11-23 | Dormant | Production-ready full-stack TypeScript monorepo for SaaS applications |
+| `create-launchpad` | Public | JavaScript | 2025-11-10 | 2025-11-10 | Dormant | No GitHub description set |
+| `codeby.ai` | Private | TypeScript | 2025-06-11 | 2025-10-20 | Dormant | No GitHub description set |
+| `lostcause.com` | Private | TypeScript | 2025-06-15 | 2025-09-15 | Dormant | No GitHub description set |
+| `create-launchapp` | Public | TypeScript | 2025-05-31 | 2025-07-12 | Dormant | CLI script to get a lunchapp project launched |
+| `mymoku-demo` | Private | TypeScript | 2025-06-16 | 2025-07-05 | Dormant | No GitHub description set |
+| `project-management` | Private | TypeScript | 2025-07-05 | 2025-07-05 | Dormant | A place to manage our projects |
+| `launchapp-images` | Private | TypeScript | 2025-06-28 | 2025-06-30 | Dormant | No GitHub description set |
+| `launchapp-studio` | Public | TypeScript | 2025-06-21 | 2025-06-23 | Dormant | The IDE of the future |
+| `launchapp-registry` | Private | - | 2025-06-23 | 2025-06-23 | Dormant | The place where the packages will be stored for the launch app registry |
+| `code-pilot-studio` | Private | TypeScript | 2025-06-05 | 2025-06-21 | Dormant | No GitHub description set |
+| `moku-demo` | Private | - | 2025-06-12 | 2025-06-12 | Dormant | No GitHub description set |
+| `neuron-hive-discover` | Private | TypeScript | 2025-06-09 | 2025-06-09 | Dormant | No GitHub description set |
+| `openapi-gen` | Public | TypeScript | 2025-06-01 | 2025-06-04 | Dormant | A generator for openapi |
+| `wyman-demo` | Private | TypeScript | 2025-06-04 | 2025-06-04 | Dormant | No GitHub description set |
+| `launchapp.dev-landing` | Private | TypeScript | 2025-04-30 | 2025-05-23 | Dormant | No GitHub description set |
+| `pr-review-responder` | Public | - | 2025-05-19 | 2025-05-19 | Dormant | a local task that runs whenever a comment is added on github and passes it to codex |
+| `react-router-presets` | Public | - | 2025-05-05 | 2025-05-05 | Dormant | A place where I will storing different presets for react router v7 |
+| `react-router-vercel-test` | Private | TypeScript | 2025-05-01 | 2025-05-01 | Dormant | No GitHub description set |
+| `crafted-blog-scapes` | Private | TypeScript | 2025-04-24 | 2025-04-24 | Dormant | No GitHub description set |
+| `better-auth` | Public | TypeScript | 2025-04-18 | 2025-04-17 | Dormant | The most comprehensive authentication framework for TypeScript |
+| `content-canvas-kit` | Private | TypeScript | 2025-04-16 | 2025-04-16 | Dormant | No GitHub description set |
+| `supabase-to-hooks` | Public | TypeScript | 2025-03-12 | 2025-04-10 | Dormant | No GitHub description set |
+| `figma-tailwind-plugin` | Public | TypeScript | 2025-03-08 | 2025-04-10 | Dormant | A figma plugin, to generate tailwind react components, based on all the variables contained in the file. |
+| `neon-edge-incubator` | Private | TypeScript | 2025-04-09 | 2025-04-09 | Dormant | No GitHub description set |
+| `react-router-vercel` | Private | TypeScript | 2025-04-08 | 2025-04-08 | Dormant | No GitHub description set |
+| `streamlined-saas-console` | Private | TypeScript | 2025-03-31 | 2025-04-01 | Dormant | No GitHub description set |
+| `audits_pro` | Private | TypeScript | 2025-03-07 | 2025-03-20 | Dormant | A palce to do audits |
+| `site-inspector-landing` | Private | TypeScript | 2025-03-17 | 2025-03-17 | Dormant | No GitHub description set |
+| `landing-siteinspector-pro` | Private | - | 2025-03-12 | 2025-03-12 | Dormant | Landing for site inspector pro |
+| `supabase-railway-template` | Public | - | 2025-03-10 | 2025-03-10 | Dormant | A place where I will be setting up supabase for my railway projects |
+| `aethris-landing` | Private | TypeScript | 2025-03-05 | 2025-03-06 | Dormant | No GitHub description set |
+| `job_miner` | Private | Python | 2025-02-06 | 2025-02-06 | Dormant | No GitHub description set |
+| `my_resume_ai` | Private | TypeScript | 2025-01-02 | 2025-01-23 | Dormant | No GitHub description set |
+| `job-scraper-with-proxy` | Private | - | 2025-01-23 | 2025-01-23 | Dormant | No GitHub description set |
+| `aetheris-site` | Private | TypeScript | 2025-01-18 | 2025-01-18 | Dormant | site to host the atheris website |
+| `mental-health-agent` | Private | TypeScript | 2025-01-01 | 2025-01-01 | Dormant | No GitHub description set |
+| `ats_applicant_setup` | Private | TypeScript | 2024-12-08 | 2024-12-13 | Dormant | No GitHub description set |
+| `cursor_rules` | Private | - | 2024-12-12 | 2024-12-12 | Dormant | No GitHub description set |
+| `blog_generator` | Private | TypeScript | 2024-12-05 | 2024-12-05 | Dormant | blog_generator |
+| `aethris_client_plugins` | Public | - | 2024-11-23 | 2024-11-23 | Dormant | No GitHub description set |
+| `aethris_client` | Private | TypeScript | 2024-11-23 | 2024-11-23 | Dormant | aethris Clinet |
+| `the_store` | Private | - | 2024-11-20 | 2024-11-20 | Dormant | the app store for AethrisLabs |
 
----
+### Archived Repos
 
-## Tooling / Infrastructure
-
-| Repo | Description | Last Push |
-|---|---|---|
-| `renovate-config` | Shared Renovate config preset | 2025-12-30 |
-| `worktree-manager` | Parallel dev tool using git worktrees with Claude/Codex/Gemini | 2025-12-22 |
-| `agent-orchestrator` | Desktop app for orchestrating software dev agents (Rust, older) | 2026-03-19 (archived) |
-
----
-
-## New Repos (created last 7 days)
-
-| Repo | Created | Notes |
-|---|---|---|
-| `launchapp-lite` | 2026-03-17 | Original lightweight SaaS starter line, now sitting alongside the newer flagship template repos |
-| `ao-skills` | 2026-03-17 | Claude Code plugin for AO CLI — 15 skills with marketplace metadata |
-| `saas-template-launch-app-test` | 2026-03-17 | Flagship launchapp-lite trunk/canary; highest-volume private repo in the org |
-| `launchapp-lite-v2` | 2026-03-17 | Lightweight SaaS starter v2, Turborepo conversion track |
-| `brain` | 2026-03-19 | Org-wide AI workforce command center |
-| `design-system` | 2026-03-17 | Private component-library repo with docs site and AO automation |
-| `ao-bundled-packs` | 2026-03-18 | First-party/community AO workflow pack collection |
-| `claude-plugin-marketplace` | 2026-03-17 | Index of all Claude plugin packs |
-| `aws-pack` | 2026-03-16 | AO plugin pack scaffold for AWS |
-| `firebase-pack` | 2026-03-16 | AO plugin pack scaffold for Firebase |
-| `pdf-pack` | 2026-03-16 | AO plugin pack scaffold for PDF workflows |
-| `monitoring-pack` | 2026-03-16 | AO plugin pack scaffold for monitoring/observability |
-| `ollama-pack` | 2026-03-16 | AO plugin pack scaffold for local LLM workflows |
-| `postgres-pack` | 2026-03-16 | AO plugin pack scaffold for PostgreSQL |
-| `figma-pack` | 2026-03-16 | AO plugin pack scaffold for Figma |
-| `slack-pack` | 2026-03-16 | AO plugin pack scaffold for Slack |
-| `stripe-pack` | 2026-03-16 | AO plugin pack scaffold for Stripe |
-| `playwright-pack` | 2026-03-16 | AO plugin pack scaffold for Playwright |
-| `linear-pack` | 2026-03-16 | AO plugin pack scaffold for Linear |
-| `research-pack` | 2026-03-16 | AO plugin pack scaffold for research workflows |
-| `docker-pack` | 2026-03-16 | AO plugin pack scaffold for Docker |
-| `supabase-pack` | 2026-03-16 | AO plugin pack scaffold for Supabase |
-| `google-workspace-pack` | 2026-03-16 | AO plugin pack scaffold for Google Workspace |
-
-## Org Rename
-
-The org was previously known as **AudioGenius-ai**. As of 2026-03-19, all plugin metadata in `ao-skills` was updated to reflect the org as **launchapp-dev** / **launchapp.dev**.
-
-## Recently Archived
-
-| Repo | Archived By | Notes |
-|---|---|---|
-| `agent-orchestrator` | GitHub repo metadata (observed 2026-03-19) | Historical AO desktop app wrapper; `ao-cli` remains the active engine |
+| Repo | Visibility | Language | Created | Last Push | Status | Purpose |
+|---|---|---|---|---|---|---|
+| `agent-orchestrator` | Private | Rust | 2026-01-06 | 2026-03-19 | Archived | AI-powered desktop application for orchestrating software development agents |

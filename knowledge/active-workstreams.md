@@ -1,31 +1,35 @@
 # Active Workstreams
 
 > Last updated: 2026-03-19 by knowledge-curator agent.
-> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-19, not the stale 2026-03-18 fallback snapshot.
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-19, including the post-19:30 merge cluster that landed after the earlier knowledge snapshot.
 
 ## Summary
 
-As of 2026-03-19, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), 1 still-mostly-planning standards initiative (Launchpad SDK consistency), and a newly created AO plugin ecosystem. The previously active `agent-orchestrator` desktop repo is now archived.
+As of 2026-03-19, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), 25 repos pushed in the last 30 days, 23 repos created in the last 7 days, and 1 archived desktop-shell repo (`agent-orchestrator`). The fastest-moving narrative shifts since the previous snapshot are the flagship template's build-graph refactor, the design-system workflow expansion, and `brain`'s move into operator workflows.
 
 ---
 
-## 1. saas-template-launch-app-test — Flagship Template Hardening + Async Jobs
+## 1. saas-template-launch-app-test — Flagship Template Hardening + Incremental Build Graph
 
 **Repo:** `saas-template-launch-app-test`
 **Owner:** Shooksie
 **Who is doing the work:** AO-managed implementation/review/merge pipeline on top of the repo's custom workflow
-**Status:** Extremely active — 179 merged PRs since 2026-03-12
+**Status:** Extremely active — 188 merged PRs since 2026-03-12
 
 This repo is no longer best described as a "test/staging" copy. It is the primary launchapp-lite trunk/canary where new platform capabilities land first.
 
 **Current focus:**
 - Add async/background processing primitives.
+- Make `tsc --build` and project references reliable across the workspace.
 - Decouple over-coupled API responsibilities.
 - Harden admin/API security and deployment health.
 - Tighten types and monitoring around the dashboard + API surface.
 
 **Recent highlights (verified 2026-03-19):**
-- `@repo/jobs` added with Trigger.dev v3 tasks for welcome email and webhook processing.
+- `@repo/jobs` landed, then moved from Trigger.dev v3 to v4 the same day.
+- `@repo/jobs` now has a dedicated `tsc --build` build script and participates in the project-reference graph.
+- TypeScript project references plus `composite: true` were wired across the internal package graph to support topological incremental builds.
+- `packages/jobs/tsconfig.json` now extends the shared base config and keeps `jsx: "react-jsx"` because it depends on `@repo/email`'s TSX templates.
 - `@repo/api` gained a QStash-backed jobs route for enqueueing async work.
 - `/enqueue` was tightened so only admin sessions or API keys can use it.
 - Waitlist join flow moved out of `@repo/api` into a web action to reduce API/email coupling.
@@ -40,22 +44,25 @@ This repo is no longer best described as a "test/staging" copy. It is the primar
 
 **Repo:** `design-system`
 **Owner:** Shooksie
-**Who is doing the work:** AO product-owner, component-author, reviewer, and updater agents
-**Status:** Very active — 51 merged PRs since 2026-03-12
+**Who is doing the work:** AO product-owner, component-author, reviewer, updater, token-generator, and adoption-analyst agents
+**Status:** Very active — 70 merged PRs since 2026-03-12
 
 The repo is still finishing Phase 3/4 component coverage, but it is now also being automated as an AO-managed dependency-aware component platform.
 
 **Current focus:**
 - Finish high-level block coverage and docs-site polish.
 - Keep dependencies moving with an explicit updater workflow.
-- Give authoring/review agents direct dependency and docs context.
+- Add formal lint/typecheck/CI gates to the AO delivery workflows.
+- Start design-token generation and monthly adoption reporting.
 
 **Recent highlights (verified 2026-03-19):**
 - Ecommerce blocks landed: `ProductCard`, `ProductCardGrid`, `ShoppingCart`, and `CheckoutForm`.
 - Docs-site work added live previews, corrected component prop mismatches, and replaced raw HTML controls with design-system primitives for accessibility.
 - Blocks barrel exports were fixed so all block categories are available from the package root.
-- Commit `735383c` added a dependency-update phase/workflow/cron in `.ao/workflows/custom.yaml`.
-- That same automation change wired Context7 to reviewer, product-owner, and component-author agents, and wired `package-version` MCP to product-owner and component-author agents.
+- The earlier dependency-update phase/workflow/cron remains in place in `.ao/workflows/custom.yaml`.
+- TASK-062 added `lint-check`, `typecheck`, and `wait-for-ci` phases to the component, standard, scaffold, and quick-fix workflows.
+- TASK-062 also added `token-generator` and `adoption-analyst` agents plus `design-token-generation` and monthly `adoption-metrics` workflows.
+- A post-19:30 accessibility sweep added ARIA/semantics fixes across `DataTable`, `DatePicker`, `MultiSelect`, `Combobox`, `KPICard`, and `ChartContainer`.
 
 ---
 
@@ -64,7 +71,7 @@ The repo is still finishing Phase 3/4 component coverage, but it is now also bei
 **Repo:** `ao-cli`
 **Owner:** Shooksie
 **Who is doing the work:** AO's own planner/reconciler/reviewer/workflow stack plus direct maintainer commits
-**Status:** Very active — 51 merged PRs since 2026-03-12
+**Status:** Very active — 53 merged PRs since 2026-03-12
 
 The release train moved from self-healing failover work into a same-day workflow-routing overhaul on 2026-03-19.
 
@@ -78,7 +85,8 @@ The release train moved from self-healing failover work into a same-day workflow
 - Commit `4d2694f` routed most low/medium/high work to Codex GPT-5.4 during the doubled-rate-limit window through 2026-04-02.
 - Commit `67d7e4e` rebalanced routing to features → Sonnet, bugfix/refactor → Codex, and UI → Gemini.
 - Commit `baeeaea` moved PR review, code review, reconciler, and workflow-optimizer to Codex GPT-5.4.
-- Process-leak fixes, rustfmt cleanup, and a cargo-test CI gate also landed around the release.
+- Process-leak fixes, rustfmt cleanup, and a cargo-test CI gate landed around the release.
+- The latest default-branch work then added session-resume preflight fallback and an orphan-tracker data-loss fix.
 
 ---
 
@@ -87,13 +95,14 @@ The release train moved from self-healing failover work into a same-day workflow
 **Repo:** `brain`
 **Owner:** Shooksie
 **Who is doing the work:** conductor + knowledge-curator/product-doc-writer/toolmaker/reviewer workflows
-**Status:** Extremely active — 54 merged PRs since the repo was created on 2026-03-19
+**Status:** Extremely active — 55 merged PRs since the repo was created on 2026-03-19
 
-The brain repo moved beyond markdown curation into structured data + typed MCP access on 2026-03-19.
+The brain repo moved beyond markdown curation into structured data + typed MCP access, and then into explicit operator workflows, on 2026-03-19.
 
 **Current focus:**
 - Keep the knowledge base aligned with same-day org changes.
 - Add machine-readable access paths for repo and product data.
+- Add operator workflows for quality, decisions, and cross-repo execution.
 - Stabilize conductor scheduling and writing workflows.
 
 **Recent highlights:**
@@ -101,6 +110,7 @@ The brain repo moved beyond markdown curation into structured data + typed MCP a
 - `brain-knowledge-mcp` and `brain-products-mcp` servers added for typed access to knowledge/product data.
 - Repo catalog expanded to cover previously undocumented repos.
 - Conductor deduplication, stale-task cleanup, and idempotent PR phases were strengthened.
+- `Brain v2` added `quality-audit`, `decision-pipeline`, and `cross-repo-execute` workflows, and the conductor now runs every 10 minutes instead of every 5.
 
 ---
 
@@ -142,4 +152,4 @@ The org opened SDK consistency tracking work on 2026-03-18, but this is still mo
 
 - `agent-orchestrator` is now archived. AO's active engine is `ao-cli`; the desktop shell remains historical.
 - Launchpad BaaS repos remain lower-velocity. Most last substantive pushes are from December 2025 to January 2026.
-- Marketing/landing repos (`launchapp.dev`, `launchapp-landing-v2`, `mymoku.net`) are materially less active than the four core workstreams above.
+- Marketing/landing repos remain materially less active than the four core workstreams above, with `mymoku.net` the only one that saw a push during this 7-day window.
