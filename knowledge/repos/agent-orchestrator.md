@@ -1,10 +1,11 @@
-# agent-orchestrator
+# agent-orchestrator (ARCHIVED)
 
 **Repo**: `launchapp-dev/agent-orchestrator`
-**Visibility**: Private
+**Visibility**: Private (Archived 2026-03-19)
 **Language**: TypeScript + Rust (Tauri)
 **Version**: 0.1.0
 **Last updated**: 2026-02-22
+**Status**: Archived — superseded by ao-cli
 
 ## Purpose
 
