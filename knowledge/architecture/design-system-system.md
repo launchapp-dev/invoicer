@@ -12,14 +12,14 @@ last_verified: 2026-03-18
 
 ## Overview
 
-System architecture of the @audiogenius/design-system — a Radix UI-based React component library with 52 components, built with CVA + Tailwind CSS, documented via Storybook v10, and bundled with tsup.
+System architecture of the @audiogenius/design-system — a Radix UI-based React component library with 51 components, built with CVA + Tailwind CSS, documented via Storybook v10, and bundled with tsup.
 
 ## Diagram
 
 ```mermaid
 graph TD
     subgraph "Design System Package"
-        subgraph "src/components/ (52 components)"
+        subgraph "src/components/ (51 components)"
             FOUND["Foundation<br/>Button, Input, Label,<br/>Badge, Separator, Skeleton"]
             LAYOUT["Layout<br/>Card, AspectRatio,<br/>Resizable, ScrollArea"]
             OVERLAY["Overlays<br/>Dialog, Sheet, AlertDialog,<br/>Popover, Tooltip, DropdownMenu"]
@@ -75,7 +75,7 @@ graph TD
 
 ## Notes
 
-- 52 components spanning foundation, layout, overlays, navigation, forms, data display, and feedback
+- 51 components spanning foundation, layout, overlays, navigation, forms, data display, and feedback
 - Built on 27 @radix-ui/* primitive packages for accessibility and behavior
 - CVA (class-variance-authority) handles component variant styling
 - Dual ESM/CJS output via tsup for maximum compatibility

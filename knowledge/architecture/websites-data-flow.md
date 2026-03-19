@@ -4,7 +4,7 @@ product: websites
 type: data-flow
 status: current
 source_repos:
-  - launchapp.dev
+  - launchapp-landing-v2
   - codeby.ai
   - lostcause.com
 generated_by: architecture-diagrammer
@@ -14,7 +14,7 @@ last_verified: 2026-03-18
 
 ## Overview
 
-Data flow through the shared website architecture. All three sites follow the same pattern: SSR-rendered React Router 7 pages, Hono API routes for backend logic, Better Auth for authentication, and Drizzle ORM for database access.
+Data flow through the website architecture. The simpler sites (codeby.ai, lostcause.com) follow a basic SSR pattern. launchapp-landing-v2 is a full platform with payments, push notifications, and native mobile app flows in addition to the base pattern.
 
 ## Diagram
 
@@ -62,6 +62,7 @@ sequenceDiagram
 - Better Auth manages sessions and OAuth flows; session tokens stored in cookies
 - Drizzle ORM provides type-safe database access to PostgreSQL
 - Supabase is used as the managed PostgreSQL provider
-- The sites are primarily content/marketing pages with auth-gated dashboard sections
+- codeby.ai and lostcause.com are primarily content/marketing pages with auth-gated dashboard sections
+- launchapp-landing-v2 is a full platform with payments (Stripe), email (Resend), push notifications (FCM/APNs), and a native mobile app (React Native/Expo)
 - Static pages (/, /pricing, /faq, /terms) are SSR-rendered without database access
 - Dashboard pages (/dashboard/*) require authentication and fetch data via API

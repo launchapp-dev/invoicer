@@ -12,7 +12,7 @@ last_verified: 2026-03-18
 
 ## Overview
 
-System architecture of the brain repo — the org-wide AI workforce command center. Runs on AO CLI with 18+ specialized agents, scheduled workflows, and MCP server integrations. Maintains the knowledge base, product catalog, and strategic planning for the entire launchapp-dev org.
+System architecture of the brain repo — the org-wide AI workforce command center. Runs on AO CLI with 22 specialized agents, 21 workflows, 35 phases, and MCP server integrations. Maintains the knowledge base, product catalog, and strategic planning for the entire launchapp-dev org.
 
 ## Diagram
 
@@ -23,7 +23,7 @@ graph TD
         QUEUE["Task Queue<br/>Priority-based"]
     end
 
-    subgraph "Agents (18+)"
+    subgraph "Agents (22)"
         subgraph "Planning & Strategy"
             PLANNER["planner<br/>3h cron, knowledge gaps"]
             TRIAGER["triager"]
@@ -36,6 +36,7 @@ graph TD
             REVIEWER["reviewer"]
             TOOLMAKER["toolmaker"]
             ARCHITECT["architecture-diagrammer"]
+            WFOPT["workflow-optimizer"]
         end
 
         subgraph "Quality & Security"
@@ -51,8 +52,9 @@ graph TD
             DOCWRITER["product-doc-writer"]
             CURATOR["knowledge-curator"]
             IMPACT["impact-analyzer"]
-            WFOPT["workflow-optimizer"]
             RELEASE["release-coordinator"]
+            QGEN["question-generator"]
+            ACTEX["action-extractor"]
         end
     end
 
@@ -110,8 +112,8 @@ graph TD
 
 ## Notes
 
-- The brain-planner agent runs every 3 hours via cron, assessing knowledge gaps and queuing tasks
-- 18+ agents cover the full product lifecycle: planning, development, security, docs, GTM, revenue
+- The brain-planner agent runs every 3 hours via cron; architecture-diagrammer runs weekly (Thursdays 7am)
+- 22 agents cover the full product lifecycle: planning, development, security, docs, GTM, revenue
 - Knowledge base organized by domain: products, repos, architecture, competitive, gtm, revenue, ideas
 - MCP servers provide external capabilities: Context7 for docs, Firecrawl for web scraping, GitHub for repo ops
 - The brain repo itself has no application code — it's pure configuration, knowledge, and agent definitions

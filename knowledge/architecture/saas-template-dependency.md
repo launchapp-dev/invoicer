@@ -35,13 +35,15 @@ graph BT
     MCP["@repo/mcp"]
     UIKIT["@repo/ui-kit"]
 
-    CONFIG --> CORE
+    CONFIG --> TS
     DB --> CONFIG
     AUTH --> DB
     AUTH --> CONFIG
+    AUTH --> EMAIL
 
     AI --> CONFIG
     BILLING --> CONFIG
+    BILLING --> CORE
     EMAIL --> CONFIG
     STORAGE --> CONFIG
 
@@ -50,6 +52,7 @@ graph BT
     API --> BILLING
     API --> CONFIG
     API --> DB
+    API --> EMAIL
     API --> STORAGE
 
     APIHOOKS -.->|generated from OpenAPI spec| API
@@ -61,12 +64,8 @@ graph BT
     WEB --> CONFIG
     WEB --> DB
     WEB --> AI
-    WEB --> APIHOOKS
+    WEB --> API
     WEB --> ANALYTICS
-    WEB --> I18N
-    WEB --> UIKIT
-
-    CORE --> BILLING
 
     style TS fill:#e8e8e8,stroke:#999
     style CORE fill:#e8e8e8,stroke:#999
@@ -79,9 +78,11 @@ graph BT
 
 ## Notes
 
-- @repo/typescript-config has no internal deps (leaf node shared by all packages)
-- @repo/config is the central hub: most domain packages depend on it for Zod-validated env access
-- @repo/api-hooks is auto-generated from the OpenAPI spec (dashed line = generated dependency)
+- @repo/typescript-config and @repo/core are leaf nodes with no internal deps
+- @repo/config depends on @repo/typescript-config and provides Zod-validated env access
+- @repo/auth depends on @repo/email (for auth email flows) in addition to database and config
+- @repo/api depends on @repo/email directly for transactional email sending
+- @repo/billing depends on @repo/core (lazy-init utilities), not the other way around
+- @repo/api-hooks is auto-generated from the OpenAPI spec via orval (dashed line = generated dependency)
 - @repo/analytics, @repo/i18n, @repo/ui-kit are independent packages with no internal deps
-- The dependency tree ensures Turborepo can parallelize builds effectively
-- @repo/core provides lazy-init utilities consumed by config and billing
+- apps/web depends directly on @repo/api (not via api-hooks); does not depend on i18n, ui-kit, or api-hooks

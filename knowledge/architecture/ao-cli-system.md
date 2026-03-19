@@ -27,7 +27,7 @@ graph TD
         DAEMON["orchestrator-daemon-runtime<br/>Background daemon"]
         WFV2["workflow-runner-v2<br/>Multi-phase execution"]
         RUNNER["agent-runner<br/>LLM CLI process manager"]
-        WEBSVR["orchestrator-web-server<br/>Axum web UI"]
+        WEBSVR["orchestrator-web-server<br/>Axum + GraphQL web UI"]
         WEBAPI["orchestrator-web-api<br/>Web API logic"]
         GITOPS["orchestrator-git-ops<br/>Git/worktree management"]
         PROVIDERS["orchestrator-providers<br/>Model routing"]
@@ -40,6 +40,10 @@ graph TD
         CLAUDE[Claude CLI]
         CODEX[Codex CLI]
         GEMINI[Gemini CLI]
+    end
+
+    subgraph "OAI Runner (Standalone Binary)"
+        OAIRUNNER["oai-runner<br/>OpenAI-compatible streaming<br/>+ MCP client (rmcp)"]
     end
 
     subgraph "OpenAI-Compatible APIs"
@@ -76,8 +80,9 @@ graph TD
     RUNNER --> CLAUDE
     RUNNER --> CODEX
     RUNNER --> GEMINI
-    PROVIDERS --> OAIAPI
-    PROVIDERS --> OAICOMPAT
+    OAIRUNNER --> OAIAPI
+    OAIRUNNER --> OAICOMPAT
+    PROVIDERS --> OAIRUNNER
     WEBSVR --> WEBAPI
     WEBAPI --> CORE
     WEBAPI --> DAEMON
@@ -103,5 +108,6 @@ graph TD
 - Self-healing pipeline: failing model routes auto-fallback to Claude
 - Workflow optimizer tracks per-model success rates and creates bugfix tasks on failures
 - Git worktrees provide isolated execution environments for each agent
-- The web UI is Axum-based with embedded static assets
+- The web UI is Axum-based with async-graphql API and embedded static assets
+- oai-runner is a standalone binary for OpenAI-compatible streaming with MCP client support (rmcp)
 - State persisted as JSON files in .ao/ directory (no external database)

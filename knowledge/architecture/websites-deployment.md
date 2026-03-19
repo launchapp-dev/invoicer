@@ -4,10 +4,9 @@ product: websites
 type: deployment
 status: current
 source_repos:
-  - launchapp.dev
+  - launchapp-landing-v2
   - codeby.ai
   - lostcause.com
-  - launchapp-landing-v2
 generated_by: architecture-diagrammer
 generated_at: 2026-03-18
 last_verified: 2026-03-18

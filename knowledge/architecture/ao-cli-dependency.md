@@ -37,13 +37,16 @@ graph BT
 
     PROVIDERS --> PROTO
     STORE --> PROTO
-    LLM --> PROTO
     RUNNER --> PROTO
+    RUNNER --> LLM
+    OAI --> PROTO
+    CONFIG --> PROTO
 
     CORE --> PROTO
     CORE --> PROVIDERS
     CORE --> STORE
     CORE --> CONFIG
+    CORE --> LLM
 
     WFV2 --> RUNNER
     WFV2 --> PROTO
@@ -72,6 +75,7 @@ graph BT
     CLI --> NOTIF
     CLI --> WFV2
     CLI --> CONFIG
+    CLI --> LLM
 
     style PROTO fill:#f9e2af,stroke:#f5c211
     style CORE fill:#89b4fa,stroke:#1e66f5
@@ -83,9 +87,10 @@ graph BT
 ## Notes
 
 - `protocol` is the leaf crate — shared wire types with no internal deps
-- `orchestrator-core` is the hub: domain logic, ServiceHub DI, depends on config, store, providers
+- `orchestrator-core` is the hub: domain logic, ServiceHub DI, depends on config, store, providers, llm-cli-wrapper
 - `orchestrator-cli` is the root: depends on most other crates to compose the full binary
-- `llm-cli-wrapper` and `oai-runner` are standalone — they only depend on protocol
+- `llm-cli-wrapper` is standalone (no internal deps); `oai-runner` depends only on protocol
+- `oai-runner` uses rmcp (MCP client), tiktoken-rs (token counting), and OpenAI-compatible streaming APIs
 - `workflow-runner-v2` composes agent-runner + core for multi-phase execution
 - Default workspace members: orchestrator-cli, agent-runner, llm-cli-wrapper, oai-runner
 - External deps: axum 0.8 (web), async-graphql 7 (API), croner 3 (scheduling), tokio (async), clap (CLI), serde (serialization)

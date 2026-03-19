@@ -77,7 +77,7 @@ graph BT
     SLK --> MKT
     LIN --> MKT
     PDF --> MKT
-    AOSKILLS --> MKT
+    AOSKILLS -.->|Separate plugin, not in marketplace| MKT
 
     SUPA --> SUPA_API
     PG --> PG_API
@@ -104,8 +104,8 @@ graph BT
 
 ## Notes
 
-- All packs are independent — no shared code dependencies between packs
-- The marketplace is the only shared dependency (registry/discovery)
+- All 15 packs are independent — no shared code dependencies between packs
+- The marketplace registry indexes only the 15 Claude Code plugin packs; ao-skills is a separate plugin not listed in the marketplace
 - Each pack wraps a specific external service API
 - research-pack supports multiple backends: Tavily, Brave Search, Context7
 - ao-bundled-packs use pack.toml format (different from Claude Code plugin format)

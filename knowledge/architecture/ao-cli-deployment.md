@@ -25,6 +25,7 @@ graph TD
         CARGO --> ARBIN["agent-runner binary"]
         CARGO --> LLMBIN["llm-cli-wrapper binary"]
         CARGO --> OAIBIN["oai-runner binary"]
+        CARGO --> WFBIN["ao-workflow-runner binary"]
     end
 
     subgraph "Local Machine"
@@ -81,7 +82,7 @@ graph TD
 ## Notes
 
 - AO is a local-only tool — no cloud deployment, all state in .ao/ directory
-- Four default build targets: orchestrator-cli, agent-runner, llm-cli-wrapper, oai-runner
+- Five build targets: orchestrator-cli (ao), agent-runner, llm-cli-wrapper, oai-runner (ao-oai-runner), workflow-runner-v2 (ao-workflow-runner)
 - The daemon runs as a background process, managing worktrees and executing workflows on schedule
 - The Tauri desktop app builds ao-cli via `scripts/prepare-sidecar.mjs` and bundles it
 - Each project configures AO via .ao/config.json and .ao/workflows/*.yaml

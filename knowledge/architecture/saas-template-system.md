@@ -59,7 +59,7 @@ graph TD
     CLIENT -->|HTTP/SSR| WEB
     WEB --> API
     WEB --> AUTH
-    WEB --> APIHOOKS
+    WEB --> API
     API --> AUTH
     API --> DB
     API --> BILLING
@@ -74,10 +74,9 @@ graph TD
     ANALYTICS --> POSTHOG
     AI --> OPENAI
     AI --> ANTHROPIC
-    CONFIG --> DB
-    CONFIG --> AUTH
     MCP --> AUTH
     MCP --> DB
+    API --> EMAIL
 ```
 
 ## Notes
