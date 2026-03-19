@@ -14,9 +14,9 @@ The system consists of:
 
 ## Maturity: Active Development (highly active)
 
-The ao-cli is under very heavy active development with multiple commits per day. Latest commit (2026-03-18) implements self-healing model pipeline routing. The desktop app is at v0.1.0.
+The `ao-cli` is under very heavy active development with multiple commits per day. On 2026-03-19 it merged `Release v0.0.11`, then immediately retuned default-branch routing so Codex GPT-5.4 carries more throughput work, Sonnet stays on feature delivery, and Gemini handles UI-heavy work. The desktop app repo exists but is now archived.
 
-## Visibility: ao-cli is Private, ao-skills is Public
+## Visibility: ao-cli is Private, ao-skills is Public, agent-orchestrator is Private + Archived
 
 ---
 
@@ -66,11 +66,20 @@ The ao-cli is under very heavy active development with multiple commits per day.
 
 - Multi-phase workflow execution with retry/rework loops
 - Background daemon with queue-based task scheduling
-- Model routing (Claude, Codex, Gemini, OpenAI-compatible models)
-- Self-healing pipeline: auto-reroutes failing model pipelines
+- Task-specialized routing across Claude, Codex GPT-5.4, Gemini, and cheaper monitoring paths
+- Self-healing pipeline: auto-reroutes failing model pipelines and exhausted providers
 - Git worktree management for isolated agent execution
 - MCP server integration
 - Web UI (Axum-based, embedded)
+
+### Current Routing Posture (verified 2026-03-19)
+
+- **Throughput default:** Codex GPT-5.4 for most low/medium/high coding work
+- **Feature work:** Claude Sonnet
+- **Bugfix/refactor work:** Codex GPT-5.4
+- **UI work:** Gemini
+- **Analytical phases:** PR review, code review, reconciler, and workflow-optimizer now run on Codex GPT-5.4
+- **Recent release/ops follow-up:** v0.0.11, process leak fixes, and a cargo test gate all landed on the same day
 
 ---
 
@@ -79,7 +88,8 @@ The ao-cli is under very heavy active development with multiple commits per day.
 - **Language**: TypeScript + Rust (Tauri)
 - **Version**: 0.1.0 (private)
 - **Type**: Desktop application (Tauri v2)
-- **Last updated**: 2026-02-22
+- **Status**: Archived (verified via GitHub metadata on 2026-03-19)
+- **Last updated**: 2026-03-19
 
 ### Stack
 
@@ -92,6 +102,8 @@ The ao-cli is under very heavy active development with multiple commits per day.
 ### Architecture
 
 The desktop app embeds `ao-cli` as a Tauri sidecar. The frontend communicates via Tauri's IPC layer to invoke ao commands and display results. The web app at `apps/ao-web` is also embedded.
+
+As of 2026-03-19 this repo is historical rather than primary. AO's active control surface is the CLI/daemon stack, not the desktop wrapper.
 
 ---
 
@@ -129,7 +141,7 @@ The desktop app embeds `ao-cli` as a Tauri sidecar. The frontend communicates vi
 
 ## Internal Dependencies
 
-- `agent-orchestrator` embeds `ao-cli` as a Tauri sidecar
+- `agent-orchestrator` historically embeds `ao-cli` as a Tauri sidecar, but that repo is now archived
 - `ao-skills` references `ao-cli` commands and MCP tools
 - `ao-bundled-packs` extends `ao-cli` workflow capabilities
 - AO itself manages the `brain` repo tasks and workflows

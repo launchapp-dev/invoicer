@@ -3,7 +3,7 @@
 **Repo**: `launchapp-dev/ao-cli`
 **Visibility**: Private
 **Language**: Rust
-**Last updated**: 2026-03-18 (very active)
+**Last updated**: 2026-03-19 (very active)
 
 ## Purpose
 
@@ -47,14 +47,28 @@ crates/
 
 - None (standalone Rust binary)
 - Integrates with `ao-skills` (Claude Code plugin that wraps ao commands)
-- Used by `agent-orchestrator` (desktop app sidecar)
+- Historically used by `agent-orchestrator` (the desktop sidecar repo is now archived)
 
 ## Current Status: Active Development
 
 Recent commits show:
-- Self-healing model pipeline routing (auto-reroutes failing models)
-- Multi-owner agent team (6 POs, 2 architects, 2 researchers)
-- Workflow optimizer tracking success rates per model
+- `Release v0.0.11` merged on 2026-03-19, followed by same-day workflow tuning on the default branch
+- `.ao/workflows/custom.yaml` is now the main control surface for model routing and agent specialization
+- `4d2694f` routes most low/medium/high work to Codex GPT-5.4 during the doubled-rate-limit window through 2026-04-02
+- `67d7e4e` rebalances routing by task type: features → Sonnet, bugfix/refactor → Codex, UI → Gemini
+- `baeeaea` moves PR review, code review, reconciler, and workflow-optimizer onto Codex GPT-5.4
+- Self-healing/failover logic from 2026-03-18 remains active under the new routing policy
+- Recent merged PRs also cover agent-runner process leak fixes, rustfmt cleanup, and a cargo test gate in CI
+
+## Workflow Direction (verified 2026-03-19)
+
+The repo is no longer best summarized as just "multi-model routing." It now uses task-specialized routing plus analytical-role specialization:
+
+- **Default throughput path:** Codex GPT-5.4 for most everyday coding work
+- **Feature/build work:** Claude Sonnet
+- **UI work:** Gemini
+- **Analytical/system judgment:** Codex GPT-5.4 for PR review, code review, reconciler, and workflow-optimizer
+- **Fallback behavior:** failover/re-routing remains active for failing providers and exhausted routes
 
 ## API Surface
 

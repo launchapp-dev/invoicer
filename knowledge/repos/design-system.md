@@ -29,6 +29,9 @@ Shared design system based on Radix UI primitives, providing consistent UI compo
 ## Source Structure
 
 ```
+apps/
+  docs/         # Documentation website with component pages + live previews
+
 src/
   components/   # ~52 atomic primitives (Button, Input, Card, Form, DataTable, …)
   blocks/
@@ -43,6 +46,15 @@ src/
   styles/       # CSS + Tailwind config
   index.ts      # Flat public re-exports for everything above
 ```
+
+## AO Workflow Automation
+
+Verified on the default branch at commit `735383c` (2026-03-19):
+
+- `.ao/workflows/custom.yaml` now includes a dependency-update phase, workflow, and 6-hour cron schedule.
+- An `updater` agent uses Context7 + `package-version` MCP for dependency scanning.
+- Context7 was wired to reviewer, product-owner, and component-author agents.
+- `package-version` was wired to product-owner and component-author agents.
 
 ## Ecommerce Block Module (`src/blocks/ecommerce`)
 
@@ -73,5 +85,6 @@ import {
 - The `@audiogenius/` namespace (vs `@launchpad/`) suggests it predates or serves both the AI product line and the BaaS platform
 - No public README available
 - Very recent activity (updated 2026-03-19) — actively being developed
+- Current default-branch focus is split between component/block coverage and AO-managed maintenance automation
 
 ## Current Status: Active Development

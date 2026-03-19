@@ -1,8 +1,8 @@
 # SDK Consistency Matrix
 
-> Last updated: 2026-03-19 by knowledge-curator agent (2nd pass).
+> Last updated: 2026-03-19 by knowledge-curator agent (3rd pass).
 > Source repo: `saas-template-launch-app-test` (flagship template).
-> Note: Private repo data cannot be freshly verified — GitHub API returns 404 for saas-template-launch-app-test, ao-cli, and design-system. Versions below reflect last verified state from 2026-03-18. No new SDK upgrades detected from public repos in current 7-day window.
+> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-19. The current default branch includes `packages/jobs`, QStash-backed job enqueueing in `@repo/api`, Sentry in the web/API surfaces, and the removal of the old `@repo/api-hooks` package.
 
 ## Core Framework Versions
 
@@ -27,6 +27,8 @@
 | `@repo/api` | hono | ^4.7.5 | Current |
 | | hono-rate-limiter | ^0.5.0 | Current (upgraded from 0.4.x) |
 | | @hono-rate-limiter/redis | ^0.1.4 | — |
+| | @sentry/node | ^10.0.0 | New on 2026-03-19 |
+| | @upstash/qstash | ^2.7.21 | New on 2026-03-19 |
 | | @upstash/redis | ^1.37.0 | — |
 | | @hono/zod-openapi | ^1.2.2 | — |
 | | @scalar/hono-api-reference | ^0.10.4 | — |
@@ -39,6 +41,8 @@
 | | postgres | ^3.4.5 | — |
 | `@repo/billing` | stripe | ^20.0.0 | Current |
 | | @polar-sh/sdk | ^0.46.0 | Polar.sh (alternative) |
+| `@repo/jobs` | @trigger.dev/sdk | ^3.0.0 | New package added 2026-03-19 |
+| | @repo/email | workspace:* | Welcome-email + webhook tasks |
 | `@repo/analytics` | posthog-node | ^5.0.0 | Current (upgraded from v4) |
 | | posthog-js | ^1.57.0 | — |
 | `@repo/email` | resend | ^6.0.0 | Current |
@@ -46,7 +50,6 @@
 | | @react-email/components | ^1.0.0 | — |
 | `@repo/storage` | @aws-sdk/client-s3 | ^3.1011.0 | Current |
 | | @aws-sdk/s3-request-presigner | ^3.1011.0 | — |
-| `@repo/api-hooks` | orval | ^8 | Current (upgraded from v7) |
 | `@repo/i18n` | i18next | ^25 | Current (upgraded from v24) |
 | | react-i18next | ^16 | Current (upgraded from v15) |
 
@@ -90,16 +93,20 @@
 | | storybook | v10 | Upgraded from v8 |
 | | tsup | — | Build |
 
-## Recent Upgrades (last 7 days)
+## Recent Changes (last 7 days)
 
-| Package | From | To | Repo |
-|---|---|---|---|
-| orval | v7 | v8 | `saas-template-launch-app-test` (`@repo/api-hooks`) |
-| hono-rate-limiter | 0.4.2 | 0.5.3 | `saas-template-launch-app-test` (`@repo/api`) |
-| i18next | v24 | v25 | `saas-template-launch-app-test` (`@repo/i18n`) |
-| react-i18next | v15 | v16 | `saas-template-launch-app-test` (`@repo/i18n`) |
-| react-email | v4 | v5 | `saas-template-launch-app-test` (`@repo/email`) |
-| posthog-node | v4 | v5 | `saas-template-launch-app-test` (`@repo/analytics`) |
-| tailwindcss | 4.2.1 | 4.2.2 | `saas-template-launch-app-test` |
-| turbo | 2.8.18 | 2.8.19 | `saas-template-launch-app-test` |
-| storybook | v8 | v10 | `design-system` |
+| Change | Detail | Repo / Area |
+|---|---|---|
+| Added | `@trigger.dev/sdk` ^3.0.0 in new `@repo/jobs` package | `saas-template-launch-app-test` |
+| Added | `@upstash/qstash` ^2.7.21 for async job enqueueing | `saas-template-launch-app-test` (`@repo/api`) |
+| Added | `@sentry/node` ^10.0.0 | `saas-template-launch-app-test` (`@repo/api`) |
+| Added | `@sentry/react` ^10.0.0 | `saas-template-launch-app-test` (`apps/web`) |
+| Removed | `@repo/api-hooks` package from the live monorepo | `saas-template-launch-app-test` |
+| Upgraded | `hono-rate-limiter` 0.4.2 → 0.5.3 | `saas-template-launch-app-test` (`@repo/api`) |
+| Upgraded | `i18next` v24 → v25 | `saas-template-launch-app-test` (`@repo/i18n`) |
+| Upgraded | `react-i18next` v15 → v16 | `saas-template-launch-app-test` (`@repo/i18n`) |
+| Upgraded | `react-email` v4 → v5 | `saas-template-launch-app-test` (`@repo/email`) |
+| Upgraded | `posthog-node` v4 → v5 | `saas-template-launch-app-test` (`@repo/analytics`) |
+| Upgraded | `tailwindcss` 4.2.1 → 4.2.2 | `saas-template-launch-app-test` |
+| Upgraded | `turbo` 2.8.18 → 2.8.19 | `saas-template-launch-app-test` |
+| Upgraded | `storybook` v8 → v10 | `design-system` |

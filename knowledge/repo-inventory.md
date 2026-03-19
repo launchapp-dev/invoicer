@@ -1,6 +1,7 @@
 # Repository Inventory
 
 > Last updated: 2026-03-19 by knowledge-curator agent.
+> Snapshot: 109 repos in `launchapp-dev`, 23 created since 2026-03-12, and 1 archived repo (`agent-orchestrator`). Private repo status in this file was freshly verified with authenticated GitHub CLI access.
 
 ## Active Repos (pushed in last 30 days)
 
@@ -8,10 +9,10 @@
 
 | Repo | Description | Language | Last Push | Status |
 |---|---|---|---|---|
-| `saas-template-launch-app-test` | Full SaaS monorepo: React Router 7, Hono, Better-Auth, Drizzle, Stripe/Polar, Docker | TypeScript | 2026-03-19 | Active — 180+ merged PRs, AO-managed |
-| `design-system` | Radix UI-based React component library, Storybook v10, shadcn registry compatible | TypeScript | 2026-03-19 | Active — Phase 3/4 components in progress |
-| `ao-cli` | Rust AI agent orchestrator CLI with daemon, worktrees, multi-model routing | Rust | 2026-03-19 | Active — self-healing model pipeline work |
-| `brain` | Org-wide AI workforce command center (AO config, knowledge base, agents) | — | 2026-03-19 | New — created 2026-03-18 |
+| `saas-template-launch-app-test` | Full SaaS monorepo: React Router 7, Hono, Better-Auth, Drizzle, Stripe/Polar, Trigger.dev, QStash | TypeScript | 2026-03-19 | Active — 179 merged PRs in 7 days; current launchapp-lite trunk/canary |
+| `design-system` | Radix UI-based React component library, Storybook v10, docs site, shadcn registry compatible | TypeScript | 2026-03-19 | Active — 51 merged PRs in 7 days; ecommerce blocks + AO dependency updater workflow |
+| `ao-cli` | Rust AI agent orchestrator CLI with daemon, worktrees, and task-specialized model routing | Rust | 2026-03-19 | Active — 51 merged PRs in 7 days; v0.0.11 plus Codex/Sonnet/Gemini routing overhaul |
+| `brain` | Org-wide AI workforce command center (AO config, knowledge base, agents, MCP servers) | JavaScript | 2026-03-19 | Active — 54 merged PRs since creation; structured data + typed MCP access added |
 | `ao-skills` | Claude Code plugin pack with 15 AO skills (workflow-authoring, agent-personas, mcp-servers, etc.) | — | 2026-03-19 | Active — published as Claude Code plugin with marketplace.json |
 | `ao-bundled-packs` | Community/first-party extension packs for AO CLI | — | 2026-03-18 | Active |
 | `launchapp-lite-v2` | Lightweight SaaS starter v2: RR7, Hono SSR, Drizzle, Turborepo | TypeScript | 2026-03-17 | Active — recently converted to Turborepo monorepo |
@@ -48,6 +49,14 @@
 
 ---
 
+## Status Changes (verified 2026-03-19)
+
+| Repo | Change | Notes |
+|---|---|---|
+| `agent-orchestrator` | Archived | Private Tauri desktop shell for AO; GitHub metadata now marks the repo archived even though it saw a 2026-03-19 push |
+
+---
+
 ## Launchpad BaaS Repos (lower activity, last push Jan 2026 or earlier)
 
 | Repo | Description | Language | Last Push |
@@ -81,7 +90,7 @@
 |---|---|---|
 | `renovate-config` | Shared Renovate config preset | 2025-12-30 |
 | `worktree-manager` | Parallel dev tool using git worktrees with Claude/Codex/Gemini | 2025-12-22 |
-| `agent-orchestrator` | Desktop app for orchestrating software dev agents (Rust, older) | 2026-02-22 |
+| `agent-orchestrator` | Desktop app for orchestrating software dev agents (Rust, older) | 2026-03-19 (archived) |
 
 ---
 
@@ -89,8 +98,29 @@
 
 | Repo | Created | Notes |
 |---|---|---|
-| `brain` | 2026-03-18 | Org-wide AI workforce command center, initial commit |
-| `ao-skills` | 2026-03-17 | Claude Code plugin for AO CLI — 15 skills covering workflow authoring, task management, agent personas, MCP setup, daemon ops, troubleshooting. Restructured into `.claude-plugin/plugin.json` format with `marketplace.json` for plugin discovery. |
+| `launchapp-lite` | 2026-03-17 | Original lightweight SaaS starter line, now sitting alongside the newer flagship template repos |
+| `ao-skills` | 2026-03-17 | Claude Code plugin for AO CLI — 15 skills with marketplace metadata |
+| `saas-template-launch-app-test` | 2026-03-17 | Flagship launchapp-lite trunk/canary; highest-volume private repo in the org |
+| `launchapp-lite-v2` | 2026-03-17 | Lightweight SaaS starter v2, Turborepo conversion track |
+| `brain` | 2026-03-19 | Org-wide AI workforce command center |
+| `design-system` | 2026-03-17 | Private component-library repo with docs site and AO automation |
+| `ao-bundled-packs` | 2026-03-18 | First-party/community AO workflow pack collection |
+| `claude-plugin-marketplace` | 2026-03-17 | Index of all Claude plugin packs |
+| `aws-pack` | 2026-03-16 | AO plugin pack scaffold for AWS |
+| `firebase-pack` | 2026-03-16 | AO plugin pack scaffold for Firebase |
+| `pdf-pack` | 2026-03-16 | AO plugin pack scaffold for PDF workflows |
+| `monitoring-pack` | 2026-03-16 | AO plugin pack scaffold for monitoring/observability |
+| `ollama-pack` | 2026-03-16 | AO plugin pack scaffold for local LLM workflows |
+| `postgres-pack` | 2026-03-16 | AO plugin pack scaffold for PostgreSQL |
+| `figma-pack` | 2026-03-16 | AO plugin pack scaffold for Figma |
+| `slack-pack` | 2026-03-16 | AO plugin pack scaffold for Slack |
+| `stripe-pack` | 2026-03-16 | AO plugin pack scaffold for Stripe |
+| `playwright-pack` | 2026-03-16 | AO plugin pack scaffold for Playwright |
+| `linear-pack` | 2026-03-16 | AO plugin pack scaffold for Linear |
+| `research-pack` | 2026-03-16 | AO plugin pack scaffold for research workflows |
+| `docker-pack` | 2026-03-16 | AO plugin pack scaffold for Docker |
+| `supabase-pack` | 2026-03-16 | AO plugin pack scaffold for Supabase |
+| `google-workspace-pack` | 2026-03-16 | AO plugin pack scaffold for Google Workspace |
 
 ## Org Rename
 
@@ -98,4 +128,6 @@ The org was previously known as **AudioGenius-ai**. As of 2026-03-19, all plugin
 
 ## Recently Archived
 
-None observed as of 2026-03-19.
+| Repo | Archived By | Notes |
+|---|---|---|
+| `agent-orchestrator` | GitHub repo metadata (observed 2026-03-19) | Historical AO desktop app wrapper; `ao-cli` remains the active engine |

@@ -1,6 +1,6 @@
 # LaunchApp Templates
 
-> SaaS starter templates — launchapp-lite, launchapp-lite-v2, launchpad-saas-template
+> SaaS starter templates — launchapp-lite, launchapp-lite-v2, saas-template-launch-app-test, launchpad-saas-template
 
 ## Purpose
 
@@ -8,7 +8,7 @@ Production-ready SaaS starter templates for building full-stack applications. Te
 
 ## Maturity: Active Development
 
-Both template variants are under active development as of early 2026.
+Active development is concentrated in `saas-template-launch-app-test`, which now functions as the flagship launchapp-lite trunk/canary. `launchapp-lite` and `launchapp-lite-v2` remain sibling template lines with lighter recent activity.
 
 ## Visibility: Private
 
@@ -89,9 +89,17 @@ packages/
 
 ## `saas-template-launch-app-test` (private)
 
-- **Description**: Test/staging version of launchapp-lite
+- **Description**: Current flagship/canary launchapp-lite monorepo, despite the temporary repo name
 - **Last updated**: 2026-03-19
-- **Status**: Appears to be a testing environment
+- **Status**: Extremely active — 179 merged PRs in the last 7 days
+
+### Current Direction
+
+- Async/background jobs were added through a new `@repo/jobs` package powered by Trigger.dev v3.
+- `@repo/api` now exposes QStash-backed job enqueueing and locks that surface to admin sessions or API keys.
+- Recent work hardened admin/API security, fixed the ALB health-check path, and corrected API key dashboard typing.
+- Sentry monitoring, in-app notifications, and Vitest test scaffolding all landed the same day.
+- `@repo/api-hooks` was removed from the live monorepo, so this repo is converging on a leaner package graph instead of accumulating scaffolding.
 
 ---
 
@@ -103,6 +111,10 @@ All templates use:
 - **Stripe** — payments
 - **Radix UI** — component primitives
 - **Tailwind CSS** — styling
+
+The flagship template additionally now uses:
+- **Trigger.dev + Upstash QStash** — async/background jobs
+- **Sentry** — web/API monitoring
 
 ## Other Template-Related Repos
 

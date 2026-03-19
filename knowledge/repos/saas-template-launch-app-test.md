@@ -3,15 +3,15 @@
 **Internal name**: launchapp-lite
 **Org**: launchapp-dev
 **Visibility**: private
-**Status**: Active development (180+ merged PRs, multiple PRs per day)
+**Status**: Active development (179 merged PRs in the last 7 days, multiple PRs per hour)
 **Created**: 2026-03-17
 **Last pushed**: 2026-03-19
 
 ## Purpose
 
-Lightweight SaaS starter monorepo providing auth, database, API, web frontend, payments, email, AI, i18n, and storage out of the box. Target audience: developers who want a production-ready SaaS foundation built on React Router 7, with sensible defaults and provider abstractions for swappable third-party services.
+Production-ready SaaS starter monorepo providing auth, database, API, web frontend, payments, email, AI, i18n, storage, monitoring, and async jobs out of the box. Target audience: developers who want a full-stack SaaS foundation built on React Router 7, with sensible defaults and provider abstractions for swappable third-party services.
 
-This is the flagship, actively developed template that receives AO-orchestrated task automation daily.
+This is the flagship, actively developed template that receives AO-orchestrated task automation daily. Despite the repo name, it now functions as the primary launchapp-lite trunk/canary rather than a throwaway testing copy.
 
 ## Monorepo Structure
 
@@ -23,7 +23,6 @@ saas-template-launch-app-test/
 │   ├── ai/                     Vercel AI SDK wrapper (OpenAI + Anthropic)
 │   ├── analytics/              PostHog provider abstraction (client + server)
 │   ├── api/                    Hono API server with OpenAPI spec + Scalar docs
-│   ├── api-hooks/              Auto-generated React Query hooks + Axios client (orval)
 │   ├── auth/                   Better-Auth server + client setup, API key plugin
 │   ├── billing/                Stripe + Polar.sh provider abstraction
 │   ├── config/                 Shared env config with Zod validation + lazy-init
@@ -31,6 +30,7 @@ saas-template-launch-app-test/
 │   ├── database/               Drizzle ORM schema, migrations, db client
 │   ├── email/                  Resend + React Email templates
 │   ├── i18n/                   i18next internationalization (en/es)
+│   ├── jobs/                   Trigger.dev task definitions + async job payloads
 │   ├── mcp/                    Custom MCP server scaffold (stdio transport)
 │   ├── storage/                S3-compatible object storage (@aws-sdk)
 │   ├── typescript-config/      Shared tsconfig base
@@ -59,6 +59,8 @@ saas-template-launch-app-test/
 | Analytics | PostHog (posthog-js + posthog-node) | latest |
 | Billing | Stripe + Polar.sh (@polar-sh/sdk) | latest |
 | Email | Resend + React Email | latest |
+| Background jobs | Trigger.dev + Upstash QStash | `@trigger.dev/sdk` ^3.0.0, `@upstash/qstash` ^2.7.21 |
+| Monitoring | Sentry (web + API) | `@sentry/react` / `@sentry/node` ^10.0.0 |
 | Storage | AWS S3 (@aws-sdk/client-s3) | latest |
 | i18n | i18next + react-i18next | latest |
 | MCP | @modelcontextprotocol/sdk | latest |
@@ -92,12 +94,10 @@ Hono API server with OpenAPI spec generation via `@hono/zod-openapi`. Served API
 - `ai` — AI generation endpoints
 - `api-keys` — CRUD for Better-Auth API keys (auth-protected)
 - `billing` — Stripe/Polar checkout and subscription management
+- `jobs` — QStash-backed async job enqueueing (restricted to admin sessions or API keys)
 - `storage` — presigned S3 upload/download/delete endpoints
 - `users` — user profile management
-- `waitlist` — public join + verify endpoints
-
-### `@repo/api-hooks`
-Auto-generated React Query hooks and Axios client from the OpenAPI spec using orval (upgraded to v8). Keeps client/server types in sync automatically.
+- `waitlist` — verification/support endpoints; join submission now starts from a web action
 
 ### `@repo/billing`
 Provider abstraction over Stripe and Polar.sh. Swappable via `PAYMENT_PROVIDER` env var. Contains separate `providers/stripe.ts` and `providers/polar.ts` implementations.
@@ -110,6 +110,9 @@ PostHog analytics abstraction with both client-side (posthog-js) and server-side
 
 ### `@repo/email`
 Resend email sending + React Email component templates. Used by auth flows and waitlist confirmation.
+
+### `@repo/jobs`
+Async/background job package added on 2026-03-19. Uses Trigger.dev v3 for task definitions and shared payload types. Current jobs cover welcome-email dispatch and a stubbed webhook-processing path, while `@repo/api` uses QStash to enqueue work into the async layer.
 
 ### `@repo/storage`
 S3-compatible object storage using `@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner`. Presigned URL generation for secure browser-direct uploads/downloads.
@@ -135,10 +138,10 @@ Billing (Stripe vs Polar) and AI (OpenAI vs Anthropic) use a provider interface 
 Config, database connections, and other expensive resources use lazy initialization — they are created on first access, not at module import time. This is critical for SSR environments where module-level side effects cause issues.
 
 ### OpenAPI-First API Design
-The Hono API uses `@hono/zod-openapi` so all routes are defined with Zod schemas that generate OpenAPI specs. `@scalar/hono-api-reference` serves live docs. `orval` consumes the spec to auto-generate `@repo/api-hooks`.
+The Hono API uses `@hono/zod-openapi` so all routes are defined with Zod schemas that generate OpenAPI specs. `@scalar/hono-api-reference` serves live docs. The older generated-client package (`@repo/api-hooks`) was removed from the live monorepo on 2026-03-19, so the OpenAPI surface is currently used for documentation and typed route contracts rather than a shipped internal hooks package.
 
 ### Zod Validation Throughout
-Zod is used at every boundary: config (`@repo/config`), database schemas via `drizzle-zod`, API route definitions, and client-side type generation.
+Zod is used at every boundary: config (`@repo/config`), database schemas via `drizzle-zod`, API route definitions, and runtime validation inside the web/API layers.
 
 ### Turborepo Task Graph
 `turbo.json` defines a proper build DAG. The `DATABASE_URL`, auth, and payment env vars are declared as `globalEnv` so Turborepo correctly invalidates caches when they change. Sensitive secrets are in `globalPassThroughEnv`.
@@ -172,12 +175,14 @@ This repo is deeply integrated with the AO Agent Orchestrator:
 
 ## Current Status and Recent Activity
 
-**Extremely active development** — created 2026-03-17, already has 180+ merged PRs as of 2026-03-19. Recent additions:
-- Waitlist system with DB schema, API route, email confirmation (TASK-182)
-- API key management CRUD endpoints (TASK-183)
-- Turbo.json alignment with full launchapp (TASK-184)
-- Storage presigned URL API routes (TASK-175)
-- Hono rate-limiter upgrade 0.4.2 → 0.5.3 (TASK-180)
-- Orval upgrade v7 → v8 in api-hooks (TASK-179)
+**Extremely active development** — created 2026-03-17 and already at 179 merged PRs in the current 7-day window. Recent verified changes:
+- `26b819c`: add `@repo/jobs` with Trigger.dev v3 (`send-welcome-email`, `process-webhook`)
+- `70830c4`: add QStash-backed background job enqueueing to `@repo/api`
+- `07a92c1`: lock the jobs enqueue route down to admin sessions or API keys
+- `2b6c17c`: remove `@repo/email` coupling from `@repo/api` by moving waitlist join into a web action
+- `79ef14c`: fix Pulumi ALB health checks to use `/api/health`
+- `4ee9dfe`: fix dashboard API key typing by mapping Better-Auth results instead of unsafe casts
+- `@repo/api-hooks` removed from the default branch as dead code
+- Sentry, notifications, and Vitest setup all landed the same day
 
 This repo is the primary development vehicle for the launchapp-lite product, with AO automating multiple feature tasks daily.

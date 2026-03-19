@@ -1,182 +1,145 @@
 # Active Workstreams
 
 > Last updated: 2026-03-19 by knowledge-curator agent.
-> Note: Private repo activity (saas-template-launch-app-test, ao-cli, design-system) cannot be freshly verified — GitHub API returns 404 for these repos. Status below reflects last known state from 2026-03-18. Brain repo, ao-skills activity is current via GitHub API.
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-19, not the stale 2026-03-18 fallback snapshot.
 
 ## Summary
 
-As of 2026-03-19, the org has 3 high-velocity active workstreams (private, last verified 2026-03-18), 1 SDK consistency initiative in early remediation, the Brain command center operating at scale, and a new ao-skills Claude Code plugin published.
+As of 2026-03-19, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), 1 still-mostly-planning standards initiative (Launchpad SDK consistency), and a newly created AO plugin ecosystem. The previously active `agent-orchestrator` desktop repo is now archived.
 
 ---
 
-## 1. saas-template-launch-app-test — Feature Buildout
+## 1. saas-template-launch-app-test — Flagship Template Hardening + Async Jobs
 
 **Repo:** `saas-template-launch-app-test`
 **Owner:** Shooksie
-**Status:** Very active — 180+ merged PRs in 7 days via AO daemon
+**Who is doing the work:** AO-managed implementation/review/merge pipeline on top of the repo's custom workflow
+**Status:** Extremely active — 179 merged PRs since 2026-03-12
 
-The flagship SaaS template is under rapid AI-assisted development. The AO daemon is running agents against a large task backlog covering features, bugfixes, and dependency upgrades.
+This repo is no longer best described as a "test/staging" copy. It is the primary launchapp-lite trunk/canary where new platform capabilities land first.
 
-**Recent highlights (last 7 days):**
-- Waitlist persistence: DB schema, API route, email confirmation (TASK-182)
-- API key management CRUD route added to `@repo/api` (TASK-183)
-- Storage routes: presigned upload/download/delete endpoints (TASK-175)
-- Polar.sh billing dashboard support (TASK-170)
-- Deployment: Dockerfile, docker-compose.prod.yml, deployment docs (TASK-173)
-- Local dev docker-compose.yml for PostgreSQL (TASK-172)
-- Security fix: rate limiter keyGenerator hardened against x-forwarded-for spoofing (TASK-164)
-- Security fix: Zod runtime validation replacing `as` casts in billing webhook (TASK-166)
-- `@repo/i18n` documented as opt-in with integration guide
-- `@repo/mcp` tsconfig fixed for typecheck
-- Multiple dependency upgrades: orval v7→v8, hono-rate-limiter 0.4→0.5, i18next v24→v25, react-i18next v15→v16, react-email v4→v5, posthog-node v4→v5, tailwindcss 4.2.1→4.2.2, turbo 2.8.18→2.8.19
+**Current focus:**
+- Add async/background processing primitives.
+- Decouple over-coupled API responsibilities.
+- Harden admin/API security and deployment health.
+- Tighten types and monitoring around the dashboard + API surface.
 
-**AO Workflow Config:**
-- 5 agents, 9 phases, 6 workflows, staggered cron schedules
-- Standard pipeline: implementation → push branch → create PR → PR review → merge
+**Recent highlights (verified 2026-03-19):**
+- `@repo/jobs` added with Trigger.dev v3 tasks for welcome email and webhook processing.
+- `@repo/api` gained a QStash-backed jobs route for enqueueing async work.
+- `/enqueue` was tightened so only admin sessions or API keys can use it.
+- Waitlist join flow moved out of `@repo/api` into a web action to reduce API/email coupling.
+- ALB health check path was fixed from `/health` to `/api/health`.
+- Dashboard API key typing was corrected by serializing/mapping Better-Auth date fields instead of using unsafe casts.
+- Sentry monitoring, in-app notifications, and Vitest-based test setup all landed the same day.
+- `@repo/api-hooks` was removed from the live monorepo as dead code.
 
 ---
 
-## 2. design-system — Component Library Buildout (Phase 3/4)
+## 2. design-system — Component Library Buildout + Repo Automation
 
 **Repo:** `design-system`
 **Owner:** Shooksie
-**Status:** Active — ~10 PRs merged in 7 days via AO
+**Who is doing the work:** AO product-owner, component-author, reviewer, and updater agents
+**Status:** Very active — 51 merged PRs since 2026-03-12
 
-Completing the Radix UI-based React component library. Currently working through Phase 3 (extended) and Phase 4 (advanced) components.
+The repo is still finishing Phase 3/4 component coverage, but it is now also being automated as an AO-managed dependency-aware component platform.
 
-**Recent highlights (last 7 days):**
-- Combobox and MultiSelect components (TASK-033)
-- VisuallyHidden, Portal, FocusScope utility components (TASK-032)
-- Chart, KPICard, StatDisplay components (TASK-029)
-- Storybook upgrade: v8 → v10 (TASK-030)
-- Toolbar, ContextMenu, Menubar (TASK-028)
-- Calendar and DatePicker (TASK-026)
-- Table striped row variant, Alert info variant
-- NavigationMenu, Breadcrumb, Pagination
+**Current focus:**
+- Finish high-level block coverage and docs-site polish.
+- Keep dependencies moving with an explicit updater workflow.
+- Give authoring/review agents direct dependency and docs context.
 
-**Roadmap status:**
-- Phase 1-2 (Foundation, Core): Complete
-- Phase 3 (Extended): Nearly complete — forms, navigation, data display
-- Phase 4 (Advanced Patterns): In progress — charts, combobox, utility components done
+**Recent highlights (verified 2026-03-19):**
+- Ecommerce blocks landed: `ProductCard`, `ProductCardGrid`, `ShoppingCart`, and `CheckoutForm`.
+- Docs-site work added live previews, corrected component prop mismatches, and replaced raw HTML controls with design-system primitives for accessibility.
+- Blocks barrel exports were fixed so all block categories are available from the package root.
+- Commit `735383c` added a dependency-update phase/workflow/cron in `.ao/workflows/custom.yaml`.
+- That same automation change wired Context7 to reviewer, product-owner, and component-author agents, and wired `package-version` MCP to product-owner and component-author agents.
 
 ---
 
-## 3. AO CLI — v0.0.11 Release + Self-Healing Model Pipeline
+## 3. AO CLI — v0.0.11 + Model Routing Overhaul
 
 **Repo:** `ao-cli`
 **Owner:** Shooksie
-**Status:** Active — v0.0.11 release PR open, infrastructure improvements ongoing
+**Who is doing the work:** AO's own planner/reconciler/reviewer/workflow stack plus direct maintainer commits
+**Status:** Very active — 51 merged PRs since 2026-03-12
 
-The AO CLI is being upgraded with self-healing and multi-owner agent team capabilities. A significant release milestone is in progress.
+The release train moved from self-healing failover work into a same-day workflow-routing overhaul on 2026-03-19.
 
-**Release milestone:**
-- PR #94 opened 2026-03-18: Release v0.0.11 — pending review and merge
+**Current focus:**
+- Raise throughput by shifting more work to Codex GPT-5.4.
+- Split task classes by model strengths instead of one default route.
+- Keep analytical/reconciliation phases on the provider best suited to code-critical judgment.
 
-**Recent highlights:**
-- Auto-detect and re-route failing model pipelines (reconciler + workflow-optimizer)
-- Reconciler: failing oai-runner tasks auto-rerouted to Claude
-- Workflow-optimizer: tracks per-model success rates, creates bugfix tasks on 0% success
-- Multi-owner agent team: 6 Product Owners, 2 architects, 2 researchers, master reviewer
-  - po-oai-runner: oai-runner/model routing (every 2hr)
-  - po-web: web UI, GraphQL, React app (hourly)
-
----
-
-## 4. Launchpad SDK Consistency — Cross-Repo Standards Remediation (New)
-
-**Repos:** All `launchpad-*-sdk` repos (identity, payments, storage, realtime, workflows, push, db, email, secrets)
-**Owner:** Shooksie
-**Status:** New initiative — 10 issues filed 2026-03-18
-
-A new cross-repo workstream was started to bring all Launchpad BaaS SDKs up to a consistent standard. 10 `[SDK-CONSISTENCY]` issues were filed across the `launchpad-*-sdk` repos on 2026-03-18, signaling a structured remediation effort.
-
-**Scope:**
-- Standardize SDK conventions, interfaces, and patterns across all Launchpad BaaS SDKs
-- Likely covers: naming conventions, error handling patterns, TypeScript types, versioning, documentation, and test coverage
-- Affects: `launchpad-identity-sdk`, `launchpad-payments-sdk`, `launchpad-storage-sdk`, `launchpad-realtime-sdk`, `launchpad-workflows-sdk`, `launchpad-push-sdk`, `launchpad-db-sdk`, and related repos
-
-**Status as of 2026-03-18:**
-- 10 issues filed; none closed yet — remediation work not yet started
-- Issues labeled `[SDK-CONSISTENCY]` for tracking
+**Recent highlights (verified 2026-03-19):**
+- `Release v0.0.11` merged earlier in the day.
+- Commit `4d2694f` routed most low/medium/high work to Codex GPT-5.4 during the doubled-rate-limit window through 2026-04-02.
+- Commit `67d7e4e` rebalanced routing to features → Sonnet, bugfix/refactor → Codex, and UI → Gemini.
+- Commit `baeeaea` moved PR review, code review, reconciler, and workflow-optimizer to Codex GPT-5.4.
+- Process-leak fixes, rustfmt cleanup, and a cargo-test CI gate also landed around the release.
 
 ---
 
-## 5. Brain — Org-Wide AI Workforce Command Center (Active)
+## 4. brain — Structured Knowledge Platform
 
 **Repo:** `brain`
 **Owner:** Shooksie
-**Status:** Operating at scale — 44+ commits since launch (2026-03-18 to 2026-03-19)
+**Who is doing the work:** conductor + knowledge-curator/product-doc-writer/toolmaker/reviewer workflows
+**Status:** Extremely active — 54 merged PRs since the repo was created on 2026-03-19
 
-The brain repo is the active org-wide coordination layer. Since launch it has processed 6 rounds of product ideation and strategic analysis.
+The brain repo moved beyond markdown curation into structured data + typed MCP access on 2026-03-19.
 
-**Cumulative output (as of 2026-03-19):**
-- **61 repo docs** in `knowledge/repos/` covering the full launchapp-dev portfolio
-- **93 product ideas** across 4 rounds in `knowledge/ideas/`
-- **51+ strategic questions** across 6 rounds in `knowledge/questions/`
-- **34 action items** extracted and filed in `knowledge/actions/`
-- **32 architecture diagrams** verified against source code (2026-03-19)
-- Revenue analysis refreshed to incorporate 93-idea portfolio
-- GTM strategies created for LaunchPad, AO, Better Auth, and LaunchApp Templates
-- Conductor workflow strengthened: deduplication and stale-task cleanup added (#36)
-- Conflict recovery improved: rebase-and-retry workflow added
+**Current focus:**
+- Keep the knowledge base aligned with same-day org changes.
+- Add machine-readable access paths for repo and product data.
+- Stabilize conductor scheduling and writing workflows.
 
-**Infrastructure:**
-- Conductor runs every 5 minutes (replaced brain-planner)
-- All brain-writing workflows use standard push/PR/merge with conflict recovery
-- MCP servers: context7, sequential-thinking, github, firecrawl, playwright
+**Recent highlights:**
+- SQLite-backed structured data layer added.
+- `brain-knowledge-mcp` and `brain-products-mcp` servers added for typed access to knowledge/product data.
+- Repo catalog expanded to cover previously undocumented repos.
+- Conductor deduplication, stale-task cleanup, and idempotent PR phases were strengthened.
 
 ---
 
-## 6. launchapp-lite-v2 — Turborepo Conversion
+## 5. Launchpad SDK Consistency — Standards Initiative
 
-**Repo:** `launchapp-lite-v2`
+**Repos:** `launchpad-*-sdk` family
 **Owner:** Shooksie
-**Status:** Recently active (2026-03-17), may be transitioning to active development
+**Who is doing the work:** planning/requirements stage only so far
+**Status:** Early initiative — issues filed, little fresh code activity
 
-**Recent work:**
-- Converted from single-app to Turborepo monorepo
-- Hono SSR added
-- packages: auth, database, typescript-config, ui
-- Drizzle schema: organizations, memberships, subscriptions
-- AO configured with 4 agents, 11 phases, 5 workflows, 3 schedules
+The org opened SDK consistency tracking work on 2026-03-18, but this is still mostly governance and backlog shaping rather than active implementation.
 
----
-
-## Stale / Lower Priority
-
-- **Launchpad BaaS repos** — Last significant pushes were Dec 2025 – Jan 2026. No active code development, but 10 `[SDK-CONSISTENCY]` issues filed 2026-03-18 signal pending remediation work (see workstream 4 above).
-- **launchapp-landing-v2** — Static landing page, last push Jan 2026.
-- **launchapp.dev** — Marketing site, last push Feb 2026.
-- **mymoku.net** — Personal/product site, last push Mar 12 2026.
+**Current focus:**
+- Standardize naming, interfaces, error handling, and test/documentation expectations across Launchpad SDKs.
+- Decide how the `@launchpad/*` SDK line relates to the rapidly moving `@repo/*` packages in the flagship template.
 
 ---
 
-## 7. ao-skills — Claude Code Plugin for AO CLI (New, Active)
+## 6. AO Skills + Pack Ecosystem — Newly Created Surface Area
 
-**Repo:** `ao-skills`
+**Repos:** `ao-skills`, `ao-bundled-packs`, `claude-plugin-marketplace`, plus 15 pack repos
 **Owner:** Shooksie
-**Status:** New — created 2026-03-17, 11 commits through 2026-03-19
+**Who is doing the work:** direct maintainer work plus AO pack authoring
+**Status:** New and active — 23 repos were created in the org since 2026-03-12
 
-The `ao-skills` repo was launched as the official Claude Code plugin for AO CLI. It has been restructured from a raw markdown knowledge base into a proper Claude Code plugin with a machine-readable manifest.
+**Current focus:**
+- Publish AO's Claude Code skill surface.
+- Establish first-party/community pack scaffolds.
+- Align plugin metadata with the launchapp-dev org rename.
 
-**Recent highlights (2026-03-17 to 2026-03-19):**
-- Initial 7 skills added: getting-started, task-management, workflow-authoring, daemon-operations, queue-management, mcp-tools, troubleshooting
-- 3 new production-pattern skills added: workflow-patterns, agent-personas, mcp-servers-for-agents (distilled from 150+ autonomous PR sessions)
-- 2 new config skills added: mcp-setup, configuration
-- setup-ao command added with step-by-step AI agent install prompt
-- Restructured into `.claude-plugin/plugin.json` format with `skills/<name>/SKILL.md` layout
-- `marketplace.json` added with `source` field for Claude Code plugin discovery
-- `pack-authoring` and `skill-authoring` skills added
-- Fixed `plugin.json`: author must be an object (not a string)
-- Org metadata updated: renamed from AudioGenius-ai → launchapp-dev
-
-**Total skills:** 15 (as of 2026-03-19)
+**Recent highlights:**
+- `ao-skills` now exposes 15 AO-focused skills via Claude plugin metadata.
+- `ao-bundled-packs` and `claude-plugin-marketplace` were created to organize and index pack distribution.
+- AWS, Firebase, PDF, monitoring, Ollama, Postgres, Figma, Slack, Stripe, Playwright, Linear, research, Docker, Supabase, and Google Workspace pack repos all appeared in the same creation wave.
 
 ---
 
-## AO Plugin Packs Ecosystem
+## Archived / Lower Priority
 
-**Repos:** `aws-pack`, `firebase-pack`, `pdf-pack`, + 12 more
-**Status:** Scaffolded (2026-03-16 to 2026-03-17), likely awaiting content
-
-All plugin packs were created in bulk on 2026-03-16 to 2026-03-17. Each follows the same scaffold pattern with workflows, hooks, skills, agents, and setup. The `claude-plugin-marketplace` indexes all packs.
+- `agent-orchestrator` is now archived. AO's active engine is `ao-cli`; the desktop shell remains historical.
+- Launchpad BaaS repos remain lower-velocity. Most last substantive pushes are from December 2025 to January 2026.
+- Marketing/landing repos (`launchapp.dev`, `launchapp-landing-v2`, `mymoku.net`) are materially less active than the four core workstreams above.

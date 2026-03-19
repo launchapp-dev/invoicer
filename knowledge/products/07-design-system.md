@@ -8,7 +8,7 @@
 - **Description**: Radix UI based design system for AudioGenius
 - **Language**: TypeScript
 - **Last updated**: 2026-03-19 (very recent — active)
-- **Maturity**: Active development
+- **Maturity**: Active development with AO-managed dependency automation
 
 ## Purpose
 
@@ -18,7 +18,9 @@ A shared design system based on Radix UI primitives, providing consistent UI com
 
 - TypeScript
 - Radix UI (component primitives)
-- Likely Tailwind CSS (based on org-wide usage)
+- Tailwind CSS
+- Storybook v10
+- AO workflow automation via `.ao/workflows/custom.yaml`
 
 ## Usage in Org
 
@@ -72,9 +74,19 @@ A full, two-column checkout page (form + sticky order summary sidebar). Built on
 
 Key exports: `CheckoutForm`, `CheckoutFormProps`, `CheckoutValues`, `OrderSummaryItem`.
 
+## Repository Automation (verified 2026-03-19)
+
+Commit `735383c` changed the repo from a pure component library into an AO-managed dependency-aware maintenance target:
+
+- Added a dependency-update phase, workflow, and 6-hour cron in `.ao/workflows/custom.yaml`
+- Added an updater agent with Context7 + `package-version` MCP for dependency scanning
+- Wired Context7 to reviewer, product-owner, and component-author agents
+- Wired `package-version` to product-owner and component-author agents
+
 ## Notes
 
 - No README available in the repo
 - Very recent activity (updated 2026-03-19) suggests active development
 - The `@audiogenius/` namespace vs `@launchpad/` suggests this may serve both the AI product line and the BaaS platform
 - Shadcn UI (used in templates) is built on top of Radix UI — this design system likely provides the configured, branded layer on top of Shadcn/Radix primitives
+- The repo now mixes feature delivery (components/blocks/docs) with automated dependency maintenance through AO

@@ -1,7 +1,7 @@
 # Organization Architecture
 
 > Last updated: 2026-03-19 by knowledge-curator agent.
-> Note: Private repo data (saas-template-launch-app-test, ao-cli, design-system) cannot be freshly verified — GitHub API returns 404. Architecture reflects last verified state from 2026-03-18. Brain architecture and ao-skills are current via git log / GitHub API.
+> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes the 2026-03-19 `ao-cli` routing overhaul, `design-system` AO workflow automation updates, and the flagship template's new async jobs stack.
 
 ## Overview
 
@@ -19,7 +19,7 @@ The `launchapp-dev` GitHub org builds and maintains:
 
 ### saas-template-launch-app-test (flagship SaaS template)
 
-**Turborepo monorepo** — the most complete and actively developed SaaS starter.
+**Turborepo monorepo** — the org's primary launchapp-lite trunk/canary and the highest-volume AO-managed codebase.
 
 **Tech Stack:**
 - Runtime/Tooling: Node.js 20, pnpm, Turborepo
@@ -27,9 +27,11 @@ The `launchapp-dev` GitHub org builds and maintains:
 - Backend: Hono (API server), Better-Auth (auth), Drizzle ORM
 - Database: PostgreSQL
 - Billing: Stripe + Polar.sh (pluggable provider abstraction)
+- Background jobs: Trigger.dev v3 + Upstash QStash
 - Storage: S3-compatible
 - Email: Resend + React Email
 - Analytics: PostHog
+- Monitoring: Sentry (web + API)
 - Linting: Biome (no ESLint/Prettier)
 - AI: OpenAI / Anthropic SDK wrapper
 - Containerization: Docker (multi-stage), docker-compose for local dev
@@ -43,7 +45,6 @@ packages/
   ai/            AI SDK wrapper (OpenAI, Anthropic providers)
   analytics/     Analytics abstraction (Console + PostHog providers)
   api/           Hono API server (routes, middleware)
-  api-hooks/     React Query hooks + Axios client (orval v8 generated)
   auth/          Better-Auth server + client
   billing/       Billing abstraction (Stripe + Polar.sh)
   config/        Shared env config (lazy-init, Zod-validated)
@@ -51,6 +52,7 @@ packages/
   database/      Drizzle schema (users, orgs, memberships, subscriptions), migrations, DB client
   email/         Resend + React Email templates
   i18n/          i18next (en/es) — opt-in internationalization
+  jobs/          Trigger.dev task definitions + shared async job payloads
   mcp/           MCP server scaffold with stdio transport
   storage/       S3 file/object storage
   typescript-config/  Shared tsconfig base configs
@@ -60,16 +62,17 @@ packages/
 **Package Dependency Graph:**
 ```
 typescript-config (no deps)
-analytics, api-hooks, core, i18n, ui-kit (no internal deps)
+analytics, core, i18n, ui-kit (no internal deps)
 
 config
   -> database -> auth
-  -> ai, billing, email, storage
+  -> ai, billing, email, jobs, storage
 
 core -> billing
 
-api  (ai, auth, billing, config, database)
-web  (ai, auth, config, database)
+jobs (config, email)
+api  (ai, auth, billing, config, database, storage)
+web  (ai, analytics, api, auth, config, database, email)
 ```
 
 **Conventions:**
@@ -87,6 +90,12 @@ web  (ai, auth, config, database)
 - `/admin/*` — Admin-only (users, subscriptions management)
 - `/checkout/success`, `/checkout/cancel`
 - `/api/*` — Wildcard proxy to Hono API
+
+**Recent 2026-03-19 shifts:**
+- `packages/jobs` was added with Trigger.dev tasks for welcome-email and webhook processing.
+- `@repo/api` now exposes a QStash-backed jobs route, with `/enqueue` restricted to admin sessions or API keys.
+- Waitlist email triggering moved from `@repo/api` into a web action to reduce API/email coupling.
+- `@repo/api-hooks` was removed from the default branch as dead code, so generated hooks are no longer part of the live package graph.
 
 ---
 
@@ -122,6 +131,11 @@ Standalone Radix UI-based React component library. MIT licensed, shadcn/ui regis
 - Phase 1–2 (complete): Foundation, core components (buttons, inputs, dialogs, etc.)
 - Phase 3–4 (active): Navigation, data display, advanced patterns (Combobox, Calendar, Charts, etc.)
 
+**Repo automation (2026-03-19):**
+- `.ao/workflows/custom.yaml` now includes a dependency-update phase, workflow, and 6-hour cron.
+- An `updater` agent uses Context7 + `package-version` MCP for dependency scanning.
+- Context7 was wired to reviewer, product-owner, and component-author agents; `package-version` was wired to product-owner and component-author.
+
 ---
 
 ### AO CLI (`ao-cli`)
@@ -130,23 +144,32 @@ Rust-based AI agent orchestrator CLI. Powers the org's own AI workforce automati
 
 **Features:**
 - Worktree-based task isolation for parallel AI agents
-- Multi-model routing (Claude, oai-runner models)
-- Self-healing: auto-reroutes failing model pipelines to Claude
+- Task-specialized routing across Claude, Codex GPT-5.4, Gemini, and cheaper monitoring paths
+- Self-healing: auto-reroutes failing model pipelines away from exhausted providers
 - Workflow-optimizer: tracks per-model success rates, creates bugfix tasks on failures
 - Daemon with scheduled/on-demand workflows
 - MCP server integration
+
+**Current routing posture (2026-03-19):**
+- v0.0.11 was merged earlier in the day, then `.ao/workflows/custom.yaml` was retuned repeatedly on the default branch.
+- Most low/medium/high tasks now route to Codex GPT-5.4 during the temporary doubled-rate-limit window through 2026-04-02.
+- Features stay on Claude Sonnet, bugfix/refactor work routes to Codex, UI work routes to Gemini, and analytical phases like PR review/reconciler/workflow-optimizer moved to Codex.
 
 ---
 
 ### brain (this repo)
 
-Org-wide AI workforce command center. Runs on AO CLI. Operating at scale as of 2026-03-19 with 44+ merged PRs since launch.
+Org-wide AI workforce command center. Runs on AO CLI. Operating at scale as of 2026-03-19 with 54 merged PRs since creation.
 
 **Agents:** planner, triager, reviewer, doc-auditor, security-monitor, sdk-auditor, release-coordinator, impact-analyzer, stale-detector, competitive-researcher, product-cataloger, product-doc-writer, toolmaker, knowledge-curator, workflow-optimizer, gtm-strategist, product-ideator, revenue-analyst
 
 **Scheduled:** Conductor runs every 5 minutes (replaced brain-planner), queuing and coordinating all knowledge workflows
 
-**MCP servers:** context7, sequential-thinking, github, firecrawl, playwright
+**MCP servers:** context7, sequential-thinking, github, firecrawl, playwright, `brain-knowledge-mcp`, `brain-products-mcp`
+
+**Current platform state:**
+- Structured SQLite-backed data layer and MCP servers were added on 2026-03-19 for typed knowledge and product access.
+- The conductor was tightened with deduplication, stale-task cleanup, and idempotent PR phases.
 
 **Architecture diagrams:** 32 diagrams in `knowledge/architecture/`, last verified 2026-03-19
 
@@ -202,5 +225,6 @@ Extension packs targeting third-party services and platforms.
 | API framework | Hono |
 | Frontend | React Router 7 (SSR) |
 | Styling | Tailwind CSS 4 |
+| Async jobs | Trigger.dev + Upstash QStash |
 | Agent orchestration | AO CLI (custom Rust tool) |
 | Dependency updates | Renovate (shared config in `renovate-config`) |
