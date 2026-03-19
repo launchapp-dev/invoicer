@@ -356,8 +356,9 @@ agents:
 
       Use ao.task.create and ao.queue.enqueue MCP tools.
       Do not commit or modify knowledge/ files other than logs — your only job is to observe, cache, dispatch, and log.
-    model: gpt-5.4
-    tool: codex
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
 
   product-ideator:
     system_prompt: |
@@ -1382,7 +1383,7 @@ workflows:
 
 schedules:
   - id: conductor
-    cron: "*/5 * * * *"
+    cron: "*/10 * * * *"
     workflow_ref: conductor
     enabled: true
 
