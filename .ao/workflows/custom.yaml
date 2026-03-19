@@ -517,6 +517,15 @@ phases:
       If the content looks good, merge with `gh pr merge --squash`.
       If issues found, request changes with specific feedback.
 
+  auto-merge-pr:
+    mode: command
+    directive: "Auto-merge the PR created by this workflow"
+    command:
+      program: gh
+      args: ["pr", "merge", "--squash", "--auto", "--delete-branch"]
+      cwd_mode: task_root
+      timeout_secs: 60
+
   scan-org-issues:
     mode: agent
     agent: issue-triager
@@ -900,7 +909,7 @@ workflows:
       - update-knowledge-base
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
   - id: competitive-research
     name: "Competitive Research"
@@ -909,7 +918,7 @@ workflows:
       - research-competitors
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
   - id: product-catalog
     name: "Product Catalog"
@@ -918,7 +927,7 @@ workflows:
       - catalog-products
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
   - id: product-docs
     name: "Product Documentation"
@@ -927,7 +936,7 @@ workflows:
       - write-product-docs
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
   - id: product-ideas
     name: "Product Ideation"
@@ -936,7 +945,7 @@ workflows:
       - generate-product-ideas
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
   - id: revenue-analysis
     name: "Revenue Analysis"
@@ -945,7 +954,7 @@ workflows:
       - analyze-revenue
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
   - id: optimize-workflows
     name: "Workflow Optimizer"
@@ -954,7 +963,7 @@ workflows:
       - optimize-workflows
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
   - id: gtm-strategy
     name: "GTM Strategy"
@@ -963,7 +972,7 @@ workflows:
       - create-gtm-strategy
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
   - id: build-tool
     name: "Build Tool"
@@ -972,7 +981,7 @@ workflows:
       - build-tool
       - push-branch
       - create-pr
-      - pr-review
+      - auto-merge-pr
 
 schedules:
   - id: brain-planner
