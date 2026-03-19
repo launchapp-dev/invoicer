@@ -811,7 +811,7 @@ workflows:
     phases:
       - plan-and-queue
 
-  # === ON-DEMAND (queued by the planner or manually) ===
+  # === EXTERNAL-ONLY (operate on other repos via gh, no brain commits) ===
   - id: org-issue-triage
     name: "Org Issue Triage"
     description: "Scan all repos for new issues, label, prioritize, create tasks"
@@ -865,59 +865,87 @@ workflows:
       - human-gate-releases
       - create-release-tasks
 
+  # === BRAIN-WRITING (commit to brain repo → push → PR → auto-merge) ===
   - id: knowledge-update
     name: "Knowledge Base Update"
     description: "Maintain org-wide documentation and knowledge"
     phases:
       - update-knowledge-base
+      - push-branch
+      - create-pr
+      - pr-review
 
   - id: competitive-research
     name: "Competitive Research"
     description: "Research competitors across all product areas"
     phases:
       - research-competitors
+      - push-branch
+      - create-pr
+      - pr-review
 
   - id: product-catalog
     name: "Product Catalog"
     description: "Catalog all products, versions, dependencies, and maturity"
     phases:
       - catalog-products
+      - push-branch
+      - create-pr
+      - pr-review
 
   - id: product-docs
     name: "Product Documentation"
     description: "Write and maintain product documentation"
     phases:
       - write-product-docs
+      - push-branch
+      - create-pr
+      - pr-review
 
   - id: product-ideas
     name: "Product Ideation"
     description: "Generate product ideas and feature proposals"
     phases:
       - generate-product-ideas
+      - push-branch
+      - create-pr
+      - pr-review
 
   - id: revenue-analysis
     name: "Revenue Analysis"
     description: "Analyze monetization opportunities and pricing strategies"
     phases:
       - analyze-revenue
+      - push-branch
+      - create-pr
+      - pr-review
 
   - id: optimize-workflows
     name: "Workflow Optimizer"
     description: "Review and improve the brain's own workflow configuration"
     phases:
       - optimize-workflows
+      - push-branch
+      - create-pr
+      - pr-review
 
   - id: gtm-strategy
     name: "GTM Strategy"
     description: "Create go-to-market strategies for products"
     phases:
       - create-gtm-strategy
+      - push-branch
+      - create-pr
+      - pr-review
 
   - id: build-tool
     name: "Build Tool"
     description: "Create utility scripts and tools for the AI workforce"
     phases:
       - build-tool
+      - push-branch
+      - create-pr
+      - pr-review
 
 schedules:
   - id: brain-planner
