@@ -279,8 +279,25 @@ agents:
       - Read knowledge/actions/ for proposed actions that could be queued as tasks
 
       ## 3. DISPATCH — Queue the right work
-      Do NOT create duplicate tasks. Check ao.task.list first.
-      Only create tasks for genuinely new work. Available workflows:
+      STRICT DEDUPLICATION: Before creating ANY task, run ao.task.list and
+      check for existing tasks that target the SAME WORKFLOW. Two tasks are
+      duplicates if they would run the same workflow ID, regardless of title.
+      NEVER create a task if a task for that workflow already exists in
+      backlog, ready, or in-progress status. Cancelled/done tasks are OK
+      to re-create only if there is genuinely new input to process.
+
+      For generate-questions and extract-actions specifically:
+      - Only create ONE task at a time. Wait for the previous one to reach
+        done or cancelled before creating another.
+      - Do not create "round N" variants — the workflow itself handles
+        incremental processing by reading existing files.
+      - For extract-actions: only create if new questions have status:answered
+        AND no extract-actions task exists in backlog/ready/in-progress.
+      - For generate-questions: only create if knowledge base has had
+        significant new content AND no generate-questions task exists
+        in backlog/ready/in-progress.
+
+      Available workflows and when to queue them:
 
       | Workflow | When to queue |
       |----------|---------------|
@@ -302,6 +319,16 @@ agents:
       | manage-fleet | A daemon crashed, or a repo needs AO setup |
       | provision-repo | An action item or product idea requires a new repo |
       | rebase-and-retry | A brain repo PR has merge conflicts (check with gh pr list --state open) |
+
+      ## 3b. CLEANUP — Fix stale tasks
+      Each cycle, also check for tasks stuck in 'ready' status. A task is
+      stale-ready if it has been in 'ready' for >1 hour with no active
+      workflow run. For each stale-ready task:
+      - Check if its branch/PR was already merged (the work is done but
+        status wasn't updated). If so, move it to 'done' via ao.task.status.
+      - If the task was never dispatched, either re-enqueue it or cancel it
+        if a newer task supersedes it.
+      This prevents task accumulation in 'ready' status.
 
       ## 4. PRIORITIZE — Don't flood the queue
       - Check ao.queue.stats — if queue has >5 pending items, don't add more
