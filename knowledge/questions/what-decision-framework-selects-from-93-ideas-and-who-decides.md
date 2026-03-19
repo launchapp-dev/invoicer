@@ -1,0 +1,51 @@
+---
+title: "What decision framework selects from 93 ideas — and who decides?"
+priority: critical
+status: open
+category: operations
+source_files:
+  - knowledge/ideas/overview.md
+  - knowledge/ideas/new-products.md
+  - knowledge/ideas/feature-proposals.md
+  - knowledge/ideas/integrations.md
+  - knowledge/revenue/opportunities.md
+  - knowledge/questions/is-79-ideas-in-three-rounds-creating-strategy-debt.md
+generated_by: question-generator
+generated_at: 2026-03-19
+---
+
+## Context
+
+The knowledge base now contains 93 product ideas (27 new products, 34 features, 32 integrations) across 4 rounds of generation. The existing question "is 79 ideas in three rounds creating strategy debt" flagged this concern at 79 ideas — it's now worse at 93. But the deeper problem isn't the number of ideas; it's the absence of a decision-making process. Every idea has a priority score between 7-10/10, making the scores useless for prioritization. There is no documented framework for selecting which ideas to build, no kill criteria for ideas that should be abandoned, and no record of any idea being rejected or deprioritized. The brain's AI agents generate ideas but no agent or process evaluates them against constraints (budget, time, team capacity, market validation). This creates an ever-growing backlog that looks productive but may be delaying actual execution.
+
+## What We Know
+
+- 93 ideas generated across 4 rounds in ~2 days (2026-03-18 to 2026-03-19).
+- Priority scores range from 7/10 to 10/10 — only 1 idea (AO Guard) is rated 10/10.
+- 38 ideas are rated 9/10; 42 are rated 8/10 — the scoring doesn't meaningfully differentiate.
+- The revenue analysis identifies 12 monetizable opportunities but doesn't rank-order them against each other.
+- Active workstreams (5 tracked) show execution is concentrated on the SaaS template, design system, and AO CLI — none of the 93 new ideas.
+- The org appears to be a solo founder ("can a solo founder execute nine revenue streams simultaneously" is an existing question).
+- No idea has been marked as rejected, deprioritized, or killed in any knowledge file.
+- The AI agents that generate ideas are not the same agents that would build them, creating a producer-consumer mismatch.
+
+## What We Don't Know
+
+- What the actual development capacity is (hours/week available for new product work vs maintaining existing products).
+- Whether the founder has evaluated any of the 93 ideas for build/no-build decisions.
+- What the opportunity cost of ideation is — time spent generating and documenting ideas 24-27 could have been spent building ideas 1-3.
+- Whether a RICE score, ICE score, or weighted scoring model has been considered.
+- What market signals would kill an idea (e.g., "if no customer asks for this in 90 days, archive it").
+- Whether the 93 ideas create analysis paralysis that prevents starting anything.
+
+## Suggested Investigation
+
+1. Force-rank the top 5 ideas using a constrained scoring model: (Impact × Confidence) / Effort, where Confidence requires at least one external signal (customer request, competitor validation, or market data beyond the knowledge base).
+2. Define "kill criteria" for the idea backlog: ideas without external validation after 90 days get archived.
+3. Create a "NOT building" list — explicitly rejecting 10+ ideas provides more strategic clarity than keeping all 93 "open."
+4. Map the 93 ideas against active workstreams: which ideas can only be built after current workstreams complete? This reveals true sequencing constraints.
+5. Estimate total development effort for the top 10 ideas and compare against available capacity. If the top 10 alone exceed 12 months of capacity, the remaining 83 are noise.
+
+## Answer
+
+_To be filled in by the team or an investigating agent._
