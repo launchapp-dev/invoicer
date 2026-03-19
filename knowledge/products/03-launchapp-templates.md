@@ -1,14 +1,16 @@
 # LaunchApp Templates
 
-> SaaS starter templates — launchapp-lite, launchapp-lite-v2, saas-template-launch-app-test, launchpad-saas-template
+> SaaS starter templates — launchapp-lite, launchapp-lite-v2, saas-template-launch-app-test (flagship), launchpad-saas-template, plus framework-specific variants: launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit
 
 ## Purpose
 
 Production-ready SaaS starter templates for building full-stack applications. Templates provide a complete starting point with auth, billing, multi-tenancy, and team management pre-configured. They are designed to integrate with the Launchpad BaaS platform or be used standalone.
 
+The **flagship template** (`saas-template-launch-app-test`) serves as the reference implementation. Framework-specific variants are pure ports of this flagship template to other TypeScript SSR frameworks, maintained continuously by AO.
+
 ## Maturity: Active Development
 
-Active development is concentrated in `saas-template-launch-app-test`, which now functions as the flagship launchapp-lite trunk/canary. `launchapp-lite` and `launchapp-lite-v2` remain sibling template lines with lighter recent activity.
+Active development is concentrated in `saas-template-launch-app-test`, which now functions as the flagship launchapp-lite trunk/canary. `launchapp-lite` and `launchapp-lite-v2` remain sibling template lines with lighter recent activity. Three new framework-specific variants were scaffolded on 2026-03-19: `launchapp-nextjs`, `launchapp-nuxt`, and `launchapp-sveltekit`.
 
 ## Visibility: Private
 
@@ -104,6 +106,49 @@ packages/
 - Recent work hardened admin/API security, fixed the ALB health-check path, and corrected API key dashboard typing.
 - Sentry monitoring, in-app notifications, and Vitest test scaffolding all landed alongside deployment work.
 - `@repo/api-hooks` was removed from the live monorepo, so this repo is converging on a leaner package graph instead of accumulating scaffolding.
+
+---
+
+## Framework-Specific Variants (New 2026-03-19)
+
+Three new **pure framework ports** of the flagship template were scaffolded on 2026-03-19. These repos use identical architecture, monorepo structure, and @repo/* package naming — only the frontend framework differs. Each is maintained continuously by AO via autonomous agents that compare against the flagship template to prevent divergence.
+
+### `launchapp-nextjs` (private)
+
+- **Framework**: Next.js App Router (SSR)
+- **Description**: Production SaaS starter for Next.js
+- **Status**: Early development, core monorepo structure in place
+- **Last updated**: 2026-03-19
+- **Structure**: Same @repo/* packages as flagship, with Next.js in `apps/web`
+
+### `launchapp-nuxt` (private)
+
+- **Framework**: Nuxt 4 (SSR)
+- **Description**: Production SaaS starter for Nuxt 4
+- **Status**: Early development, core monorepo structure in place
+- **Last updated**: 2026-03-19
+- **Structure**: Same @repo/* packages as flagship, with Nuxt in `apps/web`
+
+### `launchapp-sveltekit` (private)
+
+- **Framework**: SvelteKit (SSR)
+- **Description**: Production SaaS starter for SvelteKit
+- **Status**: Early development, core monorepo structure in place
+- **Last updated**: 2026-03-19
+- **Structure**: Same @repo/* packages as flagship, with SvelteKit in `apps/web`
+
+### Architecture Pattern
+
+All three framework variants follow the same pattern:
+- **Frontend**: Framework-specific app in `apps/web`
+- **Backend**: Hono API in `packages/api` (shared with flagship)
+- **Infrastructure**: Same @repo/* package structure as flagship
+- **Build System**: Turborepo + pnpm (same as flagship)
+- **Maintenance**: AO agents autonomously keep each in sync with flagship architecture
+
+### Maturity Gap
+
+All three repos are **early development** stage (created 2026-03-19). Core scaffolding and monorepo structure are in place, but app scripts (build, dev, test commands) may still be stubbed with `TODO` placeholders. Feature implementation and integration work is ongoing via AO workflows.
 
 ---
 

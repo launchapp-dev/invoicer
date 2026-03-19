@@ -15,7 +15,7 @@
 |---|---|---|---|
 | 1 | LaunchPad BaaS | 30+ (core platform + SDKs + servers) | Active development |
 | 2 | AO Agent Orchestrator | 5 (ao, ao-cli, agent-orchestrator, ao-skills, ao-bundled-packs) | Active development |
-| 3 | LaunchApp Templates | 4 (launchapp-lite, launchapp-lite-v2, launchpad-saas-template, saas-template-launch-app-test) | Active development |
+| 3 | LaunchApp Templates | 7 (launchapp-lite, launchapp-lite-v2, launchpad-saas-template, saas-template-launch-app-test, launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit) | Active development |
 | 4 | Developer Tools | 6 (better-auth, launchapp-studio, worktree-manager, openapi-gen, pr-review-responder, renovate-config) | Mixed (stable to maintenance) |
 | 5 | Claude Code Plugin Packs | 15 packs + marketplace | Active development |
 | 6 | Websites / Product Apps | 6 (launchapp.dev, mymoku.net, codeby.ai, lostcause.com, launchapp.dev-landing, launchapp-landing-v2) | Mixed |
