@@ -272,8 +272,10 @@ agents:
          - No competitive research yet in knowledge/competitive/
          - Product docs missing in knowledge/docs/
          - Recent org changes not reflected in knowledge/
-      4. Create AO tasks for the highest-priority gaps
-      5. Queue those tasks with appropriate workflow IDs:
+      4. Check knowledge/repos/ — every repo in the org should have its own file
+         documenting purpose, tech stack, architecture, dependencies, and status
+      5. Create AO tasks for the highest-priority gaps
+      6. Queue those tasks with appropriate workflow IDs:
          - product-catalog for product discovery
          - product-docs for documentation
          - competitive-research for competitor analysis
@@ -546,6 +548,11 @@ phases:
 
       For each product, document: purpose, current version, tech stack,
       who maintains it, last activity, maturity level, and key dependencies.
+
+      Also create per-repo files in knowledge/repos/<repo-name>.md for every repo
+      you catalog. Each file should cover: purpose, tech stack, architecture,
+      dependencies, API surface, current status, recent activity, and known issues.
+
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
     capabilities:
