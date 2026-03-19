@@ -14,7 +14,7 @@
 | # | Product Line | Repos | Status |
 |---|---|---|---|
 | 1 | LaunchPad BaaS | 30+ (core platform + SDKs + servers) | Active development |
-| 2 | AO Agent Orchestrator | 4 (ao-cli, agent-orchestrator, ao-skills, ao-bundled-packs) | Active development |
+| 2 | AO Agent Orchestrator | 5 (ao, ao-cli, agent-orchestrator, ao-skills, ao-bundled-packs) | Active development |
 | 3 | LaunchApp Templates | 4 (launchapp-lite, launchapp-lite-v2, launchpad-saas-template, saas-template-launch-app-test) | Active development |
 | 4 | Developer Tools | 6 (better-auth, launchapp-studio, worktree-manager, openapi-gen, pr-review-responder, renovate-config) | Mixed (stable to maintenance) |
 | 5 | Claude Code Plugin Packs | 15 packs + marketplace | Active development |
@@ -45,8 +45,8 @@ The primary technology stack is TypeScript (Node.js/Bun), with Rust used for the
 
 ## Visibility
 
-- **Public repos** (14): ao-cli, ao-skills, launchpad-db-engine, worktree-manager, better-auth, openapi-gen, create-launchpad, create-launchapp, launchapp-studio, pr-review-responder, react-router-presets, supabase-to-hooks, figma-tailwind-plugin, supabase-railway-template
-- **Private repos**: Everything else (most of the BaaS platform, templates, websites, plugin packs, legacy experiments)
+- **Public repos** (15): ao, ao-skills, launchpad-db-engine, worktree-manager, better-auth, openapi-gen, create-launchpad, create-launchapp, launchapp-studio, pr-review-responder, react-router-presets, supabase-to-hooks, figma-tailwind-plugin, supabase-railway-template
+- **Private repos**: Everything else (ao-cli implementation, most of the BaaS platform, templates, websites, plugin packs, legacy experiments)
 
 ## Notable Legacy Context
 

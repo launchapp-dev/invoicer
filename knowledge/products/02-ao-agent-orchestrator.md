@@ -16,7 +16,27 @@ The system consists of:
 
 The `ao-cli` is under very heavy active development with multiple commits per day. On 2026-03-19 it merged `Release v0.0.11`, then immediately retuned default-branch routing so Codex GPT-5.4 carries more throughput work, Sonnet stays on feature delivery, and Gemini handles UI-heavy work. The desktop app repo exists but is now archived.
 
-## Visibility: ao-cli is Private, ao-skills is Public, agent-orchestrator is Private + Archived
+## Visibility
+
+- **ao** — Public distribution channel (newly launched 2026-03-19)
+- **ao-cli** — Private Rust implementation
+- **ao-skills** — Public Claude Code plugin
+- **agent-orchestrator** — Private + Archived (desktop app)
+- **ao-bundled-packs** — Private workflow extensions
+
+---
+
+## `ao` (public)
+
+- **Purpose**: Installation and distribution point for AO binaries
+- **Created**: 2026-03-19 (newly launched public release channel)
+- **Contents**: `install.sh` script + README
+- **Platforms**: macOS (M1+/Intel), Linux x86_64, Windows x86_64
+- **What it distributes**: Compiled binaries from ao-cli (`ao`, `agent-runner`, `llm-cli-wrapper`)
+- **Installation**: `curl -fsSL https://raw.githubusercontent.com/launchapp-dev/ao/main/install.sh | bash`
+- **Target audience**: End users and external consumers of AO
+
+This is the primary public distribution channel for AO, complementing the public `ao-skills` plugin and private `ao-cli` implementation.
 
 ---
 
