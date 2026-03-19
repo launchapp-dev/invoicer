@@ -95,10 +95,12 @@ packages/
 
 ### Current Direction
 
-- Async/background jobs were added through a new `@repo/jobs` package powered by Trigger.dev v3.
-- `@repo/api` now exposes QStash-backed job enqueueing and locks that surface to admin sessions or API keys.
+- Deployment infrastructure expanded: Railway and Vercel deployment configs + guides added on 2026-03-19.
+- Storage layer abstraction verified: `@repo/storage` confirmed compatible across R2, Tigris, and Vercel Blob.
+- Authentication flows enhanced: email verification now added post-registration.
+- The `@repo/jobs` async job package was removed, streamlining the package graph away from Trigger.dev.
 - Recent work hardened admin/API security, fixed the ALB health-check path, and corrected API key dashboard typing.
-- Sentry monitoring, in-app notifications, and Vitest test scaffolding all landed the same day.
+- Sentry monitoring, in-app notifications, and Vitest test scaffolding all landed alongside deployment work.
 - `@repo/api-hooks` was removed from the live monorepo, so this repo is converging on a leaner package graph instead of accumulating scaffolding.
 
 ---
@@ -112,9 +114,9 @@ All templates use:
 - **Radix UI** — component primitives
 - **Tailwind CSS** — styling
 
-The flagship template additionally now uses:
-- **Trigger.dev + Upstash QStash** — async/background jobs
+The flagship template additionally uses:
 - **Sentry** — web/API monitoring
+- **Railway & Vercel** — deployment platforms with native config support
 
 ## Other Template-Related Repos
 

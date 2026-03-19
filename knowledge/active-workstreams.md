@@ -19,19 +19,20 @@ As of 2026-03-19, the org has 4 very high-velocity workstreams (`saas-template-l
 This repo is no longer best described as a "test/staging" copy. It is the primary launchapp-lite trunk/canary where new platform capabilities land first.
 
 **Current focus:**
-- Add async/background processing primitives.
+- Expand deployment infrastructure (Railway, Vercel).
+- Verify storage layer compatibility across providers (R2, Tigris, Vercel Blob).
+- Strengthen authentication flows (email verification post-registration).
 - Make `tsc --build` and project references reliable across the workspace.
 - Decouple over-coupled API responsibilities.
 - Harden admin/API security and deployment health.
 - Tighten types and monitoring around the dashboard + API surface.
 
 **Recent highlights (verified 2026-03-19):**
-- `@repo/jobs` landed, then moved from Trigger.dev v3 to v4 the same day.
-- `@repo/jobs` now has a dedicated `tsc --build` build script and participates in the project-reference graph.
-- TypeScript project references plus `composite: true` were wired across the internal package graph to support topological incremental builds.
-- `packages/jobs/tsconfig.json` now extends the shared base config and keeps `jsx: "react-jsx"` because it depends on `@repo/email`'s TSX templates.
-- `@repo/api` gained a QStash-backed jobs route for enqueueing async work.
-- `/enqueue` was tightened so only admin sessions or API keys can use it.
+- PR #288: `@repo/jobs` package removed (Trigger.dev async processing no longer included in template).
+- PR #289: `@repo/storage` verified compatible across R2, Tigris, and Vercel Blob providers.
+- PR #290: Railway deployment config and docs added.
+- PR #291, #294: Vercel deployment config (vercel.json) and deployment guide added.
+- PR #292: Email verification flow added post-registration for enhanced auth security.
 - Waitlist join flow moved out of `@repo/api` into a web action to reduce API/email coupling.
 - ALB health check path was fixed from `/health` to `/api/health`.
 - Dashboard API key typing was corrected by serializing/mapping Better-Auth date fields instead of using unsafe casts.

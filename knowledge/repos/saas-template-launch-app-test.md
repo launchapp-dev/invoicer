@@ -30,7 +30,6 @@ saas-template-launch-app-test/
 │   ├── database/               Drizzle ORM schema, migrations, db client
 │   ├── email/                  Resend + React Email templates
 │   ├── i18n/                   i18next internationalization (en/es)
-│   ├── jobs/                   Trigger.dev task definitions + async job payloads
 │   ├── mcp/                    Custom MCP server scaffold (stdio transport)
 │   ├── storage/                S3-compatible object storage (@aws-sdk)
 │   ├── typescript-config/      Shared tsconfig base
@@ -59,7 +58,6 @@ saas-template-launch-app-test/
 | Analytics | PostHog (posthog-js + posthog-node) | latest |
 | Billing | Stripe + Polar.sh (@polar-sh/sdk) | latest |
 | Email | Resend + React Email | latest |
-| Background jobs | Trigger.dev + Upstash QStash | `@trigger.dev/sdk` ^3.0.0, `@upstash/qstash` ^2.7.21 |
 | Monitoring | Sentry (web + API) | `@sentry/react` / `@sentry/node` ^10.0.0 |
 | Storage | AWS S3 (@aws-sdk/client-s3) | latest |
 | i18n | i18next + react-i18next | latest |
@@ -111,11 +109,8 @@ PostHog analytics abstraction with both client-side (posthog-js) and server-side
 ### `@repo/email`
 Resend email sending + React Email component templates. Used by auth flows and waitlist confirmation.
 
-### `@repo/jobs`
-Async/background job package added on 2026-03-19. Uses Trigger.dev v3 for task definitions and shared payload types. Current jobs cover welcome-email dispatch and a stubbed webhook-processing path, while `@repo/api` uses QStash to enqueue work into the async layer.
-
 ### `@repo/storage`
-S3-compatible object storage using `@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner`. Presigned URL generation for secure browser-direct uploads/downloads.
+S3-compatible object storage using `@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner`. Presigned URL generation for secure browser-direct uploads/downloads. Verified compatible with R2, Tigris, and Vercel Blob storage providers.
 
 ### `@repo/i18n`
 i18next internationalization with browser language detection and HTTP backend. Languages: English (en), Spanish (es).
@@ -165,6 +160,7 @@ This repo is deeply integrated with the AO Agent Orchestrator:
 - **Production IaC**: Pulumi + AWS (`@pulumi/aws ^6.0.0`, `@pulumi/awsx ^2.0.0`)
 - **Deploy scripts**: `infrastructure/scripts/deploy.sh`, `health-check.sh`, `generate-secrets.sh`
 - **Docker**: `docker-compose.prod.yml` for production-like local testing
+- **Deployment targets**: Railway and Vercel configurations available (vercel.json and Railway deployment guides merged 2026-03-19)
 
 ## Dependencies on Other Org Products
 
@@ -175,14 +171,15 @@ This repo is deeply integrated with the AO Agent Orchestrator:
 
 ## Current Status and Recent Activity
 
-**Extremely active development** — created 2026-03-17 and already at 179 merged PRs in the current 7-day window. Recent verified changes:
-- `26b819c`: add `@repo/jobs` with Trigger.dev v3 (`send-welcome-email`, `process-webhook`)
-- `70830c4`: add QStash-backed background job enqueueing to `@repo/api`
-- `07a92c1`: lock the jobs enqueue route down to admin sessions or API keys
+**Extremely active development** — created 2026-03-17 and already at 180+ merged PRs in the current 7-day window. Recent verified changes:
 - `2b6c17c`: remove `@repo/email` coupling from `@repo/api` by moving waitlist join into a web action
 - `79ef14c`: fix Pulumi ALB health checks to use `/api/health`
 - `4ee9dfe`: fix dashboard API key typing by mapping Better-Auth results instead of unsafe casts
 - `@repo/api-hooks` removed from the default branch as dead code
 - Sentry, notifications, and Vitest setup all landed the same day
+- PR #288: `@repo/jobs` package removed (Trigger.dev async jobs no longer in template)
+- PR #289: `@repo/storage` verified compatible across R2, Tigris, and Vercel Blob
+- PR #290, #291, #294: Railway and Vercel deployment configurations + guides added
+- PR #292: Email verification flow added after user registration
 
 This repo is the primary development vehicle for the launchapp-lite product, with AO automating multiple feature tasks daily.
