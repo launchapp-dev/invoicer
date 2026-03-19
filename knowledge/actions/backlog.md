@@ -8,6 +8,7 @@ Last updated: 2026-03-19
 
 | Action | Effort | Category | Source Question |
 |--------|--------|----------|----------------|
+| [Implement founder review gate for ideas](implement-founder-review-gate-for-ideas.md) | Small | Operations | Decision framework for 93 ideas |
 | [Audit AO-generated code quality](audit-ao-generated-code-quality.md) | Small | Technical Debt | Quality-gating AI-generated code |
 | [Focus on a single revenue stream](focus-single-revenue-stream.md) | Small | Product Strategy | Solo founder / 9 revenue streams |
 | [Resolve @repo/* vs @launchpad/* SDK divergence](resolve-repo-vs-launchpad-sdk-divergence.md) | Small | Product Strategy | Flagship template duplicates Launchpad SDKs |
@@ -22,6 +23,7 @@ Last updated: 2026-03-19
 
 | Action | Effort | Category | Source Question |
 |--------|--------|----------|----------------|
+| [Triage and archive the 93-idea catalog](triage-and-archive-idea-catalog.md) | Small | Product Strategy | Decision framework for 93 ideas |
 | [Archive abandoned public repos](archive-abandoned-public-repos.md) | Small | Operations | Abandoned repos eroding developer trust |
 | [Cap integration portfolio and adopt recipes approach](cap-integration-portfolio-and-adopt-recipes-approach.md) | Small | Operations | Hidden maintenance cost of 22 integrations |
 | [Conduct capacity audit for non-coding work](conduct-capacity-audit.md) | Small | Operations | Solo founder / 9 revenue streams |
@@ -53,35 +55,37 @@ Last updated: 2026-03-19
 
 ## Recommended Execution Order
 
-1. **Audit AO-generated code quality** — no dependencies, immediate risk assessment, informs urgency of CI gates
-2. **Implement CI quality gates for AO merges** — depends on audit findings, blocks safe continued AO operation
-3. **Archive abandoned public repos** — no dependencies, immediate credibility win, do before any public launch
-4. **Conduct capacity audit** — no dependencies, immediate clarity on constraints
-5. **Check public repo metrics** — no dependencies, quick data collection
-6. **Run external validation of product priorities** — no dependencies, calibrates AI-biased roadmap before major investment decisions
-7. **Validate AO Guard market demand** — no dependencies, determines if highest-rated idea has real demand
-8. **Cap integration portfolio at 5 packages** — no dependencies, prevents premature commitment to 22 maintenance liabilities
-9. **Run pricing research and raise launch price** — no dependencies, must happen before prices go public
-10. **Validate React Router 7 market demand** — search volume analysis has no dependencies, informs template strategy
-11. **Run demand validation** — informs the revenue focus decision
-12. **Focus on single revenue stream** — depends on #4-11 for data
-13. **Resolve @repo/* vs @launchpad/* SDK divergence** — clarifies whether two stacks exist intentionally, informs BaaS fate
-14. **Run platform coherence assessment** — strategic decision that shapes everything downstream
-15. **Define brand architecture** — follows from platform coherence decision
-16. **Define kill criteria** — applies to deferred streams after focus decision
-17. **Decide LaunchPad BaaS fate** — informed by revenue focus, SDK divergence finding, and platform decisions
-18. **Adopt integrate-first strategy for BaaS** — executes the "how" after BaaS fate decision; wraps existing services instead of building custom
-19. **Publish @launchpad/core to npm** — only if BaaS SDKs survive the fate decision; unblocks SDK distribution
-20. **Build cross-SDK integration test suite** — only if BaaS SDKs survive; verifies ecosystem actually works
-21. **Consolidate MCP server implementations** — audit and document hierarchy, deprecate redundant servers
-22. **Verify plugin pack implementations** — quick audit to check if packs are scaffolds or real code
-23. **Audit and test plugin packs** — depends on verification results; tests market viability
-24. **Consolidate marketplace proposals into one** — depends on plugin pack viability; single marketplace instead of three
-25. **Build minimum viable support and docs** — must complete before first sale
-26. **Consolidate SaaS template repos** — execute after deciding templates are the focus
-27. **Draft EULA for digital products** — needed before first sale
-28. **Set up checkout and license system** — blocks revenue Phase 1, depends on EULA
-29. **Implement AO daemon circuit breakers and rollback** — important safety net, depends on CI gates being in place
-30. **Create one-click AO cloud deploy** — reduces adoption friction immediately
-31. **Build AO Cloud playground MVP** — validates hosted demand, depends on AO being a focus
-32. **Audit Better Auth coupling** — independent but lower urgency
+1. **Implement founder review gate for ideas** — no dependencies, prevents further unfiltered idea accumulation, critical process fix
+2. **Triage and archive the 93-idea catalog** — depends on review gate; founders pick 3-5 ideas, archive the rest
+3. **Audit AO-generated code quality** — no dependencies, immediate risk assessment, informs urgency of CI gates
+4. **Implement CI quality gates for AO merges** — depends on audit findings, blocks safe continued AO operation
+5. **Archive abandoned public repos** — no dependencies, immediate credibility win, do before any public launch
+6. **Conduct capacity audit** — no dependencies, immediate clarity on constraints
+7. **Check public repo metrics** — no dependencies, quick data collection
+8. **Run external validation of product priorities** — no dependencies, calibrates AI-biased roadmap before major investment decisions
+9. **Validate AO Guard market demand** — no dependencies, determines if highest-rated idea has real demand
+10. **Cap integration portfolio at 5 packages** — no dependencies, prevents premature commitment to 22 maintenance liabilities
+11. **Run pricing research and raise launch price** — no dependencies, must happen before prices go public
+12. **Validate React Router 7 market demand** — search volume analysis has no dependencies, informs template strategy
+13. **Run demand validation** — informs the revenue focus decision
+14. **Focus on single revenue stream** — depends on #6-13 for data
+15. **Resolve @repo/* vs @launchpad/* SDK divergence** — clarifies whether two stacks exist intentionally, informs BaaS fate
+16. **Run platform coherence assessment** — strategic decision that shapes everything downstream
+17. **Define brand architecture** — follows from platform coherence decision
+18. **Define kill criteria** — applies to deferred streams after focus decision
+19. **Decide LaunchPad BaaS fate** — informed by revenue focus, SDK divergence finding, and platform decisions
+20. **Adopt integrate-first strategy for BaaS** — executes the "how" after BaaS fate decision; wraps existing services instead of building custom
+21. **Publish @launchpad/core to npm** — only if BaaS SDKs survive the fate decision; unblocks SDK distribution
+22. **Build cross-SDK integration test suite** — only if BaaS SDKs survive; verifies ecosystem actually works
+23. **Consolidate MCP server implementations** — audit and document hierarchy, deprecate redundant servers
+24. **Verify plugin pack implementations** — quick audit to check if packs are scaffolds or real code
+25. **Audit and test plugin packs** — depends on verification results; tests market viability
+26. **Consolidate marketplace proposals into one** — depends on plugin pack viability; single marketplace instead of three
+27. **Build minimum viable support and docs** — must complete before first sale
+28. **Consolidate SaaS template repos** — execute after deciding templates are the focus
+29. **Draft EULA for digital products** — needed before first sale
+30. **Set up checkout and license system** — blocks revenue Phase 1, depends on EULA
+31. **Implement AO daemon circuit breakers and rollback** — important safety net, depends on CI gates being in place
+32. **Create one-click AO cloud deploy** — reduces adoption friction immediately
+33. **Build AO Cloud playground MVP** — validates hosted demand, depends on AO being a focus
+34. **Audit Better Auth coupling** — independent but lower urgency
