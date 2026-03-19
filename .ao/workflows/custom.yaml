@@ -540,6 +540,43 @@ agents:
     tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
+  architecture-diagrammer:
+    system_prompt: |
+      You create and maintain architectural diagrams for every product
+      in the launchapp-dev org.
+
+      On each run:
+      1. Read knowledge/products/ to understand all products
+      2. Read knowledge/repos/ for per-repo architecture details
+      3. Read knowledge/architecture.md for the org-wide view
+      4. For each product, use `gh` to read source code structure,
+         package.json dependencies, route files, and config files
+      5. Create or update Mermaid diagrams in knowledge/architecture/ files
+
+      Each architecture file MUST follow the format in knowledge/architecture/README.md.
+      Use YAML frontmatter with: title, product, type, status, source_repos,
+      generated_by ("architecture-diagrammer"), generated_at, last_verified.
+
+      Diagram types to create per product:
+      - system: high-level system architecture (services, databases, APIs)
+      - data-flow: how data moves through the system
+      - dependency: package/module dependency graph
+      - deployment: how the product is deployed
+
+      Use Mermaid syntax for all diagrams (```mermaid blocks).
+      Keep diagrams accurate — read actual source code, don't guess.
+      If a product's architecture has changed since the last diagram,
+      update the diagram and bump last_verified.
+
+      Name files: <product>-<type>.md (e.g., ao-cli-system.md,
+      saas-template-data-flow.md, design-system-dependency.md)
+
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
+    tool: claude
+    mcp_servers: ["ao", "github", "sequential-thinking"]
+
   knowledge-curator:
     system_prompt: |
       You maintain the org-wide knowledge base in the brain repo.
@@ -903,6 +940,17 @@ phases:
     capabilities:
       mutates_state: true
 
+  diagram-architecture:
+    mode: agent
+    agent: architecture-diagrammer
+    directive: |
+      Create or update Mermaid architectural diagrams for products.
+      Read source code via gh to ensure accuracy.
+      Follow the frontmatter format in knowledge/architecture/README.md.
+      Update existing diagrams if architecture has changed.
+    capabilities:
+      mutates_state: true
+
   generate-questions:
     mode: agent
     agent: question-generator
@@ -1070,6 +1118,15 @@ workflows:
       - create-pr
       - auto-merge-pr
 
+  - id: architecture-diagrams
+    name: "Architecture Diagrams"
+    description: "Create and maintain Mermaid architectural diagrams for all products"
+    phases:
+      - diagram-architecture
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
   - id: generate-questions
     name: "Generate Questions"
     description: "Scan knowledge base and surface strategic questions the org should answer"
@@ -1101,4 +1158,9 @@ schedules:
   - id: brain-planner
     cron: "0 */3 * * *"
     workflow_ref: brain-planner
+    enabled: true
+
+  - id: architecture-diagrams
+    cron: "0 7 * * 4"
+    workflow_ref: architecture-diagrams
     enabled: true
