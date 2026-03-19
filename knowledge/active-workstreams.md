@@ -1,10 +1,11 @@
 # Active Workstreams
 
-> Last updated: 2026-03-18 by knowledge-curator agent.
+> Last updated: 2026-03-19 by knowledge-curator agent.
+> Note: Private repo activity (saas-template-launch-app-test, ao-cli, design-system) cannot be freshly verified — GitHub API returns 404 for these repos. Status below reflects last known state from 2026-03-18. Brain repo, ao-skills activity is current via GitHub API.
 
 ## Summary
 
-As of 2026-03-18, the org has 3 high-velocity active workstreams, 1 recently launched initiative, and 1 new cross-repo SDK standards initiative.
+As of 2026-03-19, the org has 3 high-velocity active workstreams (private, last verified 2026-03-18), 1 SDK consistency initiative in early remediation, the Brain command center operating at scale, and a new ao-skills Claude Code plugin published.
 
 ---
 
@@ -100,25 +101,29 @@ A new cross-repo workstream was started to bring all Launchpad BaaS SDKs up to a
 
 ---
 
-## 5. Brain — Org-Wide AI Workforce Command Center (New)
+## 5. Brain — Org-Wide AI Workforce Command Center (Active)
 
 **Repo:** `brain`
 **Owner:** Shooksie
-**Status:** Just launched (2026-03-18)
+**Status:** Operating at scale — 44+ commits since launch (2026-03-18 to 2026-03-19)
 
-The brain repo was created today as the org-wide coordination layer for all AI agents.
+The brain repo is the active org-wide coordination layer. Since launch it has processed 6 rounds of product ideation and strategic analysis.
 
-**Setup completed:**
-- 14+ specialized agents (planner, triager, reviewer, doc-auditor, security-monitor, sdk-auditor, release-coordinator, impact-analyzer, stale-detector, competitive-researcher, product-cataloger, product-doc-writer, toolmaker, knowledge-curator, workflow-optimizer, gtm-strategist, product-ideator, revenue-analyst)
-- 14 on-demand workflows for org management
-- Scheduled brain-planner every 3h
-- Per-repo knowledge base structure (`knowledge/repos/`)
-- Standard push/PR/merge flow for all brain-writing workflows
-- Product ideation and revenue analysis workflows added
-- GTM strategist and workflow optimizer agents added
+**Cumulative output (as of 2026-03-19):**
+- **61 repo docs** in `knowledge/repos/` covering the full launchapp-dev portfolio
+- **93 product ideas** across 4 rounds in `knowledge/ideas/`
+- **51+ strategic questions** across 6 rounds in `knowledge/questions/`
+- **34 action items** extracted and filed in `knowledge/actions/`
+- **32 architecture diagrams** verified against source code (2026-03-19)
+- Revenue analysis refreshed to incorporate 93-idea portfolio
+- GTM strategies created for LaunchPad, AO, Better Auth, and LaunchApp Templates
+- Conductor workflow strengthened: deduplication and stale-task cleanup added (#36)
+- Conflict recovery improved: rebase-and-retry workflow added
 
-**Active tasks queued:**
-- TASK-003: Build org-wide architecture documentation (this task)
+**Infrastructure:**
+- Conductor runs every 5 minutes (replaced brain-planner)
+- All brain-writing workflows use standard push/PR/merge with conflict recovery
+- MCP servers: context7, sequential-thinking, github, firecrawl, playwright
 
 ---
 
@@ -143,6 +148,29 @@ The brain repo was created today as the org-wide coordination layer for all AI a
 - **launchapp-landing-v2** — Static landing page, last push Jan 2026.
 - **launchapp.dev** — Marketing site, last push Feb 2026.
 - **mymoku.net** — Personal/product site, last push Mar 12 2026.
+
+---
+
+## 7. ao-skills — Claude Code Plugin for AO CLI (New, Active)
+
+**Repo:** `ao-skills`
+**Owner:** Shooksie
+**Status:** New — created 2026-03-17, 11 commits through 2026-03-19
+
+The `ao-skills` repo was launched as the official Claude Code plugin for AO CLI. It has been restructured from a raw markdown knowledge base into a proper Claude Code plugin with a machine-readable manifest.
+
+**Recent highlights (2026-03-17 to 2026-03-19):**
+- Initial 7 skills added: getting-started, task-management, workflow-authoring, daemon-operations, queue-management, mcp-tools, troubleshooting
+- 3 new production-pattern skills added: workflow-patterns, agent-personas, mcp-servers-for-agents (distilled from 150+ autonomous PR sessions)
+- 2 new config skills added: mcp-setup, configuration
+- setup-ao command added with step-by-step AI agent install prompt
+- Restructured into `.claude-plugin/plugin.json` format with `skills/<name>/SKILL.md` layout
+- `marketplace.json` added with `source` field for Claude Code plugin discovery
+- `pack-authoring` and `skill-authoring` skills added
+- Fixed `plugin.json`: author must be an object (not a string)
+- Org metadata updated: renamed from AudioGenius-ai → launchapp-dev
+
+**Total skills:** 15 (as of 2026-03-19)
 
 ---
 

@@ -1,7 +1,8 @@
 # SDK Consistency Matrix
 
-> Last updated: 2026-03-18 by knowledge-curator agent.
+> Last updated: 2026-03-19 by knowledge-curator agent (2nd pass).
 > Source repo: `saas-template-launch-app-test` (flagship template).
+> Note: Private repo data cannot be freshly verified — GitHub API returns 404 for saas-template-launch-app-test, ao-cli, and design-system. Versions below reflect last verified state from 2026-03-18. No new SDK upgrades detected from public repos in current 7-day window.
 
 ## Core Framework Versions
 

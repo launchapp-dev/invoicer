@@ -53,10 +53,14 @@ The `.ao/workflows/custom.yaml` defines the full agent roster and workflow pipel
 
 ## Knowledge Base (as of 2026-03-19)
 - **products/**: Complete documentation for all 7 product lines
-- **repos/**: Per-repo docs for 21+ repos
-- **questions/**: 5 strategic questions from knowledge gap analysis
-- **revenue/**: Monetization analysis with pricing benchmarks and 12-month roadmap
+- **repos/**: Per-repo docs for 61 repos
+- **ideas/**: 93 product ideas across 4 rounds (`new-products.md`, `feature-proposals.md`, `integrations.md`, `overview.md`)
+- **questions/**: 51+ strategic questions across 6 rounds
+- **actions/**: 34 action items extracted from strategic questions
+- **architecture/**: 32 architecture diagrams (system, data-flow, deployment, dependency) — verified 2026-03-19
+- **revenue/**: Monetization analysis refreshed to incorporate 93-idea portfolio
 - **competitive/**: Competitor landscape research
+- **gtm/**: GTM strategies for LaunchPad, AO, Better Auth, LaunchApp Templates
 
 ## Relationship to Other Products
 - Orchestrates work across all launchapp-dev repos using AO CLI

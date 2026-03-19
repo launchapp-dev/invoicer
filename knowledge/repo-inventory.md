@@ -1,6 +1,6 @@
 # Repository Inventory
 
-> Last updated: 2026-03-18 by knowledge-curator agent.
+> Last updated: 2026-03-19 by knowledge-curator agent.
 
 ## Active Repos (pushed in last 30 days)
 
@@ -12,7 +12,7 @@
 | `design-system` | Radix UI-based React component library, Storybook v10, shadcn registry compatible | TypeScript | 2026-03-19 | Active — Phase 3/4 components in progress |
 | `ao-cli` | Rust AI agent orchestrator CLI with daemon, worktrees, multi-model routing | Rust | 2026-03-19 | Active — self-healing model pipeline work |
 | `brain` | Org-wide AI workforce command center (AO config, knowledge base, agents) | — | 2026-03-19 | New — created 2026-03-18 |
-| `ao-skills` | AI skills for the AO agent orchestrator CLI | — | 2026-03-19 | Active |
+| `ao-skills` | Claude Code plugin pack with 15 AO skills (workflow-authoring, agent-personas, mcp-servers, etc.) | — | 2026-03-19 | Active — published as Claude Code plugin with marketplace.json |
 | `ao-bundled-packs` | Community/first-party extension packs for AO CLI | — | 2026-03-18 | Active |
 | `launchapp-lite-v2` | Lightweight SaaS starter v2: RR7, Hono SSR, Drizzle, Turborepo | TypeScript | 2026-03-17 | Active — recently converted to Turborepo monorepo |
 | `launchapp-lite` | Original lightweight SaaS starter: RR7, Hono, Better Auth, Drizzle, Supabase, Stripe | TypeScript | 2026-03-17 | Active |
@@ -90,7 +90,12 @@
 | Repo | Created | Notes |
 |---|---|---|
 | `brain` | 2026-03-18 | Org-wide AI workforce command center, initial commit |
+| `ao-skills` | 2026-03-17 | Claude Code plugin for AO CLI — 15 skills covering workflow authoring, task management, agent personas, MCP setup, daemon ops, troubleshooting. Restructured into `.claude-plugin/plugin.json` format with `marketplace.json` for plugin discovery. |
+
+## Org Rename
+
+The org was previously known as **AudioGenius-ai**. As of 2026-03-19, all plugin metadata in `ao-skills` was updated to reflect the org as **launchapp-dev** / **launchapp.dev**.
 
 ## Recently Archived
 
-None observed as of 2026-03-18.
+None observed as of 2026-03-19.

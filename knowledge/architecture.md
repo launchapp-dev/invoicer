@@ -1,6 +1,7 @@
 # Organization Architecture
 
-> Last updated: 2026-03-18 by knowledge-curator agent.
+> Last updated: 2026-03-19 by knowledge-curator agent.
+> Note: Private repo data (saas-template-launch-app-test, ao-cli, design-system) cannot be freshly verified — GitHub API returns 404. Architecture reflects last verified state from 2026-03-18. Brain architecture and ao-skills are current via git log / GitHub API.
 
 ## Overview
 
@@ -139,13 +140,15 @@ Rust-based AI agent orchestrator CLI. Powers the org's own AI workforce automati
 
 ### brain (this repo)
 
-Org-wide AI workforce command center. Runs on AO CLI with 14 specialized agents.
+Org-wide AI workforce command center. Runs on AO CLI. Operating at scale as of 2026-03-19 with 44+ merged PRs since launch.
 
 **Agents:** planner, triager, reviewer, doc-auditor, security-monitor, sdk-auditor, release-coordinator, impact-analyzer, stale-detector, competitive-researcher, product-cataloger, product-doc-writer, toolmaker, knowledge-curator, workflow-optimizer, gtm-strategist, product-ideator, revenue-analyst
 
-**Scheduled:** brain-planner runs every 3h, assessing knowledge gaps and queuing tasks
+**Scheduled:** Conductor runs every 5 minutes (replaced brain-planner), queuing and coordinating all knowledge workflows
 
 **MCP servers:** context7, sequential-thinking, github, firecrawl, playwright
+
+**Architecture diagrams:** 32 diagrams in `knowledge/architecture/`, last verified 2026-03-19
 
 ---
 
@@ -164,7 +167,22 @@ A full Backend-as-a-Service platform with standalone SDKs. Less actively develop
 
 ## AO Plugin Packs
 
-Claude Code skill/workflow extension packs for AO CLI.
+Claude Code skill/workflow extension packs for AO CLI. Two distinct types:
+
+### ao-skills (core AO skills plugin)
+
+The official Claude Code plugin for AO CLI itself. Installed via Claude Code plugin manager using `marketplace.json`.
+
+**Format:** `.claude-plugin/plugin.json` manifest + `skills/<name>/SKILL.md` with YAML frontmatter
+
+**15 skills published (as of 2026-03-19):**
+- `getting-started`, `task-management`, `workflow-authoring`, `daemon-operations`, `queue-management`
+- `mcp-tools`, `troubleshooting`, `mcp-setup`, `configuration`, `setup-ao`
+- `workflow-patterns`, `agent-personas`, `mcp-servers-for-agents`, `pack-authoring`, `skill-authoring`
+
+### Domain-Specific Bundled Packs (ao-bundled-packs)
+
+Extension packs targeting third-party services and platforms.
 
 **Published packs:** aws-pack, firebase-pack, pdf-pack, monitoring-pack, ollama-pack, postgres-pack, figma-pack, slack-pack, stripe-pack, playwright-pack, linear-pack, research-pack, docker-pack, supabase-pack, google-workspace-pack
 
