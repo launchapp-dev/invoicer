@@ -287,3 +287,230 @@
 | I11 | Slack/Discord Notifications | AO ↔ Communication | Small | 8/10 |
 | I12 | Terraform/Pulumi Provider | LaunchPad ↔ IaC tools | Medium | 7/10 |
 | I13 | Stripe Sync Engine | LaunchPad ↔ Stripe Data | Medium | 9/10 |
+
+---
+
+## New Integration Ideas — Round 2 (2026-03-18)
+
+> Generated from comprehensive knowledge base analysis including 40+ repo docs,
+> revenue analysis, GTM strategies, and March 2026 market research.
+
+---
+
+## I14. Polar.sh Deep Integration for LaunchApp
+
+**Problem:** The LaunchApp template already has basic Polar.sh support (added via recent PRs). But Polar.sh offers much more than payments — it provides sponsorship tiers, benefit fulfillment, newsletter, file downloads, Discord access grants, and license key management. For open-source-first SaaS products (which LaunchApp targets), Polar.sh is increasingly preferred over Stripe for its developer-friendly UX and lower fees.
+
+**Target audience:** Indie hackers and open-source maintainers building SaaS products who prefer Polar.sh's open-source-native billing over raw Stripe integration.
+
+**Proposed solution:** A `@launchapp/polar` package that provides: full Polar.sh subscription lifecycle management (create, upgrade, cancel, pause), benefit fulfillment hooks (auto-grant access to features based on Polar tier), license key generation and validation for distributed software, sponsorship tier display components (pricing tables, sponsor walls), webhook handling for subscription events, and seamless switching between Polar.sh and Stripe via config.
+
+**Leverage:**
+- `saas-template-launch-app-test` (already has basic Polar.sh integration)
+- Better Auth (map Polar subscriptions to auth roles)
+- Existing Stripe integration patterns (parallel implementation)
+
+**Effort:** Small (days) — Polar.sh integration exists; this extends it to feature parity with Stripe
+
+**Revenue potential:** Free (adoption driver — makes LaunchApp the best template for open-source SaaS)
+
+**Priority score:** 8/10 — Polar.sh is growing rapidly in the indie hacker space; first-class support differentiates LaunchApp from competitors locked to Stripe
+
+---
+
+## I15. Sentry / Error Tracking Integration for LaunchPad
+
+**Problem:** Every production app needs error tracking. Developers currently set up Sentry, Bugsnag, or Datadog manually. LaunchPad apps have no built-in error boundary or reporting. A pre-wired integration would save hours of setup and provide better error context (which user, which tenant, which API endpoint).
+
+**Target audience:** LaunchPad and LaunchApp developers deploying to production who need error monitoring.
+
+**Proposed solution:** A `@launchpad/errors` package that provides: Sentry as the default provider (open-source, self-hostable), automatic error context enrichment (user ID, org ID, tenant from Better Auth session), API route error boundaries with structured error responses, React error boundary components from the design system, source map upload automation for Hono SSR, and environment-aware configuration (dev: console, staging: Sentry, prod: Sentry + alerts).
+
+**Leverage:**
+- Better Auth (user/session context for error enrichment)
+- Hono middleware (API error capture)
+- React Router v7 (error boundary patterns)
+- Design system (error UI components)
+
+**Effort:** Small (days)
+
+**Revenue potential:** Free (adoption driver, reduces support burden)
+
+**Priority score:** 7/10 — Quality-of-life integration; not differentiating but reduces setup friction significantly
+
+---
+
+## I16. Cloudflare Workers + R2 Integration for LaunchPad
+
+**Problem:** Cloudflare Workers and R2 are increasingly the default edge compute and storage choice for cost-conscious developers — R2 has zero egress fees (vs S3's expensive egress). LaunchPad uses S3 for storage but has no edge compute story. A Cloudflare integration would provide both edge functions (complementing the proposed LaunchPad Functions) and cheaper storage.
+
+**Target audience:** Cost-conscious developers who want edge-deployed LaunchPad apps with zero-egress storage.
+
+**Proposed solution:** Integration providing: R2 as an alternative storage backend for `@launchpad/storage` (alongside S3), Cloudflare Workers deployment target for Hono API routes (Hono already has first-class Cloudflare support), KV namespace for session storage and caching, D1 as an alternative SQLite-based database for lightweight apps, and Cloudflare Tunnel for local development exposure.
+
+**Leverage:**
+- Hono (native Cloudflare Workers adapter — zero additional work for API routes)
+- `launchpad-db-engine` (abstract storage backend)
+- Docker + Railway deploy (add Cloudflare as alternative deploy target)
+
+**Effort:** Small-Medium (days to weeks) — Hono's Cloudflare support does the heavy lifting
+
+**Revenue potential:** Free (adoption driver — unlocks a large developer segment)
+
+**Priority score:** 8/10 — Cloudflare is the fastest-growing edge platform; Hono's native support makes this unusually low-effort for high impact
+
+---
+
+## I17. n8n / Zapier / Make Integration for AO
+
+**Problem:** Not every workflow needs AI agents. Many AO users also use no-code automation tools (n8n, Zapier, Make) for integrations — syncing CRM data, sending notifications, updating spreadsheets. Currently there's no bridge between AO's AI agent workflows and these no-code automation platforms.
+
+**Target audience:** Teams using both AO and no-code automation who want AI agent results to flow into their existing automation pipelines (and vice versa).
+
+**Proposed solution:** Bidirectional integration providing: AO webhook triggers (trigger n8n/Zapier workflows when AO tasks complete), AO actions for n8n/Zapier (trigger AO workflows from no-code automations), pre-built n8n nodes for common AO operations (create task, run workflow, check status), Zapier triggers and actions published to the Zapier app marketplace, and webhook-based event forwarding for any automation platform.
+
+**Leverage:**
+- AO daemon events (already emits lifecycle events)
+- AO workflow webhooks (extend existing webhook support)
+- `ao-skills` (skill definitions can map to Zapier action schemas)
+
+**Effort:** Small-Medium (days to weeks) — webhook-based integration is straightforward
+
+**Revenue potential:** Free basic webhooks, AO Cloud tier for managed integrations and Zapier marketplace listing
+
+**Priority score:** 7/10 — Bridges AI agent workflows with the broader automation ecosystem; expands AO's reach to non-developer users
+
+---
+
+## I18. OpenTelemetry Integration for LaunchPad
+
+**Problem:** Production observability is shifting to OpenTelemetry as the universal standard. Supabase exposes metrics via OpenTelemetry. Any BaaS that doesn't emit OTel traces and metrics is invisible to modern observability stacks (Grafana, Datadog, New Relic, Honeycomb).
+
+**Target audience:** DevOps engineers and platform teams running LaunchPad in production who need observability in their existing monitoring stack.
+
+**Proposed solution:** Built-in OpenTelemetry instrumentation for LaunchPad: automatic tracing for all Hono API routes (request → middleware → handler → DB → response), database query spans with duration and row count, auth operation spans (login, token refresh, session validation), storage operation spans (upload, download, delete), configurable exporters (OTLP, Jaeger, Zipkin), and health check endpoints for load balancer integration.
+
+**Leverage:**
+- Hono (OpenTelemetry middleware available)
+- `launchpad-db-engine` (instrument query pipeline)
+- Better Auth (instrument auth flows)
+
+**Effort:** Small-Medium (days to weeks) — Hono has OTel middleware; extend to other LaunchPad services
+
+**Revenue potential:** Free (enterprise adoption driver — required for production deployments)
+
+**Priority score:** 8/10 — Non-negotiable for enterprise adoption; relatively low effort given Hono's existing middleware support
+
+---
+
+## I19. Turborepo Remote Cache Integration
+
+**Problem:** The org uses Turborepo extensively (LaunchApp template, design system, launchapp-lite-v2). Turborepo's remote cache dramatically speeds up CI builds by sharing build artifacts across team members and CI runners. Vercel offers hosted remote cache, but it requires a Vercel account. Self-hosted alternatives exist but require setup.
+
+**Target audience:** All developers working on LaunchApp monorepo projects who want faster builds.
+
+**Proposed solution:** A pre-configured remote cache solution for LaunchApp projects: one-command setup (`launchpad cache setup`), self-hosted option via S3/R2 (zero vendor lock-in), pre-configured cache policies per package type, CI pipeline templates with cache integration (GitHub Actions, Railway), and cache analytics (hit rate, storage usage, time saved).
+
+**Leverage:**
+- Turborepo (already the build system for all monorepos)
+- S3/R2 (storage for cache artifacts)
+- GitHub Actions (CI integration)
+
+**Effort:** Small (days)
+
+**Revenue potential:** Free self-hosted, $9/month for managed cache hosting
+
+**Priority score:** 7/10 — Developer productivity improvement; nice-to-have but not essential
+
+---
+
+## I20. AO + Cursor / Windsurf Interop
+
+**Problem:** AO currently orchestrates Claude Code agents. But many developers use Cursor (29.3B valuation, 500M ARR) or Windsurf (acquired by Cognition/Devin). AO is locked to a single AI coding tool. True orchestration should support dispatching tasks to any agent — including Cursor and Windsurf instances.
+
+**Target audience:** Teams with mixed AI tooling who want unified orchestration regardless of which AI coding tool individual developers prefer.
+
+**Proposed solution:** Agent adapter layer for AO that: supports dispatching tasks to Cursor via its CLI/API, supports Windsurf/Devin task dispatch, normalizes task results across agent types, tracks cost and quality metrics per agent type (enabling apples-to-apples comparison), and allows per-workflow agent selection (some tasks go to Claude Code, others to Cursor).
+
+**Leverage:**
+- AO workflow engine (already has agent abstraction)
+- AO multi-model routing (extend from model-level to tool-level routing)
+- AO daemon (agent process management)
+
+**Effort:** Medium (weeks) — depends on Cursor/Windsurf API availability
+
+**Revenue potential:** AO Pro/Team feature — strong differentiator for enterprise teams with diverse tooling
+
+**Priority score:** 8/10 — True multi-agent orchestration across tools is unique in the market; positions AO as the universal orchestrator, not just a Claude Code wrapper
+
+---
+
+## I21. Firebase Migration Accelerator
+
+**Problem:** Firebase removed its free storage tier and is increasingly pushing developers toward Gemini/Vertex AI lock-in. Developers are actively looking for alternatives (Firebase vs Supabase comparisons are the most searched BaaS topic in 2026). But Firebase migration is particularly painful because of its NoSQL → SQL schema translation, Firebase Auth → alternative auth migration, and Cloud Functions → alternative functions porting.
+
+**Target audience:** Firebase developers frustrated by pricing changes, vendor lock-in, or NoSQL limitations who want to move to a relational, open-source backend.
+
+**Proposed solution:** A `launchpad migrate firebase` command (extends idea #16) with: Firestore document collections → PostgreSQL table mapping with schema inference, Firebase Auth user export → Better Auth import (preserving password hashes, OAuth connections), Firebase Cloud Functions → Hono API route translation guide (AI-assisted), Firebase Storage → S3/R2 migration with URL redirect mapping, and real-time migration progress dashboard.
+
+**Leverage:**
+- `launchpad-db-engine` (target database)
+- Better Auth (auth import)
+- Hono (API route target — same runtime model as Cloud Functions)
+- `supabase-to-hooks` (migration pattern expertise)
+
+**Effort:** Medium (weeks)
+
+**Revenue potential:** Free (adoption driver — directly converts Firebase users). $199 for assisted migration service.
+
+**Priority score:** 9/10 — Firebase pricing backlash is creating a migration wave right now; being the easiest off-ramp captures high-intent users
+
+---
+
+## I22. Inngest / Trigger.dev Integration for LaunchPad
+
+**Problem:** Background job processing is complex to build from scratch (proposed in new product #11). Inngest and Trigger.dev are established platforms specifically for this — durable functions, event-driven workflows, cron jobs, retries. Rather than building LaunchPad Jobs from scratch, integrating with an existing solution gets 80% of the value in 10% of the time.
+
+**Target audience:** LaunchPad developers who need background jobs immediately without waiting for a native LaunchPad Jobs product.
+
+**Proposed solution:** A `@launchpad/inngest` adapter that: pre-configures Inngest/Trigger.dev with LaunchPad event sources (database triggers, auth events, webhook receipts), provides type-safe event definitions matching LaunchPad's schema, includes pre-built function templates (send welcome email, sync Stripe, generate report), offers a dashboard widget in `launchpad-studio` for job monitoring, and supports both hosted (Inngest Cloud) and self-hosted (Trigger.dev) options.
+
+**Leverage:**
+- `launchpad-db-engine` (event source for triggers)
+- Better Auth (auth events as trigger sources)
+- Hono (API routes to serve Inngest functions)
+
+**Effort:** Small (days) — thin adapter over existing platforms
+
+**Revenue potential:** Free (adoption driver — unblocks production use cases immediately)
+
+**Priority score:** 8/10 — Faster path to background jobs than building native; validates demand before investing in LaunchPad Jobs (#11)
+
+---
+
+## Updated Summary Table
+
+| # | Integration | Connects | Effort | Priority |
+|---|-------------|----------|--------|----------|
+| I1 | Stripe Connect | LaunchPad ↔ Stripe | Medium | 9/10 |
+| I2 | Vercel/Netlify Deploy | LaunchPad ↔ Deploy platforms | Small | 8/10 |
+| I3 | Resend Email | LaunchPad ↔ Email providers | Small | 7/10 |
+| I4 | AI Agent Rules | All products ↔ Claude/Cursor | Small | 9/10 |
+| I5 | Figma Pipeline | Design ↔ LaunchApp | Medium | 7/10 |
+| I6 | GitHub Issues Sync | AO ↔ GitHub | Medium | 8/10 |
+| I7 | LaunchPad MCP Server | LaunchPad ↔ AI agents | Medium | 9/10 |
+| I8 | Better Auth Plugins | Better Auth ↔ Enterprise tools | Small-Medium | 8/10 |
+| I9 | Linear/Jira Sync | AO ↔ Linear/Jira | Medium | 8/10 |
+| I10 | PostHog Analytics | LaunchPad ↔ Analytics | Small | 7/10 |
+| I11 | Slack/Discord Notifications | AO ↔ Communication | Small | 8/10 |
+| I12 | Terraform/Pulumi Provider | LaunchPad ↔ IaC tools | Medium | 7/10 |
+| I13 | Stripe Sync Engine | LaunchPad ↔ Stripe Data | Medium | 9/10 |
+| **I14** | **Polar.sh Deep Integration** | **LaunchApp ↔ Polar.sh** | **Small** | **8/10** |
+| **I15** | **Sentry Error Tracking** | **LaunchPad ↔ Sentry** | **Small** | **7/10** |
+| **I16** | **Cloudflare Workers + R2** | **LaunchPad ↔ Cloudflare** | **Small-Medium** | **8/10** |
+| **I17** | **n8n/Zapier/Make** | **AO ↔ No-code automation** | **Small-Medium** | **7/10** |
+| **I18** | **OpenTelemetry** | **LaunchPad ↔ Observability** | **Small-Medium** | **8/10** |
+| **I19** | **Turborepo Remote Cache** | **LaunchApp ↔ CI/CD** | **Small** | **7/10** |
+| **I20** | **Cursor/Windsurf Interop** | **AO ↔ AI coding tools** | **Medium** | **8/10** |
+| **I21** | **Firebase Migration** | **Firebase → LaunchPad** | **Medium** | **9/10** |
+| **I22** | **Inngest/Trigger.dev** | **LaunchPad ↔ Background jobs** | **Small** | **8/10** |
