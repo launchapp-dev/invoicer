@@ -160,7 +160,15 @@ This repo is deeply integrated with the AO Agent Orchestrator:
 - **Production IaC**: Pulumi + AWS (`@pulumi/aws ^6.0.0`, `@pulumi/awsx ^2.0.0`)
 - **Deploy scripts**: `infrastructure/scripts/deploy.sh`, `health-check.sh`, `generate-secrets.sh`
 - **Docker**: `docker-compose.prod.yml` for production-like local testing
-- **Deployment targets**: Railway and Vercel configurations available (vercel.json and Railway deployment guides merged 2026-03-19)
+- **Deployment targets**: Railway, Vercel, and Cloudflare Workers configurations available (all merged 2026-03-19)
+  - **Cloudflare Workers**: `apps/web/wrangler.toml`, `apps/web/workers/app.ts`, and `docs/deployment/cloudflare.md` guide
+    - Uses Hyperdrive for Neon Postgres connection pooling at the edge
+    - Uses R2 for S3-compatible object storage (replaces traditional S3 when deployed to CF)
+    - Built with `CF_PAGES=1` flag for ESM module format
+    - Sub-5ms cold starts, with 50ms CPU time limit per request on free plan (30s on paid)
+    - Integrates with React Router via `AppLoadContext` to expose CF bindings (Hyperdrive, R2)
+    - Known constraints: no Node.js fs/child_process APIs, uses `nodejs_compat` flag for crypto/path support
+  - **Railway & Vercel**: Traditional platforms with full Node.js runtime and Pulumi IaC support
 
 ## Dependencies on Other Org Products
 
@@ -180,6 +188,7 @@ This repo is deeply integrated with the AO Agent Orchestrator:
 - PR #288: `@repo/jobs` package removed (Trigger.dev async jobs no longer in template)
 - PR #289: `@repo/storage` verified compatible across R2, Tigris, and Vercel Blob
 - PR #290, #291, #294: Railway and Vercel deployment configurations + guides added
+- **Cloudflare Workers deployment support**: `wrangler.toml`, `workers/app.ts` entry point, and comprehensive deployment guide with Hyperdrive + R2 integration (merged 2026-03-19)
 - PR #292: Email verification flow added after user registration
 
-This repo is the primary development vehicle for the launchapp-lite product, with AO automating multiple feature tasks daily.
+This repo is the primary development vehicle for the launchapp-lite product, with AO automating multiple feature tasks daily. Three deployment targets (Railway, Vercel, Cloudflare Workers) now have full configuration and documentation support.

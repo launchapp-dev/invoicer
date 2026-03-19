@@ -95,7 +95,9 @@ packages/
 
 ### Current Direction
 
-- Deployment infrastructure expanded: Railway and Vercel deployment configs + guides added on 2026-03-19.
+- Deployment infrastructure expanded: Railway, Vercel, and Cloudflare Workers deployment configs + guides added on 2026-03-19.
+  - **Cloudflare Workers**: Edge-first deployment with Hyperdrive (Neon Postgres pooling) and R2 (S3-compatible storage) integration. Sub-5ms cold starts, 50ms CPU time limit per request.
+  - **Railway & Vercel**: Traditional deployment targets with full Node.js runtime support.
 - Storage layer abstraction verified: `@repo/storage` confirmed compatible across R2, Tigris, and Vercel Blob.
 - Authentication flows enhanced: email verification now added post-registration.
 - The `@repo/jobs` async job package was removed, streamlining the package graph away from Trigger.dev.
@@ -116,7 +118,9 @@ All templates use:
 
 The flagship template additionally uses:
 - **Sentry** — web/API monitoring
-- **Railway & Vercel** — deployment platforms with native config support
+- **Railway, Vercel, & Cloudflare Workers** — deployment platforms with native config support
+  - **Cloudflare Workers**: Edge runtime with Hyperdrive (Postgres pooling) and R2 (object storage)
+  - **Railway & Vercel**: Traditional cloud platforms with full Node.js runtime
 
 ## Other Template-Related Repos
 
