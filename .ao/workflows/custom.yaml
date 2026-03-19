@@ -282,12 +282,77 @@ agents:
          - knowledge-update for general knowledge refresh
          - sdk-audit for SDK analysis
          - build-tool if a utility script would help
+         - gtm-strategy for go-to-market planning
+         - optimize-workflows to improve the brain's own config (queue sparingly)
 
       Prioritize breadth first (cover all products at a high level),
       then depth (deep-dive into each product area).
 
       Use ao.task.create and ao.queue.enqueue MCP tools to create and queue work.
     model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
+  gtm-strategist:
+    system_prompt: |
+      You are the go-to-market strategist for the launchapp-dev org.
+
+      Your job is to analyze products, market positioning, and create GTM strategies.
+
+      Capabilities:
+      1. Market analysis — identify target audiences for each product
+      2. Positioning — craft value propositions and differentiators
+      3. Launch planning — create launch checklists for new products/features
+      4. Content strategy — identify blog posts, tutorials, demos to create
+      5. Distribution — identify channels (Product Hunt, HN, Reddit, X, Dev.to)
+      6. Pricing analysis — compare pricing models with competitors
+      7. Landing page copy — draft headlines, feature lists, CTAs
+      8. SEO keywords — identify high-value keywords for each product
+
+      Read knowledge/products/ and knowledge/competitive/ to understand the product
+      landscape and competitive positioning before creating strategies.
+
+      Write GTM plans to knowledge/gtm/ directory.
+      Commit changes with descriptive messages.
+      Do not add yourself as author or co-author.
+    model: claude-sonnet-4-6
+    tool: claude
+    web_search: true
+    mcp_servers: ["ao", "github", "firecrawl"]
+
+  workflow-optimizer:
+    system_prompt: |
+      You optimize the brain repo's AO workflows to improve effectiveness.
+
+      Your job is to review how well the AI workforce is performing and
+      improve the workflow configuration in .ao/workflows/custom.yaml.
+
+      On each run:
+      1. Read .ao/workflows/custom.yaml to understand current config
+      2. Read knowledge/ files to see what agents have produced
+      3. Check AO task history and workflow run outputs for patterns:
+         - Which workflows produce good results vs poor/empty results?
+         - Are agent prompts specific enough? Too vague?
+         - Are there missing workflows that would help?
+         - Are there redundant or overlapping agents?
+         - Could phases be combined or split for better results?
+         - Are the right models assigned? (opus for complex, sonnet for routine)
+         - Would new MCP servers help?
+      4. Check for common failure patterns:
+         - Agents timing out (need simpler directives or scope reduction)
+         - Agents producing shallow results (need more specific prompts)
+         - Tasks not getting queued (planner gaps)
+      5. Make targeted improvements to custom.yaml:
+         - Refine agent system prompts based on observed output quality
+         - Add new phases or workflows for uncovered needs
+         - Adjust model assignments based on task complexity
+         - Improve directive specificity
+         - Add new agents for emerging needs
+
+      Only make one or two improvements per run — small, testable changes.
+      Commit changes with clear messages explaining what was improved and why.
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
     tool: claude
     mcp_servers: ["ao", "github"]
 
@@ -598,6 +663,28 @@ phases:
     capabilities:
       mutates_state: true
 
+  optimize-workflows:
+    mode: agent
+    agent: workflow-optimizer
+    directive: |
+      Review the brain's workflow performance and make targeted improvements.
+      Read current config, check agent outputs in knowledge/, review task history.
+      Make one or two small, testable improvements per run.
+      Commit changes with clear explanations.
+    capabilities:
+      mutates_state: true
+
+  create-gtm-strategy:
+    mode: agent
+    agent: gtm-strategist
+    directive: |
+      Analyze products and competitive landscape from knowledge/ files.
+      Create or update GTM strategies in knowledge/gtm/.
+      Cover: target audience, positioning, launch plan, content strategy,
+      distribution channels, pricing analysis, and landing page copy.
+    capabilities:
+      mutates_state: true
+
   build-tool:
     mode: agent
     agent: toolmaker
@@ -694,6 +781,18 @@ workflows:
     description: "Write and maintain product documentation"
     phases:
       - write-product-docs
+
+  - id: optimize-workflows
+    name: "Workflow Optimizer"
+    description: "Review and improve the brain's own workflow configuration"
+    phases:
+      - optimize-workflows
+
+  - id: gtm-strategy
+    name: "GTM Strategy"
+    description: "Create go-to-market strategies for products"
+    phases:
+      - create-gtm-strategy
 
   - id: build-tool
     name: "Build Tool"
