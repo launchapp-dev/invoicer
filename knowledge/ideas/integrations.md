@@ -514,3 +514,175 @@
 | **I20** | **Cursor/Windsurf Interop** | **AO ↔ AI coding tools** | **Medium** | **8/10** |
 | **I21** | **Firebase Migration** | **Firebase → LaunchPad** | **Medium** | **9/10** |
 | **I22** | **Inngest/Trigger.dev** | **LaunchPad ↔ Background jobs** | **Small** | **8/10** |
+
+---
+
+## New Integration Ideas — Round 3 (2026-03-19)
+
+> Generated from refreshed revenue analysis, March 2026 MCP/agent ecosystem research,
+> strategic question analysis, and competitive landscape gaps.
+
+---
+
+## I23. Anthropic Agent SDK Native Integration for AO
+
+**Problem:** Anthropic released the Claude Agent SDK, providing a structured way to build agent applications with tool use, multi-turn conversations, and orchestration primitives. AO currently wraps Claude Code CLI for agent execution, but the Agent SDK offers a more direct, programmatic API for agent control — lower latency, finer-grained tool management, and native streaming. As Anthropic evolves the SDK, AO should be a first-class consumer.
+
+**Target audience:** AO users who want more granular control over agent behavior, custom tool definitions, and direct API-level agent interaction without the CLI overhead.
+
+**Proposed solution:** A native Anthropic Agent SDK adapter for AO that: uses the Agent SDK directly for agent task execution (alongside the existing Claude Code CLI path), exposes Agent SDK tool definitions as first-class AO skill primitives, supports custom tool registrations per workflow phase, enables streaming agent output in the AO dashboard and CLI, provides lower-latency execution for simple tasks (skip CLI bootstrap), and maintains backward compatibility (users can choose CLI or SDK execution per workflow).
+
+**Leverage:**
+- AO workflow engine (agent abstraction layer already exists)
+- AO skills (map to Agent SDK tool definitions)
+- AO daemon (manage SDK agent processes alongside CLI agents)
+- Claude API integration patterns (from plugin packs)
+
+**Effort:** Medium (weeks) — Agent SDK is well-documented; integration with AO's phase/workflow system is the work
+
+**Revenue potential:** Core AO Pro feature — enables advanced use cases that justify subscription
+
+**Priority score:** 9/10 — Anthropic's own SDK is the canonical way to build Claude agents; native support positions AO as the premium orchestrator for Anthropic's ecosystem
+
+---
+
+## I24. Neon Serverless Postgres Integration for LaunchPad
+
+**Problem:** Neon is the fastest-growing serverless Postgres platform — branching, auto-scaling, scale-to-zero, and a generous free tier. LaunchPad uses traditional Postgres (via Railway/Docker), which means always-on infrastructure costs and no database branching. For developers building on LaunchPad who want serverless economics and instant preview environments, Neon is the natural backend. The org's proposed Database Branching feature (F3) could be achieved largely for free by integrating with Neon's existing branching.
+
+**Target audience:** Cost-conscious developers who want LaunchPad with serverless Postgres (pay only for active usage) and instant database branches for PR previews.
+
+**Proposed solution:** A `@launchpad/neon` adapter that: configures `launchpad-db-engine` to use Neon's serverless driver (HTTP or WebSocket), auto-creates Neon database branches from Git branches (solves F3 with zero infrastructure), supports scale-to-zero for development/staging databases (zero idle cost), provides connection pooling via Neon's proxy, includes migration tooling that works with Neon's branching, and supports one-click setup from `create-launchpad` CLI.
+
+**Leverage:**
+- `launchpad-db-engine` (Drizzle ORM already supports Neon's serverless driver)
+- Database Branching (F3) — Neon does this natively, reducing effort from "Large" to "Small"
+- `create-launchpad` CLI (add Neon as a database provider option)
+
+**Effort:** Small (days) — Drizzle + Neon is a documented setup; the value is in wiring it into LaunchPad's provisioning
+
+**Revenue potential:** Free (adoption driver — reduces LaunchPad's infrastructure cost for users, makes DB branching free)
+
+**Priority score:** 8/10 — Solves database branching (F3) at a fraction of the effort; Neon's serverless model is increasingly the default for new projects
+
+---
+
+## I25. Supabase SDK Compatibility Layer
+
+**Problem:** Supabase has 4M+ developers. Many have existing codebases using `@supabase/supabase-js`. Migrating to LaunchPad requires rewriting every database query, auth call, and storage operation. The proposed LaunchPad Migrate (#16) handles schema and data, but doesn't address the application code. A Supabase-compatible SDK would let developers switch backends without rewriting their app code — the ultimate migration accelerator.
+
+**Target audience:** Supabase developers who want to migrate to LaunchPad with minimal application code changes. Also developers evaluating BaaS platforms who want portability guarantees.
+
+**Proposed solution:** A `@launchpad/supabase-compat` SDK that: implements the `@supabase/supabase-js` API surface on top of LaunchPad's backend, supports the most-used Supabase patterns (`.from('table').select('*').eq('col', val)`), handles auth methods (signIn, signUp, signOut, onAuthStateChange), provides storage operations (upload, download, list), includes real-time subscriptions (when LaunchPad Realtime ships), and clearly documents which Supabase features are supported and which need migration.
+
+**Leverage:**
+- `supabase-to-hooks` (already understands Supabase patterns — can inform the compat layer)
+- `launchpad-db-engine` (target for all operations)
+- Better Auth (implements Supabase auth API surface)
+- LaunchPad Migrate (#16) (schema migration handles the backend; this handles the frontend)
+
+**Effort:** Medium (weeks) — map Supabase API surface to LaunchPad equivalents; 80/20 rule (cover the 20% of API that 80% of apps use)
+
+**Revenue potential:** Free (migration accelerator — converts Supabase's 4M users into potential LaunchPad users)
+
+**Priority score:** 9/10 — The combination of Migrate (#16) + Supabase Compat SDK creates the lowest-friction BaaS migration path in the market. Supabase's own users are the largest addressable audience.
+
+---
+
+## I26. Starlight/Astro Documentation Site Generator
+
+**Problem:** The strategic question "do we have customer support and docs infrastructure for paying users" is critical. Before launching paid products, the org needs professional documentation. But spinning up docs from scratch is a distraction from product work. Starlight (Astro's docs framework) is the new standard for developer docs — it's fast, SEO-optimized, and supports content collections. A LaunchPad-aware docs generator could auto-populate API references from the codebase.
+
+**Target audience:** The org itself (immediate need for product documentation before launch) and LaunchPad/LaunchApp users who need docs for their SaaS products.
+
+**Proposed solution:** A `@launchpad/docs` package that: scaffolds a Starlight documentation site from `create-launchpad` or `create-launchapp`, auto-generates API reference pages from `openapi-gen` output, includes pre-built content sections (Getting Started, API Reference, SDK Guides, Changelog), supports versioned documentation (per release), integrates with the design system for consistent branding, and includes a search API powered by the LaunchPad Vector (#10) embeddings.
+
+**Leverage:**
+- `openapi-gen` (API documentation generation)
+- Design system (consistent styling)
+- LaunchPad Vector (#10) (semantic search for docs)
+- `create-launchapp` CLI (scaffold docs alongside app)
+
+**Effort:** Small (days) — Starlight does the heavy lifting; auto-generation from openapi-gen is the value-add
+
+**Revenue potential:** Free (essential infrastructure for launching paid products). Indirectly enables all revenue streams by providing professional documentation.
+
+**Priority score:** 9/10 — Documentation is a hard prerequisite for paid product launches. Without docs, template buyers and AO Pro subscribers will churn immediately. Near-zero cost with Starlight + openapi-gen.
+
+---
+
+## I27. Railway One-Click Deploy Templates
+
+**Problem:** Railway is the deployment platform used across the org (LaunchPad, templates, AO). Railway supports one-click deploy buttons and templates that appear in their marketplace. Deploying LaunchPad or LaunchApp projects currently requires manual Railway configuration. A one-click template would: appear in Railway's marketplace (free distribution), reduce setup from 30 minutes to 30 seconds, and serve as the best possible demo for potential customers.
+
+**Target audience:** All developers evaluating LaunchPad or LaunchApp who want to see a working deployment instantly.
+
+**Proposed solution:** Railway template configurations for: LaunchApp Pro template (full SaaS with auth, billing, email), LaunchPad standalone backend (database + auth + API), AO daemon (for teams wanting hosted AO without AO Cloud), and a combined template (LaunchApp + LaunchPad backend). Each template includes: `railway.toml` with optimized build settings, environment variable templates with descriptions, health check endpoints, and automatic database provisioning.
+
+**Leverage:**
+- Railway (already the org's deployment platform — all Dockerfiles exist)
+- `supabase-railway-template` (already have a Railway template repo)
+- Docker configurations across all products
+
+**Effort:** Small (days) — Docker configs exist; Railway templates need `railway.toml` and variable mappings
+
+**Revenue potential:** Free (distribution channel — Railway marketplace has 100K+ developers). Drives template sales and AO adoption.
+
+**Priority score:** 8/10 — Near-zero effort for significant distribution. Railway marketplace is a free customer acquisition channel.
+
+---
+
+## I28. Vanta/Drata SOC 2 Integration for LaunchPad
+
+**Problem:** Every B2B SaaS eventually needs SOC 2 compliance. Vanta and Drata have become the standard platforms for continuous compliance monitoring. But connecting a custom backend to Vanta/Drata requires manual integration — mapping auth events, access logs, and infrastructure changes to compliance controls. A pre-built integration would make LaunchPad the first BaaS that's SOC 2-ready out of the box.
+
+**Target audience:** B2B SaaS builders on LaunchPad who need to achieve SOC 2 certification for enterprise sales.
+
+**Proposed solution:** A `@launchpad/compliance` adapter that: auto-maps Better Auth events (login, logout, role change, MFA enrollment) to Vanta/Drata evidence, exports audit logs in the format compliance platforms expect, provides infrastructure evidence collection (uptime, backup, encryption status), includes pre-built security policies and controls documentation, and supports automated evidence refreshes via webhook.
+
+**Leverage:**
+- Better Auth (comprehensive auth event logging)
+- `@launchpad/audit-log` SDK (already exists)
+- LaunchPad's database encryption and backup capabilities
+- AO Compliance Engine (#20) (shares compliance domain)
+
+**Effort:** Small-Medium (days to weeks) — Vanta/Drata have well-documented APIs; mapping auth events is straightforward
+
+**Revenue potential:** Premium feature ($49/month) — SOC 2 compliance is a gating requirement for enterprise sales. Any SaaS selling to enterprises will pay for this.
+
+**Priority score:** 8/10 — Differentiates LaunchPad for B2B SaaS builders; compliance is a hard gate for enterprise revenue; relatively low effort with existing audit logging
+
+---
+
+## Updated Summary Table (All Rounds)
+
+| # | Integration | Connects | Effort | Priority |
+|---|-------------|----------|--------|----------|
+| I1 | Stripe Connect | LaunchPad ↔ Stripe | Medium | 9/10 |
+| I2 | Vercel/Netlify Deploy | LaunchPad ↔ Deploy platforms | Small | 8/10 |
+| I3 | Resend Email | LaunchPad ↔ Email providers | Small | 7/10 |
+| I4 | AI Agent Rules | All products ↔ Claude/Cursor | Small | 9/10 |
+| I5 | Figma Pipeline | Design ↔ LaunchApp | Medium | 7/10 |
+| I6 | GitHub Issues Sync | AO ↔ GitHub | Medium | 8/10 |
+| I7 | LaunchPad MCP Server | LaunchPad ↔ AI agents | Medium | 9/10 |
+| I8 | Better Auth Plugins | Better Auth ↔ Enterprise tools | Small-Medium | 8/10 |
+| I9 | Linear/Jira Sync | AO ↔ Linear/Jira | Medium | 8/10 |
+| I10 | PostHog Analytics | LaunchPad ↔ Analytics | Small | 7/10 |
+| I11 | Slack/Discord Notifications | AO ↔ Communication | Small | 8/10 |
+| I12 | Terraform/Pulumi Provider | LaunchPad ↔ IaC tools | Medium | 7/10 |
+| I13 | Stripe Sync Engine | LaunchPad ↔ Stripe Data | Medium | 9/10 |
+| I14 | Polar.sh Deep Integration | LaunchApp ↔ Polar.sh | Small | 8/10 |
+| I15 | Sentry Error Tracking | LaunchPad ↔ Sentry | Small | 7/10 |
+| I16 | Cloudflare Workers + R2 | LaunchPad ↔ Cloudflare | Small-Medium | 8/10 |
+| I17 | n8n/Zapier/Make | AO ↔ No-code automation | Small-Medium | 7/10 |
+| I18 | OpenTelemetry | LaunchPad ↔ Observability | Small-Medium | 8/10 |
+| I19 | Turborepo Remote Cache | LaunchApp ↔ CI/CD | Small | 7/10 |
+| I20 | Cursor/Windsurf Interop | AO ↔ AI coding tools | Medium | 8/10 |
+| I21 | Firebase Migration | Firebase → LaunchPad | Medium | 9/10 |
+| I22 | Inngest/Trigger.dev | LaunchPad ↔ Background jobs | Small | 8/10 |
+| **I23** | **Anthropic Agent SDK** | **AO ↔ Claude Agent SDK** | **Medium** | **9/10** |
+| **I24** | **Neon Serverless Postgres** | **LaunchPad ↔ Neon** | **Small** | **8/10** |
+| **I25** | **Supabase Compat SDK** | **LaunchPad ↔ Supabase apps** | **Medium** | **9/10** |
+| **I26** | **Starlight Docs Generator** | **All products ↔ Docs** | **Small** | **9/10** |
+| **I27** | **Railway One-Click Deploy** | **All products ↔ Railway** | **Small** | **8/10** |
+| **I28** | **Vanta/Drata SOC 2** | **LaunchPad ↔ Compliance** | **Small-Medium** | **8/10** |

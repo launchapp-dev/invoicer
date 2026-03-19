@@ -559,3 +559,164 @@
 | **F21** | **AI SaaS Template** | **LaunchApp** | **Small-Medium** | **9/10** |
 | **F22** | **Figma Community Kit** | **Design System** | **Small-Medium** | **7/10** |
 | **F23** | **Admin Dashboard** | **Better Auth** | **Medium** | **9/10** |
+
+---
+
+## New Feature Proposals — Round 3 (2026-03-19)
+
+> Generated from refreshed revenue analysis, March 2026 market research,
+> strategic question analysis (36 questions), and MCP/agent ecosystem trends.
+
+---
+
+## AO Agent Orchestrator
+
+### F24. AO Dry-Run Mode — Preview Agent Actions Before Commit
+
+**Problem:** The strategic question "what is blast radius if ao daemon introduces systematic bugs" highlights a real risk. When AO agents process 180+ PRs/week, a misconfigured workflow or prompt regression can introduce systematic defects across the entire codebase. There's no way to preview what an agent will do before it commits changes. This is the equivalent of running database migrations without `--dry-run` — unacceptable in production.
+
+**Target audience:** Teams using AO at scale who need confidence that workflow changes won't introduce regressions across multiple repos.
+
+**Proposed solution:** A `--dry-run` flag for AO workflows that: executes the full workflow pipeline in an isolated worktree, generates a diff preview of all changes without committing, runs configured test suites against the changes, produces a risk assessment (files changed, tests affected, blast radius estimate), supports approval gates where a human reviews the dry-run before the real execution, and logs dry-run results for comparison with actual executions.
+
+**Leverage:** AO workflow engine (already has worktree isolation), `worktree-manager` (isolated execution), AO Guard (#12) (quality check on dry-run output)
+
+**Effort:** Small-Medium (days to weeks) — worktree isolation exists; need diff capture and preview UI
+
+**Revenue potential:** Core AO Pro feature (increases trust, reduces rework)
+
+**Priority score:** 9/10 — Directly addresses the #1 operational risk of AI agent orchestration at scale; low effort, high trust impact
+
+---
+
+### F25. AO Agent Personas Library — Pre-Built Specialized Agents
+
+**Problem:** The brain repo internally uses 14+ specialized agent personas (product owner, architect, auditor, docs-writer, DevOps, researcher). These are battle-tested but not available to AO users outside the org. Setting up effective agent personas from scratch requires deep prompt engineering expertise that most teams don't have.
+
+**Target audience:** Teams adopting AO who want immediately productive agents without spending weeks on prompt engineering.
+
+**Proposed solution:** A library of pre-built agent personas shipped with `ao-skills`: ready-to-use personas covering common engineering roles (reviewer, implementer, tester, docs writer, security auditor, refactoring specialist), each persona with optimized system prompts, tool configurations, and workflow templates, customizable via YAML overrides (add domain-specific context without rewriting prompts), performance benchmarks per persona (expected quality, cost per task, typical rework rate), and `ao persona install <name>` CLI command.
+
+**Leverage:** Brain repo's 14+ existing personas (reference implementations), `ao-skills` (distribution mechanism), AO workflow engine (persona-aware task routing)
+
+**Effort:** Small (days) — personas exist internally; need packaging, documentation, and CLI integration
+
+**Revenue potential:** Free community personas (adoption driver), premium enterprise personas (domain-specific: fintech reviewer, healthcare compliance auditor) at $15-29/persona/month
+
+**Priority score:** 9/10 — Extremely low effort (personas already exist), dramatically reduces time-to-value for new AO users, creates upsell path to premium personas
+
+---
+
+## LaunchPad BaaS
+
+### F26. LaunchPad Schema Marketplace — Pre-Built Database Schemas
+
+**Problem:** Every SaaS builder starts by designing the same database schemas — users, organizations, subscriptions, invoices, projects, comments, notifications. Supabase has community schema templates. Prisma has a schema catalog. But no BaaS offers one-click installable, production-ready schemas with RLS policies, seed data, and type-safe SDK integration already wired up.
+
+**Target audience:** Developers starting new projects on LaunchPad who want to skip the schema design phase for common SaaS patterns.
+
+**Proposed solution:** A schema registry within `launchpad-studio` and CLI that: offers pre-built schemas for common SaaS patterns (multi-tenant org, e-commerce, CMS, project management, social network, analytics dashboard), includes RLS policies, indexes, and seed data, auto-generates type-safe SDK methods for the schema, supports `launchpad schema install <name>` via CLI, allows community contributions with review process, and composes — install multiple schemas that work together.
+
+**Leverage:** `launchpad-db-engine` (migration system, type generation), `create-launchpad` CLI, Better Auth (auth-aware schema patterns), vertical templates (F7) — schemas extracted from template data models
+
+**Effort:** Small-Medium (days to weeks) — extract schemas from existing templates, package them
+
+**Revenue potential:** Free core schemas (adoption driver), premium schemas for complex verticals ($29-49 one-time)
+
+**Priority score:** 8/10 — Reduces time-to-first-query from hours to minutes; schemas are the entry point for LaunchPad adoption
+
+---
+
+## LaunchApp Templates
+
+### F27. LaunchApp Internationalization Kit — Production i18n
+
+**Problem:** The flagship template has i18n mentioned in its SDK list (`@launchpad/i18n`) but SaaS templates notoriously ship with token i18n support — a translation file and a hook, with no actual production workflow. For SaaS products targeting global markets (which is most of them), proper i18n requires: translation management, locale detection, RTL support, number/date formatting, and pluralization rules. No SaaS boilerplate does this well.
+
+**Target audience:** SaaS builders targeting international markets who need production-grade i18n from day one, not an afterthought.
+
+**Proposed solution:** A complete i18n module for LaunchApp templates that: ships with a translation management dashboard (admin can edit translations), supports AI-powered translation suggestions (via Claude API — translate UI strings on demand), includes locale detection with user preference persistence, provides RTL layout support in the design system, handles number, date, and currency formatting per locale, supports namespace-based translation loading (only load what's needed), and includes CI checks for missing translations.
+
+**Leverage:** `@launchpad/i18n` SDK (already exists), design system (RTL-aware components), Better Auth (user locale preference), Claude API (translation suggestions)
+
+**Effort:** Medium (weeks)
+
+**Revenue potential:** Included in Pro template tier (increases template value), standalone i18n module at $49 one-time
+
+**Priority score:** 7/10 — Important for global market reach; differentiates from competitors that treat i18n as an afterthought
+
+---
+
+## Claude Code Plugin Packs
+
+### F28. Plugin Pack Analytics Dashboard — Usage & Impact Metrics
+
+**Problem:** The org has 15+ Claude Code plugin packs, but there's no way to know which ones are actually used, how often, or whether they improve developer productivity. Without usage data, pack development is guided by intuition rather than evidence. The strategic question "do plugin packs contain working implementations or empty scaffolds" highlights this visibility gap.
+
+**Target audience:** Internal team (for prioritizing pack development) and enterprise customers who need to measure AI tool ROI.
+
+**Proposed solution:** An analytics layer for Claude Code plugin packs that: tracks pack activation, command usage, and error rates (opt-in telemetry), measures productivity impact (time saved, rework reduction — requires baseline comparison), provides a dashboard showing most/least used packs and commands, identifies common error patterns to guide pack improvements, supports A/B testing of pack variations, and feeds data into AO Observability (#9) for unified AI tool analytics.
+
+**Leverage:** AO Observability (#9) (analytics infrastructure), AO daemon events (telemetry pipeline), Claude Code plugin hooks (instrumentation points)
+
+**Effort:** Small-Medium (days to weeks) — telemetry collection is straightforward; dashboard is the main effort
+
+**Revenue potential:** Free for basic metrics, part of AO Cloud Team tier for advanced analytics
+
+**Priority score:** 8/10 — Data-driven pack development produces better packs; enterprise customers need ROI measurement for AI tools
+
+---
+
+## Better Auth
+
+### F29. Better Auth Passkey-First Authentication Flow
+
+**Problem:** Passkeys (WebAuthn) are now supported by all major browsers and platforms (Apple, Google, Microsoft). Auth.js v5 still lacks native passkey support. Clerk added passkeys but charges premium for it. The FIDO Alliance reports 15B+ accounts can now use passkeys. A passkey-first auth flow would be a strong differentiator for Better Auth — most auth libraries treat passkeys as an add-on, not the primary flow.
+
+**Target audience:** Security-conscious developers building apps where passwordless authentication is preferred or required (fintech, healthcare, enterprise).
+
+**Proposed solution:** A `@better-auth/passkeys` plugin providing: passkey registration and authentication as the primary flow (not an add-on), fallback to password/magic link for devices without passkey support, cross-device passkey sync (leverage platform passkey providers), passkey management UI components (list, rename, delete registered devices), conditional UI mediation (auto-suggest passkey on login), and enterprise attestation support for hardware security keys.
+
+**Leverage:** Better Auth plugin architecture, design system (passkey management UI), LaunchApp templates (integrate as default auth flow option)
+
+**Effort:** Small-Medium (days to weeks) — WebAuthn libraries exist; integration with Better Auth plugin system is the work
+
+**Revenue potential:** Free (drives Better Auth adoption), premium enterprise attestation as paid plugin ($19/month)
+
+**Priority score:** 8/10 — Passkeys are the future of authentication; first-class support in Better Auth cements its position as the most modern auth library
+
+---
+
+## Updated Summary Table (All Rounds)
+
+| # | Feature | Product | Effort | Priority |
+|---|---------|---------|--------|----------|
+| F1 | RLS Policy Builder | LaunchPad | Medium | 8/10 |
+| F2 | Type-Safe SDK | LaunchPad | Medium | 9/10 |
+| F3 | Database Branching | LaunchPad | Large | 7/10 |
+| F4 | Skill Marketplace | AO | Small-Medium | 8/10 |
+| F5 | GitHub Actions | AO | Small | 9/10 |
+| F6 | Multi-Model Routing | AO | Medium | 8/10 |
+| F7 | Vertical Templates | LaunchApp | Medium | 8/10 |
+| F8 | AI Scaffolding Mode | LaunchApp | Small | 7/10 |
+| F9 | OpenAPI-to-MCP Gen | Dev Tools | Medium | 8/10 |
+| F10 | A2A Protocol Support | AO | Medium | 8/10 |
+| F11 | Cost Analytics & Budgets | AO | Small-Medium | 9/10 |
+| F12 | AI Query Console | LaunchPad | Medium | 8/10 |
+| F13 | Performance Insights | LaunchPad | Medium | 7/10 |
+| F14 | Plugin Pack Generator | Claude Code | Small | 7/10 |
+| F15 | Workflow Visual Editor | AO | Medium | 8/10 |
+| F16 | Agent Memory | AO | Medium | 9/10 |
+| F17 | Workflow Marketplace | AO | Small-Medium | 8/10 |
+| F18 | Managed Webhooks | LaunchPad | Medium | 8/10 |
+| F19 | Local Dev Suite | LaunchPad | Medium | 9/10 |
+| F20 | White-Label Kit | LaunchApp | Medium | 8/10 |
+| F21 | AI SaaS Template | LaunchApp | Small-Medium | 9/10 |
+| F22 | Figma Community Kit | Design System | Small-Medium | 7/10 |
+| F23 | Admin Dashboard | Better Auth | Medium | 9/10 |
+| **F24** | **AO Dry-Run Mode** | **AO** | **Small-Medium** | **9/10** |
+| **F25** | **Agent Personas Library** | **AO** | **Small** | **9/10** |
+| **F26** | **Schema Marketplace** | **LaunchPad** | **Small-Medium** | **8/10** |
+| **F27** | **Internationalization Kit** | **LaunchApp** | **Medium** | **7/10** |
+| **F28** | **Plugin Analytics Dashboard** | **Claude Code** | **Small-Medium** | **8/10** |
+| **F29** | **Passkey-First Auth** | **Better Auth** | **Small-Medium** | **8/10** |

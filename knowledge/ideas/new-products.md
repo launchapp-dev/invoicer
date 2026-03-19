@@ -414,3 +414,153 @@
 | **15** | **Claude Code Skill Studio** | **Medium** | **Freemium SaaS** | **8/10** |
 | **16** | **LaunchPad Migrate** | **Medium** | **Free + paid** | **9/10** |
 | **17** | **AO Fleet** | **Large** | **Enterprise SaaS** | **8/10** |
+
+---
+
+## New Ideas — Round 3 (2026-03-19)
+
+> Generated from refreshed revenue analysis (25 product ideas, commit 2bdb2a0),
+> March 2026 market research ($10B MCP market, $8.5B agent orchestration market),
+> strategic question analysis (36 open questions exposing blind spots),
+> and competitive landscape update.
+
+---
+
+## 18. MCP Gateway — Enterprise MCP Infrastructure
+
+**Problem:** The MCP ecosystem has 6,400+ registered servers (Feb 2026), but production deployment is chaotic. There's no standard way to handle authentication, rate limiting, audit trails, or horizontal scaling for MCP servers. The 2026 MCP roadmap explicitly lists transport evolution, enterprise auth, audit trails, and gateway behavior as unsolved priorities. Cloudflare is early with hosted MCP servers but offers no gateway/proxy layer. Organizations deploying MCP servers in production are building ad-hoc solutions for problems that should be standardized infrastructure.
+
+**Target audience:** Platform teams and DevOps engineers deploying MCP servers in production environments that need security, observability, and governance — particularly in regulated industries (finance, healthcare, manufacturing).
+
+**Proposed solution:** An open-source MCP gateway (`@launchpad/mcp-gateway`) that provides: reverse proxy for MCP servers with connection pooling and load balancing, SSO-integrated authentication (map MCP tool access to org roles via Better Auth), request/response audit logging for compliance, rate limiting and cost attribution per tool per user, horizontal scaling via stateless session routing (solving the MCP roadmap's biggest unsolved problem), `.well-known/mcp` metadata endpoint for capability discovery, and a dashboard for monitoring MCP server health and usage.
+
+**Leverage:**
+- Better Auth (SSO, RBAC for MCP tool access control)
+- Hono framework (reverse proxy middleware — native HTTP handling)
+- AO's MCP integration experience (battle-tested MCP client/server patterns)
+- `launchpad-mcp-server` (reference implementation for gateway-aware servers)
+- OpenTelemetry integration (I18) for observability
+
+**Effort:** Medium (weeks) — the gateway pattern is well-understood; MCP-specific routing and session handling are the novel parts
+
+**Revenue potential:** Open-core — free self-hosted gateway, $49/month managed gateway (hosted at scale), $199/month enterprise (audit logs, SSO, SLA, compliance reports). Addresses the $10B MCP market's enterprise-readiness gap.
+
+**Priority score:** 9/10 — MCP enterprise infrastructure is explicitly unsolved per the 2026 roadmap; first-mover in MCP gateway = "the Nginx of AI tool integration"; leverages existing Better Auth + Hono stack perfectly
+
+---
+
+## 19. LaunchPad Auth Cloud — Hosted Better Auth Service
+
+**Problem:** Better Auth is the fastest-growing JS auth library ($5M funding, YC-backed), but it's self-hosted only. Clerk charges $250/month for business features. Auth0 charges $240/month. WorkOS charges $125/month. The strategic question "what is our risk if Better Auth diverges from our needs" highlights a dependency — but it also reveals an opportunity: the org deeply understands Better Auth and could offer a managed hosting layer that's 8x cheaper than Clerk while providing the admin dashboard (F23) that's the #1 requested feature.
+
+**Target audience:** Developers who love Better Auth's code-first approach but don't want to manage auth infrastructure in production. Teams currently paying $250+/month for Clerk/Auth0 who would switch to a cheaper, open-source-backed alternative.
+
+**Proposed solution:** A managed hosting service for Better Auth that provides: one-click deployment of Better Auth with production-grade infrastructure, pre-built admin dashboard (F23) included, automatic scaling and SSL certificate management, user management API with webhook delivery, session storage with global edge distribution, enterprise features (SAML SSO, SCIM provisioning, audit logs) at a fraction of Clerk's price, and migration tools from Clerk/Auth0/Firebase Auth.
+
+**Leverage:**
+- Better Auth (deep integration expertise — it's used across all org products)
+- Better Auth Admin Dashboard (F23) (core differentiator vs raw self-hosting)
+- `launchpad-db-engine` (multi-tenant database for auth data)
+- Better Auth plugin ecosystem (I8) (SAML, audit log, Stripe sync)
+- LaunchPad Migrate (#16) (auth user migration patterns)
+
+**Effort:** Large (months) — hosting infrastructure, multi-tenancy, edge session distribution, billing
+
+**Revenue potential:** SaaS subscription — $19/month (hobby, 10K MAU), $49/month (pro, 100K MAU), $149/month (team, unlimited MAU + SSO), $399/month (enterprise, SAML + SCIM + SLA). At 1/3 to 1/5 of Clerk/Auth0 pricing with the same features. Addressable market: 500K+ developers evaluating auth solutions annually. Realistic capture: 200–1,000 subscribers → $4K–$50K/month.
+
+**Priority score:** 8/10 — Massive addressable market (auth-as-a-service is $3B+), clear pricing advantage over incumbents, but requires hosting infrastructure investment. Lower priority than AO Guard due to higher effort and established competition.
+
+---
+
+## 20. AO Compliance Engine — AI Code Regulatory Toolkit
+
+**Problem:** The EU AI Act entered into force in 2025, with enforcement beginning in 2026. Any organization using AI to generate code for regulated industries (healthcare, finance, transportation) will need to demonstrate that AI outputs meet compliance requirements — traceability, human oversight, risk assessment, and documentation. 54% of IT leaders rank AI governance as a core concern. No tool exists that maps AI agent code generation to regulatory compliance frameworks.
+
+**Target audience:** Engineering teams in regulated industries (fintech, healthtech, govtech) using AI agents for code generation who need to demonstrate compliance with EU AI Act, SOC 2, HIPAA, and other frameworks.
+
+**Proposed solution:** An AO workflow extension and standalone compliance layer that provides: automatic classification of AI-generated code changes by risk level (EU AI Act Annex III categories), human oversight enforcement (mandatory review gates for high-risk changes), full audit trail of AI agent decisions, prompts, and outputs, compliance report generation (PDF/JSON) for auditors, configurable policy engine mapping org rules to regulatory requirements, data residency controls for agent context and outputs, and integration with existing GRC tools (Vanta, Drata, Secureframe).
+
+**Leverage:**
+- AO Guard (#12) (code quality + compliance = natural bundle)
+- AO workflow engine (compliance gates as workflow phases)
+- AO daemon events and decision logs (raw material for audit trails)
+- `pr-review-responder` (GitHub App for compliance status checks)
+
+**Effort:** Large (months) — regulatory mapping, audit trail infrastructure, report generation, GRC integrations
+
+**Revenue potential:** Enterprise SaaS — $199/seat/month for compliance dashboard, $499/seat/month for full audit trail + report generation, $999/seat/month for enterprise (custom policies, GRC integration, dedicated support). Targets the intersection of AI governance ($45.3% CAGR) and compliance ($15B GRC market). Realistic capture: 50–200 enterprise seats → $10K–$100K/month.
+
+**Priority score:** 8/10 — High revenue per seat, growing regulatory pressure, but requires deep compliance domain expertise and longer sales cycle. Natural extension of AO Guard.
+
+---
+
+## 21. DevOnboard — AI-Powered Interactive Documentation
+
+**Problem:** The strategic question "do we have customer support and docs infrastructure for paying users" reveals a critical gap. But beyond the org's own need, the broader market lacks good documentation tooling for AI-native products. Traditional docs (Docusaurus, GitBook) are static. Developers increasingly expect to ask questions and get answers — not read pages. Stripe's developer experience is the gold standard, but building that is expensive. An AI-powered documentation platform that understands your codebase could commoditize great developer docs.
+
+**Target audience:** Developer tool companies and open-source projects that want Stripe-quality developer documentation without a dedicated docs team. Also serves the org's own documentation needs.
+
+**Proposed solution:** A documentation platform that provides: automatic API documentation from code (extends `openapi-gen`), AI-powered search that answers questions using the codebase as context, interactive code examples that users can modify and run, version-aware documentation (shows the right docs for the user's installed version), community Q&A that feeds back into the docs (similar to Stack Overflow integration), and analytics on what developers search for and where they get stuck.
+
+**Leverage:**
+- `openapi-gen` (API documentation generation)
+- AO skills (skill documentation format is already structured)
+- LaunchPad MCP Server (I7) (AI agents can query docs via MCP)
+- Claude API (power the conversational search)
+
+**Effort:** Large (months) — NLP pipeline, interactive playground, analytics
+
+**Revenue potential:** Freemium SaaS — free for open-source projects, $49/month for private projects, $199/month for team features (analytics, custom branding), $499/month for enterprise (SSO, custom domain, SLA). Addresses the developer documentation market ($2B+). Realistic capture: 100–500 subscribers → $5K–$50K/month.
+
+**Priority score:** 7/10 — Valuable but competitive (GitBook, Mintlify, ReadMe.io all exist). Best deployed as an internal tool first, then productized.
+
+---
+
+## 22. LaunchPad Edge — Cloudflare-Native BaaS Deployment
+
+**Problem:** Cloudflare Workers has become the fastest-growing edge compute platform. Hono (the org's API framework) has first-class Cloudflare Workers support. R2 offers zero-egress storage. D1 provides edge-SQLite. But no BaaS deploys natively to Cloudflare's edge — they all require centralized servers. A Cloudflare-native LaunchPad would be unique: globally distributed, cheaper than AWS-backed alternatives, and developer-friendly.
+
+**Target audience:** Cost-conscious developers building latency-sensitive applications who want a globally distributed backend without managing infrastructure or paying AWS egress fees.
+
+**Proposed solution:** A Cloudflare-native deployment target for LaunchPad that provides: API routes running on Cloudflare Workers (Hono's native adapter — zero additional work), R2 as the storage backend (zero egress fees), D1 for lightweight relational data (edge-SQLite), KV for session storage and caching, Durable Objects for real-time features, one-command deployment (`launchpad deploy --target cloudflare`), and automatic CDN for static assets.
+
+**Leverage:**
+- Hono (native Cloudflare Workers adapter already exists)
+- `launchpad-db-engine` (abstract storage backend to support D1/R2)
+- Better Auth (session storage on KV)
+- Integration I16 (Cloudflare Workers + R2 — this productizes it)
+
+**Effort:** Medium (weeks) — Hono does the heavy lifting; need D1 adapter for `launchpad-db-engine` and R2 adapter for storage
+
+**Revenue potential:** Free (adoption driver — differentiates LaunchPad as the only edge-native BaaS). Monetize via premium features: custom domains ($9/month), analytics ($19/month), or bundle with LaunchPad managed service.
+
+**Priority score:** 8/10 — Cloudflare is the fastest-growing edge platform; Hono's native support makes this unusually low-effort for high differentiation. Positions LaunchPad uniquely in the BaaS market.
+
+---
+
+## Updated Summary Table (All Rounds)
+
+| # | Product | Effort | Revenue Model | Priority |
+|---|---------|--------|---------------|----------|
+| 1 | LaunchPad Realtime | Large | Freemium/Usage | 7/10 |
+| 2 | LaunchPad Functions | Large | Usage-based | 8/10 |
+| 3 | AO Cloud | Large | SaaS subscription | 9/10 |
+| 4 | LaunchApp Marketplace | Medium | Marketplace fees | 8/10 |
+| 5 | LaunchPad Storage | Medium | Usage-based | 7/10 |
+| 6 | CodeBy.ai | Medium | Freemium SaaS | 8/10 |
+| 7 | LaunchPad AI Agent | Medium | Freemium | 9/10 |
+| 8 | LaunchPad Platform | Large | Enterprise licensing | 8/10 |
+| 9 | AO Observability | Medium | Freemium SaaS | 8/10 |
+| 10 | LaunchPad Vector | Medium | Usage-based | 8/10 |
+| 11 | LaunchPad Jobs | Medium | Freemium/Usage | 9/10 |
+| 12 | AO Guard | Medium | Freemium SaaS | 10/10 |
+| 13 | LaunchApp Mobile | Medium | Premium add-on | 9/10 |
+| 14 | AO Autopilot | Large | Premium tier | 8/10 |
+| 15 | Claude Code Skill Studio | Medium | Freemium SaaS | 8/10 |
+| 16 | LaunchPad Migrate | Medium | Free + paid | 9/10 |
+| 17 | AO Fleet | Large | Enterprise SaaS | 8/10 |
+| **18** | **MCP Gateway** | **Medium** | **Open-core SaaS** | **9/10** |
+| **19** | **LaunchPad Auth Cloud** | **Large** | **SaaS subscription** | **8/10** |
+| **20** | **AO Compliance Engine** | **Large** | **Enterprise SaaS** | **8/10** |
+| **21** | **DevOnboard** | **Large** | **Freemium SaaS** | **7/10** |
+| **22** | **LaunchPad Edge** | **Medium** | **Free + premium** | **8/10** |
