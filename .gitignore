@@ -3,3 +3,6 @@ node_modules/
 .claude/
 repos/
 knowledge/logs/*.log
+brain.db
+brain.db-shm
+brain.db-wal

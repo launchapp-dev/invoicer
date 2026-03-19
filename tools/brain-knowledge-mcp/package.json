@@ -1,0 +1,24 @@
+{
+  "name": "brain-knowledge-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for querying the brain knowledge base via SQLite",
+  "type": "module",
+  "bin": {
+    "brain-knowledge-mcp": "./server.ts"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types server.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "better-sqlite3": "^11.0.0",
+    "gray-matter": "^4.0.3",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  }
+}
