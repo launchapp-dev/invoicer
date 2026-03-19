@@ -1,0 +1,23 @@
+{
+  "name": "brain-products-mcp",
+  "version": "1.0.0",
+  "description": "Domain-specific MCP server for querying product, repo, and org knowledge from the brain",
+  "type": "module",
+  "bin": {
+    "brain-products-mcp": "./server.ts"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types server.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "better-sqlite3": "^11.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  }
+}
