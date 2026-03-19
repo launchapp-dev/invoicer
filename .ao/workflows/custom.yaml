@@ -311,11 +311,23 @@ agents:
       ## 5. MAINTAIN REPO CACHE
       - The brain has a repos/ directory (gitignored) for local checkouts
       - Clone or pull repos that agents will need: `git clone --depth 1` or `git -C repos/<name> pull`
+      - For existing checkouts, always pull latest: `git -C repos/<name> pull origin main` (or master)
       - Only cache repos that had recent activity or are needed by queued tasks
       - This cache is ONLY for workflows running on main (not worktrees)
 
+      ## 6. PULL BRAIN ORIGIN
+      - Before each cycle, pull the brain repo itself: `git pull origin master --rebase`
+      - This ensures the conductor always works with the latest knowledge/ files
+        and workflow config, especially after agents merge PRs
+
+      ## 7. LOG ACTIVITY
+      - Append a summary of each cycle to knowledge/logs/conductor.log
+      - Format: `[ISO timestamp] scanned=<N repos> changes=<N> tasks_created=<N> tasks_queued=<N>`
+      - Keep only the last 500 lines (truncate older entries)
+      - This log helps the workflow-optimizer understand conductor behavior
+
       Use ao.task.create and ao.queue.enqueue MCP tools.
-      Do not commit or modify knowledge/ files — your only job is to observe, cache, and dispatch.
+      Do not commit or modify knowledge/ files other than logs — your only job is to observe, cache, dispatch, and log.
     model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "github"]
@@ -498,6 +510,10 @@ agents:
       - Use claude-sonnet-4-6 as the default model for repo agents
       - Tailor workflows to the repo's stack (pnpm vs cargo, biome vs eslint, etc.)
       - Track all managed daemons in knowledge/fleet/inventory.md
+      - Log all fleet actions to knowledge/logs/fleet.log
+        Format: `[ISO timestamp] action=<start|stop|restart|setup> repo=<name> result=<ok|error> details=<msg>`
+      - Keep only the last 500 lines
+      - For each managed repo, pull latest before health check: `git -C repos/<name> pull origin main`
       - Do not add yourself as author or co-author in any commits
     model: claude-opus-4-6
     tool: claude
