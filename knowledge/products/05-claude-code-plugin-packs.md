@@ -33,38 +33,38 @@ All packs follow the pattern:
 
 ### Database Packs
 
-| Pack | Description | Key Capabilities |
-|------|-------------|-----------------|
-| `supabase-pack` | Supabase workflow | Auth, storage, edge functions, migrations, SQL |
-| `postgres-pack` | PostgreSQL | Schema design, migrations, query optimization, explain plans |
-| `firebase-pack` | Firebase | Firestore, auth, Cloud Functions, hosting, storage |
+| Pack | Commands | Agents | Key Capabilities |
+|------|----------|--------|-----------------|
+| `supabase-pack` | `auth-setup`, `db-schema`, `edge-function`, `migrate`, `rls-check`, `seed-data`, `storage-manage` | `schema-reviewer` | Auth, storage, edge functions, migrations, RLS |
+| `postgres-pack` | `connection-pool`, `create-migration`, `explain-query`, `index-advisor`, `schema-diff`, `table-stats` | `query-optimizer`, `schema-designer` | Schema design, migrations, query optimization, explain plans |
+| `firebase-pack` | `auth-users`, `deploy-functions`, `emulator`, `firestore-browse`, `hosting-deploy`, `security-rules`, `storage-manage` | `function-debugger`, `security-rules-reviewer` | Firestore, auth, Cloud Functions, hosting, storage |
 
 ### Cloud & DevOps Packs
 
-| Pack | Description | Key Capabilities |
-|------|-------------|-----------------|
-| `aws-pack` | AWS | S3, Lambda, EC2, CloudWatch, infrastructure |
-| `docker-pack` | Docker | Container management, compose workflows, image inspection |
-| `monitoring-pack` | Monitoring | System metrics, Grafana dashboards, process management, alerts |
+| Pack | Commands | Agents | Key Capabilities |
+|------|----------|--------|-----------------|
+| `aws-pack` | `cloudwatch-alarms`, `cost-report`, `ec2-instances`, `iam-audit`, `lambda-logs`, `s3-browse`, `security-groups` | `deployment-manager`, `infra-auditor` | S3, Lambda, EC2, CloudWatch, IAM |
+| `docker-pack` | `compose-up`, `containers`, `dockerfile-review`, `image-scan`, `logs`, `network-inspect` | `container-debugger` | Container management, compose workflows, image inspection |
+| `monitoring-pack` | `alert-check`, `dashboard-query`, `disk-usage`, `network-stats`, `processes`, `system-health` | `alert-responder`, `capacity-planner` | System metrics, Grafana dashboards, process management, alerts |
 
 ### Development Packs
 
-| Pack | Description | Key Capabilities |
-|------|-------------|-----------------|
-| `playwright-pack` | Browser automation | E2E testing, screenshots, accessibility audits |
-| `stripe-pack` | Stripe | Payment flows, webhook debugging, subscription management |
-| `figma-pack` | Figma | Design token extraction, component specs, design-to-code |
-| `research-pack` | Research | Web search, docs lookup, citation management (Brave/Tavily/Context7) |
-| `ollama-pack` | Ollama | Local LLM inference, model management, prompt testing |
+| Pack | Commands | Agents | Key Capabilities |
+|------|----------|--------|-----------------|
+| `playwright-pack` | `accessibility-audit`, `performance-audit`, `record-flow`, `scrape-page`, `screenshot`, `test-flow` | `form-tester`, `visual-regression` | E2E testing, screenshots, accessibility audits |
+| `stripe-pack` | `create-checkout`, `customers`, `payments`, `subscriptions`, `webhook-debug` | `payment-debugger` | Payment flows, webhook debugging, subscription management |
+| `figma-pack` | `component-spec`, `export-assets`, `extract-tokens`, `list-components`, `style-guide` | `design-reviewer`, `design-to-code` | Design token extraction, component specs, design-to-code |
+| `research-pack` | `changelog`, `compare-libs`, `find-examples`, `lookup-docs`, `research` | `deep-researcher`, `docs-assistant` | Web search, docs lookup, citation management (Brave/Tavily/Context7) |
+| `ollama-pack` | `benchmark`, `chat-local`, `embeddings`, `models`, `prompt-test`, `pull-model` | `model-evaluator`, `prompt-optimizer` | Local LLM inference, model management, prompt testing |
 
 ### Productivity Packs
 
-| Pack | Description | Key Capabilities |
-|------|-------------|-----------------|
-| `google-workspace-pack` | Google Workspace | Gmail, Calendar, Drive, Docs, Sheets |
-| `slack-pack` | Slack | Channel monitoring, standup automation, notifications |
-| `linear-pack` | Linear | Issue tracking, sprint planning, triage automation |
-| `pdf-pack` | PDF processing | Generation, parsing, form filling, OCR, document processing |
+| Pack | Commands | Agents | Key Capabilities |
+|------|----------|--------|-----------------|
+| `google-workspace-pack` | `calendar-today`, `create-doc`, `draft-email`, `drive-search`, `inbox-summary`, `schedule-meeting`, `search-emails` | `email-triage`, `meeting-prep`, `weekly-digest` | Gmail, Calendar, Drive, Docs, Sheets |
+| `slack-pack` | `channel-summary`, `search-messages`, `send-message`, `standup`, `thread-summary` | `incident-responder`, `standup-bot` | Channel monitoring, standup automation, notifications |
+| `linear-pack` | `backlog-triage`, `create-issue`, `link-pr`, `my-issues`, `sprint-summary`, `team-velocity` | `issue-linker`, `sprint-planner` | Issue tracking, sprint planning, triage automation |
+| `pdf-pack` | `extract-tables`, `extract-text`, `fill-form`, `merge-pdfs`, `pdf-summary`, `pdf-to-markdown` | `contract-reviewer`, `document-analyzer` | PDF generation, parsing, form filling, OCR |
 
 ---
 

@@ -1,6 +1,6 @@
 # Websites
 
-> launchapp.dev, codeby.ai, lostcause.com
+> launchapp.dev, mymoku.net, codeby.ai, lostcause.com, and related properties
 
 ## Overview
 
@@ -38,14 +38,29 @@ The README shows the same "Project Starter Monorepo" structure as `launchapp.dev
 
 ## `lostcause.com` (private)
 
-- **Purpose**: lostcause.com web property
+- **Purpose**: Anime audition/submission platform — allows up to 3 file submissions per user per audition
 - **Stack**: TypeScript (same monorepo structure)
 - **Last updated**: 2025-08-12
-- **Status**: Maintenance
+- **Status**: Low activity — some real feature work but sparse commits
 
-### Notes
+---
 
-Same template structure as the other websites. No unique product description available.
+## `mymoku.net` (private)
+
+- **Purpose**: Yelp-style local business discovery app ("My Moku"). Mobile-first with privacy policy/terms pages. Business chat handler with carousel/map/list view markdown directives.
+- **Stack**: TypeScript, React Router v7 (web), Expo React Native (mobile), Hono API, Better Auth, Drizzle ORM, NativeWind/Tailwind
+- **Last updated**: 2026-03-12
+- **Status**: Active development — most recently updated product app in the org
+- **Notes**: `moku-demo` and `mymoku-demo` repos are earlier prototypes of this product
+
+---
+
+## `codeby.ai` (private)
+
+- **Purpose**: Placeholder/very early start on an AI coding product. No description. README is generic template.
+- **Stack**: TypeScript (same monorepo structure)
+- **Last updated**: 2025-06-11
+- **Status**: Essentially empty — single initial commit, likely abandoned
 
 ---
 
@@ -53,12 +68,11 @@ Same template structure as the other websites. No unique product description ava
 
 | Repo | Description | Status |
 |------|-------------|--------|
-| `launchapp.dev-landing` | Original launchapp.dev landing page | Archived/maintenance |
-| `launchapp-landing-v2` | v2 landing page | Active development (updated 2026-01-13) |
+| `launchapp.dev-landing` | Original launchapp.dev landing page | Stale (2025-05-23) |
+| `launchapp-landing-v2` | v2 landing page | Active development (2026-01-13) |
 | `aethris-landing` | Landing for "Aethris" product | Abandoned (2025-03-06) |
 | `site-inspector-landing` | Site inspector pro landing | Abandoned (2025-03-17) |
 | `landing-siteinspector-pro` | Site inspector pro landing v2 | Abandoned (2025-03-12) |
-| `mymoku.net` | mymoku.net web app | Maintenance (2026-03-12) |
 
 ---
 

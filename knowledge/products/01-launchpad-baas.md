@@ -68,10 +68,10 @@ As of 2026-03-19, SDK-CONSISTENCY issues have been filed across 10 of 11 client 
 | `launchpad-workflows` | `@launchpad/workflows` | Standalone workflow engine — declarative actions, circuit breaker, BullMQ distributed | 0.1.0 | 2026-01-03 | Active dev | Private |
 | `launchpad-secrets` | `@launchpad/secrets` | Standalone secrets SDK — AES-256-GCM encryption, versioning, key rotation | 0.1.0 | 2025-12-30 | Stable | Private |
 | `launchpad-ai` | `@launchpad/ai` | Standalone AI SDK — OpenAI + Anthropic, streaming, embeddings, usage tracking | 0.1.0 | 2025-12-12 | Stable | Private |
-| `launchpad-analytics` | `@launchpad/analytics` | Pluggable analytics — event tracking and feature flags | — | — | Unknown | Private |
-| `launchpad-audit-log` | `@launchpad/audit-log` | Audit logging for tracking system events and user actions | — | — | Unknown | Private |
-| `launchpad-i18n` | `@launchpad/i18n` | Internationalization and localization utilities | — | — | Unknown | Private |
-| `launchpad-appstores` | `@launchpad/appstores` | Apple App Store + Google Play — receipt validation, IAP | — | — | Unknown | Private |
+| `launchpad-analytics` | `@launchpad/analytics` | Pluggable analytics — event tracking, feature flags, Postgres provider (85+ tests, 99%+ coverage) | 0.1.0 | 2025-12-12 | Stable | Private |
+| `launchpad-audit-log` | `@launchpad/audit-log` | Structured audit logging — filtering, pagination, Postgres + Memory backends (139+ tests, 100% coverage) | 0.1.0 | 2025-12-12 | Stable | Private |
+| `launchpad-i18n` | `@launchpad/i18n` | Internationalization — translation, pluralization, Intl-based formatters (127 tests, 97%+ coverage) | 0.1.0 | 2025-12-11 | Stable | Private |
+| `launchpad-appstores` | `@launchpad/appstores` | Apple App Store + Google Play receipt validation, subscription lifecycle, IAP webhooks (142 tests, 100% coverage) | 0.1.0 | 2025-12-11 | Stable | Private |
 
 ---
 
@@ -80,9 +80,9 @@ As of 2026-03-19, SDK-CONSISTENCY issues have been filed across 10 of 11 client 
 | Repo | Package | Description | Version | Last Updated | Status |
 |------|---------|-------------|---------|--------------|--------|
 | `launchpad-server` | `@launchpad/server` | Type-safe HTTP server framework with OpenAPI 3.1 and Zod (Hono-based) | 0.1.0 | 2025-12-16 | Stable |
-| `launchpad-payments-server` | `@launchpad/payments-server` | Payments server — Stripe webhooks, subscription API, usage billing | — | — | Unknown |
+| `launchpad-payments-server` | `@launchpad/payments-server` | Stripe integration — customer CRUD, subscription lifecycle, payment intents, refunds, metered billing (118 tests) | 0.1.0 | 2025-12-11 | Stable |
 | `launchpad-realtime-server` | `@launchpad/realtime-server` | Realtime server — PostgreSQL LISTEN/NOTIFY, Redis pub/sub, SSE | 0.1.0 | 2025-12-19 | Stable |
-| `launchpad-push-server` | `@launchpad/push-server` | Push notification server — FCM, APNs, Web Push | — | — | Unknown |
+| `launchpad-push-server` | `@launchpad/push-server` | Cross-platform push — FCM (Android), APNs (iOS), Web Push (VAPID), device mgmt, delivery analytics (175 tests) | 0.1.0 | 2025-12-18 | Stable |
 | `launchpad-git-server` | `@launchpad/git-server` | Agent-optimized git server — worktree-per-task isolation, isomorphic-git | 0.1.0 | 2026-01-01 | Stable |
 | `launchpad-mcp-server` | `@launchpad/mcp-server` | MCP server exposing Launchpad ops for AI coding agents | 0.1.0 | 2026-01-01 | Stable |
 | `launchpad-task-orchestrator` | `@launchpad/task-orchestrator` | Machine-consumable task queue (17 MCP tools) for AI agent workflows | 0.1.0 | 2025-12-20 | Stable |
