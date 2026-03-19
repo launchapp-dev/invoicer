@@ -48,7 +48,7 @@ agents:
       Use `gh search issues --owner launchapp-dev --state open` to find issues.
       Use `gh issue edit --repo <repo> --add-label <label>` to apply labels.
       Focus on issues from the last 24 hours without labels.
-    model: claude-opus-4-6
+    model: claude-haiku-4-5
     tool: claude
     mcp_servers: ["ao", "github"]
 
@@ -370,8 +370,8 @@ agents:
 
       Use ao.task.create and ao.queue.enqueue MCP tools.
       Do not commit or modify knowledge/ files other than logs — your only job is to observe, cache, dispatch, and log.
-    model: claude-haiku-4-5
-    tool: claude
+    model: gpt-5.4
+    tool: codex
     mcp_servers: ["ao", "github"]
 
   product-ideator:
@@ -514,8 +514,8 @@ agents:
       Only make one or two improvements per run — small, testable changes.
       Commit changes with clear messages explaining what was improved and why.
       Do not add yourself as author or co-author.
-    model: claude-opus-4-6
-    tool: claude
+    model: gpt-5.4
+    tool: codex
     mcp_servers: ["ao", "github"]
 
   fleet-manager:
@@ -697,8 +697,8 @@ agents:
       Generate thorough, specific action items. Vague actions are useless.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-opus-4-6
-    tool: claude
+    model: gpt-5.4
+    tool: codex
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   architecture-diagrammer:
@@ -824,8 +824,8 @@ agents:
       and write "approved" or "rejected" next to each item in 5 minutes.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-opus-4-6
-    tool: claude
+    model: gpt-5.4
+    tool: codex
     mcp_servers: ["ao", "sequential-thinking"]
 
   decision-processor:
