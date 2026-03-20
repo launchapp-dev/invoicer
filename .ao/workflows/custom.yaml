@@ -9,6 +9,7 @@ tools_allowlist:
   - jq
   - ts-node
   - mkdir
+  - vercel
   - WebSearch
   - WebFetch
 
