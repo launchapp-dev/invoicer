@@ -5,7 +5,7 @@
 **Version**: `0.1.0`
 **Visibility**: Private
 **Language**: TypeScript
-**Last updated**: 2025-12-18
+**Last updated**: 2026-03-20
 
 ## Purpose
 
@@ -38,7 +38,7 @@ Headless CMS SDK for LaunchPad BaaS — React hooks and providers for content ty
 
 ## Maturity
 
-**Early Development (pre-1.0)** — Initial commit 2025-12-10. CI/CD pipeline added 2025-12-18. Has a well-written README with usage examples.
+**Active Development (pre-1.0)** — Last commit 2026-03-20 (chore: use @launchpad/core@^0.1.0 from npm). Milestone: dependency source transitioned from GitHub to npm registry as part of coordinated SDK consistency update.
 
 ## Open Issues
 
@@ -46,6 +46,8 @@ Headless CMS SDK for LaunchPad BaaS — React hooks and providers for content ty
 
 ## Notes
 
+- **SIGNIFICANT CHANGE (2026-03-20)**: Now uses `@launchpad/core@^0.1.0` from npm registry instead of GitHub deps
+- Part of coordinated SDK ecosystem update enabling npm publishing and registry-based dependency management
 - One of the better-documented SDKs — has a full README with API reference
 - Single export entry (no sub-paths) — all CMS APIs in one bundle
 - Missing `publishConfig` block

@@ -5,7 +5,7 @@
 **Version**: `0.1.0`
 **Visibility**: Private
 **Language**: TypeScript
-**Last updated**: 2025-12-18
+**Last updated**: 2026-03-20
 
 ## Purpose
 
@@ -34,7 +34,7 @@ Push Notifications SDK for LaunchPad BaaS — React hooks and providers for web 
 
 ## Maturity
 
-**Early Development (pre-1.0)** — Last commit 2025-12-18 (CI maintenance). Has a complete README with usage examples, better documented than most peers.
+**Active Development (pre-1.0)** — Last commit 2026-03-20 (chore: use @launchpad/core@^0.1.0 from npm). Milestone: dependency source transitioned from GitHub to npm registry as part of coordinated SDK consistency update.
 
 ## Open Issues
 
@@ -42,7 +42,9 @@ Push Notifications SDK for LaunchPad BaaS — React hooks and providers for web 
 
 ## Notes
 
+- **SIGNIFICANT CHANGE (2026-03-20)**: Now uses `@launchpad/core@^0.1.0` from npm registry instead of GitHub deps
+- Part of coordinated SDK ecosystem update enabling npm publishing and registry-based dependency management
 - Author field is `"Launchpad Team"` (not `"AudioGenius <hello@audiogenius.ai>"` like other SDKs) — flagged in consistency issue
 - Uniquely provides both ESM and CJS builds (`dist/index.cjs` in exports)
-- Has README unlike most other SDKs at this stage
+- Has README with usage examples
 - `prepublishOnly` script runs build + tests before publish

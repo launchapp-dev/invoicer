@@ -5,7 +5,7 @@
 **Version**: `0.1.0`
 **Visibility**: Private
 **Language**: TypeScript
-**Last updated**: 2026-01-03
+**Last updated**: 2026-03-20
 
 ## Purpose
 
@@ -32,7 +32,7 @@ Payments SDK for LaunchPad BaaS — React components and hooks for Stripe-based 
 
 ## Maturity
 
-**Active Development (pre-1.0)** — Most recently updated SDK alongside `launchpad-db-sdk`. Stripe Elements integration completed 2026-01-03 (TASK-400). `useSubscription` enhanced 2026-01-01 (TASK-401).
+**Active Development (pre-1.0)** — Last commit 2026-03-20 (chore: use @launchpad/core@^0.1.0 from npm). Milestone: dependency source transitioned from GitHub to npm registry. Prior: Stripe Elements integration completed 2026-01-03. `useSubscription` enhanced 2026-01-01.
 
 ## Open Issues
 
@@ -40,6 +40,8 @@ Payments SDK for LaunchPad BaaS — React components and hooks for Stripe-based 
 
 ## Notes
 
+- **SIGNIFICANT CHANGE (2026-03-20)**: Now uses `@launchpad/core@^0.1.0` from npm registry instead of GitHub deps
+- Part of coordinated SDK ecosystem update enabling npm publishing and registry-based dependency management
 - Missing `publishConfig` block (unlike other SDKs) — npm publish configuration not set
 - Highest issue number (#10) suggesting more iterations/issues have been filed and closed
 - Does NOT bundle the Stripe server-side SDK — only client-side Stripe.js

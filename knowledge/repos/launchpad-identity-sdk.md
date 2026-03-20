@@ -5,7 +5,7 @@
 **Version**: `0.1.0`
 **Visibility**: Private
 **Language**: TypeScript
-**Last updated**: 2025-12-18
+**Last updated**: 2026-03-20
 
 ## Purpose
 
@@ -33,7 +33,7 @@ Identity SDK for LaunchPad BaaS — user directory management, Single Sign-On (S
 
 ## Maturity
 
-**Early Development (pre-1.0)** — Last commit 2025-12-18 (CI maintenance: pnpm v10 upgrade + vitest alias fix). No feature development since initial setup.
+**Active Development (pre-1.0)** — Last commit 2026-03-20 (chore: use @launchpad/core@^0.1.0 from npm). Milestone: dependency source transitioned from GitHub to npm registry as part of coordinated SDK consistency update.
 
 ## Open Issues
 
@@ -41,7 +41,8 @@ Identity SDK for LaunchPad BaaS — user directory management, Single Sign-On (S
 
 ## Notes
 
+- **SIGNIFICANT CHANGE (2026-03-20)**: Now uses `@launchpad/core@^0.1.0` from npm registry instead of GitHub deps
+- Part of coordinated SDK ecosystem update enabling npm publishing and registry-based dependency management
 - No README exists
 - Missing `publishConfig` block
 - Single export entry point only (no `./react` sub-path like some peers)
-- Vitest alias workaround applied (same as `launchpad-auth-sdk`) — known pnpm git dependency path issue

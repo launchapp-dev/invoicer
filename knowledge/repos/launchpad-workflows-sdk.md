@@ -5,7 +5,7 @@
 **Version**: `0.1.0`
 **Visibility**: Private
 **Language**: TypeScript
-**Last updated**: 2025-12-18
+**Last updated**: 2026-03-20
 
 ## Purpose
 
@@ -33,7 +33,7 @@ Workflows SDK for LaunchPad BaaS — client-side interface for triggering backgr
 
 ## Maturity
 
-**Early Development (pre-1.0)** — Last commit 2025-12-18 (CI maintenance only). No feature development since initial setup.
+**Active Development (pre-1.0)** — Last commit 2026-03-20 (chore: use @launchpad/core@^0.1.0 from npm). Milestone: dependency source transitioned from GitHub to npm registry as part of coordinated SDK consistency update.
 
 ## Open Issues
 
@@ -41,6 +41,8 @@ Workflows SDK for LaunchPad BaaS — client-side interface for triggering backgr
 
 ## Notes
 
+- **SIGNIFICANT CHANGE (2026-03-20)**: Now uses `@launchpad/core@^0.1.0` from npm registry instead of GitHub deps
+- Part of coordinated SDK ecosystem update enabling npm publishing and registry-based dependency management
 - No README exists
 - Missing `publishConfig` block (unlike most other SDKs)
 - Related server-side standalone SDK: `launchpad-workflows` (circuit breaker, state management, actions)

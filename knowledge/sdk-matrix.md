@@ -70,20 +70,23 @@
 
 ## Launchpad BaaS Client SDKs
 
-> Standalone client-side SDKs for the Launchpad BaaS platform. All v0.1.0, private, TypeScript/React. All depend on `@launchpad/core`.
+> Standalone client-side SDKs for the Launchpad BaaS platform. All v0.1.0, private, TypeScript/React. All depend on `@launchpad/core` (npm registry as of 2026-03-20).
+>
+> **MAJOR UPDATE (2026-03-20)**: npm publishing enabled for `@launchpad/core`. All 10 dependent SDKs updated to consume from npm registry instead of GitHub. All SDKs updated simultaneously as part of coordinated ecosystem maturity milestone.
 
 | SDK | Package | Description | Status |
 |---|---|---|---|
-| `launchpad-core-sdk` | `@launchpad/core` | HTTP client, session management, React integration | Stable (last: Dec 2025) |
-| `launchpad-auth-sdk` | `@launchpad/auth` | Auth hooks and components for React | Scaffolded (last: Dec 2025) |
-| `launchpad-db-sdk` | `@launchpad/db` | React hooks for data querying (TanStack Query) | Active (last: Jan 2026) |
-| `launchpad-cms-sdk` | `@launchpad/cms` | Headless CMS — content types, localization, versioning | Scaffolded (last: Dec 2025) |
-| `launchpad-customers-sdk` | `@launchpad/customers` | Customer management, CRM, segmentation | Scaffolded (last: Dec 2025) |
-| `launchpad-identity-sdk` | `@launchpad/identity` | User directory, SSO, RBAC, org management | Scaffolded (last: Dec 2025) |
-| `launchpad-realtime-sdk` | `@launchpad/realtime` | WebSocket subscriptions | Scaffolded (last: Dec 2025) |
-| `launchpad-storage-sdk` | `@launchpad/storage` | File uploads/downloads | Scaffolded (last: Dec 2025) |
-| `launchpad-workflows-sdk` | `@launchpad/workflows` | Background jobs, scheduled tasks | Scaffolded (last: Dec 2025) |
-| `launchpad-push-sdk` | `@launchpad/push` | Web/mobile push notifications | Scaffolded (last: Dec 2025) |
+| `launchpad-core-sdk` | `@launchpad/core` | HTTP client, session management, React integration | **Active (2026-03-20: npm publishing enabled)** |
+| `launchpad-auth-sdk` | `@launchpad/auth` | Auth hooks and components for React | **Active (2026-03-20: npm dep update)** |
+| `launchpad-db-sdk` | `@launchpad/db` | React hooks for data querying (TanStack Query) | **Active (2026-03-20: npm dep update)** |
+| `launchpad-cms-sdk` | `@launchpad/cms` | Headless CMS — content types, localization, versioning | **Active (2026-03-20: npm dep update)** |
+| `launchpad-customers-sdk` | `@launchpad/customers` | Customer management, CRM, segmentation | **Active (2026-03-20: npm dep update)** |
+| `launchpad-identity-sdk` | `@launchpad/identity` | User directory, SSO, RBAC, org management | **Active (2026-03-20: npm dep update)** |
+| `launchpad-realtime-sdk` | `@launchpad/realtime` | WebSocket subscriptions | **Active (2026-03-20: npm dep update)** |
+| `launchpad-storage-sdk` | `@launchpad/storage` | File uploads/downloads | **Stable (2026-03-20: npm dep update)** |
+| `launchpad-workflows-sdk` | `@launchpad/workflows` | Background jobs, scheduled tasks | **Active (2026-03-20: npm dep update)** |
+| `launchpad-push-sdk` | `@launchpad/push` | Web/mobile push notifications | **Active (2026-03-20: npm dep update)** |
+| `launchpad-payments-sdk` | `@launchpad/payments` | Stripe integration, subscriptions, billing | **Active (2026-03-20: npm dep update)** |
 | `offline-sdk` | `@launchpad/offline` | Offline-first capabilities | Early (last: Dec 2025) |
 | `testing-sdk` | `@launchpad/testing` | Testing utilities | Early (last: Dec 2025) |
 
@@ -108,10 +111,11 @@
 | | storybook | v10 | Upgraded from v8 |
 | | tsup | — | Build |
 
-## Recent Changes (last 7 days through 2026-03-20T06:07Z)
+## Recent Changes (last 7 days through 2026-03-20T06:22Z)
 
 | Change | Detail | Repo / Area |
 |---|---|---|
+| **COORDINATED ECOSYSTEM UPDATE** | **npm publishing enabled for 11 LaunchPad SDKs** | All `launchpad-*-sdk` repos updated 2026-03-20 06:22Z: `@launchpad/core` now publishes to npm on version tags; 10 dependent SDKs transitioned from GitHub to npm registry deps |
 | Added | `@ai-sdk/mistral` provider to AI SDK wrapper | `saas-template-launch-app-test` (`@repo/ai`) |
 | Fixed | @types/node/core tsconfig alignment | `saas-template-launch-app-test` |
 | Fixed | Docker CI install process for better container testing | `saas-template-launch-app-test` |

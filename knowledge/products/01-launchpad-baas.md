@@ -12,7 +12,9 @@ The goal is to provide a "Firebase alternative" built on Postgres and open stand
 
 All packages are at `v0.1.0`. The platform is functional and in use by templates, but not yet publicly released.
 
-As of 2026-03-19, SDK-CONSISTENCY issues have been filed across 10 of 11 client SDKs covering: missing READMEs, `tsconfig.json` deviations, `package.json` packaging gaps (missing `publishConfig`, `test:coverage` script), and import extension inconsistencies. `launchpad-storage-sdk` is the only client SDK with no open issues.
+**MAJOR MILESTONE (2026-03-20)**: Coordinated SDK ecosystem update enabling npm publishing. `launchpad-core-sdk` configured for npm registry publishing on version tags. All 10 dependent SDKs updated to consume `@launchpad/core@^0.1.0` from npm registry instead of GitHub dependencies. This marks a significant maturity step toward production-grade package distribution.
+
+As of 2026-03-20, SDK-CONSISTENCY issues remain across 10 of 11 client SDKs covering: missing READMEs (most), `tsconfig.json` deviations, `package.json` gaps (missing `publishConfig` on some, `test:coverage` scripts). `launchpad-storage-sdk` is the only client SDK with no open issues.
 
 ## Visibility: Private (except launchpad-db-engine)
 
@@ -106,7 +108,7 @@ As of 2026-03-19, SDK-CONSISTENCY issues have been filed across 10 of 11 client 
 
 ## Internal Dependencies
 
-- All SDKs depend on `@launchpad/core` (core SDK)
+- All SDKs depend on `@launchpad/core` (**as of 2026-03-20**: npm registry; **prior**: GitHub dependencies)
 - `launchpad-saas-template` depends on `@launchpad/core`, `@launchpad/auth`, `@launchpad/db`, `@launchpad/payments`
 - `launchpad-baas` hosts the reference implementation of `@launchpad/core`, `@launchpad/auth`, `@launchpad/db`
 

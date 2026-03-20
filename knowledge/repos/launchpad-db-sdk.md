@@ -5,7 +5,7 @@
 **Version**: `0.1.0`
 **Visibility**: Private
 **Language**: TypeScript
-**Last updated**: 2026-01-03
+**Last updated**: 2026-03-20
 
 ## Purpose
 
@@ -33,7 +33,7 @@ Database SDK for LaunchPad BaaS — provides React hooks for querying, mutating,
 
 ## Maturity
 
-**Active Development (pre-1.0)** — Most recently updated SDK in the group. TanStack Query integration completed 2026-01-03 via TASK-394.
+**Active Development (pre-1.0)** — Last commit 2026-03-20 (chore: use @launchpad/core@^0.1.0 from npm). Milestone: dependency source transitioned from GitHub to npm registry. Prior: TanStack Query integration completed 2026-01-03 via TASK-394.
 
 ## Open Issues
 
@@ -41,6 +41,8 @@ Database SDK for LaunchPad BaaS — provides React hooks for querying, mutating,
 
 ## Notes
 
+- **SIGNIFICANT CHANGE (2026-03-20)**: Now uses `@launchpad/core@^0.1.0` from npm registry instead of GitHub deps
+- Part of coordinated SDK ecosystem update enabling npm publishing and registry-based dependency management
 - Has a complete README with usage examples
 - Most feature-complete of the client SDKs at time of last update
 - Peer dependency on `@tanstack/react-query` ≥5 makes it heavier than other SDKs
