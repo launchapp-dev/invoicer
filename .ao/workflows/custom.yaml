@@ -334,6 +334,7 @@ agents:
       | manage-fleet | A daemon crashed, or a repo needs AO setup |
       | provision-repo | An action item or product idea requires a new repo |
       | rebase-and-retry | A brain repo PR has merge conflicts (check with gh pr list --state open) |
+      | template-sync | Any template repo merged a PR that the other 2 don't have yet (check recent PRs across all 3) |
       | quality-audit | A repo had >5 PRs merged in the last 7 days, or no quality audit exists in knowledge/quality/ for it |
       | cross-repo-execute | Approved actions exist in knowledge/actions/ with no corresponding tasks/PRs in target repos |
       | decision-pipeline | >5 proposed actions accumulated since last decision batch (check knowledge/decisions/pending/) |
@@ -853,6 +854,44 @@ agents:
     model: gpt-5.4
     tool: codex
     mcp_servers: ["ao"]
+
+  template-syncer:
+    system_prompt: |
+      You keep the 3 LaunchApp SaaS templates in sync: launchapp-nextjs,
+      launchapp-nuxt, and launchapp-sveltekit.
+
+      All 3 share the same @repo/* packages but have framework-specific
+      apps/web implementations. When one template adds a feature, the
+      others should get it too.
+
+      PROCESS:
+      1. Pull latest for all 3 templates in repos/
+      2. Compare recent merged PRs across all 3 repos using gh:
+         gh pr list --repo launchapp-dev/<repo> --state merged --limit 20 --json title,mergedAt,files
+      3. For each merged PR, categorize the change:
+         - PACKAGE change (packages/*) — affects shared code, ALL templates need it
+         - UI change (apps/web) — framework-specific, needs PORTING not copying
+         - CONFIG change (root configs, .ao/) — may need syncing
+      4. For PACKAGE changes: check if the other 2 repos have the same
+         change in their packages/ dir. If not, create a task in each
+         missing repo to apply the change.
+      5. For UI changes: create a task in the other repos to PORT the
+         feature to their framework. E.g., "SvelteKit added org support
+         in apps/web — port organization UI to Next.js App Router"
+      6. Track sync state in knowledge/sync/template-sync-log.md:
+         [date] [source-repo] [PR#] [change-type] [synced-to] [task-ids]
+
+      RULES:
+      - Never copy apps/web code between frameworks — always PORT
+      - Package changes CAN be copied directly (same TypeScript code)
+      - Create tasks with proper descriptions referencing the source PR
+      - Use ao task create --project-root repos/<target-repo> to create
+        tasks in each target template
+      - Check if a sync task already exists before creating duplicates
+      Do not add yourself as author or co-author.
+    model: claude-haiku-4-5
+    tool: claude
+    mcp_servers: ["ao", "github"]
 
   cross-repo-executor:
     system_prompt: |
@@ -1429,6 +1468,17 @@ phases:
     capabilities:
       mutates_state: true
 
+  sync-templates:
+    mode: agent
+    agent: template-syncer
+    directive: |
+      Compare recent merged PRs across launchapp-nextjs, launchapp-nuxt,
+      and launchapp-sveltekit. For package changes, sync to all 3.
+      For UI features, create port tasks in the repos that are missing them.
+      Log all syncs to knowledge/sync/template-sync-log.md.
+    capabilities:
+      mutates_state: true
+
   execute-cross-repo:
     mode: agent
     agent: cross-repo-executor
@@ -1655,6 +1705,15 @@ workflows:
       - create-pr
       - auto-merge-pr
 
+  - id: template-sync
+    name: "Template Sync"
+    description: "Keep all 3 SaaS templates in sync — propagate features and package changes"
+    phases:
+      - sync-templates
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
   - id: cross-repo-execute
     name: "Cross-Repo Executor"
     description: "Turn approved actions into real tasks/PRs in target repos"
@@ -1680,6 +1739,11 @@ schedules:
   - id: architecture-diagrams
     cron: "0 7 * * 4"
     workflow_ref: architecture-diagrams
+    enabled: true
+
+  - id: template-sync
+    cron: "22 */2 * * *"
+    workflow_ref: template-sync
     enabled: true
 
   - id: decision-pipeline
