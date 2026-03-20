@@ -1,24 +1,12 @@
 {
   "mcpServers": {
     "ao": {
-      "args": [
-        "run",
-        "--manifest-path",
-        "/Users/samishukri/brain/crates/orchestrator-cli/Cargo.toml",
-        "--",
-        "--project-root",
-        "/Users/samishukri/brain",
-        "mcp",
-        "serve"
-      ],
-      "command": "cargo"
+      "command": "ao",
+      "args": ["--project-root", "/Users/samishukri/brain", "mcp", "serve"]
     },
-    "brain-fleet-mcp": {
-      "command": "node",
-      "args": [
-        "--experimental-strip-types",
-        "tools/brain-fleet-mcp/server.ts"
-      ]
+    "railway": {
+      "command": "npx",
+      "args": ["-y", "@railway/mcp-server"]
     }
   }
 }

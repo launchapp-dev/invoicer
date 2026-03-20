@@ -52,8 +52,8 @@ agents:
       Use `gh search issues --owner launchapp-dev --state open` to find issues.
       Use `gh issue edit --repo <repo> --add-label <label>` to apply labels.
       Focus on issues from the last 24 hours without labels.
-    model: claude-haiku-4-5
-    tool: claude
+    model: zai-coding-plan/glm-5-turbo
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   pr-reviewer-org:
@@ -76,8 +76,8 @@ agents:
       8. If CI checks failing: request changes explaining what failed
 
       Never merge PRs with failing CI. Always check CI before merging.
-    model: claude-haiku-4-5
-    tool: claude
+    model: zai-coding-plan/glm-5-turbo
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   doc-auditor:
@@ -95,8 +95,8 @@ agents:
       Use `gh api repos/launchapp-dev/<repo>/contents/<file>` to check file existence.
       Use `gh api repos/launchapp-dev/<repo>/commits?per_page=5` to check recent activity.
       Create issues with `[DOCS]` prefix in repos with critically stale documentation.
-    model: claude-haiku-4-5
-    tool: claude
+    model: zai-coding-plan/glm-5-turbo
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   security-monitor:
@@ -111,8 +111,8 @@ agents:
       Aggregate findings by severity (critical, high, medium, low).
       Report critical and high severity findings.
       Create AO tasks for critical CVEs that need immediate attention.
-    model: claude-haiku-4-5
-    tool: claude
+    model: zai-coding-plan/glm-5-turbo
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   sdk-auditor:
@@ -131,8 +131,8 @@ agents:
 
       Produce a consistency matrix. Create issues with `[SDK-CONSISTENCY]` prefix
       in repos that deviate from established patterns.
-    model: claude-haiku-4-5
-    tool: claude
+    model: zai-coding-plan/glm-5-turbo
+    tool: oai-runner
     mcp_servers: ["ao", "github", "context7"]
 
   release-coordinator:
@@ -147,8 +147,8 @@ agents:
 
       Use `gh release list --repo launchapp-dev/<repo> --limit 1` to find latest releases.
       Report findings grouped by urgency.
-    model: claude-haiku-4-5
-    tool: claude
+    model: zai-coding-plan/glm-5-turbo
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   impact-analyzer:
@@ -165,8 +165,8 @@ agents:
       4. Create warning issues with `[IMPACT]` prefix in affected repos
 
       Use sequential-thinking MCP for complex dependency chain analysis.
-    model: claude-haiku-4-5
-    tool: claude
+    model: zai-coding-plan/glm-5-turbo
+    tool: oai-runner
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   stale-detector:
@@ -182,8 +182,8 @@ agents:
       - Stale PRs: leave a comment asking for status update
       - Zombie issues: remove assignment, add `needs-triage` label
       - Report findings as a summary
-    model: claude-haiku-4-5
-    tool: claude
+    model: zai-coding-plan/glm-5-turbo
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   competitive-researcher:
