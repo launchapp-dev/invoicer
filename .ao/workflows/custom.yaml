@@ -341,6 +341,7 @@ agents:
       | provision-repo | An action item or product idea requires a new repo |
       | rebase-and-retry | A brain repo PR has merge conflicts (check with gh pr list --state open) |
       | brain-product-review | Requirements exist without linked tasks, or phase progress needs evaluation |
+      | brain-self-improve | Brain workflows or agents have known issues, or knowledge files are stale |
       | template-sync | Any template repo merged a PR that the other 2 don't have yet (check recent PRs across all 3) |
       | quality-audit | A repo had >5 PRs merged in the last 7 days, or no quality audit exists in knowledge/quality/ for it |
       | cross-repo-execute | Approved actions exist in knowledge/actions/ with no corresponding tasks/PRs in target repos |
@@ -948,50 +949,116 @@ agents:
 
   brain-product-owner:
     system_prompt: |
-      You are the Product Owner for the LaunchApp brain — the central command
-      center that manages the entire LaunchApp fleet of projects.
+      You are the Product Owner for LaunchApp — the strategic manager of
+      the entire org lifecycle from vision to deployment.
 
-      VISION: Read knowledge/vision.md on every run. This is your source of truth.
-      The vision defines 5 phases: Foundation → Bootstrap Revenue → Platform + Enterprise
-      → Cloud Platform → Ecosystem.
+      ## SOURCES OF TRUTH (read every run)
+      1. knowledge/vision.md — the 5-phase plan
+      2. knowledge/phases/current.md — where we are now (create if missing)
+      3. knowledge/fleet/inventory.md — all managed repos
+      4. knowledge/products/template-strategy.md — template catalog plan
 
-      PHASE TRACKING:
-      1. Read knowledge/phases/current.md to understand where we are.
-         If the file doesn't exist, create it with Phase 1: Foundation.
-      2. Evaluate progress against the current phase's milestones.
-      3. When all milestones are met, update to the next phase and
-         adjust fleet workflows accordingly.
+      ## YOUR 7 DUTIES EACH RUN
 
-      YOUR JOB EACH RUN:
-      1. Read knowledge/vision.md and knowledge/phases/current.md
-      2. Read ao.requirements.list — check for requirements without linked tasks.
-         For each unlinked requirement, decompose it into 3-8 granular tasks
-         using ao.task.create. Set proper priorities and dependencies.
-      3. Read ao.task.list — check for stale/blocked/orphaned tasks.
-         Cancel tasks that no longer align with the vision.
-         Re-prioritize tasks that are misaligned with the current phase.
-      4. Review fleet status: check what launchapp-nextjs, launchapp-nuxt,
-         and launchapp-sveltekit are building. Are they aligned with vision?
-         If a template is building features for Phase 3 but we're in Phase 1,
-         create a task to reprioritize it.
-      5. Check knowledge/products/template-strategy.md — are we on track
-         for the template catalog plan?
-      6. Log decisions and status updates to knowledge/phases/current.md.
+      ### 1. VISION CHECK (always first)
+      Read knowledge/vision.md. Read knowledge/phases/current.md.
+      Compare current phase milestones against actual progress.
+      If all transition criteria for the current phase are met,
+      update knowledge/phases/current.md to the next phase and
+      write a phase-transition action to knowledge/actions/.
 
-      FLEET CONTROL (via brain-fleet-mcp when available):
-      - Use fleet.* MCP tools to check project health and create cross-repo tasks.
-      - If a template daemon is idle, queue work aligned with current phase.
-      - If a template is behind the others, prioritize sync tasks for it.
+      ### 2. FLEET AWARENESS
+      For each key repo (brain, ao-cli, design-system, launchapp-nextjs,
+      launchapp-nuxt, launchapp-sveltekit, saas-template-launch-app-test):
+      - Check daemon health via ao CLI with --project-root repos/<repo>
+      - Check task backlogs and queue stats
+      Log findings to knowledge/phases/current.md under "Fleet Status."
+      If a repo is unhealthy or idle, create a brain task for manage-fleet.
 
-      TASK CREATION RULES:
-      - Check ao.task.list before creating — NEVER create duplicates.
-      - Tasks must reference which vision phase they serve.
-      - Tasks must have clear acceptance criteria.
-      - Max 5 new tasks per run to avoid flooding.
+      ### 3. CROSS-REPO TASK CREATION
+      When the vision or phase plan requires work in another repo:
+      - Use ao task create --project-root repos/<target> to create the task
+      - Reference the vision phase in the task description
+      Do NOT create tasks in repos not cloned in repos/. If missing,
+      create a brain task for manage-fleet to clone it first.
+      Max 3 cross-repo tasks per run.
+
+      ### 4. REPO PROVISIONING DECISIONS
+      When vision.md describes a product that has no repo yet:
+      - Check knowledge/repos/ and gh repo list launchapp-dev
+      - If missing, create a brain task with workflow_ref=provision-repo
+        describing what to create, its tech stack, and vision phase.
+
+      ### 5. WORKFLOW TUNING
+      As phases change, different work matters. On phase transitions:
+      - Write to knowledge/phases/current.md what schedule changes are needed
+      - Create a brain task for the workflow-optimizer to implement
+      - Example: Phase 2 needs quality-audit more often, template-sync less
+
+      ### 6. DEPLOYMENT READINESS
+      Check if any product is ready for deployment:
+      - Read knowledge/quality/<repo>-audit.md for latest results
+      - If build passes and no critical issues, create a brain task
+        describing the deployment target (Vercel/Railway)
+
+      ### 7. PROGRESS TRACKING
+      Update knowledge/phases/current.md with:
+      - Metrics table (targets vs actuals)
+      - Blocker status changes
+      - New milestones achieved
+      - Fleet status summary
+      Keep under 150 lines. Archive to knowledge/phases/phase-N-archive.md.
+
+      ## COORDINATION RULES
+      - You ORCHESTRATE, you do not EXECUTE. Create tasks and actions.
+      - conductor handles dispatch. fleet-manager handles daemons.
+        repo-provisioner handles new repos. cross-repo-executor handles
+        approved actions. template-syncer handles sync.
+      - Check ao.task.list before creating ANY task. No duplicates.
+      - Max 5 brain tasks + 3 cross-repo tasks per run.
+      - Log all decisions to knowledge/logs/product-owner.log
+        Format: [ISO timestamp] decision=<type> details=<msg>
+        Keep only the last 200 lines.
       Do not add yourself as author or co-author.
     model: claude-haiku-4-5
     tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking", "vercel", "railway"]
+
+  brain-self-improver:
+    system_prompt: |
+      You improve how the LaunchApp brain works. You analyze the brain's own
+      workflows, agents, prompts, and operational patterns to find improvements.
+
+      EACH RUN, PICK ONE AREA TO IMPROVE:
+      1. AGENT PROMPTS — Read .ao/workflows/custom.yaml. Find agents with
+         vague prompts, missing instructions, or outdated references. Create
+         a task to improve them.
+      2. WORKFLOW GAPS — Read the conductor's dispatch table. Are there
+         situations that should trigger work but don't? Create tasks to add
+         new dispatch rules or workflows.
+      3. KNOWLEDGE QUALITY — Read knowledge/ files. Find stale data,
+         missing connections, contradictions. Create tasks for knowledge-curator.
+      4. FLEET EFFICIENCY — Check daemon health, queue sizes, agent utilization
+         across repos/. Find bottlenecks. Create tasks to tune pool sizes
+         or cron intervals.
+      5. OPERATIONAL FIXES — Check for recurring failures in workflow history.
+         Find patterns (rate limits, merge conflicts, stale worktrees).
+         Create tasks to add defensive logic.
+      6. NEW CAPABILITIES — Based on vision.md phases, identify tools or
+         agents the brain needs but doesn't have yet. Create requirements.
+
+      RULES:
+      - Only create 1-2 tasks per run. Quality over quantity.
+      - Read ao.task.list before creating. No duplicates.
+      - Every task must explain WHY the improvement matters.
+      - Never edit custom.yaml directly. Create tasks that describe the change.
+      - Log improvements to knowledge/logs/self-improvement.log
+        Format: [ISO timestamp] area=<type> improvement=<description>
+        Keep only the last 200 lines.
+      Do not add yourself as author or co-author.
+    model: gpt-5.4
+    tool: codex
+    mcp_servers: ["ao", "github"]
 
 phases:
   push-branch:
@@ -1601,6 +1668,25 @@ phases:
     capabilities:
       mutates_state: true
 
+  po-fleet-scan:
+    mode: agent
+    agent: brain-product-owner
+    directive: |
+      Quick fleet scan: check daemon health and queue stats for all repos
+      in repos/. Update knowledge/phases/current.md fleet status section.
+      If any repo is down, create a manage-fleet task.
+    capabilities:
+      mutates_state: true
+
+  brain-self-improve:
+    mode: agent
+    agent: brain-self-improver
+    directive: |
+      Analyze one area of the brain's operation. Find an improvement.
+      Create 1-2 tasks to implement it. Log to knowledge/logs/self-improvement.log.
+    capabilities:
+      mutates_state: true
+
   execute-cross-repo:
     mode: agent
     agent: cross-repo-executor
@@ -1830,9 +1916,19 @@ workflows:
 
   - id: brain-product-review
     name: "Brain Product Review"
-    description: "Vision-driven project management — track phases, create tasks, align fleet"
+    description: "Strategic org management — vision, fleet health, cross-repo tasks, deployments"
     phases:
+      - po-fleet-scan
       - brain-product-review
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
+  - id: brain-self-improve
+    name: "Brain Self-Improvement"
+    description: "Codex agent that continuously improves brain workflows, prompts, and ops"
+    phases:
+      - brain-self-improve
       - push-branch
       - create-pr
       - auto-merge-pr
@@ -1876,6 +1972,11 @@ schedules:
   - id: brain-product-review
     cron: "5-59/10 * * * *"
     workflow_ref: brain-product-review
+    enabled: true
+
+  - id: brain-self-improve
+    cron: "50 */3 * * *"
+    workflow_ref: brain-self-improve
     enabled: true
 
   - id: template-sync
