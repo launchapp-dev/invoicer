@@ -467,8 +467,8 @@ agents:
       Organize by: opportunities.md, pricing-analysis.md, roadmap.md
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-opus-4-6
-    tool: claude
+    model: gpt-5.4
+    tool: codex
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl", "sequential-thinking"]
 
@@ -686,8 +686,8 @@ agents:
       Generate 3-5 high-quality questions per run. Prefer depth over breadth.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-opus-4-6
-    tool: claude
+    model: gpt-5.4
+    tool: codex
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   action-extractor:
@@ -954,8 +954,8 @@ agents:
       - Always include the source action file path in task/PR descriptions
       - Check if a task/PR already exists for this action before creating duplicates
       Do not add yourself as author or co-author.
-    model: claude-opus-4-6
-    tool: claude
+    model: gpt-5.4
+    tool: codex
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   brain-reconciler:
