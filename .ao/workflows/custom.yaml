@@ -1181,10 +1181,41 @@ agents:
 phases:
   push-branch:
     mode: command
-    directive: "Push the branch to origin"
+    directive: "Push the current branch to origin; if running on the default branch, refresh from origin first and skip when there is nothing new to publish"
     command:
-      program: git
-      args: ["push", "-u", "origin", "HEAD"]
+      program: bash
+      args:
+        - "-c"
+        - |
+          set -euo pipefail
+
+          BRANCH=$(git branch --show-current)
+          if [ -z "$BRANCH" ]; then
+            echo "Could not determine current branch"
+            exit 1
+          fi
+
+          DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q '.defaultBranchRef.name' 2>/dev/null || printf 'master\n')
+
+          git fetch origin --prune --quiet
+
+          if [ "$BRANCH" = "$DEFAULT_BRANCH" ]; then
+            if git rev-parse --verify "origin/$BRANCH" >/dev/null 2>&1; then
+              AHEAD_COUNT=$(git rev-list --count "origin/$BRANCH..HEAD")
+              if [ "$AHEAD_COUNT" -eq 0 ]; then
+                echo "No commits ahead of origin/$BRANCH — skipping push"
+                exit 0
+              fi
+              git pull --rebase --autostash origin "$BRANCH"
+            fi
+            git push origin "HEAD:$BRANCH"
+          else
+            if git rev-parse --verify --quiet "@{upstream}" >/dev/null 2>&1; then
+              git push origin HEAD
+            else
+              git push -u origin HEAD
+            fi
+          fi
       cwd_mode: task_root
       timeout_secs: 60
 
@@ -1672,9 +1703,16 @@ phases:
 
           PROJECT_ROOT=$(dirname "$(git rev-parse --git-common-dir)")
           TASK_JSON=$(ao task get --project-root "$PROJECT_ROOT" --id "$TASK_ID" --json)
-          TARGET_REPO=$(printf '%s' "$TASK_JSON" | jq -r '.data.description // ""' | grep -oE 'launchapp-dev/[A-Za-z0-9._-]+' | head -n1 | cut -d/ -f2 || true)
+          TASK_TEXT=$(printf '%s' "$TASK_JSON" | jq -r '[.data.title // "", .data.description // ""] | join("\n")')
+          TARGET_REPO=$(printf '%s' "$TASK_TEXT" | grep -oE 'launchapp-dev/[A-Za-z0-9._-]+' | head -n1 | cut -d/ -f2 || true)
           if [ -z "$TARGET_REPO" ]; then
-            echo "Could not derive target repo from task description"
+            TARGET_REPO=$(printf '%s\n' "$TASK_TEXT" | sed -nE 's/^Quality audit: ([A-Za-z0-9._-]+).*/\1/p' | head -n1 || true)
+          fi
+          if [ -z "$TARGET_REPO" ]; then
+            TARGET_REPO=$(git diff-tree --no-commit-id --name-only -r HEAD -- 'knowledge/quality/*-audit.md' | sed -nE 's#^knowledge/quality/([A-Za-z0-9._-]+)-audit\.md$#\1#p' | head -n1 || true)
+          fi
+          if [ -z "$TARGET_REPO" ]; then
+            echo "Could not derive target repo from task title, description, or committed audit artifact"
             exit 1
           fi
 
