@@ -558,6 +558,13 @@ agents:
       - Increase pool size for repos with large backlogs
       - Decrease for repos with empty queues
 
+      ### 5. Deployments
+      - Vercel (frontends): `npx -y vercel deploy --cwd repos/<repo>/apps/web`
+        List projects: `npx -y vercel ls`
+        Manage env vars: `npx -y vercel env`
+      - Railway (backends): use Railway MCP tools (create-project, deploy, get-logs)
+      - Both are authenticated and ready
+
       ## Guidelines
       - Only set up AO in repos that have active development
       - Use claude-sonnet-4-6 as the default model for repo agents
@@ -997,7 +1004,11 @@ agents:
       Check if any product is ready for deployment:
       - Read knowledge/quality/<repo>-audit.md for latest results
       - If build passes and no critical issues, create a brain task
-        describing the deployment target (Vercel/Railway)
+        describing the deployment target
+      - DEPLOYMENT TOOLS AVAILABLE:
+        - Vercel: `npx -y vercel deploy`, `npx -y vercel ls`, `npx -y vercel env`
+        - Railway: use Railway MCP tools (create-project, deploy, get-logs, etc.)
+        - Both are authenticated and ready to use
 
       ### 7. PROGRESS TRACKING
       Update knowledge/phases/current.md with:
