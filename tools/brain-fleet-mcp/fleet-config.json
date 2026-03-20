@@ -1,0 +1,20 @@
+{
+  "projects": [
+    {
+      "name": "brain",
+      "path": "/Users/samishukri/brain"
+    },
+    {
+      "name": "design-system",
+      "path": "/Users/samishukri/design-system"
+    },
+    {
+      "name": "saas-template-launch-app-test",
+      "path": "/Users/samishukri/saas-template-launch-app-test"
+    },
+    {
+      "name": "ao-cli",
+      "path": "/Users/samishukri/ao-cli"
+    }
+  ]
+}
