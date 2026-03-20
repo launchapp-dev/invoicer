@@ -796,6 +796,20 @@ agents:
       7. If critical failures found (build broken), create a GitHub issue
          with [QUALITY] prefix in that repo
 
+      PUBLISH REQUIREMENTS:
+      - Normalize the target repo to the short repo slug and write exactly
+        `knowledge/quality/<repo>-audit.md` in the brain repo worktree.
+      - Before finishing, run `git status --short -- knowledge/quality/<repo>-audit.md`.
+      - If the report is new or changed, stage and commit it yourself so the
+        downstream publish phases have an actual commit to push.
+      - If you believe there is no diff to commit, verify the same file already
+        exists on the brain repo default branch with:
+        `gh api repos/launchapp-dev/brain/contents/knowledge/quality/<repo>-audit.md?ref=master`
+      - If the artifact exists only locally, is untracked, or is modified but
+        uncommitted, exit non-zero and explain the publish failure.
+      - Never claim success unless the audit artifact is committed for publish
+        or already exists on the default branch.
+
       CRITICAL: You must actually RUN commands, not just read files.
       Do not add yourself as author or co-author.
     model: claude-haiku-4-5
@@ -1392,10 +1406,55 @@ phases:
     agent: quality-runner
     directive: |
       Clone/pull the target repo into repos/. Run install, build, test, lint.
-      Record all results with exit codes and stderr. Write quality report
-      to knowledge/quality/<repo>-audit.md. Create fix issues for failures.
+      Record all results with exit codes and stderr. Write and publish the
+      quality report to knowledge/quality/<repo>-audit.md. Before exiting,
+      ensure the report is committed or verify it already exists on master.
+      Create fix issues for failures.
     capabilities:
       mutates_state: true
+
+  verify-quality-audit-published:
+    mode: command
+    directive: "Verify the expected quality audit artifact exists on the brain default branch"
+    command:
+      program: bash
+      args:
+        - "-c"
+        - |
+          set -euo pipefail
+
+          BRANCH=$(git branch --show-current)
+          TASK_ID=$(printf '%s\n' "$BRANCH" | sed -n 's#^ao/task-\([0-9][0-9]*\)$#TASK-\1#p')
+          if [ -z "$TASK_ID" ]; then
+            echo "Could not derive task id from branch $BRANCH"
+            exit 1
+          fi
+
+          PROJECT_ROOT=$(dirname "$(git rev-parse --git-common-dir)")
+          TASK_JSON=$(ao task get --project-root "$PROJECT_ROOT" --id "$TASK_ID" --json)
+          TARGET_REPO=$(printf '%s' "$TASK_JSON" | jq -r '.data.description // ""' | grep -oE 'launchapp-dev/[A-Za-z0-9._-]+' | head -n1 | cut -d/ -f2 || true)
+          if [ -z "$TARGET_REPO" ]; then
+            echo "Could not derive target repo from task description"
+            exit 1
+          fi
+
+          DEFAULT_BRANCH=$(gh repo view launchapp-dev/brain --json defaultBranchRef -q '.defaultBranchRef.name')
+          ARTIFACT_PATH="knowledge/quality/${TARGET_REPO}-audit.md"
+
+          if ! gh api "repos/launchapp-dev/brain/contents/${ARTIFACT_PATH}?ref=${DEFAULT_BRANCH}" >/dev/null 2>&1; then
+            echo "Expected audit artifact is missing on ${DEFAULT_BRANCH}: ${ARTIFACT_PATH}"
+            if [ -f "$ARTIFACT_PATH" ]; then
+              echo "Local worktree copy exists but was not durably published."
+            else
+              echo "No local worktree copy found either."
+            fi
+            git status --short -- "$ARTIFACT_PATH" || true
+            exit 1
+          fi
+
+          echo "Verified published audit artifact on ${DEFAULT_BRANCH}: ${ARTIFACT_PATH}"
+      cwd_mode: task_root
+      timeout_secs: 60
 
   package-decisions:
     mode: agent
@@ -1688,6 +1747,7 @@ workflows:
       - push-branch
       - create-pr
       - auto-merge-pr
+      - verify-quality-audit-published
 
   - id: decision-pipeline
     name: "Founder Decision Pipeline"
