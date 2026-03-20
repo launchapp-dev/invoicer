@@ -38,6 +38,9 @@ mcp_servers:
   obsidian:
     command: npx
     args: ["-y", "mcp-obsidian", "--vault", "/Users/samishukri/brain/knowledge"]
+  idea-reality:
+    command: uvx
+    args: ["idea-reality-mcp"]
 
 agents:
   default:
