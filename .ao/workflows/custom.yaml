@@ -1803,6 +1803,15 @@ phases:
     capabilities:
       mutates_state: true
 
+  triage:
+    mode: agent
+    agent: default
+    directive: |
+      Perform lightweight triage on this task: read the task description and any
+      linked requirements, assess scope and complexity, identify blockers or
+      ambiguities, and produce a brief scoping summary so the requirements phase
+      has a clear starting point. Do not write code or make file changes.
+
 workflows:
   # === PLANNER (the only scheduled workflow — creates and queues all other work) ===
   - id: conductor
@@ -2059,6 +2068,21 @@ workflows:
     description: "Turn approved actions into real tasks/PRs in target repos"
     phases:
       - execute-cross-repo
+
+  - id: ao.task/quick-fix
+    name: "Quick Fix"
+    description: "Fast-track workflow for urgent, well-scoped fixes — skips requirements and goes straight to implementation"
+    phases:
+      - implementation
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
+  - id: ao.task/triage
+    name: "Task Triage"
+    description: "Lightweight investigation phase to scope work and surface blockers before full requirements gathering"
+    phases:
+      - triage
 
 schedules:
   - id: conductor
