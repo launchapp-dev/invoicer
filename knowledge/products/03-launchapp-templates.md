@@ -92,8 +92,8 @@ packages/
 ## `saas-template-launch-app-test` (private)
 
 - **Description**: Current flagship/canary launchapp-lite monorepo, despite the temporary repo name
-- **Last updated**: 2026-03-19
-- **Status**: Extremely active — 179 merged PRs in the last 7 days
+- **Last updated**: 2026-03-20T00:39:32Z
+- **Status**: Extremely active — 180+ merged PRs in the last 7 days
 
 ### Current Direction
 
@@ -118,7 +118,7 @@ Three new **pure framework ports** of the flagship template were scaffolded on 2
 - **Framework**: Next.js App Router (SSR)
 - **Description**: Production SaaS starter for Next.js
 - **Status**: Early development, core monorepo structure in place
-- **Last updated**: 2026-03-19
+- **Last updated**: 2026-03-20T00:37:58Z (PR #9, #10 merged)
 - **Structure**: Same @repo/* packages as flagship, with Next.js in `apps/web`
 
 ### `launchapp-nuxt` (private)
@@ -126,7 +126,7 @@ Three new **pure framework ports** of the flagship template were scaffolded on 2
 - **Framework**: Nuxt 4 (SSR)
 - **Description**: Production SaaS starter for Nuxt 4
 - **Status**: Early development, core monorepo structure in place
-- **Last updated**: 2026-03-19
+- **Last updated**: 2026-03-20T00:36:04Z (PR #11 merged)
 - **Structure**: Same @repo/* packages as flagship, with Nuxt in `apps/web`
 
 ### `launchapp-sveltekit` (private)
@@ -134,7 +134,7 @@ Three new **pure framework ports** of the flagship template were scaffolded on 2
 - **Framework**: SvelteKit (SSR)
 - **Description**: Production SaaS starter for SvelteKit
 - **Status**: Early development, core monorepo structure in place
-- **Last updated**: 2026-03-19
+- **Last updated**: 2026-03-20T00:36:31Z (PR #7, #8 merged)
 - **Structure**: Same @repo/* packages as flagship, with SvelteKit in `apps/web`
 
 ### Architecture Pattern
