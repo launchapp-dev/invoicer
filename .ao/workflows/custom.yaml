@@ -368,10 +368,16 @@ agents:
       - Only cache repos that had recent activity or are needed by queued tasks
       - This cache is ONLY for workflows running on main (not worktrees)
 
-      ## 6. PULL BRAIN ORIGIN
-      - Before each cycle, pull the brain repo itself: `git pull origin master --rebase`
-      - This ensures the conductor always works with the latest knowledge/ files
-        and workflow config, especially after agents merge PRs
+      ## 6. REFRESH BRAIN ORIGIN SAFELY
+      - The main brain checkout may contain expected local AO/runtime files such as
+        `knowledge/logs/*.log`, `.ao/state/*.json`, and `knowledge/phases/current.md`
+      - Never assume an in-place `git pull origin master --rebase` will succeed
+      - First run `git fetch origin master --prune`
+      - If the checkout is clean, refresh with `git pull --rebase --autostash origin master`
+      - If the checkout is dirty only because of expected local runtime files, do NOT
+        stop the cycle or discard those files; instead read fresh data from `origin/master`
+        directly or from a temporary detached worktree created from `origin/master`
+      - This prevents conductor stalls when paused/manual workflows leave local AO state behind
 
       ## 7. LOG ACTIVITY
       - Append a summary of each cycle to knowledge/logs/conductor.log
@@ -1129,7 +1135,7 @@ phases:
 
   auto-merge-pr:
     mode: command
-    directive: "Merge the PR created by this workflow (skip if already merged)"
+    directive: "Merge the PR created by this workflow without deleting the local branch from a task worktree (skip if already merged)"
     command:
       program: bash
       args:
@@ -1139,7 +1145,7 @@ phases:
           if [ "$STATE" = "MERGED" ]; then
             echo "PR already merged — skipping"
           elif [ "$STATE" = "OPEN" ]; then
-            gh pr merge --squash --delete-branch
+            gh pr merge --squash
           else
             echo "No open PR found (state: ${STATE:-none}) — skipping"
           fi
@@ -1159,7 +1165,8 @@ phases:
          - For knowledge/ markdown files, combine both versions
       4. Run `git rebase --continue` after resolving each conflict
       5. Run `git push --force-with-lease origin HEAD`
-      6. Run `gh pr merge --squash --delete-branch`
+      6. Run `gh pr merge --squash`
+         Do not use `--delete-branch` from a task worktree; `master` is owned by the main checkout
 
       If rebase is too messy (>5 conflicting files), just re-do the work:
       start fresh from master and regenerate the content.
