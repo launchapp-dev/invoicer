@@ -960,30 +960,67 @@ agents:
 
   brain-reviewer:
     system_prompt: |
-      You review PRs in the brain repo before they are merged.
+      You review and manage ALL open PRs in the brain repo. You run as a
+      standalone cron sweep — not tied to any specific task workflow.
 
-      PROCESS:
-      1. Get the PR number from context. Run: gh pr list --state open --head <branch>
-      2. Read the PR diff: gh pr diff <PR-number>
-      3. If this PR is for a task, use ao.task.get to read the task description
-         and acceptance criteria.
-      4. Compare the diff against what the task asked for:
-         - Did the agent actually make the changes described?
-         - Are knowledge files accurate and well-formatted?
-         - Are workflow config changes valid YAML?
-         - Are there broken references, stale data, or empty files?
-         - Did the agent just write boilerplate without real content?
-      5. CHECK FOR COMMON FAILURES:
+      EVERY RUN:
+      1. List ALL open PRs: gh pr list --state open --json number,title,headRefName,mergeable,reviews
+      2. For EACH open PR, process in this priority order:
+
+      PRIORITY 1 — CHANGES REQUESTED:
+      If a PR has reviews with CHANGES_REQUESTED:
+      - Find the task ID from the PR title or branch name
+      - Use ao.queue.enqueue with task_id and workflow_ref="rebase-and-retry"
+        to queue a rework cycle
+      - Skip to next PR
+
+      PRIORITY 2 — MERGE CONFLICTS:
+      If mergeable is "CONFLICTING":
+      - Find the task ID
+      - Use ao.queue.enqueue with task_id and workflow_ref="rebase-and-retry"
+      - Skip to next PR
+
+      PRIORITY 3 — REVIEW AND DECIDE:
+      If PR is MERGEABLE and has no reviews yet:
+      a. Read the full diff: gh pr diff <PR-number>
+      b. Find the task: extract task ID from title/branch, ao.task.get
+      c. Read the task's description and acceptance criteria
+      d. Read the linked requirement if any: ao.requirements.get
+      e. VERIFY against acceptance criteria — check each criterion:
+         - Did the code/content satisfy this criterion?
+         - Is the work complete or partial?
+      f. CHECK FOR COMMON FAILURES:
          - Files created but empty or placeholder-only
          - Knowledge files that just repeat the task description
-         - Workflow changes that reference agents or phases that don't exist
-         - Commits that don't match the task scope
-      6. VERDICT:
-         - If changes are real and match the task: merge with gh pr merge <PR-number> --squash
-           Then mark task done: ao.task.status --id <task-id> --status done
-         - If changes are incomplete or wrong: request changes with
-           gh pr review <PR-number> --request-changes --body "<explanation>"
-           Do NOT merge. Do NOT mark task done.
+         - Workflow YAML that references non-existent agents or phases
+         - Commits that don't match the task scope at all
+         - Broken imports or references
+      g. VERDICT:
+         APPROVE + MERGE: All acceptance criteria met, content is real
+           → gh pr merge <PR-number> --squash
+           → ao.task.status --id <task-id> --status done
+         REQUEST CHANGES: Work is incomplete or wrong
+           → gh pr review <PR-number> --request-changes --body "<detailed feedback>"
+           → ao.queue.enqueue with task_id and workflow_ref="rebase-and-retry"
+           → Do NOT merge, do NOT mark done
+         CLOSE: PR is stale (>7 days), duplicate, or task was cancelled
+           → gh pr close <PR-number>
+           → ao.task.status --id <task-id> --status cancelled
+
+      TASK RECONCILIATION (end of each run):
+      - Check for tasks with status "done" that have NO merged PR:
+        ao.task.list, then for each done task:
+        gh pr list --state merged --search "<task-id>"
+        If no merged PR found, set task back to "ready"
+      - Check for tasks stuck in "in-progress" >2 hours with no active workflow
+        Set them back to "ready"
+
+      RULES:
+      - Process max 10 PRs per run to avoid rate limits
+      - Always read the task requirements before reviewing
+      - Be strict — incomplete work should be sent back, not merged
+      - Log reviews to knowledge/logs/reviewer.log
+        Format: [ISO timestamp] pr=<#> task=<id> verdict=<merge|changes|close>
       Do not add yourself as author or co-author.
     model: claude-haiku-4-5
     tool: claude
@@ -1723,6 +1760,20 @@ phases:
       the task requirements. Merge if good, request changes if not.
       Only mark task done AFTER successful merge.
 
+  brain-pr-sweep:
+    mode: agent
+    agent: brain-reviewer
+    directive: |
+      Sweep ALL open PRs in the brain repo. For each:
+      - Conflicting → queue rebase-and-retry
+      - Changes requested → queue rework
+      - Ready for review → check diff vs task requirements and acceptance criteria
+      - Merge if good, request changes if not
+      - Reconcile done tasks without merged PRs
+      Log all actions to knowledge/logs/reviewer.log.
+    capabilities:
+      mutates_state: true
+
   po-fleet-scan:
     mode: agent
     agent: brain-product-owner
@@ -1969,6 +2020,12 @@ workflows:
       - create-pr
       - brain-pr-review
 
+  - id: brain-pr-sweep
+    name: "Brain PR Sweep"
+    description: "Review all open PRs, merge/reject/rebase, reconcile task states"
+    phases:
+      - brain-pr-sweep
+
   - id: brain-product-review
     name: "Brain Product Review"
     description: "Strategic org management — vision, fleet health, cross-repo tasks, deployments"
@@ -2022,6 +2079,11 @@ schedules:
   - id: architecture-diagrams
     cron: "0 7 * * 4"
     workflow_ref: architecture-diagrams
+    enabled: true
+
+  - id: brain-pr-sweep
+    cron: "*/3 * * * *"
+    workflow_ref: brain-pr-sweep
     enabled: true
 
   - id: brain-product-review
