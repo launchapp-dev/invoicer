@@ -5,7 +5,7 @@
 **Visibility**: private
 **Status**: Active development (179 merged PRs in the last 7 days, multiple PRs per hour)
 **Created**: 2026-03-17
-**Last pushed**: 2026-03-20 (after PR #325 merge at 2026-03-20T00:39:32Z)
+**Last pushed**: 2026-03-20 (after PR #351 merge at 2026-03-20T13:02:54Z)
 
 ## Purpose
 
@@ -194,4 +194,13 @@ This repo is deeply integrated with the AO Agent Orchestrator:
 
 This repo is the primary development vehicle for the launchapp-lite product, with AO automating multiple feature tasks daily. Three deployment targets (Railway, Vercel, Cloudflare Workers) now have full configuration and documentation support.
 
-**Recent activity (2026-03-20)**: PR #323 (00:39:14Z) and PR #325 (00:39:32Z) merged, continuing active development cycle with multiple automated tasks per hour.
+**Recent activity (2026-03-20)**:
+- Early morning cycle: PR #323 (00:39:14Z) and PR #325 (00:39:32Z) merged.
+- Post-12:43Z activity (billing, CI, docs, and testing):
+  - PR #347 (12:49:26Z): GET /api/billing/subscription endpoint added (TASK-374)
+  - PR #353 (12:51:14Z): Node.js version pinned to 20.18.3 in CI (TASK-382)
+  - PR #355 (13:02:30Z): Duplicate ENV CI=true removed from Dockerfile (TASK-381)
+  - PR #354 (13:02:36Z): Comprehensive package guides documented for ai, analytics, core, i18n, mcp, storage, typescript-config, ui-kit (TASK-380)
+  - PR #351 (13:02:54Z): Test coverage added for @repo/core getRequiredEnv/getEnvWithDefault (TASK-371)
+
+Continuing active development with multiple automated tasks per hour and demonstrated improvements in billing surface, CI reliability, documentation, and test coverage.

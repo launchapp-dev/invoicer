@@ -1,7 +1,7 @@
 # Active Workstreams
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T12:43Z).
-> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T12:43Z, including the full 2026-03-20 update cycle for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, launchapp-nuxt, and brain.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T13:04:59Z).
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T13:04:59Z, including post-12:43Z merged activity in design-system and saas-template-launch-app-test. Full 2026-03-20 update cycle verified for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, launchapp-nuxt, and brain.
 
 ## Summary
 
@@ -27,7 +27,7 @@ This repo is no longer best described as a "test/staging" copy. It is the primar
 - Harden admin/API security and deployment health.
 - Tighten types and monitoring around the dashboard + API surface.
 
-**Recent highlights (verified through 2026-03-20T06:07Z):**
+**Recent highlights (verified through 2026-03-20T13:02:54Z):**
 - **AI provider expansion (2026-03-20):** @ai-sdk/mistral provider added to the AI SDK wrapper for additional model support.
 - **Docker CI (2026-03-20):** Docker CI install fixes applied for improved container-based testing.
 - **TypeScript alignment (2026-03-20):** @types/node/core tsconfig corrected for type consistency.
@@ -38,6 +38,9 @@ This repo is no longer best described as a "test/staging" copy. It is the primar
 - **Dependency updates (2026-03-20):** AWS SDK bumped to 3.1013.0; Polar.sh SDK upgraded to 0.46.5.
 - **Security (2026-03-20):** ajv ReDoS vulnerability resolved via pnpm override.
 - **Deployment shift (2026-03-20):** Cloudflare deployment documentation removed; focus moved to Railway and Vercel.
+- **Billing API expansion (2026-03-20, post-12:43Z):** GET /api/billing/subscription endpoint added for subscription query (TASK-374).
+- **CI/Docker hardening (2026-03-20, 12:51:14Z–13:02:36Z):** Node.js version pinned to 20.18.3 in CI (TASK-382), duplicate ENV CI=true removed from Dockerfile (TASK-381).
+- **Documentation & testing (2026-03-20, 13:02:36Z–13:02:54Z):** Comprehensive package guides added for ai, analytics, core, i18n, mcp, storage, typescript-config, and ui-kit (TASK-380); test coverage for @repo/core getRequiredEnv/getEnvWithDefault utilities added (TASK-371).
 - **Earlier 2026-03-19 highlights:**
   - Email verification flow added post-registration for enhanced auth security.
   - Waitlist join flow moved out of `@repo/api` into a web action to reduce API/email coupling.
@@ -60,12 +63,14 @@ The repo is still finishing Phase 3/4 component coverage, but it is now also bei
 - Add formal lint/typecheck/CI gates to the AO delivery workflows.
 - Start design-token generation and monthly adoption reporting.
 
-**Recent highlights (verified through 2026-03-20T06:07Z):**
+**Recent highlights (verified through 2026-03-20T13:04:59Z):**
 - **Phase 4 completion (2026-03-20):** Timeline data block added (TASK-093) completing Phase 4 advanced patterns.
 - **CLI tooling (2026-03-20):** Design system CLI scaffolding tool added (TASK-094) for rapid component generation.
 - **Layout transitions (2026-03-20):** New animation utilities for route/page transitions completed.
 - **Documentation (2026-03-20):** Palettes documentation page added covering all design tokens and color systems.
 - **Page blocks (2026-03-20):** Landing page, blog, and error page composition blocks completed for e-commerce + marketing use.
+- **Accessibility hardening (2026-03-20, post-12:43Z):** NavigationMenuTrigger updated with focus-visible ring for WCAG 2.4.7 (TASK-134), warning variant role updated to "alert" for WCAG 4.1.3 (TASK-135).
+- **Docs infrastructure upgrade (2026-03-20, 13:04:59Z):** Storybook docs site upgraded from Next.js 14 to 16.2.0 for better compatibility and performance.
 - **Distribution (2026-03-19-20):** Visual regression testing integrated with Chromatic for automated screenshot diffs.
 - **Distribution (2026-03-19-20):** Changelog automation set up with conventional commits and release-it for versioning.
 - **Distribution (2026-03-19-20):** NPM publishing pipeline via GitHub Actions for automated package releases.

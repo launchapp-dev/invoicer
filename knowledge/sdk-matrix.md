@@ -1,8 +1,8 @@
 # SDK Consistency Matrix
 
-> Last updated: 2026-03-20 by knowledge-curator agent (6th pass, through 2026-03-20T06:07Z).
+> Last updated: 2026-03-20 by knowledge-curator agent (7th pass, through 2026-03-20T13:02:54Z).
 > Source repo: `saas-template-launch-app-test` (flagship template).
-> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-20. The current default branch includes 2026-03-20 updates through 06:07Z: @ai-sdk/mistral provider, Docker CI fixes, @types/node/core tsconfig alignment, 2FA/TOTP in Better-Auth, Email OTP passwordless login, full @repo/ui-kit and @repo/i18n integration, AWS SDK 3.1013.0, Polar.sh SDK 0.46.5, and ajv ReDoS vulnerability fix.
+> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-20. The current default branch includes 2026-03-20 updates through 13:02:54Z with post-12:43Z activity: billing endpoint expansion, CI/Docker hardening (Node.js pinning), package documentation guides, and @repo/core test coverage additions. Earlier updates include @ai-sdk/mistral provider, Docker CI fixes, @types/node/core tsconfig alignment, 2FA/TOTP in Better-Auth, Email OTP passwordless login, full @repo/ui-kit and @repo/i18n integration, AWS SDK 3.1013.0, Polar.sh SDK 0.46.5, and ajv ReDoS vulnerability fix.
 
 ## Core Framework Versions
 
