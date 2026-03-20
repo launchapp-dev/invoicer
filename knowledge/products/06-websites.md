@@ -10,16 +10,20 @@ The org maintains several websites/web properties. Most are built on similar sta
 
 ## `launchapp.dev` (private)
 
-- **Purpose**: Main product website for LaunchApp platform
-- **Stack**: TypeScript, Drizzle ORM, Zod (package name: `launchapp.dev`)
-- **Last updated**: 2025-11-22
-- **Status**: Maintenance / outdated (v2 landing in separate repo)
+- **Purpose**: Full-stack monorepo serving as the main LaunchApp product website AND canonical template for other org projects
+- **Stack**: TypeScript, Turborepo + pnpm, React Router v7, Expo React Native, Hono API, Better Auth, Drizzle ORM, Pulumi (ECS/RDS)
+- **Last updated**: 2026-03-20T01:18:04Z
+- **Status**: Active development — serves as live marketing site + template baseline
 
-### Notes
+### Key Capabilities
+- Monorepo with: React web app (apps/web), React Native mobile (apps/native), marketing site (apps/landing)
+- Shared packages: API (Hono), authentication (Better Auth), database (Drizzle), email (Resend), push notifications, storage (S3)
+- Infrastructure: Pulumi deployment, OpenAPI code generation, admin user management
+- Used as canonical template by mymoku.net, launchapp-landing-v2, launchapp-images, bluelight-poc
 
-The README shows this is the `launchapp-lite` monorepo structure (React Router v7, React Native/Expo, Hono API). The domain-named repo seems to be the actual web app rather than just a marketing site. The `launchapp.dev-landing` repo (private, last updated 2025-05-23) appears to be the older landing page.
-
-`launchapp-landing-v2` (private, updated 2026-01-13) appears to be the current active landing page development.
+### Recent Activity (2026-03-20)
+- Dependency updates: better-auth upgraded from 1.2.12 to 1.3.26
+- Auto-linting fixes and active maintenance
 
 ---
 

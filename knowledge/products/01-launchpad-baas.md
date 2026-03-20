@@ -27,7 +27,8 @@ As of 2026-03-20, SDK-CONSISTENCY issues remain across 10 of 11 client SDKs cove
 - **Description**: Main platform repo with API server, admin UI, and core SDKs
 - **Stack**: TypeScript, Hono (API), Next.js (admin), Better Auth, Drizzle ORM, PostgreSQL, Railway (deployment)
 - **Structure**: `apps/api` (Hono API), `apps/admin` (Next.js), `sdk/core`, `sdk/auth`, `sdk/db`
-- **Last updated**: 2026-01-04
+- **Last updated**: 2026-03-20T05:48:53Z
+- **Recent activity**: API generator fixes (#129), payments SDK updates (#130)
 
 ### `launchpad-ecosystem` (private)
 - **Type**: Orchestration workspace / multi-agent dev environment

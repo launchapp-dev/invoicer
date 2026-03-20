@@ -7,7 +7,7 @@ Based on the structure, this appears to be both the deployed marketing site at l
 
 ## Repository
 - **Repo**: launchapp-dev/launchapp.dev (private)
-- **Last Pushed**: 2026-02-04
+- **Last Pushed**: 2026-03-20T01:18:04Z
 
 ## Tech Stack
 - **Monorepo**: Turborepo + pnpm (v10.11.0) workspaces
@@ -35,5 +35,10 @@ Based on the structure, this appears to be both the deployed marketing site at l
 - Likely the deployment target for launchapp.dev marketing site
 - The ECS deployment suggests production infrastructure on AWS
 
+## Recent Activity
+- **Latest commit** (2026-03-20): chore(deps): bump better-auth from 1.2.12 to 1.3.26 + auto-fix linting
+- Ongoing dependency maintenance and active development
+- Continued infrastructure deployment and template maintenance
+
 ## Maturity / Status
-**Active / Stable** — last pushed 2026-02-04. Active infrastructure deployment. Serves as both the live marketing site and the template baseline for other org products.
+**Active / Stable** — last pushed 2026-03-20. Active infrastructure deployment. Serves as both the live marketing site and the template baseline for other org products.

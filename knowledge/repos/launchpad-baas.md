@@ -3,7 +3,7 @@
 **Repo**: `launchapp-dev/launchpad-baas`
 **Visibility**: Private
 **Language**: TypeScript
-**Last updated**: 2026-01-04
+**Last updated**: 2026-03-20T05:48:53Z
 
 ## Purpose
 
@@ -47,7 +47,10 @@ launchpad-baas/
 
 ## Current Status: Stable/Active
 
-Recent commit (2026-01-04): Added Docker image for admin service with nginx, runtime env injection, security headers, health endpoint.
+### Recent Changes (2026-03-20)
+- **API Generator Fix** (#129): Resolved OpenAPIHono vs RouterMapEntry detection in generator, ensuring all 44 contract tests pass
+- **Payments Integration** (#130): Replaced @launchpad/payments workspace with standalone GitHub package dependency
+- Active maintenance and bug fixes for API reliability and generator correctness
 
 ## Deployment
 
