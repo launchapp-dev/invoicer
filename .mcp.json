@@ -4,10 +4,6 @@
       "command": "ao",
       "args": ["--project-root", "/Users/samishukri/brain", "mcp", "serve"]
     },
-    "vercel": {
-      "command": "npx",
-      "args": ["-y", "@vercel/mcp"]
-    },
     "railway": {
       "command": "npx",
       "args": ["-y", "@railway/mcp-server"]

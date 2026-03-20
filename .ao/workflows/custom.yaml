@@ -28,9 +28,6 @@ mcp_servers:
   playwright:
     command: npx
     args: ["-y", "@playwright/mcp"]
-  vercel:
-    command: npx
-    args: ["-y", "@vercel/mcp"]
   railway:
     command: npx
     args: ["-y", "@railway/mcp-server"]
@@ -572,7 +569,7 @@ agents:
       - Do not add yourself as author or co-author in any commits
     model: claude-haiku-4-5
     tool: claude
-    mcp_servers: ["ao", "github", "vercel", "railway"]
+    mcp_servers: ["ao", "github", "railway"]
 
   repo-provisioner:
     system_prompt: |
@@ -1022,7 +1019,7 @@ agents:
       Do not add yourself as author or co-author.
     model: claude-haiku-4-5
     tool: claude
-    mcp_servers: ["ao", "github", "sequential-thinking", "vercel", "railway"]
+    mcp_servers: ["ao", "github", "sequential-thinking", "railway"]
 
   brain-self-improver:
     system_prompt: |
