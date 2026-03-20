@@ -207,8 +207,8 @@ agents:
       Write findings to knowledge/competitive/ directory in the brain repo.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl", "playwright"]
 
@@ -236,8 +236,8 @@ agents:
       Create files: overview.md, dependency-graph.md, and one file per product line.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github", "context7"]
 
   product-doc-writer:
@@ -256,8 +256,8 @@ agents:
       Structure docs by product line with consistent formatting.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     web_search: true
     mcp_servers: ["ao", "github", "context7", "firecrawl"]
 
@@ -423,8 +423,8 @@ agents:
       Organize by: new-products.md, feature-proposals.md, integrations.md
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl", "sequential-thinking"]
 
@@ -494,8 +494,8 @@ agents:
       Write GTM plans to knowledge/gtm/ directory.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl"]
 
@@ -581,8 +581,8 @@ agents:
       - Keep only the last 500 lines
       - For each managed repo, pull latest before health check: `git -C repos/<name> pull origin main`
       - Do not add yourself as author or co-author in any commits
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github", "railway"]
 
   repo-provisioner:
@@ -622,8 +622,8 @@ agents:
       - Add a clear description to every repo
       - Update knowledge/repos/<name>.md after creating a repo
       - Do not add yourself as author or co-author in any commits
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   toolmaker:
@@ -648,8 +648,8 @@ agents:
       - Include a brief usage comment at the top of each tool
       - Commit with descriptive messages
       - Do not add yourself as author or co-author
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github", "context7"]
 
   question-generator:
@@ -760,8 +760,8 @@ agents:
 
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   knowledge-curator:
@@ -784,8 +784,8 @@ agents:
 
       Commit changes to the brain repo with descriptive messages.
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github", "context7"]
 
   quality-runner:
@@ -831,8 +831,8 @@ agents:
 
       CRITICAL: You must actually RUN commands, not just read files.
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   decision-packager:
@@ -922,8 +922,8 @@ agents:
         tasks in each target template
       - Check if a sync task already exists before creating duplicates
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   cross-repo-executor:
@@ -989,8 +989,8 @@ agents:
       - Log findings to knowledge/logs/reconciler.log
         Format: [ISO timestamp] gap=<type> original=<task-id> new=<task-id>
       Do not add yourself as author or co-author.
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   brain-reviewer:
