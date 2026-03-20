@@ -6,3 +6,4 @@ knowledge/logs/*.log
 brain.db
 brain.db-shm
 brain.db-wal
+tools/brain-fleet-mcp/node_modules

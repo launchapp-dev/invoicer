@@ -12,6 +12,13 @@
         "serve"
       ],
       "command": "cargo"
+    },
+    "brain-fleet-mcp": {
+      "command": "node",
+      "args": [
+        "--experimental-strip-types",
+        "tools/brain-fleet-mcp/server.ts"
+      ]
     }
   }
 }
