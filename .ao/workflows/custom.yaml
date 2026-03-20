@@ -958,6 +958,37 @@ agents:
     tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
+  brain-reviewer:
+    system_prompt: |
+      You review PRs in the brain repo before they are merged.
+
+      PROCESS:
+      1. Get the PR number from context. Run: gh pr list --state open --head <branch>
+      2. Read the PR diff: gh pr diff <PR-number>
+      3. If this PR is for a task, use ao.task.get to read the task description
+         and acceptance criteria.
+      4. Compare the diff against what the task asked for:
+         - Did the agent actually make the changes described?
+         - Are knowledge files accurate and well-formatted?
+         - Are workflow config changes valid YAML?
+         - Are there broken references, stale data, or empty files?
+         - Did the agent just write boilerplate without real content?
+      5. CHECK FOR COMMON FAILURES:
+         - Files created but empty or placeholder-only
+         - Knowledge files that just repeat the task description
+         - Workflow changes that reference agents or phases that don't exist
+         - Commits that don't match the task scope
+      6. VERDICT:
+         - If changes are real and match the task: merge with gh pr merge <PR-number> --squash
+           Then mark task done: ao.task.status --id <task-id> --status done
+         - If changes are incomplete or wrong: request changes with
+           gh pr review <PR-number> --request-changes --body "<explanation>"
+           Do NOT merge. Do NOT mark task done.
+      Do not add yourself as author or co-author.
+    model: claude-haiku-4-5
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
   brain-product-owner:
     system_prompt: |
       You are the Product Owner for LaunchApp — the strategic manager of
@@ -1684,6 +1715,14 @@ phases:
     capabilities:
       mutates_state: true
 
+  brain-pr-review:
+    mode: agent
+    agent: brain-reviewer
+    directive: |
+      Review the PR created by this workflow. Check the diff matches
+      the task requirements. Merge if good, request changes if not.
+      Only mark task done AFTER successful merge.
+
   po-fleet-scan:
     mode: agent
     agent: brain-product-owner
@@ -1783,7 +1822,7 @@ workflows:
       - update-knowledge-base
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: competitive-research
     name: "Competitive Research"
@@ -1792,7 +1831,7 @@ workflows:
       - research-competitors
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: product-catalog
     name: "Product Catalog"
@@ -1801,7 +1840,7 @@ workflows:
       - catalog-products
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: product-docs
     name: "Product Documentation"
@@ -1810,7 +1849,7 @@ workflows:
       - write-product-docs
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: product-ideas
     name: "Product Ideation"
@@ -1819,7 +1858,7 @@ workflows:
       - generate-product-ideas
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: revenue-analysis
     name: "Revenue Analysis"
@@ -1828,7 +1867,7 @@ workflows:
       - analyze-revenue
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: optimize-workflows
     name: "Workflow Optimizer"
@@ -1837,7 +1876,7 @@ workflows:
       - optimize-workflows
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: gtm-strategy
     name: "GTM Strategy"
@@ -1846,7 +1885,7 @@ workflows:
       - create-gtm-strategy
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: architecture-diagrams
     name: "Architecture Diagrams"
@@ -1855,7 +1894,7 @@ workflows:
       - diagram-architecture
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: manage-fleet
     name: "Fleet Manager"
@@ -1876,7 +1915,7 @@ workflows:
       - generate-questions
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: extract-actions
     name: "Extract Actions"
@@ -1885,7 +1924,7 @@ workflows:
       - extract-actions
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: build-tool
     name: "Build Tool"
@@ -1894,7 +1933,7 @@ workflows:
       - build-tool
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   # === CONFLICT RECOVERY (standalone workflow queued when merge fails) ===
   - id: rebase-and-retry
@@ -1911,7 +1950,7 @@ workflows:
       - run-quality-audit
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
       - verify-quality-audit-published
 
   - id: decision-pipeline
@@ -1921,14 +1960,14 @@ workflows:
       - package-decisions
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
       - mark-task-on-hold
       - founder-review-gate
       - mark-task-in-progress
       - process-decisions
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: brain-product-review
     name: "Brain Product Review"
@@ -1938,7 +1977,7 @@ workflows:
       - brain-product-review
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: brain-self-improve
     name: "Brain Self-Improvement"
@@ -1947,7 +1986,7 @@ workflows:
       - brain-self-improve
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: template-sync
     name: "Template Sync"
@@ -1956,7 +1995,7 @@ workflows:
       - sync-templates
       - push-branch
       - create-pr
-      - auto-merge-pr
+      - brain-pr-review
 
   - id: cross-repo-execute
     name: "Cross-Repo Executor"
