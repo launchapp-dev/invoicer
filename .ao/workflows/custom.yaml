@@ -28,6 +28,12 @@ mcp_servers:
   playwright:
     command: npx
     args: ["-y", "@playwright/mcp"]
+  vercel:
+    command: npx
+    args: ["-y", "@vercel/mcp"]
+  railway:
+    command: npx
+    args: ["-y", "@railway/mcp-server"]
 
 agents:
   default:
@@ -334,6 +340,7 @@ agents:
       | manage-fleet | A daemon crashed, or a repo needs AO setup |
       | provision-repo | An action item or product idea requires a new repo |
       | rebase-and-retry | A brain repo PR has merge conflicts (check with gh pr list --state open) |
+      | brain-product-review | Requirements exist without linked tasks, or phase progress needs evaluation |
       | template-sync | Any template repo merged a PR that the other 2 don't have yet (check recent PRs across all 3) |
       | quality-audit | A repo had >5 PRs merged in the last 7 days, or no quality audit exists in knowledge/quality/ for it |
       | cross-repo-execute | Approved actions exist in knowledge/actions/ with no corresponding tasks/PRs in target repos |
@@ -564,7 +571,7 @@ agents:
       - Do not add yourself as author or co-author in any commits
     model: claude-haiku-4-5
     tool: claude
-    mcp_servers: ["ao", "github"]
+    mcp_servers: ["ao", "github", "vercel", "railway"]
 
   repo-provisioner:
     system_prompt: |
@@ -938,6 +945,53 @@ agents:
     model: claude-opus-4-6
     tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
+
+  brain-product-owner:
+    system_prompt: |
+      You are the Product Owner for the LaunchApp brain — the central command
+      center that manages the entire LaunchApp fleet of projects.
+
+      VISION: Read knowledge/vision.md on every run. This is your source of truth.
+      The vision defines 5 phases: Foundation → Bootstrap Revenue → Platform + Enterprise
+      → Cloud Platform → Ecosystem.
+
+      PHASE TRACKING:
+      1. Read knowledge/phases/current.md to understand where we are.
+         If the file doesn't exist, create it with Phase 1: Foundation.
+      2. Evaluate progress against the current phase's milestones.
+      3. When all milestones are met, update to the next phase and
+         adjust fleet workflows accordingly.
+
+      YOUR JOB EACH RUN:
+      1. Read knowledge/vision.md and knowledge/phases/current.md
+      2. Read ao.requirements.list — check for requirements without linked tasks.
+         For each unlinked requirement, decompose it into 3-8 granular tasks
+         using ao.task.create. Set proper priorities and dependencies.
+      3. Read ao.task.list — check for stale/blocked/orphaned tasks.
+         Cancel tasks that no longer align with the vision.
+         Re-prioritize tasks that are misaligned with the current phase.
+      4. Review fleet status: check what launchapp-nextjs, launchapp-nuxt,
+         and launchapp-sveltekit are building. Are they aligned with vision?
+         If a template is building features for Phase 3 but we're in Phase 1,
+         create a task to reprioritize it.
+      5. Check knowledge/products/template-strategy.md — are we on track
+         for the template catalog plan?
+      6. Log decisions and status updates to knowledge/phases/current.md.
+
+      FLEET CONTROL (via brain-fleet-mcp when available):
+      - Use fleet.* MCP tools to check project health and create cross-repo tasks.
+      - If a template daemon is idle, queue work aligned with current phase.
+      - If a template is behind the others, prioritize sync tasks for it.
+
+      TASK CREATION RULES:
+      - Check ao.task.list before creating — NEVER create duplicates.
+      - Tasks must reference which vision phase they serve.
+      - Tasks must have clear acceptance criteria.
+      - Max 5 new tasks per run to avoid flooding.
+      Do not add yourself as author or co-author.
+    model: claude-haiku-4-5
+    tool: claude
+    mcp_servers: ["ao", "github", "sequential-thinking", "vercel", "railway"]
 
 phases:
   push-branch:
@@ -1538,6 +1592,15 @@ phases:
     capabilities:
       mutates_state: true
 
+  brain-product-review:
+    mode: agent
+    agent: brain-product-owner
+    directive: |
+      Review vision, track phase progress, decompose requirements into tasks,
+      check fleet alignment, reprioritize as needed. Log to knowledge/phases/current.md.
+    capabilities:
+      mutates_state: true
+
   execute-cross-repo:
     mode: agent
     agent: cross-repo-executor
@@ -1765,6 +1828,15 @@ workflows:
       - create-pr
       - auto-merge-pr
 
+  - id: brain-product-review
+    name: "Brain Product Review"
+    description: "Vision-driven project management — track phases, create tasks, align fleet"
+    phases:
+      - brain-product-review
+      - push-branch
+      - create-pr
+      - auto-merge-pr
+
   - id: template-sync
     name: "Template Sync"
     description: "Keep all 3 SaaS templates in sync — propagate features and package changes"
@@ -1799,6 +1871,11 @@ schedules:
   - id: architecture-diagrams
     cron: "0 7 * * 4"
     workflow_ref: architecture-diagrams
+    enabled: true
+
+  - id: brain-product-review
+    cron: "5-59/10 * * * *"
+    workflow_ref: brain-product-review
     enabled: true
 
   - id: template-sync
