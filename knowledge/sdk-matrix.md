@@ -1,8 +1,8 @@
 # SDK Consistency Matrix
 
-> Last updated: 2026-03-19 by knowledge-curator agent (4th pass).
+> Last updated: 2026-03-20 by knowledge-curator agent (5th pass).
 > Source repo: `saas-template-launch-app-test` (flagship template).
-> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-19. The current default branch includes `packages/jobs` on `@trigger.dev/sdk` ^4.0.0, QStash-backed job enqueueing in `@repo/api`, project references plus `tsc --build` across the internal package graph, and the removal of the old `@repo/api-hooks` package.
+> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-20. The current default branch includes 2026-03-20 updates: 2FA/TOTP in Better-Auth, Email OTP passwordless login, full @repo/ui-kit and @repo/i18n integration, AWS SDK 3.1013.0, Polar.sh SDK 0.46.5, and ajv ReDoS vulnerability fix.
 
 ## Core Framework Versions
 
@@ -36,12 +36,14 @@
 | | zod | ^4.3.6 | — |
 | `@repo/auth` | better-auth | ^1.2.7 | Current |
 | | @better-auth/api-key | ^1.5.5 | — |
+| | @better-auth/totp | ^1.x | New 2026-03-20 (2FA support) |
+| | @better-auth/email-otp | ^1.x | New 2026-03-20 (passwordless login) |
 | `@repo/database` | drizzle-orm | ^0.45.0 | Current |
 | | drizzle-kit | ^0.31.0 | — |
 | | drizzle-zod | ^0.8.3 | — |
 | | postgres | ^3.4.5 | — |
 | `@repo/billing` | stripe | ^20.0.0 | Current |
-| | @polar-sh/sdk | ^0.46.0 | Polar.sh (alternative) |
+| | @polar-sh/sdk | ^0.46.5 | Polar.sh (alternative, upgraded 2026-03-20) |
 | `@repo/jobs` | @trigger.dev/sdk | ^4.0.0 | New package added 2026-03-19, upgraded from v3 the same day |
 | | @repo/config | workspace:* | Shared env/config access |
 | | @repo/email | workspace:* | Welcome-email + webhook tasks |
@@ -50,10 +52,11 @@
 | `@repo/email` | resend | ^6.0.0 | Current |
 | | react-email | ^5.0.0 | Current (upgraded from v4) |
 | | @react-email/components | ^1.0.0 | — |
-| `@repo/storage` | @aws-sdk/client-s3 | ^3.1011.0 | Current |
-| | @aws-sdk/s3-request-presigner | ^3.1011.0 | — |
-| `@repo/i18n` | i18next | ^25 | Current (upgraded from v24) |
-| | react-i18next | ^16 | Current (upgraded from v15) |
+| `@repo/storage` | @aws-sdk/client-s3 | ^3.1013.0 | Current (upgraded 2026-03-20) |
+| | @aws-sdk/s3-request-presigner | ^3.1013.0 | Current (upgraded 2026-03-20) |
+| `@repo/i18n` | i18next | ^25 | Current (upgraded from v24, wired into apps/web 2026-03-20) |
+| | react-i18next | ^16 | Current (upgraded from v15, wired into apps/web 2026-03-20) |
+| `@repo/ui-kit` | radix-ui/* | Latest | Fully integrated into apps/web 2026-03-20 |
 
 ## TypeScript Build Graph Status (`saas-template-launch-app-test`)
 

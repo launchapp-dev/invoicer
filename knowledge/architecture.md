@@ -1,7 +1,7 @@
 # Organization Architecture
 
-> Last updated: 2026-03-19 by knowledge-curator agent.
-> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes the post-19:30 2026-03-19 `design-system` workflow expansion, the flagship template's TypeScript project-reference/build refactor, and `brain`'s new operator workflows.
+> Last updated: 2026-03-20 by knowledge-curator agent.
+> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes 2026-03-20 updates: ao-cli post-release stability fixes, design-system Phase 4 completion (Timeline block + CLI scaffolding), saas-template-launch-app-test billing & auth expansion, and launchapp-sveltekit pricing tiers & org schema migration.
 
 ## Overview
 
@@ -91,13 +91,16 @@ web  (ai, analytics, api, auth, config, database, email)
 - `/checkout/success`, `/checkout/cancel`
 - `/api/*` — Wildcard proxy to Hono API
 
-**Recent 2026-03-19 shifts:**
-- `packages/jobs` was added for welcome-email and webhook processing, then upgraded from Trigger.dev v3 to v4 the same day.
-- `@repo/api` now exposes a QStash-backed jobs route, with `/enqueue` restricted to admin sessions or API keys.
-- Waitlist email triggering moved from `@repo/api` into a web action to reduce API/email coupling.
-- TypeScript project references plus `tsc --build` were wired across the internal package graph for topological incremental builds.
-- `packages/jobs/tsconfig.json` now extends the shared base config and keeps `jsx: "react-jsx"` because the jobs package depends on `@repo/email`'s TSX templates.
-- `@repo/api-hooks` was removed from the default branch as dead code, so generated hooks are no longer part of the live package graph.
+**Recent 2026-03-20 shifts:**
+- Two-factor authentication (TOTP) added to Better-Auth for enhanced security.
+- Email OTP passwordless login plugin integrated into Better-Auth for improved user onboarding.
+- `@repo/ui-kit` fully integrated into apps/web, providing shared UI component access across the monorepo.
+- `@repo/i18n` wired into apps/web with minimal integration example (i18n support now available across the app).
+- @aws-sdk/* bumped to 3.1013.0 and @polar-sh/sdk upgraded to 0.46.5 for latest provider support.
+- ajv ReDoS vulnerability resolved via pnpm override for security hardening.
+- Dashboard and API security improved: Better-Auth date field serialization fixes, API key typing corrections, and CORS allowHeaders expansion.
+- Cloudflare deployment documentation removed; deployment focus shifted to Railway and Vercel.
+- Two-factor setup, password reset, and logout flows all enhanced as part of the 2FA rollout.
 
 ---
 
@@ -118,6 +121,20 @@ Older lightweight SaaS starter with React Router 7, Hono, Better Auth, Drizzle, 
 
 ---
 
+### launchapp-sveltekit
+
+SaaS template built with SvelteKit, focusing on lightweight modern frameworks.
+
+**Recent 2026-03-20 updates:**
+- **Billing:** Multi-plan pricing tiers implemented (Starter/Pro/Enterprise) with full Stripe integration.
+- **Frontend:** Tailwind CSS 4 styling, root layout structure, auth middleware for protected routes.
+- **Routing:** Route groups for organizing pages, organization schema migration for multi-tenant support.
+- **Auth:** Auth middleware integrated for route protection and role-based access control.
+
+This template represents the org's Svelte-first SaaS offering and differs from the flagship React Router 7 template in tech choices while maintaining parity in billing and auth capabilities.
+
+---
+
 ### design-system
 
 Standalone Radix UI-based React component library. MIT licensed, shadcn/ui registry compatible.
@@ -130,14 +147,21 @@ Standalone Radix UI-based React component library. MIT licensed, shadcn/ui regis
 - Blocks registry (pre-composed UI blocks)
 
 **Component phases:**
-- Phase 1–2 (complete): Foundation, core components (buttons, inputs, dialogs, etc.)
-- Phase 3–4 (active): Navigation, data display, advanced patterns (Combobox, Calendar, Charts, etc.)
+- Phase 1–3 (complete): Foundation, core components, navigation, data display (buttons, inputs, dialogs, tables, combobox, calendar, etc.)
+- Phase 4 (active/near-complete): Advanced patterns, ecommerce blocks (Timeline, ProductCard, ShoppingCart, CheckoutForm, etc.)
 
-**Repo automation (2026-03-19):**
+**Recent additions (2026-03-20):**
+- **Timeline block** (TASK-093): New data visualization block added to Phase 4 block library.
+- **Design system CLI scaffolding** (TASK-094): `create-design-system` CLI tool added for rapid component generation and project setup.
+
+**Repo automation (2026-03-19–20):**
 - The earlier dependency-update phase/workflow/6-hour cron remains in place for package scanning.
-- `.ao/workflows/custom.yaml` now also adds `lint-check`, `typecheck`, and `wait-for-ci` gates to the component, standard, scaffold, and quick-fix workflows.
-- New `token-generator` and `adoption-analyst` agents were added for design-token auditing and HEART-style adoption reporting.
-- New `design-token-generation` and monthly `adoption-metrics` workflows now sit alongside component delivery and dependency upkeep.
+- `.ao/workflows/custom.yaml` adds `lint-check`, `typecheck`, and `wait-for-ci` gates to the component, standard, scaffold, and quick-fix workflows.
+- New `token-generator` and `adoption-analyst` agents audit design tokens and track adoption metrics via HEART framework.
+- `design-token-generation` and monthly `adoption-metrics` workflows now sit alongside component delivery and dependency upkeep.
+- Visual regression testing integrated with Chromatic for automated screenshot diffs on every PR.
+- Changelog automation via conventional commits + release-it for versioning and release notes.
+- NPM publishing pipeline via GitHub Actions for automated package releases to npm registry.
 
 ---
 
@@ -153,10 +177,18 @@ Rust-based AI agent orchestrator CLI. Powers the org's own AI workforce automati
 - Daemon with scheduled/on-demand workflows
 - MCP server integration
 
-**Current routing posture (2026-03-19):**
-- v0.0.11 was merged earlier in the day, then `.ao/workflows/custom.yaml` was retuned repeatedly on the default branch.
+**Current routing posture (2026-03-20):**
+- v0.0.11 released 2026-03-19, followed by post-release stability improvements on 2026-03-20.
 - Most low/medium/high tasks now route to Codex GPT-5.4 during the temporary doubled-rate-limit window through 2026-04-02.
 - Features stay on Claude Sonnet, bugfix/refactor work routes to Codex, UI work routes to Gemini, and analytical phases like PR review/reconciler/workflow-optimizer moved to Codex.
+
+**Recent stability improvements (2026-03-20):**
+- Fixed failing daemon_run tests: notification delivery, selection source, task state change events.
+- Aligned workflow YAML docs, parser, and validation; rejected unsupported authored keys.
+- Added fallback and pre-flight validation for session resume in agent-runner.
+- Fixed orphan tracker data loss when cleanup removes the entire tracker file.
+- Added cargo test gate to rust-workspace-ci pull request checks for better CI quality control.
+- Standardized task MCP input structs to use `id` field name across all task operations.
 
 ---
 

@@ -1,11 +1,11 @@
 # Active Workstreams
 
-> Last updated: 2026-03-19 by knowledge-curator agent.
-> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-19, including the post-19:30 merge cluster that landed after the earlier knowledge snapshot.
+> Last updated: 2026-03-20 by knowledge-curator agent.
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20, including the full 2026-03-20 update cycle for ao-cli, design-system, saas-template-launch-app-test, and launchapp-sveltekit.
 
 ## Summary
 
-As of 2026-03-19, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), 25 repos pushed in the last 30 days, 23 repos created in the last 7 days, and 1 archived desktop-shell repo (`agent-orchestrator`). The fastest-moving narrative shifts since the previous snapshot are the flagship template's build-graph refactor, the design-system workflow expansion, and `brain`'s move into operator workflows.
+As of 2026-03-20, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), plus emerging velocity in `launchapp-sveltekit`. Key narrative shifts in 2026-03-20 cycle: ao-cli released v0.0.11 and stabilized post-release with test fixes and orphan tracking improvements; design-system completed Phase 4 with Timeline block and CLI scaffolding; saas-template-launch-app-test expanded auth (2FA/OTP) and billing capabilities; launchapp-sveltekit added multi-tier pricing and org schema migration. All four products are now AO-native with continuous delivery pipelines.
 
 ---
 
@@ -27,17 +27,18 @@ This repo is no longer best described as a "test/staging" copy. It is the primar
 - Harden admin/API security and deployment health.
 - Tighten types and monitoring around the dashboard + API surface.
 
-**Recent highlights (verified 2026-03-19):**
-- PR #288: `@repo/jobs` package removed (Trigger.dev async processing no longer included in template).
-- PR #289: `@repo/storage` verified compatible across R2, Tigris, and Vercel Blob providers.
-- PR #290: Railway deployment config and docs added.
-- PR #291, #294: Vercel deployment config (vercel.json) and deployment guide added.
-- PR #292: Email verification flow added post-registration for enhanced auth security.
-- Waitlist join flow moved out of `@repo/api` into a web action to reduce API/email coupling.
-- ALB health check path was fixed from `/health` to `/api/health`.
-- Dashboard API key typing was corrected by serializing/mapping Better-Auth date fields instead of using unsafe casts.
-- Sentry monitoring, in-app notifications, and Vitest-based test setup all landed the same day.
-- `@repo/api-hooks` was removed from the live monorepo as dead code.
+**Recent highlights (verified 2026-03-20):**
+- **Auth expansion (2026-03-20):** Two-factor authentication (TOTP) added to Better-Auth for enhanced security.
+- **Auth expansion (2026-03-20):** Email OTP passwordless login plugin integrated into Better-Auth.
+- **Package integration (2026-03-20):** @repo/ui-kit fully integrated into apps/web for shared component access.
+- **Internationalization (2026-03-20):** @repo/i18n wired into apps/web with English/Spanish support.
+- **Dependency updates (2026-03-20):** AWS SDK bumped to 3.1013.0; Polar.sh SDK upgraded to 0.46.5.
+- **Security (2026-03-20):** ajv ReDoS vulnerability resolved via pnpm override.
+- **Deployment shift (2026-03-20):** Cloudflare deployment documentation removed; focus moved to Railway and Vercel.
+- **Earlier 2026-03-19 highlights:**
+  - Email verification flow added post-registration for enhanced auth security.
+  - Waitlist join flow moved out of `@repo/api` into a web action to reduce API/email coupling.
+  - Dashboard API key typing was corrected by serializing/mapping Better-Auth date fields.
 
 ---
 
@@ -56,14 +57,17 @@ The repo is still finishing Phase 3/4 component coverage, but it is now also bei
 - Add formal lint/typecheck/CI gates to the AO delivery workflows.
 - Start design-token generation and monthly adoption reporting.
 
-**Recent highlights (verified 2026-03-19):**
-- Ecommerce blocks landed: `ProductCard`, `ProductCardGrid`, `ShoppingCart`, and `CheckoutForm`.
-- Docs-site work added live previews, corrected component prop mismatches, and replaced raw HTML controls with design-system primitives for accessibility.
-- Blocks barrel exports were fixed so all block categories are available from the package root.
-- The earlier dependency-update phase/workflow/cron remains in place in `.ao/workflows/custom.yaml`.
-- TASK-062 added `lint-check`, `typecheck`, and `wait-for-ci` phases to the component, standard, scaffold, and quick-fix workflows.
-- TASK-062 also added `token-generator` and `adoption-analyst` agents plus `design-token-generation` and monthly `adoption-metrics` workflows.
-- A post-19:30 accessibility sweep added ARIA/semantics fixes across `DataTable`, `DatePicker`, `MultiSelect`, `Combobox`, `KPICard`, and `ChartContainer`.
+**Recent highlights (verified 2026-03-20):**
+- **Phase 4 completion (2026-03-20):** Timeline data block added (TASK-093) completing Phase 4 advanced patterns.
+- **CLI tooling (2026-03-20):** Design system CLI scaffolding tool added (TASK-094) for rapid component generation.
+- **Distribution (2026-03-19-20):** Visual regression testing integrated with Chromatic for automated screenshot diffs.
+- **Distribution (2026-03-19-20):** Changelog automation set up with conventional commits and release-it for versioning.
+- **Distribution (2026-03-19-20):** NPM publishing pipeline via GitHub Actions for automated package releases.
+- **Documentation (2026-03-19):** Design tokens documentation page added to Storybook.
+- **Accessibility (2026-03-19):** Comprehensive variant/viewport coverage added for all components and blocks.
+- **Automation (2026-03-19):** `lint-check`, `typecheck`, and `wait-for-ci` phases added to component delivery workflows.
+- **Analytics (2026-03-19):** `token-generator` and `adoption-analyst` agents added for design-token auditing and HEART-style adoption reporting.
+- **Ecommerce blocks:** ProductCard, ProductCardGrid, ShoppingCart, and CheckoutForm all implemented and tested.
 
 ---
 
@@ -81,17 +85,47 @@ The release train moved from self-healing failover work into a same-day workflow
 - Split task classes by model strengths instead of one default route.
 - Keep analytical/reconciliation phases on the provider best suited to code-critical judgment.
 
-**Recent highlights (verified 2026-03-19):**
-- `Release v0.0.11` merged earlier in the day.
-- Commit `4d2694f` routed most low/medium/high work to Codex GPT-5.4 during the doubled-rate-limit window through 2026-04-02.
-- Commit `67d7e4e` rebalanced routing to features → Sonnet, bugfix/refactor → Codex, and UI → Gemini.
-- Commit `baeeaea` moved PR review, code review, reconciler, and workflow-optimizer to Codex GPT-5.4.
-- Process-leak fixes, rustfmt cleanup, and a cargo-test CI gate landed around the release.
-- The latest default-branch work then added session-resume preflight fallback and an orphan-tracker data-loss fix.
+**Recent highlights (verified 2026-03-20):**
+- **v0.0.11 release (2026-03-19):** Completed and merged, followed by post-release stability improvements on 2026-03-20.
+- **Post-release fixes (2026-03-20):**
+  - Fixed failing daemon_run tests: notification delivery, selection source, task state change events (TASK-1040).
+  - Aligned workflow YAML docs, parser, and validation; rejected unsupported authored keys (TASK-999).
+  - Added fallback and pre-flight validation for session resume in agent-runner (TASK-1015).
+  - Fixed orphan tracker data loss when cleanup removes the entire tracker file (TASK-990).
+  - Added cargo test gate to rust-workspace-ci pull request checks (TASK-980).
+  - Standardized task MCP input structs to use `id` field name across all task operations.
+- **Model routing (2026-03-19):**
+  - Features route to Claude Sonnet, bugfix/refactor to Codex GPT-5.4, UI to Gemini.
+  - PR review, code review, reconciler, and workflow-optimizer all moved to Codex GPT-5.4.
+  - Temporary doubled-rate-limit window for Codex extends through 2026-04-02.
+- **Earlier improvements:** Process-leak fixes, rustfmt cleanup, test gate additions.
 
 ---
 
-## 4. brain — Structured Knowledge Platform
+## 4. launchapp-sveltekit — Emerging Framework Variant
+
+**Repo:** `launchapp-sveltekit`
+**Owner:** Shooksie
+**Who is doing the work:** AO-managed implementation workflows
+**Status:** Emerging velocity — 4 merged PRs since 2026-03-20
+
+This repo represents the org's SvelteKit-based SaaS template offering, built to parallel the flagship React Router 7 template while exploring alternative JavaScript frameworks.
+
+**Current focus:**
+- Establish parity with the flagship template in billing and auth capabilities.
+- Validate SvelteKit's productivity claims for rapid SaaS prototyping.
+- Build a library of framework variants for different developer preferences.
+- Ensure org schema supports multi-tenant SvelteKit apps.
+
+**Recent highlights (verified 2026-03-20):**
+- **Billing (2026-03-20):** Multi-plan pricing tiers implemented (Starter/Pro/Enterprise) with Stripe integration.
+- **Frontend (2026-03-20):** Tailwind CSS 4 styling, root layout structure for page organization.
+- **Auth (2026-03-20):** Auth middleware integrated for protected routes and role-based access control.
+- **Organization (2026-03-20):** Org schema migration added for multi-tenant support.
+
+---
+
+## 5. brain — Structured Knowledge Platform
 
 **Repo:** `brain`
 **Owner:** Shooksie

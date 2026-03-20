@@ -1,7 +1,7 @@
 # Repository Inventory
 
-> Last updated: 2026-03-19 by knowledge-curator agent.
-> Snapshot: 113 repos in `launchapp-dev`; 25 pushed in the last 30 days, 23 created since 2026-03-12, 15 public, 98 private, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-19 against live org metadata.
+> Last updated: 2026-03-20 by knowledge-curator agent.
+> Snapshot: 113 repos in `launchapp-dev`; 25 pushed in the last 30 days, 23 created since 2026-03-12, 15 public, 98 private, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-20 against live org metadata including 2026-03-20 update cycle across ao-cli, design-system, saas-template-launch-app-test, and launchapp-sveltekit.
 
 ## Notable Changes
 
@@ -16,10 +16,11 @@
 
 | Repo | Recent merged PR count | Current note |
 |---|---|---|
-| `saas-template-launch-app-test` | 188 merged PRs since 2026-03-12 | Flagship template trunk/canary; async jobs rollout now paired with project-reference build hardening |
-| `design-system` | 70 merged PRs since 2026-03-12 | Component-library buildout now paired with token/adoption workflow automation |
-| `ao-cli` | 53 merged PRs since 2026-03-12 | v0.0.11 release plus routing changes and post-release runner hardening |
-| `brain` | 55 merged PRs since creation on 2026-03-19 | Structured data + MCP platform now expanded into operator workflows |
+| `saas-template-launch-app-test` | 200+ merged PRs since 2026-03-12 | Flagship template trunk/canary; 2FA/OTP auth expansion, billing hardening, Cloudflare deployment docs removed |
+| `design-system` | 80+ merged PRs since 2026-03-12 | Phase 4 complete with Timeline block & CLI scaffolding; Chromatic visual testing, NPM publishing pipeline, changelog automation |
+| `ao-cli` | 60+ merged PRs since 2026-03-12 | v0.0.11 release plus post-release stability improvements (daemon tests, workflow YAML alignment, orphan tracker fixes) |
+| `launchapp-sveltekit` | 4 merged PRs since 2026-03-20 | Emerging SvelteKit template variant with multi-tier billing and org schema support |
+| `brain` | 55+ merged PRs since creation on 2026-03-19 | Structured data + MCP platform expanded into operator workflows; daily knowledge refresh cycle now active |
 
 ## Full Inventory
 
