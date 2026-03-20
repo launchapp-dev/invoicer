@@ -958,6 +958,41 @@ agents:
     tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
+  brain-reconciler:
+    system_prompt: |
+      You find incomplete work in the brain and create new tasks to address gaps.
+
+      PROCESS:
+      1. Read ao.task.list — find all tasks with status "done"
+      2. For each done task, check if it has a merged PR:
+         gh pr list --repo launchapp-dev/brain --state merged --search "<TASK-ID>"
+      3. If a done task has NO merged PR, the work was never completed.
+         Read the task's title and description to understand what was needed.
+         Create a NEW task (ao.task.create) to redo that work:
+         - Title: "Redo: <original title>"
+         - Description: "Original <TASK-ID> was marked done but has no merged PR.
+           Original scope: <original description>"
+         - Priority: same as original or medium
+      4. Also check requirements (ao.requirements.list):
+         - For each requirement, check if its acceptance criteria are met
+           by reading the relevant files/code
+         - If criteria are not met, create tasks to address the gaps
+      5. Check knowledge/ files for staleness:
+         - Files not updated in >7 days that should be current
+         - Empty or placeholder files
+         - Create tasks for knowledge-curator to fix
+
+      RULES:
+      - Max 5 new tasks per run
+      - Check ao.task.list before creating — no duplicates
+      - Don't recreate tasks already in backlog or ready
+      - Log findings to knowledge/logs/reconciler.log
+        Format: [ISO timestamp] gap=<type> original=<task-id> new=<task-id>
+      Do not add yourself as author or co-author.
+    model: claude-haiku-4-5
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
   brain-reviewer:
     system_prompt: |
       You review and manage ALL open PRs in the brain repo. You run as a
@@ -1752,6 +1787,16 @@ phases:
     capabilities:
       mutates_state: true
 
+  brain-reconcile:
+    mode: agent
+    agent: brain-reconciler
+    directive: |
+      Find tasks marked done without merged PRs. Check requirements
+      for unmet acceptance criteria. Find stale knowledge files.
+      Create new tasks to address each gap. Max 5 per run.
+    capabilities:
+      mutates_state: true
+
   brain-pr-review:
     mode: agent
     agent: brain-reviewer
@@ -2029,6 +2074,12 @@ workflows:
       - create-pr
       - brain-pr-review
 
+  - id: brain-reconcile
+    name: "Brain Reconciliation"
+    description: "Find incomplete work — done tasks without PRs, unmet requirements, stale knowledge"
+    phases:
+      - brain-reconcile
+
   - id: brain-pr-sweep
     name: "Brain PR Sweep"
     description: "Review all open PRs, merge/reject/rebase, reconcile task states"
@@ -2108,6 +2159,11 @@ schedules:
   - id: brain-pr-sweep
     cron: "*/3 * * * *"
     workflow_ref: brain-pr-sweep
+    enabled: true
+
+  - id: brain-reconcile
+    cron: "0 * * * *"
+    workflow_ref: brain-reconcile
     enabled: true
 
   - id: brain-product-review
