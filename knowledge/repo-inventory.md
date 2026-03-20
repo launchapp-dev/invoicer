@@ -1,7 +1,7 @@
 # Repository Inventory
 
-> Last updated: 2026-03-20 by knowledge-curator agent.
-> Snapshot: 113 repos in `launchapp-dev`; 25 pushed in the last 30 days, 23 created since 2026-03-12, 15 public, 98 private, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-20 against live org metadata including 2026-03-20 update cycle across ao-cli, design-system, saas-template-launch-app-test, and launchapp-sveltekit.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T06:07Z).
+> Snapshot: 113 repos in `launchapp-dev`; 25 pushed in the last 30 days, 23 created since 2026-03-12, 15 public, 98 private, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-20 against live org metadata including 2026-03-20 update cycle through 06:07Z across ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, and launchapp-nuxt.
 
 ## Notable Changes
 

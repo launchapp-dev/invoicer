@@ -3,11 +3,11 @@
 **Repo**: launchapp-dev/launchapp-nextjs
 **Framework**: Next.js App Router
 **Status**: Active development — Phase 1 template
-**Last updated**: 2026-03-20T00:37:58Z (after PR #10 merge)
+**Last updated**: 2026-03-20T03:34Z (after merged billing/subscription email work)
 **AO**: Configured with 5 agents, 9 workflows, 5 cron schedules
 **Tasks**: 8 seeded (auth, database, dashboard, landing, email, admin, docker)
 **Requirements**: REQ-001 (Core SaaS), REQ-002 (Next.js App Router SSR)
-**Recent activity**: PR #9 (00:37:08Z) and PR #10 (00:37:58Z) merged on 2026-03-20
+**Recent activity**: PRs merged at 2026-03-20T03:31Z and 03:34Z; billing/subscription email work added
 
 ## Purpose
 
@@ -24,3 +24,8 @@ Turborepo + pnpm monorepo with @repo/* packages copied from flagship template:
 
 - Packages from saas-template-launch-app-test (shared @repo/* packages)
 - Better Auth, Drizzle, Stripe, Resend, PostHog, Tailwind CSS 4
+
+## Recent Changes (2026-03-20)
+
+- Billing and subscription email workflows integrated (PRs at 03:31Z, 03:34Z)
+- Aligns launchapp-nextjs with the flagship template's billing/email capabilities

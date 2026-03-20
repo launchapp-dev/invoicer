@@ -3,11 +3,11 @@
 **Repo**: launchapp-dev/launchapp-nuxt
 **Framework**: Nuxt 4
 **Status**: Active development — Phase 1 template
-**Last updated**: 2026-03-20T00:36:04Z (after PR #11 merge)
+**Last updated**: 2026-03-20T03:10Z (after cookie consent/GDPR work merged)
 **AO**: Configured with 5 agents, 9 workflows, 5 cron schedules
 **Tasks**: 8 seeded (auth, database, dashboard, landing, email, admin, docker)
 **Requirements**: REQ-001 (Core SaaS), REQ-002 (Nuxt 4 SSR)
-**Recent activity**: PR #11 merged on 2026-03-20T00:36:04Z
+**Recent activity**: PRs merged through 2026-03-20T03:10Z with cookie consent/GDPR compliance work
 
 ## Purpose
 
@@ -24,3 +24,8 @@ Turborepo + pnpm monorepo with @repo/* packages copied from flagship template:
 
 - Packages from saas-template-launch-app-test (shared @repo/* packages)
 - Better Auth, Drizzle, Stripe, Resend, PostHog, Tailwind CSS 4
+
+## Recent Changes (2026-03-20)
+
+- Cookie consent and GDPR compliance work integrated (through 03:10Z)
+- Establishes privacy-first approach aligned with launchapp-nuxt's target market in EU

@@ -1,11 +1,11 @@
 # Active Workstreams
 
-> Last updated: 2026-03-20 by knowledge-curator agent.
-> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20, including the full 2026-03-20 update cycle for ao-cli, design-system, saas-template-launch-app-test, and launchapp-sveltekit.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T06:07Z).
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T06:07Z, including the full 2026-03-20 update cycle for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, and launchapp-nuxt.
 
 ## Summary
 
-As of 2026-03-20, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), plus emerging velocity in `launchapp-sveltekit`. Key narrative shifts in 2026-03-20 cycle: ao-cli released v0.0.11 and stabilized post-release with test fixes and orphan tracking improvements; design-system completed Phase 4 with Timeline block and CLI scaffolding; saas-template-launch-app-test expanded auth (2FA/OTP) and billing capabilities; launchapp-sveltekit added multi-tier pricing and org schema migration. All four products are now AO-native with continuous delivery pipelines.
+As of 2026-03-20, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), plus emerging velocity in framework variants (`launchapp-sveltekit`, `launchapp-nextjs`, `launchapp-nuxt`). Key narrative shifts in 2026-03-20 cycle (through 06:07Z): ao-cli released v0.0.11 and stabilized post-release with planner MCP crash fix, macOS codesign fix, and bundled packs embedding; design-system completed Phase 4 with Timeline block, CLI scaffolding, layout transitions, palettes documentation, and landing/blog/error blocks; saas-template-launch-app-test expanded auth (2FA/OTP), billing capabilities, and added @ai-sdk/mistral provider support; launchapp-sveltekit added Vitest test suite plus multi-tier pricing and org schema migration; launchapp-nextjs integrated billing/subscription email workflows; launchapp-nuxt added cookie consent and GDPR compliance. All products are now AO-native with continuous delivery pipelines.
 
 ---
 
@@ -27,7 +27,10 @@ This repo is no longer best described as a "test/staging" copy. It is the primar
 - Harden admin/API security and deployment health.
 - Tighten types and monitoring around the dashboard + API surface.
 
-**Recent highlights (verified 2026-03-20):**
+**Recent highlights (verified through 2026-03-20T06:07Z):**
+- **AI provider expansion (2026-03-20):** @ai-sdk/mistral provider added to the AI SDK wrapper for additional model support.
+- **Docker CI (2026-03-20):** Docker CI install fixes applied for improved container-based testing.
+- **TypeScript alignment (2026-03-20):** @types/node/core tsconfig corrected for type consistency.
 - **Auth expansion (2026-03-20):** Two-factor authentication (TOTP) added to Better-Auth for enhanced security.
 - **Auth expansion (2026-03-20):** Email OTP passwordless login plugin integrated into Better-Auth.
 - **Package integration (2026-03-20):** @repo/ui-kit fully integrated into apps/web for shared component access.
@@ -57,13 +60,15 @@ The repo is still finishing Phase 3/4 component coverage, but it is now also bei
 - Add formal lint/typecheck/CI gates to the AO delivery workflows.
 - Start design-token generation and monthly adoption reporting.
 
-**Recent highlights (verified 2026-03-20):**
+**Recent highlights (verified through 2026-03-20T06:07Z):**
 - **Phase 4 completion (2026-03-20):** Timeline data block added (TASK-093) completing Phase 4 advanced patterns.
 - **CLI tooling (2026-03-20):** Design system CLI scaffolding tool added (TASK-094) for rapid component generation.
+- **Layout transitions (2026-03-20):** New animation utilities for route/page transitions completed.
+- **Documentation (2026-03-20):** Palettes documentation page added covering all design tokens and color systems.
+- **Page blocks (2026-03-20):** Landing page, blog, and error page composition blocks completed for e-commerce + marketing use.
 - **Distribution (2026-03-19-20):** Visual regression testing integrated with Chromatic for automated screenshot diffs.
 - **Distribution (2026-03-19-20):** Changelog automation set up with conventional commits and release-it for versioning.
 - **Distribution (2026-03-19-20):** NPM publishing pipeline via GitHub Actions for automated package releases.
-- **Documentation (2026-03-19):** Design tokens documentation page added to Storybook.
 - **Accessibility (2026-03-19):** Comprehensive variant/viewport coverage added for all components and blocks.
 - **Automation (2026-03-19):** `lint-check`, `typecheck`, and `wait-for-ci` phases added to component delivery workflows.
 - **Analytics (2026-03-19):** `token-generator` and `adoption-analyst` agents added for design-token auditing and HEART-style adoption reporting.
@@ -85,8 +90,12 @@ The release train moved from self-healing failover work into a same-day workflow
 - Split task classes by model strengths instead of one default route.
 - Keep analytical/reconciliation phases on the provider best suited to code-critical judgment.
 
-**Recent highlights (verified 2026-03-20):**
+**Recent highlights (verified through 2026-03-20T04:27Z):**
 - **v0.0.11 release (2026-03-19):** Completed and merged, followed by post-release stability improvements on 2026-03-20.
+- **Critical fixes (2026-03-20, 04:11Z-04:27Z):**
+  - Fixed planner MCP crash preventing workflow state transitions (commit 04:11Z).
+  - Fixed macOS codesign process for proper Darwin binary distribution (commit 04:19Z).
+  - Embedded bundled packs into AO binary for offline pack access (commit 04:27Z).
 - **Post-release fixes (2026-03-20):**
   - Fixed failing daemon_run tests: notification delivery, selection source, task state change events (TASK-1040).
   - Aligned workflow YAML docs, parser, and validation; rejected unsupported authored keys (TASK-999).
@@ -117,11 +126,43 @@ This repo represents the org's SvelteKit-based SaaS template offering, built to 
 - Build a library of framework variants for different developer preferences.
 - Ensure org schema supports multi-tenant SvelteKit apps.
 
-**Recent highlights (verified 2026-03-20):**
+**Recent highlights (verified through 2026-03-20T02:38Z):**
+- **Testing (2026-03-20):** Vitest test suite infrastructure added for unit and integration testing.
+- **Test fixes (2026-03-20):** Related test-adjacent fixes applied across billing, auth, and routing components.
 - **Billing (2026-03-20):** Multi-plan pricing tiers implemented (Starter/Pro/Enterprise) with Stripe integration.
 - **Frontend (2026-03-20):** Tailwind CSS 4 styling, root layout structure for page organization.
 - **Auth (2026-03-20):** Auth middleware integrated for protected routes and role-based access control.
 - **Organization (2026-03-20):** Org schema migration added for multi-tenant support.
+
+---
+
+## 4b. launchapp-nextjs — Next.js App Router Variant
+
+**Repo:** `launchapp-nextjs`
+**Owner:** Shooksie
+**Who is doing the work:** AO-managed implementation workflows
+**Status:** Active — Phase 1 template development
+
+Next.js App Router-based SaaS template, completing parity with flagship template capabilities.
+
+**Recent highlights (verified 2026-03-20T03:34Z):**
+- **Billing & Email (2026-03-20):** Billing and subscription email workflows integrated (PRs at 03:31Z, 03:34Z).
+- Aligns launchapp-nextjs with the flagship template's billing/email capabilities.
+
+---
+
+## 4c. launchapp-nuxt — Nuxt 4 Variant
+
+**Repo:** `launchapp-nuxt`
+**Owner:** Shooksie
+**Who is doing the work:** AO-managed implementation workflows
+**Status:** Active — Phase 1 template development
+
+Nuxt 4-based SaaS template with privacy-first focus.
+
+**Recent highlights (verified 2026-03-20T03:10Z):**
+- **Privacy & Compliance (2026-03-20):** Cookie consent and GDPR compliance work integrated (through 03:10Z).
+- Establishes privacy-first approach aligned with launchapp-nuxt's target market in EU.
 
 ---
 

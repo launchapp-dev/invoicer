@@ -1,7 +1,7 @@
 # Organization Architecture
 
-> Last updated: 2026-03-20 by knowledge-curator agent.
-> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes 2026-03-20 updates: ao-cli post-release stability fixes, design-system Phase 4 completion (Timeline block + CLI scaffolding), saas-template-launch-app-test billing & auth expansion, and launchapp-sveltekit pricing tiers & org schema migration.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T06:07Z).
+> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes 2026-03-20 updates through 06:07Z: ao-cli planner MCP crash fix + macOS codesign fix + bundled packs embedding, design-system Phase 4 completion + layout transitions + palettes page + landing/blog/error blocks, saas-template-launch-app-test billing & auth expansion + @ai-sdk/mistral + Docker CI fixes, and launchapp-sveltekit Vitest test suite + pricing tiers & org schema migration.
 
 ## Overview
 
@@ -91,7 +91,10 @@ web  (ai, analytics, api, auth, config, database, email)
 - `/checkout/success`, `/checkout/cancel`
 - `/api/*` — Wildcard proxy to Hono API
 
-**Recent 2026-03-20 shifts:**
+**Recent 2026-03-20 shifts (through 06:07Z):**
+- @ai-sdk/mistral provider added to the AI SDK wrapper (new model support).
+- Docker CI install fix applied for better container-based testing.
+- @types/node/core tsconfig alignment corrected for type consistency.
 - Two-factor authentication (TOTP) added to Better-Auth for enhanced security.
 - Email OTP passwordless login plugin integrated into Better-Auth for improved user onboarding.
 - `@repo/ui-kit` fully integrated into apps/web, providing shared UI component access across the monorepo.
@@ -150,9 +153,12 @@ Standalone Radix UI-based React component library. MIT licensed, shadcn/ui regis
 - Phase 1–3 (complete): Foundation, core components, navigation, data display (buttons, inputs, dialogs, tables, combobox, calendar, etc.)
 - Phase 4 (active/near-complete): Advanced patterns, ecommerce blocks (Timeline, ProductCard, ShoppingCart, CheckoutForm, etc.)
 
-**Recent additions (2026-03-20):**
+**Recent additions (2026-03-20, through 06:07Z):**
 - **Timeline block** (TASK-093): New data visualization block added to Phase 4 block library.
 - **Design system CLI scaffolding** (TASK-094): `create-design-system` CLI tool added for rapid component generation and project setup.
+- **Layout transition animations**: New animation utilities for route/page transitions added.
+- **Palettes documentation page**: Comprehensive design token/color palette documentation added to Storybook.
+- **Page composition blocks**: Landing page, blog, and error page blocks completed for e-commerce + marketing use cases.
 
 **Repo automation (2026-03-19–20):**
 - The earlier dependency-update phase/workflow/6-hour cron remains in place for package scanning.
@@ -182,7 +188,10 @@ Rust-based AI agent orchestrator CLI. Powers the org's own AI workforce automati
 - Most low/medium/high tasks now route to Codex GPT-5.4 during the temporary doubled-rate-limit window through 2026-04-02.
 - Features stay on Claude Sonnet, bugfix/refactor work routes to Codex, UI work routes to Gemini, and analytical phases like PR review/reconciler/workflow-optimizer moved to Codex.
 
-**Recent stability improvements (2026-03-20):**
+**Recent stability improvements (2026-03-20, through 04:27Z):**
+- Fixed planner MCP crash that occurred during workflow state transitions (commit 04:11Z).
+- Fixed macOS codesign install process for Darwin binary distribution (commit 04:19Z).
+- Embedded bundled packs into AO binary for faster, offline pack access (commit 04:27Z).
 - Fixed failing daemon_run tests: notification delivery, selection source, task state change events.
 - Aligned workflow YAML docs, parser, and validation; rejected unsupported authored keys.
 - Added fallback and pre-flight validation for session resume in agent-runner.

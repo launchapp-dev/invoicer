@@ -1,8 +1,8 @@
 # SDK Consistency Matrix
 
-> Last updated: 2026-03-20 by knowledge-curator agent (5th pass).
+> Last updated: 2026-03-20 by knowledge-curator agent (6th pass, through 2026-03-20T06:07Z).
 > Source repo: `saas-template-launch-app-test` (flagship template).
-> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-20. The current default branch includes 2026-03-20 updates: 2FA/TOTP in Better-Auth, Email OTP passwordless login, full @repo/ui-kit and @repo/i18n integration, AWS SDK 3.1013.0, Polar.sh SDK 0.46.5, and ajv ReDoS vulnerability fix.
+> Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-20. The current default branch includes 2026-03-20 updates through 06:07Z: @ai-sdk/mistral provider, Docker CI fixes, @types/node/core tsconfig alignment, 2FA/TOTP in Better-Auth, Email OTP passwordless login, full @repo/ui-kit and @repo/i18n integration, AWS SDK 3.1013.0, Polar.sh SDK 0.46.5, and ajv ReDoS vulnerability fix.
 
 ## Core Framework Versions
 
@@ -108,10 +108,14 @@
 | | storybook | v10 | Upgraded from v8 |
 | | tsup | — | Build |
 
-## Recent Changes (last 7 days)
+## Recent Changes (last 7 days through 2026-03-20T06:07Z)
 
 | Change | Detail | Repo / Area |
 |---|---|---|
+| Added | `@ai-sdk/mistral` provider to AI SDK wrapper | `saas-template-launch-app-test` (`@repo/ai`) |
+| Fixed | @types/node/core tsconfig alignment | `saas-template-launch-app-test` |
+| Fixed | Docker CI install process for better container testing | `saas-template-launch-app-test` |
+| Added | Vitest test framework infrastructure | `launchapp-sveltekit` |
 | Added | `@repo/jobs` package for async work | `saas-template-launch-app-test` |
 | Upgraded | `@trigger.dev/sdk` ^3.0.0 → ^4.0.0 in `@repo/jobs` | `saas-template-launch-app-test` |
 | Added | `tsc --build` build path + project references across internal packages | `saas-template-launch-app-test` |
