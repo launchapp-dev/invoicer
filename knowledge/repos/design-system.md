@@ -4,7 +4,7 @@
 **Visibility**: Private
 **Language**: TypeScript
 **Package**: `@audiogenius/design-system` v0.1.0
-**Last updated**: 2026-03-20T13:05:48Z (very active)
+**Last updated**: 2026-03-20T14:18:30Z (docs/CI build fixes)
 
 ## Purpose
 
@@ -105,6 +105,15 @@ Updated 2026-03-19:
 - README.md rewritten to clarify design system purpose, usage, and component categories
 - CONTRIBUTING.md added with guidelines for component development and testing
 - Storybook stories updated to include SearchableDataTable live preview
+
+## Post-16:27Z Activity — Documentation Site Stabilization (2026-03-20T13:37–14:18Z)
+
+Focused on resolving Storybook documentation build chain failures related to platform-specific dependency resolution:
+- **13:37Z**: Add explicit lightningcss dependency for Tailwind v4 on CI
+- **13:46–13:57Z**: Fix CI platform binary resolution — add lightningcss-linux-x64-gnu, regenerate lockfile with all platform binaries
+- **14:18Z**: Fix final dependency issue — add missing react-is package for recharts charting library in docs
+
+**User-visible impact**: Storybook docs site stability improved; documentation deployment pipeline now correctly resolves platform-specific native binaries in CI/CD environments. No changes to component library itself.
 
 ## Recent Activity (2026-03-20)
 

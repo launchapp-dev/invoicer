@@ -1,7 +1,7 @@
 # Active Workstreams
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T16:27:00Z).
-> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T16:27:00Z, including post-13:17Z merged activity across ao-cli (PRs #117-#119), saas-template-launch-app-test (PRs #361-#367), and design-system (PR #132). Full 2026-03-20 update cycle verified for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, launchapp-nuxt, and brain.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T20:53Z).
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T20:53Z, including post-16:27Z activity: framework template model-routing churn in response to Claude rate limits (launchapp-sveltekit/nuxt/nextjs 19:38–20:53Z), design-system docs/CI fixes (through 14:18Z), saas-template-launch-app-test rate-limit agent routing fix (20:19:38Z), and launchapp-nextjs quality issue #14 (20:39:45Z). Full 2026-03-20 update cycle verified for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, launchapp-nuxt, and brain.
 
 ## Summary
 
@@ -27,7 +27,7 @@ This repo is no longer best described as a "test/staging" copy. It is the primar
 - Harden admin/API security and deployment health.
 - Tighten types and monitoring around the dashboard + API surface.
 
-**Recent highlights (verified through 2026-03-20T13:02:54Z):**
+**Recent highlights (verified through 2026-03-20T20:19:38Z):**
 - **AI provider expansion (2026-03-20):** @ai-sdk/mistral provider added to the AI SDK wrapper for additional model support.
 - **Docker CI (2026-03-20):** Docker CI install fixes applied for improved container-based testing.
 - **TypeScript alignment (2026-03-20):** @types/node/core tsconfig corrected for type consistency.
@@ -42,6 +42,7 @@ This repo is no longer best described as a "test/staging" copy. It is the primar
 - **CI/Docker hardening (2026-03-20, 12:51:14Z–13:02:36Z):** Node.js version pinned to 20.18.3 in CI (TASK-382), duplicate ENV CI=true removed from Dockerfile (TASK-381).
 - **Documentation & testing (2026-03-20, 13:02:36Z–13:02:54Z):** Comprehensive package guides added for ai, analytics, core, i18n, mcp, storage, typescript-config, and ui-kit (TASK-380); test coverage for @repo/core getRequiredEnv/getEnvWithDefault utilities added (TASK-371).
 - **Docker hardening & package configuration (2026-03-20, 13:17:55Z–13:53:13Z):** PRs #361-#367 merged with Docker hardening enhancements and package export-map configuration improvements for better module resolution and dependency tree optimization.
+- **AO agent routing (2026-03-20, 20:19:38Z):** Default agent route changed from Claude to oai-runner/MiniMax-M2.7 to mitigate Sonnet rate limits (effective through 2026-03-24). Flagship template application code unaffected.
 - **Earlier 2026-03-19 highlights:**
   - Email verification flow added post-registration for enhanced auth security.
   - Waitlist join flow moved out of `@repo/api` into a web action to reduce API/email coupling.
@@ -64,7 +65,7 @@ The repo is still finishing Phase 3/4 component coverage, but it is now also bei
 - Add formal lint/typecheck/CI gates to the AO delivery workflows.
 - Start design-token generation and monthly adoption reporting.
 
-**Recent highlights (verified through 2026-03-20T13:05:48Z):**
+**Recent highlights (verified through 2026-03-20T14:18:30Z):**
 - **Phase 4 completion (2026-03-20):** Timeline data block added (TASK-093) completing Phase 4 advanced patterns.
 - **CLI tooling (2026-03-20):** Design system CLI scaffolding tool added (TASK-094) for rapid component generation.
 - **Layout transitions (2026-03-20):** New animation utilities for route/page transitions completed.
@@ -73,6 +74,7 @@ The repo is still finishing Phase 3/4 component coverage, but it is now also bei
 - **Accessibility hardening (2026-03-20, post-12:43Z):** NavigationMenuTrigger updated with focus-visible ring for WCAG 2.4.7 (TASK-134), warning variant role updated to "alert" for WCAG 4.1.3 (TASK-135).
 - **Docs infrastructure upgrade (2026-03-20, 13:04:53Z):** Storybook docs site upgraded from Next.js 14 to 16.2.0 for better compatibility and performance.
 - **Component dependency sync (2026-03-20, 13:05:48Z):** PR #132 merged with component dependency synchronization and refinement.
+- **Documentation site stabilization (2026-03-20, 13:37–14:18Z):** Storybook docs build chain stabilized with fixes for platform-specific binary resolution (lightningcss, recharts). Documentation pipeline now resilient to CI/CD dependency variation.
 - **Distribution (2026-03-19-20):** Visual regression testing integrated with Chromatic for automated screenshot diffs.
 - **Distribution (2026-03-19-20):** Changelog automation set up with conventional commits and release-it for versioning.
 - **Distribution (2026-03-19-20):** NPM publishing pipeline via GitHub Actions for automated package releases.
@@ -127,7 +129,7 @@ The release train moved from self-healing failover work into a same-day workflow
 **Repo:** `launchapp-sveltekit`
 **Owner:** Shooksie
 **Who is doing the work:** AO-managed implementation workflows
-**Status:** Emerging velocity — 4 merged PRs since 2026-03-20
+**Status:** Emerging velocity — rapid iteration in progress (through 2026-03-20T20:53Z)
 
 This repo represents the org's SvelteKit-based SaaS template offering, built to parallel the flagship React Router 7 template while exploring alternative JavaScript frameworks.
 
@@ -137,13 +139,14 @@ This repo represents the org's SvelteKit-based SaaS template offering, built to 
 - Build a library of framework variants for different developer preferences.
 - Ensure org schema supports multi-tenant SvelteKit apps.
 
-**Recent highlights (verified through 2026-03-20T02:38Z):**
+**Recent highlights (verified through 2026-03-20T20:53Z):**
 - **Testing (2026-03-20):** Vitest test suite infrastructure added for unit and integration testing.
 - **Test fixes (2026-03-20):** Related test-adjacent fixes applied across billing, auth, and routing components.
 - **Billing (2026-03-20):** Multi-plan pricing tiers implemented (Starter/Pro/Enterprise) with Stripe integration.
 - **Frontend (2026-03-20):** Tailwind CSS 4 styling, root layout structure for page organization.
 - **Auth (2026-03-20):** Auth middleware integrated for protected routes and role-based access control.
 - **Organization (2026-03-20):** Org schema migration added for multi-tenant support.
+- **AO agent routing (2026-03-20, 19:38–20:53Z):** Framework template rapid model-routing iteration in response to Claude rate limits (Sonnet limited through 2026-03-24). Iterative fallback via Haiku→Codex→Gemini→oai-runner. Resolved by 20:53Z with workflow gates removed. No code impact to template itself.
 
 ---
 
@@ -152,13 +155,15 @@ This repo represents the org's SvelteKit-based SaaS template offering, built to 
 **Repo:** `launchapp-nextjs`
 **Owner:** Shooksie
 **Who is doing the work:** AO-managed implementation workflows
-**Status:** Active — Phase 1 template development
+**Status:** Active — Phase 1 template development with emerging QA signal (through 2026-03-20T20:53Z)
 
 Next.js App Router-based SaaS template, completing parity with flagship template capabilities.
 
-**Recent highlights (verified 2026-03-20T03:34Z):**
+**Recent highlights (verified 2026-03-20T20:53Z):**
 - **Billing & Email (2026-03-20):** Billing and subscription email workflows integrated (PRs at 03:31Z, 03:34Z).
-- Aligns launchapp-nextjs with the flagship template's billing/email capabilities.
+- **Aligns launchapp-nextjs with the flagship template's billing/email capabilities.**
+- **AO agent routing (2026-03-20, 19:38–20:53Z):** Framework template rapid model-routing iteration in response to Claude rate limits (Sonnet limited through 2026-03-24). Iterative fallback via Haiku→Codex→Gemini→oai-runner. Resolved by 20:53Z with workflow gates removed. No code impact to template itself.
+- **Quality issue #14 (2026-03-20, 20:39:45Z):** "[QUALITY] Fix Biome lint config - .next directory not excluded" opened. Biome incorrectly scanning Next.js build output. Candidate for next sprint.
 
 ---
 
@@ -167,13 +172,14 @@ Next.js App Router-based SaaS template, completing parity with flagship template
 **Repo:** `launchapp-nuxt`
 **Owner:** Shooksie
 **Who is doing the work:** AO-managed implementation workflows
-**Status:** Active — Phase 1 template development
+**Status:** Active — Phase 1 template development with rapid iteration (through 2026-03-20T20:53Z)
 
 Nuxt 4-based SaaS template with privacy-first focus.
 
-**Recent highlights (verified 2026-03-20T03:10Z):**
+**Recent highlights (verified 2026-03-20T20:53Z):**
 - **Privacy & Compliance (2026-03-20):** Cookie consent and GDPR compliance work integrated (through 03:10Z).
-- Establishes privacy-first approach aligned with launchapp-nuxt's target market in EU.
+- **Establishes privacy-first approach aligned with launchapp-nuxt's target market in EU.**
+- **AO agent routing (2026-03-20, 19:38–20:53Z):** Framework template rapid model-routing iteration in response to Claude rate limits (Sonnet limited through 2026-03-24). Iterative fallback via Haiku→Codex→Gemini→oai-runner. Resolved by 20:53Z with workflow gates removed. No code impact to template itself.
 
 ---
 
