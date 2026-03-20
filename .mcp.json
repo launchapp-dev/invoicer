@@ -1,17 +1,8 @@
 {
   "mcpServers": {
     "ao": {
-      "args": [
-        "run",
-        "--manifest-path",
-        "/Users/samishukri/brain/crates/orchestrator-cli/Cargo.toml",
-        "--",
-        "--project-root",
-        "/Users/samishukri/brain",
-        "mcp",
-        "serve"
-      ],
-      "command": "cargo"
+      "command": "ao",
+      "args": ["--project-root", "/Users/samishukri/brain", "mcp", "serve"]
     }
   }
 }
