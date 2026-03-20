@@ -3,7 +3,7 @@
 **Repo**: `launchapp-dev/ao-cli`
 **Visibility**: Private
 **Language**: Rust
-**Last updated**: 2026-03-19 (very active)
+**Last updated**: 2026-03-20 (very active)
 
 ## Purpose
 
@@ -59,7 +59,11 @@ Recent commits show:
 - `baeeaea` moves PR review, code review, reconciler, and workflow-optimizer onto Codex GPT-5.4
 - Self-healing/failover logic from 2026-03-18 remains active under the new routing policy
 - Recent merged PRs also cover agent-runner process leak fixes, rustfmt cleanup, and a cargo test gate in CI
-- `7f43dfe` (latest, 2026-03-19): docs: document `replace_linked_architecture_entities` in `ao.task.update` (#58) — clarifies the parameter in the task mutation API surface
+- **2026-03-20 post-16:27Z merges (PRs #117-#119):**
+  - PR #117: DeepSeek routing and model provider fixes
+  - PR #118: Cargo test CI gate hardening for rust-workspace CI
+  - PR #119: Agent-runner process leak fix
+- `7f43dfe` (2026-03-19): docs: document `replace_linked_architecture_entities` in `ao.task.update` (#58) — clarifies the parameter in the task mutation API surface
 
 ## Workflow Direction (verified 2026-03-19)
 

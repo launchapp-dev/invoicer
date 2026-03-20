@@ -1,7 +1,7 @@
 # Organization Architecture
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T13:04:59Z).
-> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes 2026-03-20 updates through 13:04:59Z with post-12:43Z activity: design-system WCAG accessibility hardening (focus-visible ring, role=alert) + Next.js 14→16.2.0 docs upgrade; saas-template-launch-app-test billing endpoint expansion + CI/Docker hardening + package guides documentation + core test coverage. Earlier same-day updates: brain-reviewer and brain-pr-sweep agents for PR gating and continuous sweeping, ao-cli planner MCP crash fix + macOS codesign fix + bundled packs embedding, design-system Phase 4 completion + layout transitions + palettes page + landing/blog/error blocks, and launchapp-sveltekit Vitest test suite + pricing tiers & org schema migration.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T16:27:00Z).
+> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes 2026-03-20 updates through 16:27:00Z with post-13:17Z activity: ao-cli PRs #117-#119 (DeepSeek routing, cargo test gate, agent-runner leak fix); saas-template-launch-app-test PRs #361-#367 (Docker hardening, package export-map); design-system PR #132 (component dependency sync). Earlier same-day updates: brain-reviewer and brain-pr-sweep agents for PR gating and continuous sweeping, ao-cli planner MCP crash fix + macOS codesign fix + bundled packs embedding, design-system Phase 4 completion + layout transitions + palettes page + landing/blog/error blocks + accessibility hardening, and launchapp-sveltekit Vitest test suite + pricing tiers & org schema migration.
 
 ## Overview
 

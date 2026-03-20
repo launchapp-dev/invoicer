@@ -5,7 +5,7 @@
 **Visibility**: private
 **Status**: Active development (179 merged PRs in the last 7 days, multiple PRs per hour)
 **Created**: 2026-03-17
-**Last pushed**: 2026-03-20 (after PR #351 merge at 2026-03-20T13:02:54Z)
+**Last pushed**: 2026-03-20 (after PR #367 merge at 2026-03-20T13:53:13Z)
 
 ## Purpose
 
@@ -202,5 +202,7 @@ This repo is the primary development vehicle for the launchapp-lite product, wit
   - PR #355 (13:02:30Z): Duplicate ENV CI=true removed from Dockerfile (TASK-381)
   - PR #354 (13:02:36Z): Comprehensive package guides documented for ai, analytics, core, i18n, mcp, storage, typescript-config, ui-kit (TASK-380)
   - PR #351 (13:02:54Z): Test coverage added for @repo/core getRequiredEnv/getEnvWithDefault (TASK-371)
+- Post-13:17Z activity (Docker hardening & package export-map):
+  - PRs #361-#367 (13:17:55Z–13:53:13Z): Docker hardening enhancements and package export-map configuration improvements for better module resolution and dependency tree optimization
 
 Continuing active development with multiple automated tasks per hour and demonstrated improvements in billing surface, CI reliability, documentation, and test coverage.

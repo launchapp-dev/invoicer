@@ -1,7 +1,7 @@
 # Active Workstreams
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T13:04:59Z).
-> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T13:04:59Z, including post-12:43Z merged activity in design-system and saas-template-launch-app-test. Full 2026-03-20 update cycle verified for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, launchapp-nuxt, and brain.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T16:27:00Z).
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T16:27:00Z, including post-13:17Z merged activity across ao-cli (PRs #117-#119), saas-template-launch-app-test (PRs #361-#367), and design-system (PR #132). Full 2026-03-20 update cycle verified for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, launchapp-nuxt, and brain.
 
 ## Summary
 
@@ -41,6 +41,7 @@ This repo is no longer best described as a "test/staging" copy. It is the primar
 - **Billing API expansion (2026-03-20, post-12:43Z):** GET /api/billing/subscription endpoint added for subscription query (TASK-374).
 - **CI/Docker hardening (2026-03-20, 12:51:14Z–13:02:36Z):** Node.js version pinned to 20.18.3 in CI (TASK-382), duplicate ENV CI=true removed from Dockerfile (TASK-381).
 - **Documentation & testing (2026-03-20, 13:02:36Z–13:02:54Z):** Comprehensive package guides added for ai, analytics, core, i18n, mcp, storage, typescript-config, and ui-kit (TASK-380); test coverage for @repo/core getRequiredEnv/getEnvWithDefault utilities added (TASK-371).
+- **Docker hardening & package configuration (2026-03-20, 13:17:55Z–13:53:13Z):** PRs #361-#367 merged with Docker hardening enhancements and package export-map configuration improvements for better module resolution and dependency tree optimization.
 - **Earlier 2026-03-19 highlights:**
   - Email verification flow added post-registration for enhanced auth security.
   - Waitlist join flow moved out of `@repo/api` into a web action to reduce API/email coupling.
@@ -63,14 +64,15 @@ The repo is still finishing Phase 3/4 component coverage, but it is now also bei
 - Add formal lint/typecheck/CI gates to the AO delivery workflows.
 - Start design-token generation and monthly adoption reporting.
 
-**Recent highlights (verified through 2026-03-20T13:04:59Z):**
+**Recent highlights (verified through 2026-03-20T13:05:48Z):**
 - **Phase 4 completion (2026-03-20):** Timeline data block added (TASK-093) completing Phase 4 advanced patterns.
 - **CLI tooling (2026-03-20):** Design system CLI scaffolding tool added (TASK-094) for rapid component generation.
 - **Layout transitions (2026-03-20):** New animation utilities for route/page transitions completed.
 - **Documentation (2026-03-20):** Palettes documentation page added covering all design tokens and color systems.
 - **Page blocks (2026-03-20):** Landing page, blog, and error page composition blocks completed for e-commerce + marketing use.
 - **Accessibility hardening (2026-03-20, post-12:43Z):** NavigationMenuTrigger updated with focus-visible ring for WCAG 2.4.7 (TASK-134), warning variant role updated to "alert" for WCAG 4.1.3 (TASK-135).
-- **Docs infrastructure upgrade (2026-03-20, 13:04:59Z):** Storybook docs site upgraded from Next.js 14 to 16.2.0 for better compatibility and performance.
+- **Docs infrastructure upgrade (2026-03-20, 13:04:53Z):** Storybook docs site upgraded from Next.js 14 to 16.2.0 for better compatibility and performance.
+- **Component dependency sync (2026-03-20, 13:05:48Z):** PR #132 merged with component dependency synchronization and refinement.
 - **Distribution (2026-03-19-20):** Visual regression testing integrated with Chromatic for automated screenshot diffs.
 - **Distribution (2026-03-19-20):** Changelog automation set up with conventional commits and release-it for versioning.
 - **Distribution (2026-03-19-20):** NPM publishing pipeline via GitHub Actions for automated package releases.
@@ -95,19 +97,23 @@ The release train moved from self-healing failover work into a same-day workflow
 - Split task classes by model strengths instead of one default route.
 - Keep analytical/reconciliation phases on the provider best suited to code-critical judgment.
 
-**Recent highlights (verified through 2026-03-20T04:27Z):**
+**Recent highlights (verified through 2026-03-20T16:27:00Z):**
 - **v0.0.11 release (2026-03-19):** Completed and merged, followed by post-release stability improvements on 2026-03-20.
 - **Critical fixes (2026-03-20, 04:11Z-04:27Z):**
   - Fixed planner MCP crash preventing workflow state transitions (commit 04:11Z).
   - Fixed macOS codesign process for proper Darwin binary distribution (commit 04:19Z).
   - Embedded bundled packs into AO binary for offline pack access (commit 04:27Z).
-- **Post-release fixes (2026-03-20):**
+- **Post-release fixes (2026-03-20, through 04:27Z):**
   - Fixed failing daemon_run tests: notification delivery, selection source, task state change events (TASK-1040).
   - Aligned workflow YAML docs, parser, and validation; rejected unsupported authored keys (TASK-999).
   - Added fallback and pre-flight validation for session resume in agent-runner (TASK-1015).
   - Fixed orphan tracker data loss when cleanup removes the entire tracker file (TASK-990).
   - Added cargo test gate to rust-workspace-ci pull request checks (TASK-980).
   - Standardized task MCP input structs to use `id` field name across all task operations.
+- **Follow-up merges (2026-03-20, 16:27:00Z, PRs #117-#119):**
+  - PR #117: DeepSeek routing and model provider fixes for improved model selection
+  - PR #118: Cargo test CI gate hardening for rust-workspace CI robustness
+  - PR #119: Agent-runner process leak fix for stability in long-running daemon scenarios
 - **Model routing (2026-03-19):**
   - Features route to Claude Sonnet, bugfix/refactor to Codex GPT-5.4, UI to Gemini.
   - PR review, code review, reconciler, and workflow-optimizer all moved to Codex GPT-5.4.

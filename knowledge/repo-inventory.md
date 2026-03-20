@@ -1,7 +1,7 @@
 # Repository Inventory
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T13:04:59Z).
-> Snapshot: 113 repos in `launchapp-dev`; 25+ pushed in the last 30 days, 23 created since 2026-03-12, 15 public, 98 private, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-20 against live org metadata including 2026-03-20 update cycle through 13:04:59Z with post-12:43Z merged activity in design-system and saas-template-launch-app-test.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T16:27:00Z).
+> Snapshot: 113 repos in `launchapp-dev`; 25+ pushed in the last 30 days, 23 created since 2026-03-12, 15 public, 98 private, and 1 archived repo (`agent-orchestrator`). Verified with authenticated GitHub CLI on 2026-03-20 against live org metadata including 2026-03-20 update cycle through 16:27:00Z with post-13:17Z merged activity across ao-cli, saas-template-launch-app-test, and design-system.
 
 ## Notable Changes
 
@@ -16,9 +16,9 @@
 
 | Repo | Recent merged PR count | Current note |
 |---|---|---|
-| `saas-template-launch-app-test` | 200+ merged PRs since 2026-03-12 | Flagship template trunk/canary; 2FA/OTP auth expansion, billing hardening, Cloudflare deployment docs removed |
-| `design-system` | 80+ merged PRs since 2026-03-12 | Phase 4 complete with Timeline block & CLI scaffolding; Chromatic visual testing, NPM publishing pipeline, changelog automation |
-| `ao-cli` | 60+ merged PRs since 2026-03-12 | v0.0.11 release plus post-release stability improvements (daemon tests, workflow YAML alignment, orphan tracker fixes) |
+| `saas-template-launch-app-test` | 210+ merged PRs since 2026-03-12 | Flagship template trunk/canary; Docker hardening, package export-map improvements, comprehensive package documentation |
+| `design-system` | 82+ merged PRs since 2026-03-12 | Phase 4 complete with Timeline block & CLI scaffolding; accessibility hardening (WCAG 2.4.7, 4.1.3), Next.js 16 docs upgrade, component dependency sync |
+| `ao-cli` | 63+ merged PRs since 2026-03-12 | v0.0.11 release plus post-release stability (daemon tests, workflow YAML alignment, orphan tracker fixes); DeepSeek routing, cargo test gate, agent-runner leak fix |
 | `brain` | 58+ merged PRs since creation on 2026-03-19 | Structured data + MCP platform with PR review gating (brain-reviewer) and continuous sweep (brain-pr-sweep); knowledge-update workflows running continuously |
 | `launchapp-sveltekit` | 4 merged PRs since 2026-03-20 | Emerging SvelteKit template variant with multi-tier billing and org schema support |
 
