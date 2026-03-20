@@ -32,6 +32,12 @@ mcp_servers:
   railway:
     command: npx
     args: ["-y", "@railway/mcp-server"]
+  filesystem:
+    command: npx
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/samishukri/brain"]
+  obsidian:
+    command: npx
+    args: ["-y", "mcp-obsidian", "--vault", "/Users/samishukri/brain/knowledge"]
 
 agents:
   default:
