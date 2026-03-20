@@ -387,8 +387,8 @@ agents:
 
       Use ao.task.create and ao.queue.enqueue MCP tools.
       Do not commit or modify knowledge/ files other than logs — your only job is to observe, cache, dispatch, and log.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   product-ideator:
@@ -467,8 +467,8 @@ agents:
       Organize by: opportunities.md, pricing-analysis.md, roadmap.md
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl", "sequential-thinking"]
 
@@ -531,8 +531,8 @@ agents:
       Only make one or two improvements per run — small, testable changes.
       Commit changes with clear messages explaining what was improved and why.
       Do not add yourself as author or co-author.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
   fleet-manager:
@@ -686,8 +686,8 @@ agents:
       Generate 3-5 high-quality questions per run. Prefer depth over breadth.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   action-extractor:
@@ -721,8 +721,8 @@ agents:
       Generate thorough, specific action items. Vague actions are useless.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   architecture-diagrammer:
@@ -862,8 +862,8 @@ agents:
       and write "approved" or "rejected" next to each item in 5 minutes.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "sequential-thinking"]
 
   decision-processor:
@@ -884,8 +884,8 @@ agents:
 
       After processing, the cross-repo-executor can pick up approved items.
       Do not add yourself as author or co-author.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao"]
 
   template-syncer:
@@ -954,8 +954,8 @@ agents:
       - Always include the source action file path in task/PR descriptions
       - Check if a task/PR already exists for this action before creating duplicates
       Do not add yourself as author or co-author.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   brain-reconciler:
@@ -1174,8 +1174,8 @@ agents:
         Format: [ISO timestamp] area=<type> improvement=<description>
         Keep only the last 200 lines.
       Do not add yourself as author or co-author.
-    model: gpt-5.4
-    tool: codex
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
     mcp_servers: ["ao", "github"]
 
 phases:
