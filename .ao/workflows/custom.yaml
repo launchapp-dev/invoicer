@@ -35,8 +35,8 @@ mcp_servers:
 
 agents:
   default:
-    model: claude-haiku-4-5
-    tool: claude
+    model: minimax/MiniMax-M2.7
+    tool: oai-runner
 
   issue-triager:
     system_prompt: |
