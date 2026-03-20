@@ -1,11 +1,11 @@
 # Active Workstreams
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T06:07Z).
-> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T06:07Z, including the full 2026-03-20 update cycle for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, and launchapp-nuxt.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T12:43Z).
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T12:43Z, including the full 2026-03-20 update cycle for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, launchapp-nuxt, and brain.
 
 ## Summary
 
-As of 2026-03-20, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), plus emerging velocity in framework variants (`launchapp-sveltekit`, `launchapp-nextjs`, `launchapp-nuxt`). Key narrative shifts in 2026-03-20 cycle (through 06:07Z): ao-cli released v0.0.11 and stabilized post-release with planner MCP crash fix, macOS codesign fix, and bundled packs embedding; design-system completed Phase 4 with Timeline block, CLI scaffolding, layout transitions, palettes documentation, and landing/blog/error blocks; saas-template-launch-app-test expanded auth (2FA/OTP), billing capabilities, and added @ai-sdk/mistral provider support; launchapp-sveltekit added Vitest test suite plus multi-tier pricing and org schema migration; launchapp-nextjs integrated billing/subscription email workflows; launchapp-nuxt added cookie consent and GDPR compliance. All products are now AO-native with continuous delivery pipelines.
+As of 2026-03-20, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), plus emerging velocity in framework variants (`launchapp-sveltekit`, `launchapp-nextjs`, `launchapp-nuxt`). Key narrative shifts in 2026-03-20 cycle (through 12:43Z): brain repo added PR review gating (brain-reviewer) and continuous PR sweep (brain-pr-sweep) to prevent incomplete work and handle conflicts; ao-cli released v0.0.11 and stabilized post-release with planner MCP crash fix, macOS codesign fix, and bundled packs embedding; design-system completed Phase 4 with Timeline block, CLI scaffolding, layout transitions, palettes documentation, and landing/blog/error blocks; saas-template-launch-app-test expanded auth (2FA/OTP), billing capabilities, and added @ai-sdk/mistral provider support; launchapp-sveltekit added Vitest test suite plus multi-tier pricing and org schema migration; launchapp-nextjs integrated billing/subscription email workflows; launchapp-nuxt added cookie consent and GDPR compliance. All products are now AO-native with continuous delivery pipelines.
 
 ---
 
@@ -170,23 +170,24 @@ Nuxt 4-based SaaS template with privacy-first focus.
 
 **Repo:** `brain`
 **Owner:** Shooksie
-**Who is doing the work:** conductor + knowledge-curator/product-doc-writer/toolmaker/reviewer workflows
-**Status:** Extremely active — 55 merged PRs since the repo was created on 2026-03-19
+**Who is doing the work:** conductor + 20-agent roster (knowledge-curator/product-doc-writer/toolmaker/reviewer/brain-reviewer/brain-pr-sweep and others)
+**Status:** Extremely active — 58+ merged PRs since the repo was created on 2026-03-19
 
-The brain repo moved beyond markdown curation into structured data + typed MCP access, and then into explicit operator workflows, on 2026-03-19.
+The brain repo moved beyond markdown curation into structured data + typed MCP access, and then into explicit operator workflows, on 2026-03-19. On 2026-03-20, it added a dedicated PR review layer to prevent premature task completion and continuous PR sweep to handle conflicts and stale work.
 
 **Current focus:**
-- Keep the knowledge base aligned with same-day org changes.
+- Keep the knowledge base aligned with same-day org changes (running knowledge-update workflows continuously).
 - Add machine-readable access paths for repo and product data.
 - Add operator workflows for quality, decisions, and cross-repo execution.
 - Stabilize conductor scheduling and writing workflows.
+- Prevent incomplete/conflicting work from being marked done (new brain-reviewer gate).
 
-**Recent highlights:**
-- SQLite-backed structured data layer added.
-- `brain-knowledge-mcp` and `brain-products-mcp` servers added for typed access to knowledge/product data.
-- Repo catalog expanded to cover previously undocumented repos.
-- Conductor deduplication, stale-task cleanup, and idempotent PR phases were strengthened.
-- `Brain v2` added `quality-audit`, `decision-pipeline`, and `cross-repo-execute` workflows, and the conductor now runs every 10 minutes instead of every 5.
+**Recent highlights (verified through 2026-03-20T12:43Z):**
+- **PR review gating (2026-03-20, 06:26Z):** `brain-reviewer` agent added to verify all PRs match task requirements before merge; prevents marking tasks done if diff is incomplete or knowledge files are placeholders.
+- **Continuous PR sweeping (2026-03-20, 06:28Z):** `brain-pr-sweep` workflow added, runs every 3 minutes, handles conflicting PRs (queue rebase), change requests (queue rework), and reconciles stale task states.
+- **ao-cli quality audit (2026-03-20):** Post-release stability tracking for ao-cli v0.0.11 with crash fix, macOS codesign fix, and bundled packs.
+- **LaunchPad SDK catalog refresh (2026-03-20):** Documented SDK consistency initiative and npm publishing milestones.
+- Earlier highlights: SQLite-backed data layer, `brain-knowledge-mcp` and `brain-products-mcp` servers, conductor deduplication, quality-audit/decision-pipeline/cross-repo-execute workflows.
 
 ---
 

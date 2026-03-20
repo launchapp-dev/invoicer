@@ -5,7 +5,7 @@ The org-wide AI workforce command center for launchapp-dev. This repository IS t
 
 ## Repository
 - **Repo**: launchapp-dev/brain (private)
-- **Last Pushed**: 2026-03-19 (most recently active repo in the org)
+- **Last Pushed**: 2026-03-20 (most recently active repo in the org)
 
 ## Structure
 ```
@@ -40,10 +40,28 @@ The `.ao/workflows/custom.yaml` defines the full agent roster and workflow pipel
 - firecrawl — web scraping
 - playwright — browser automation
 
-### Agent Roster
+### Agent Roster (as of 2026-03-20)
 - **default** — claude-sonnet-4-6, general purpose
-- **issue-triager** — scans all org repos for new/unlabeled issues, assigns priority (P0–P3) and category labels, creates AO tasks for P0/P1
-- **pr-reviewer-org** — reviews open PRs across all repos for code quality, correctness, and security
+- **planner** — task planning and decomposition
+- **triager** — issue triage and priority assignment
+- **reviewer** — code and PR review
+- **doc-auditor** — documentation quality and consistency
+- **security-monitor** — security scanning and vulnerability detection
+- **sdk-auditor** — SDK API consistency and quality
+- **release-coordinator** — release management and coordination
+- **impact-analyzer** — change impact assessment
+- **stale-detector** — identifies stale tasks and knowledge
+- **competitive-researcher** — competitive landscape analysis
+- **product-cataloger** — product documentation and cataloging
+- **product-doc-writer** — product documentation authoring
+- **toolmaker** — utility script development
+- **knowledge-curator** — knowledge base maintenance and updates
+- **workflow-optimizer** — workflow performance and reliability
+- **gtm-strategist** — go-to-market strategy and planning
+- **product-ideator** — new product and feature ideation
+- **revenue-analyst** — revenue and monetization analysis
+- **brain-reviewer** — PR review and merge gating (NEW 2026-03-20) — reviews all open PRs in brain repo, verifies diff matches requirements, prevents premature task completion
+- **brain-pr-sweep** — continuous PR sweeper (NEW 2026-03-20) — runs every 3 minutes, handles conflicting PRs, change requests, and stale PR reconciliation
 
 ### Workflow Pipelines
 - **catalog-products** — catalogs all launchapp-dev repos, documents knowledge base, commits changes
@@ -51,9 +69,9 @@ The `.ao/workflows/custom.yaml` defines the full agent roster and workflow pipel
 - **action-extractor** — reviews answered questions, extracts concrete action items with priority/effort scoring
 - **planner** — queues and coordinates the above workflows
 
-## Knowledge Base (as of 2026-03-19)
+## Knowledge Base (as of 2026-03-20)
 - **products/**: Complete documentation for all 7 product lines
-- **repos/**: Per-repo docs for 61 repos
+- **repos/**: Per-repo docs for 61+ repos
 - **ideas/**: 93 product ideas across 4 rounds (`new-products.md`, `feature-proposals.md`, `integrations.md`, `overview.md`)
 - **questions/**: 51+ strategic questions across 6 rounds
 - **actions/**: 34 action items extracted from strategic questions
@@ -61,6 +79,12 @@ The `.ao/workflows/custom.yaml` defines the full agent roster and workflow pipel
 - **revenue/**: Monetization analysis refreshed to incorporate 93-idea portfolio
 - **competitive/**: Competitor landscape research
 - **gtm/**: GTM strategies for LaunchPad, AO, Better Auth, LaunchApp Templates
+
+## Recent Updates (2026-03-20)
+- **brain-reviewer agent** (2026-03-20 06:26Z): New dedicated PR review agent that verifies diff matches task requirements, prevents task completion until PR is merged, requests changes if work is incomplete
+- **brain-pr-sweep workflow** (2026-03-20 06:28Z): New continuous sweep running every 3 minutes to handle conflicting/requested-changes PRs, merge ready-to-go PRs, and reconcile task states
+- **ao-cli quality audit** (2026-03-20 04:27Z+): Post-release stability improvements including planner MCP crash fix, macOS codesign fix, bundled packs embedding
+- **LaunchPad SDK catalog refresh** (2026-03-20): Documented npm publishing milestones and SDK consistency tracking
 
 ## Relationship to Other Products
 - Orchestrates work across all launchapp-dev repos using AO CLI

@@ -1,7 +1,7 @@
 # Organization Architecture
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T06:07Z).
-> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes 2026-03-20 updates through 06:07Z: ao-cli planner MCP crash fix + macOS codesign fix + bundled packs embedding, design-system Phase 4 completion + layout transitions + palettes page + landing/blog/error blocks, saas-template-launch-app-test billing & auth expansion + @ai-sdk/mistral + Docker CI fixes, and launchapp-sveltekit Vitest test suite + pricing tiers & org schema migration.
+> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T12:43Z).
+> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes 2026-03-20 updates through 12:43Z: brain-reviewer and brain-pr-sweep agents for PR gating and continuous sweeping, ao-cli planner MCP crash fix + macOS codesign fix + bundled packs embedding, design-system Phase 4 completion + layout transitions + palettes page + landing/blog/error blocks, saas-template-launch-app-test billing & auth expansion + @ai-sdk/mistral + Docker CI fixes, and launchapp-sveltekit Vitest test suite + pricing tiers & org schema migration.
 
 ## Overview
 
@@ -203,11 +203,14 @@ Rust-based AI agent orchestrator CLI. Powers the org's own AI workforce automati
 
 ### brain (this repo)
 
-Org-wide AI workforce command center. Runs on AO CLI. Operating at scale as of 2026-03-19 with 55 merged PRs since creation.
+Org-wide AI workforce command center. Runs on AO CLI. Operating at scale as of 2026-03-20 with 58+ merged PRs since creation (2026-03-19).
 
-**Agents:** planner, triager, reviewer, doc-auditor, security-monitor, sdk-auditor, release-coordinator, impact-analyzer, stale-detector, competitive-researcher, product-cataloger, product-doc-writer, toolmaker, knowledge-curator, workflow-optimizer, gtm-strategist, product-ideator, revenue-analyst
+**Agents (20-strong roster):** planner, triager, reviewer, doc-auditor, security-monitor, sdk-auditor, release-coordinator, impact-analyzer, stale-detector, competitive-researcher, product-cataloger, product-doc-writer, toolmaker, knowledge-curator, workflow-optimizer, gtm-strategist, product-ideator, revenue-analyst, **brain-reviewer** (NEW 2026-03-20), **brain-pr-sweep** (NEW 2026-03-20)
 
-**Scheduled:** Conductor runs every 10 minutes, with additional weekly/daily schedules for decision-pipeline and question-generation workflows
+**Scheduled:**
+- Conductor runs every 10 minutes
+- brain-pr-sweep runs every 3 minutes (NEW 2026-03-20)
+- Additional weekly/daily schedules for decision-pipeline and question-generation workflows
 
 **MCP servers:** context7, sequential-thinking, github, firecrawl, playwright, `brain-knowledge-mcp`, `brain-products-mcp`
 
@@ -215,6 +218,7 @@ Org-wide AI workforce command center. Runs on AO CLI. Operating at scale as of 2
 - Structured SQLite-backed data layer and MCP servers were added on 2026-03-19 for typed knowledge and product access.
 - The conductor was tightened with deduplication, stale-task cleanup, and idempotent PR phases.
 - `brain` now has explicit operator workflows for repo quality audits, decision batching, and cross-repo execution of approved actions.
+- **NEW (2026-03-20):** PR review gating layer (brain-reviewer) prevents premature task completion and ensures diff quality before merge. Continuous PR sweeper (brain-pr-sweep) handles conflicts, change requests, and stale PR reconciliation every 3 minutes.
 
 **Architecture diagrams:** 32 diagrams in `knowledge/architecture/`, last verified 2026-03-19
 
