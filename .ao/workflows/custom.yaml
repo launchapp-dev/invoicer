@@ -44,8 +44,8 @@ mcp_servers:
 
 agents:
   default:
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
 
   issue-triager:
     system_prompt: |
@@ -61,8 +61,8 @@ agents:
       Use `gh search issues --owner launchapp-dev --state open` to find issues.
       Use `gh issue edit --repo <repo> --add-label <label>` to apply labels.
       Focus on issues from the last 24 hours without labels.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   pr-reviewer-org:
@@ -85,8 +85,8 @@ agents:
       8. If CI checks failing: request changes explaining what failed
 
       Never merge PRs with failing CI. Always check CI before merging.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   doc-auditor:
@@ -104,8 +104,8 @@ agents:
       Use `gh api repos/launchapp-dev/<repo>/contents/<file>` to check file existence.
       Use `gh api repos/launchapp-dev/<repo>/commits?per_page=5` to check recent activity.
       Create issues with `[DOCS]` prefix in repos with critically stale documentation.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   security-monitor:
@@ -120,8 +120,8 @@ agents:
       Aggregate findings by severity (critical, high, medium, low).
       Report critical and high severity findings.
       Create AO tasks for critical CVEs that need immediate attention.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   sdk-auditor:
@@ -140,8 +140,8 @@ agents:
 
       Produce a consistency matrix. Create issues with `[SDK-CONSISTENCY]` prefix
       in repos that deviate from established patterns.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "context7"]
 
   release-coordinator:
@@ -156,8 +156,8 @@ agents:
 
       Use `gh release list --repo launchapp-dev/<repo> --limit 1` to find latest releases.
       Report findings grouped by urgency.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   impact-analyzer:
@@ -174,8 +174,8 @@ agents:
       4. Create warning issues with `[IMPACT]` prefix in affected repos
 
       Use sequential-thinking MCP for complex dependency chain analysis.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   stale-detector:
@@ -191,8 +191,8 @@ agents:
       - Stale PRs: leave a comment asking for status update
       - Zombie issues: remove assignment, add `needs-triage` label
       - Report findings as a summary
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   competitive-researcher:
@@ -216,8 +216,8 @@ agents:
       Write findings to knowledge/competitive/ directory in the brain repo.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl", "playwright"]
 
@@ -245,8 +245,8 @@ agents:
       Create files: overview.md, dependency-graph.md, and one file per product line.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "context7"]
 
   product-doc-writer:
@@ -265,8 +265,8 @@ agents:
       Structure docs by product line with consistent formatting.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     web_search: true
     mcp_servers: ["ao", "github", "context7", "firecrawl"]
 
@@ -396,8 +396,8 @@ agents:
 
       Use ao.task.create and ao.queue.enqueue MCP tools.
       Do not commit or modify knowledge/ files other than logs — your only job is to observe, cache, dispatch, and log.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-sonnet-4-6
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   product-ideator:
@@ -432,8 +432,8 @@ agents:
       Organize by: new-products.md, feature-proposals.md, integrations.md
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl", "sequential-thinking"]
 
@@ -476,8 +476,8 @@ agents:
       Organize by: opportunities.md, pricing-analysis.md, roadmap.md
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl", "sequential-thinking"]
 
@@ -503,8 +503,8 @@ agents:
       Write GTM plans to knowledge/gtm/ directory.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     web_search: true
     mcp_servers: ["ao", "github", "firecrawl"]
 
@@ -540,8 +540,8 @@ agents:
       Only make one or two improvements per run — small, testable changes.
       Commit changes with clear messages explaining what was improved and why.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   fleet-manager:
@@ -590,8 +590,8 @@ agents:
       - Keep only the last 500 lines
       - For each managed repo, pull latest before health check: `git -C repos/<name> pull origin main`
       - Do not add yourself as author or co-author in any commits
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "railway"]
 
   repo-provisioner:
@@ -631,8 +631,8 @@ agents:
       - Add a clear description to every repo
       - Update knowledge/repos/<name>.md after creating a repo
       - Do not add yourself as author or co-author in any commits
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   toolmaker:
@@ -657,8 +657,8 @@ agents:
       - Include a brief usage comment at the top of each tool
       - Commit with descriptive messages
       - Do not add yourself as author or co-author
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "context7"]
 
   question-generator:
@@ -695,8 +695,8 @@ agents:
       Generate 3-5 high-quality questions per run. Prefer depth over breadth.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   action-extractor:
@@ -730,8 +730,8 @@ agents:
       Generate thorough, specific action items. Vague actions are useless.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   architecture-diagrammer:
@@ -769,8 +769,8 @@ agents:
 
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   knowledge-curator:
@@ -793,8 +793,8 @@ agents:
 
       Commit changes to the brain repo with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "context7"]
 
   quality-runner:
@@ -840,8 +840,8 @@ agents:
 
       CRITICAL: You must actually RUN commands, not just read files.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   decision-packager:
@@ -871,8 +871,8 @@ agents:
       and write "approved" or "rejected" next to each item in 5 minutes.
       Commit changes with descriptive messages.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "sequential-thinking"]
 
   decision-processor:
@@ -893,8 +893,8 @@ agents:
 
       After processing, the cross-repo-executor can pick up approved items.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao"]
 
   template-syncer:
@@ -958,8 +958,8 @@ agents:
       - Check ao.task.list in each repo before creating duplicate tasks
       - Max 5 PRs per run to avoid flooding
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   cross-repo-executor:
@@ -990,8 +990,8 @@ agents:
       - Always include the source action file path in task/PR descriptions
       - Check if a task/PR already exists for this action before creating duplicates
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github", "sequential-thinking"]
 
   brain-reconciler:
@@ -1025,8 +1025,8 @@ agents:
       - Log findings to knowledge/logs/reconciler.log
         Format: [ISO timestamp] gap=<type> original=<task-id> new=<task-id>
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
   brain-reviewer:
@@ -1243,8 +1243,8 @@ agents:
         Format: [ISO timestamp] area=<type> improvement=<description>
         Keep only the last 200 lines.
       Do not add yourself as author or co-author.
-    model: kimi-code/kimi-for-coding
-    tool: oai-runner
+    model: claude-haiku-4-5
+    tool: claude
     mcp_servers: ["ao", "github"]
 
 phases:
@@ -2267,7 +2267,7 @@ workflows:
 
 schedules:
   - id: conductor
-    cron: "*/5 * * * *"
+    cron: "*/20 * * * *"
     workflow_ref: conductor
     enabled: true
 
