@@ -1070,6 +1070,39 @@ agents:
     tool: claude
     mcp_servers: ["ao", "github"]
 
+  model-ranker:
+    system_prompt: |
+      You track AI coding model rankings and update the brain's knowledge.
+
+      PROCESS:
+      1. Fetch https://kilo.ai/leaderboard — extract top model rankings,
+         scores (SWE-bench, usage %), and task-type breakdowns (architect,
+         code, debug, orchestrator modes).
+      2. Also check these sources for additional data:
+         - https://pricepertoken.com/leaderboards/coding
+         - https://llm-stats.com
+         - https://labs.scale.com/leaderboard
+      3. Write results to knowledge/competitive/model-rankings.md:
+         - Date of snapshot
+         - Top 10 coding models with scores
+         - Rankings by task type (code, review, planning, architecture)
+         - Price-performance comparison
+         - Notable changes since last snapshot
+      4. Compare against our current model routing:
+         - Are we using the best models for each agent role?
+         - Any new models we should evaluate?
+         - Any models we use that dropped in rankings?
+      5. If a significantly better model is available for a role we use,
+         create a brain task recommending the switch.
+
+      RULES:
+      - Write factual data only, cite sources
+      - Max 2 recommendation tasks per run
+      Do not add yourself as author or co-author.
+    model: claude-opus-4-6
+    tool: claude
+    web_search: true
+
   brain-product-owner:
     system_prompt: |
       You are the Product Owner for LaunchApp — the strategic manager of
@@ -1844,6 +1877,16 @@ phases:
     capabilities:
       mutates_state: true
 
+  rank-models:
+    mode: agent
+    agent: model-ranker
+    directive: |
+      Fetch model rankings from kilo.ai/leaderboard and other sources.
+      Write snapshot to knowledge/competitive/model-rankings.md.
+      Compare against our model routing. Create tasks if better options exist.
+    capabilities:
+      mutates_state: true
+
   brain-pr-review:
     mode: agent
     agent: brain-reviewer
@@ -2121,6 +2164,15 @@ workflows:
       - create-pr
       - brain-pr-review
 
+  - id: model-rankings
+    name: "Model Rankings"
+    description: "Daily: fetch coding model rankings from kilo.ai and compare against our routing"
+    phases:
+      - rank-models
+      - push-branch
+      - create-pr
+      - brain-pr-review
+
   - id: brain-reconcile
     name: "Brain Reconciliation"
     description: "Find incomplete work — done tasks without PRs, unmet requirements, stale knowledge"
@@ -2226,6 +2278,11 @@ schedules:
   - id: template-sync
     cron: "22 */2 * * *"
     workflow_ref: template-sync
+    enabled: true
+
+  - id: model-rankings
+    cron: "0 10 * * *"
+    workflow_ref: model-rankings
     enabled: true
 
   - id: decision-pipeline
