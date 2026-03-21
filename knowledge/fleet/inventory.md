@@ -21,8 +21,11 @@ All AO-managed repos and their daemon status. Maintained by the fleet-manager ag
 
 ## Status
 
-TASK-149 fixes verified complete. Fleet recovery completed 2026-03-20T22:30Z:
-- 5 previously unhealthy repos (ao, ao-skills, launchapp.dev, launchpad-baas, agent-orchestrator) daemons started and verified healthy
-- 3 stopped daemons (ao-cli, design-system, saas-template-launch-app-test) restarted and verified healthy
-- All 12/12 daemons now running and healthy
-- Workflow configs valid in all repos (verified via ao workflow config validate)
+**CRITICAL UPDATE (2026-03-21T02:05Z)**: Fleet-scan phase (2026-03-20T23:56Z) identified regressions after TASK-149:
+- **10/12 daemons RUNNING + HEALTHY**: brain, ao, ao-skills, design-system, launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit, launchapp.dev, launchpad-baas, agent-orchestrator
+- **2/12 DOWN (NEW)**:
+  - ao-cli: STOPPED (workflow execution failures during scheduled runs)
+  - saas-template-launch-app-test: CRASHED (workflow runner failures, tasks escalated)
+- **Root causes identified**: Workflow config references undefined sub-workflows (TASK-216); scheduled workflows failing on execution
+- **Impact**: HIGH — ao-cli and saas-template-test cannot dispatch own work; Phase 2 template repos (nextjs, nuxt, sveltekit) all healthy and operational
+- **Recovery in progress**: TASK-216 (workflow config fix) and TASK-206 (daemon recovery) queued for immediate dispatch

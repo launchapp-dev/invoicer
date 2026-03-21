@@ -18,3 +18,6 @@ Tracks feature propagation across launchapp-nextjs, launchapp-nuxt, and launchap
 | 2026-03-20 | launchapp-nextjs | ao/task 013 | PACKAGE (stripe provider, email) | launchapp-nuxt, launchapp-sveltekit | TASK-174, TASK-168 |
 | 2026-03-20 | launchapp-nuxt | ao/task 020 | UI (cookie banner) | launchapp-nextjs, launchapp-sveltekit | TASK-179, TASK-170 |
 | 2026-03-20 | launchapp-sveltekit | email-preview | UI (dev route) | launchapp-nextjs, launchapp-nuxt | TASK-180, TASK-176 |
+| 2026-03-21 | launchapp-nextjs | #39 | PACKAGE (database seeding) | launchapp-sveltekit | TASK-204 |
+| 2026-03-21 | launchapp-nextjs | #9 | PACKAGE (@repo/api-hooks) | launchapp-nuxt, launchapp-sveltekit | TASK-229, TASK-205 |
+| 2026-03-21 | launchapp-sveltekit | #12 | UI (email preview dev route) | launchapp-nextjs, launchapp-nuxt | TASK-211, TASK-230 |

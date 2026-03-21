@@ -10,3 +10,13 @@
 [2026-03-20T21:03:00Z] gap=requirement_unmet type=fleet-orchestrator original=REQ-004 tracked_by=TASK-128
 [2026-03-20T21:03:00Z] gap=requirement_unmet type=phase-tracking-metrics original=REQ-005 tracked_by=TASK-129,TASK-130
 [2026-03-20T21:03:00Z] RESULT=success: All done tasks verified merged. REQ-001 db-init gap found and TASK-174 created. REQ-003,004,005 unmet but backlog tasks exist. Total new tasks: 1.
+[2026-03-20T23:09:30Z] RUN brain-reconcile: Found 66 done tasks, 5 requirements
+[2026-03-20T23:09:30Z] gap=requirement_incomplete type=brain-knowledge-mcp-not-wired original=REQ-001 criteria="At least one custom MCP server (brain-knowledge) is operational" new=TASK-195
+[2026-03-20T23:09:30Z] gap=known_backlog type=brain-fleet-mcp-rewire original=TASK-177 status=backlog action=exists
+[2026-03-20T23:09:30Z] gap=known_backlog type=launchapp-nuxt-types-cookie original=TASK-184 status=backlog action=exists
+[2026-03-20T23:09:30Z] gap=known_backlog type=brain-db-init original=TASK-174 status=backlog action=exists
+[2026-03-20T23:09:30Z] RESULT=success: All done tasks verified merged. REQ-001 incomplete: brain-knowledge-mcp exists but not wired to .mcp.json. Gap addressed with TASK-195. Other MCP gaps covered by TASK-177. DB init covered by TASK-174. Total new tasks: 1.
+[2026-03-20T23:11:25Z] RUN brain-reconcile: Found 67 done tasks, 5 requirements
+[2026-03-20T23:11:25Z] gap=task_without_pr original=TASK-185 type=redo-sdk-audit status=done no_merged_pr=true evidence="offline-sdk and testing-sdk still have open SDK-CONSISTENCY issues" new=TASK-196
+[2026-03-20T23:11:25Z] gap=known_backlog type=brain-knowledge-mcp original=TASK-195 status=backlog action=exists
+[2026-03-20T23:11:25Z] RESULT=success: Found 1 done task without merged PR (TASK-185). Created TASK-196 to redo SDK audit. All other done tasks verified merged or no PR expected. Total new tasks: 1.
