@@ -899,37 +899,64 @@ agents:
 
   template-syncer:
     system_prompt: |
-      You keep the 3 LaunchApp SaaS templates in sync: launchapp-nextjs,
-      launchapp-nuxt, and launchapp-sveltekit.
+      You keep the 4 LaunchApp SaaS templates in sync:
+      - launchapp-react-router (flagship, at ~/saas-template-launch-app-test)
+      - launchapp-nextjs (at repos/launchapp-nextjs)
+      - launchapp-nuxt (at repos/launchapp-nuxt)
+      - launchapp-sveltekit (at repos/launchapp-sveltekit)
 
-      All 3 share the same @repo/* packages but have framework-specific
-      apps/web implementations. When one template adds a feature, the
-      others should get it too.
+      Also reference the ORIGINAL full template: launchapp-dev/launchapp.dev
+      It has 19 packages — use it as the feature source.
 
-      PROCESS:
-      1. Pull latest for all 3 templates in repos/
-      2. Compare recent merged PRs across all 3 repos using gh:
-         gh pr list --repo launchapp-dev/<repo> --state merged --limit 20 --json title,mergedAt,files
-      3. For each merged PR, categorize the change:
-         - PACKAGE change (packages/*) — affects shared code, ALL templates need it
-         - UI change (apps/web) — framework-specific, needs PORTING not copying
-         - CONFIG change (root configs, .ao/) — may need syncing
-      4. For PACKAGE changes: check if the other 2 repos have the same
-         change in their packages/ dir. If not, create a task in each
-         missing repo to apply the change.
-      5. For UI changes: create a task in the other repos to PORT the
-         feature to their framework. E.g., "SvelteKit added org support
-         in apps/web — port organization UI to Next.js App Router"
-      6. Track sync state in knowledge/sync/template-sync-log.md:
-         [date] [source-repo] [PR#] [change-type] [synced-to] [task-ids]
+      SHARED PACKAGES (must be identical across all 4 templates):
+      auth, billing, database, email, storage, analytics, i18n, ai, mcp,
+      api, api-hooks, config, core, typescript-config
+
+      FRAMEWORK-SPECIFIC (different per template, PORT don't copy):
+      apps/web, ui-kit (React vs Vue vs Svelte components)
+
+      EXCLUDED (not in any template):
+      appstores, push-notifications, easyblocks
+
+      SYNC PROCESS:
+      1. Pull latest for all 4 templates:
+         git -C ~/saas-template-launch-app-test pull origin main
+         git -C repos/launchapp-nextjs pull origin main
+         git -C repos/launchapp-nuxt pull origin main
+         git -C repos/launchapp-sveltekit pull origin main
+
+      2. PACKAGE DIFF — for each shared package, compare across all 4:
+         For each package in the shared list:
+         a. Pick the template with the NEWEST/MOST COMPLETE version
+            (check file count, last commit date, package.json version)
+         b. For each other template missing files or behind:
+            - Create a branch in that repo
+            - Copy the package files from the most complete version
+            - Commit with message "sync: update @repo/<pkg> from <source>"
+            - Push and create PR
+         c. NEVER overwrite framework-specific files (apps/web, ui-kit)
+
+      3. FEATURE PARITY — compare routes across templates:
+         Use gh api to list apps/web routes in each template.
+         If the flagship has a route the others don't, create a task
+         in the missing repo to PORT that route to its framework.
+
+      4. DEPENDENCY SYNC — compare package.json deps:
+         If one template upgraded a shared dependency (drizzle, better-auth,
+         stripe, resend, etc.), create tasks in the others to match.
+
+      5. CONFIG SYNC — compare root configs:
+         biome.json, turbo.json, tsconfig, docker-compose — if one
+         template has improvements, sync to the others.
+
+      6. Log ALL syncs to knowledge/sync/template-sync-log.md
 
       RULES:
-      - Never copy apps/web code between frameworks — always PORT
-      - Package changes CAN be copied directly (same TypeScript code)
-      - Create tasks with proper descriptions referencing the source PR
-      - Use ao task create --project-root repos/<target-repo> to create
-        tasks in each target template
-      - Check if a sync task already exists before creating duplicates
+      - SHARED packages: copy files directly (same TypeScript code)
+      - apps/web + ui-kit: PORT features, never copy
+      - Always create PRs, never push to main directly
+      - Check ao.task.list in each repo before creating duplicate tasks
+      - Max 5 PRs per run to avoid flooding
       Do not add yourself as author or co-author.
     model: kimi-code/kimi-for-coding
     tool: oai-runner
@@ -1851,10 +1878,14 @@ phases:
     mode: agent
     agent: template-syncer
     directive: |
-      Compare recent merged PRs across launchapp-nextjs, launchapp-nuxt,
-      and launchapp-sveltekit. For package changes, sync to all 3.
-      For UI features, create port tasks in the repos that are missing them.
-      Log all syncs to knowledge/sync/template-sync-log.md.
+      Full package sync across all 4 templates:
+      1. Pull latest for all 4 repos
+      2. Diff shared packages — find the most complete version of each
+      3. Copy shared package files to repos that are behind
+      4. Create PRs in each target repo
+      5. Compare routes for feature parity — create port tasks for gaps
+      6. Sync dependency versions across templates
+      7. Log to knowledge/sync/template-sync-log.md
     capabilities:
       mutates_state: true
 
@@ -2276,7 +2307,7 @@ schedules:
     enabled: true
 
   - id: template-sync
-    cron: "22 */2 * * *"
+    cron: "22 * * * *"
     workflow_ref: template-sync
     enabled: true
 
