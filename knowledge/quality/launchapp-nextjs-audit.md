@@ -13,11 +13,11 @@ typecheck_status: pass
 
 | Command | Status | Duration |
 |---------|--------|----------|
-| `pnpm install` | ✅ PASS | 0.27s |
-| `pnpm build` | ✅ PASS | 23.4s |
-| `pnpm typecheck` | ✅ PASS | 3.1s |
-| `pnpm test` | ✅ PASS (placeholder) | 0.2s |
-| `pnpm lint` | ❌ FAIL | 64.5s |
+| `pnpm install` | ✅ PASS | 0.9s |
+| `pnpm build` | ✅ PASS | 32.3s |
+| `pnpm typecheck` | ✅ PASS | 13.2s |
+| `pnpm test` | ✅ PASS (placeholder) | 0.3s |
+| `pnpm lint` | ❌ FAIL | 68.3s |
 
 ## Detailed Findings
 
@@ -26,7 +26,7 @@ typecheck_status: pass
 - 14 tasks executed, 13 cached, 1 cache miss (`@repo/web`)
 - Next.js 15.5.14 compiled successfully
 - Warning: Multiple lockfiles detected (root + detected another in user home)
-- 22 routes generated (16 static, 6 dynamic)
+- 16 routes generated (9 static, 7 dynamic)
 
 ### Typecheck (PASS)
 - All 26 typecheck tasks passed
@@ -39,11 +39,11 @@ typecheck_status: pass
 ### Lint (FAIL)
 - Biome exits with code 1
 - **Root cause**: `biome.json` does not exclude `.next/` build output directory
-- 16,741 formatting errors from minified build artifacts in `.next/`
-- 165 errors in actual source code:
-  - Formatting inconsistencies (imports, JSX multiline wrapping)
-  - 1 unused import: `Button` in `apps/web/src/app/dashboard/billing/page.tsx`
-  - 1 `<img>` usage instead of `next/image` in `apps/web/src/app/dashboard/settings/security/page.tsx`
+- 16,892 errors from minified build artifacts in `.next/` and JSON formatting issues
+- Actual source code issues:
+  - Import sorting issues in `packages/ui-kit/src/types/index.ts`
+  - Import sorting issues in `packages/ui-kit/src/utils/cn.ts`
+  - JSON formatting issues in `tsconfig.json` files across packages
 
 ## Configuration Issue
 
@@ -86,8 +86,8 @@ typecheck_status: pass
 
 ### Action Items
 1. **[QUALITY] Add `.next/` exclusion to biome.json** - Fixes 16,000+ spurious lint errors from build output
-2. **Remove unused `Button` import** in `apps/web/src/app/dashboard/billing/page.tsx:4`
-3. **Replace `<img>` with `<Image />`** in `apps/web/src/app/dashboard/settings/security/page.tsx:347`
+2. **Run `pnpm lint:fix`** to auto-fix import sorting in `packages/ui-kit/src/`
+3. **Run `pnpm lint:fix`** to auto-fix JSON formatting in `tsconfig.json` files
 4. **Consider adding actual tests** - Current test script is a placeholder
 
 ## Environment
