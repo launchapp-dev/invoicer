@@ -1,7 +1,7 @@
 ---
 repo: launchapp-nuxt
-date: 2026-03-20
-build_status: FAILED
+date: 2026-03-21
+build_status: PASSED
 test_status: SKIPPED
 lint_status: FAILED
 typecheck_status: FAILED
@@ -9,149 +9,216 @@ typecheck_status: FAILED
 
 # Quality Audit: launchapp-dev/launchapp-nuxt
 
-**Audit Date:** 2026-03-20
+**Audit Date:** 2026-03-21
 **Repository:** https://github.com/launchapp-dev/launchapp-nuxt
-**Commit:** a7dd46a (Merge pull request #6 from launchapp-dev/ao/task-020)
+**Commit:** f74f735 (ao/task 196 #27)
 
 ## Executive Summary
 
-The `launchapp-nuxt` repository **fails critical quality checks** and is not suitable for production deployment. The build is broken due to missing type definitions, linting standards are not met, and there are no automated tests configured.
+The `launchapp-nuxt` repository shows **improved build status** compared to the previous audit, with the `@types/cookie` issue resolved. However, critical quality checks still fail with significant linting issues and Nuxt type resolution problems in the web app.
 
 **Current Status:**
-- ✗ **Build:** FAILED
-- ✗ **Typecheck:** FAILED
-- ✗ **Lint:** FAILED (167 errors, 133 warnings)
+- ✓ **Build:** PASSED
+- ✗ **Typecheck:** FAILED (Nuxt type resolution issues)
+- ✗ **Lint:** FAILED (3271 errors, 2783 warnings)
 - ⊘ **Test:** SKIPPED (no tests configured)
 
 ---
 
 ## Build Results
 
-**Status:** ❌ FAILED
-**Exit Code:** 1
-**Duration:** ~2 seconds
+**Status:** ✓ PASSED
+**Exit Code:** 0
+**Duration:** ~18.33s
 
-### Failure Details
+### Success Details
 
-Build fails in `@repo/core` package with critical TypeScript error:
+The build now completes successfully after the `@types/cookie` fix was merged in PR #27 (ao/task 196). All 14 packages built without errors:
+- @repo/config, @repo/core, @repo/analytics, @repo/ui-kit, @repo/i18n
+- @repo/billing, @repo/storage, @repo/database, @repo/email, @repo/ai
+- @repo/auth, @repo/mcp, @repo/web, @repo/api
 
-```
-error TS2688: Cannot find type definition file for 'cookie'.
-  The file is in the program because:
-    Entry point for implicit type library 'cookie'
-```
+**Warnings (non-blocking):**
+- Sourcemap warnings from `nuxt:module-preload-polyfill` plugin
+- Sourcemap warnings from `@tailwindcss/vite:generate:build` plugin
+- Turbo "no output files found for task @repo/web#build" warning
 
-**Root Cause:** Missing `@types/cookie` dependency in `@repo/core` package. The type definition is referenced but not explicitly declared as a dependency. This is likely a transitive dependency from one of the consuming packages (e.g., `@repo/billing` depends on stripe or @polar-sh/sdk which may reference cookie types).
+### Recommended Fixes
 
-**Failure Location:** `packages/core/src/index.ts`
-
-### Recommended Fix
-
-1. **Primary fix:** Add `@types/cookie` as a dependency in `packages/core/package.json`:
-   ```json
-   "devDependencies": {
-     "@types/cookie": "^1.0.0",
-     "@repo/typescript-config": "workspace:*"
+1. **Fix sourcemap issues:** Configure Vite to skip sourcemap generation for problematic plugins:
+   ```typescript
+   // nuxt.config.ts
+   vite: {
+     plugins: [tailwindcss()],
+     build: {
+       sourcemap: false
+     }
    }
    ```
 
-2. **Verify:** Run `pnpm install` to resolve dependencies across the workspace
-
-3. **Alternative:** If the dependency is not needed in `@repo/core` directly, move it to the package that actually uses it (likely `@repo/billing` or a package that references the Stripe SDK)
+2. **Configure turbo output:** Add outputs key to @repo/web in turbo.json:
+   ```json
+   "@repo/web#build": {
+     "outputs": [".output/**", ".nuxt/types/**"]
+   }
+   ```
 
 ---
 
 ## Typecheck Results
 
-**Status:** ❌ FAILED
+**Status:** ✗ FAILED
 **Exit Code:** 1
-**Duration:** ~1.7 seconds
+**Duration:** ~9.39s
 
 ### Failure Details
 
-Typecheck fails with the **same missing `@types/cookie` error** as the build. The typecheck command cannot complete due to unresolved type references across the monorepo.
+Typecheck fails in `@repo/web` package with 150+ errors. The errors indicate **Nuxt type generation is not properly configured** for `vue-tsc`:
 
-**Command:** `pnpm typecheck` (runs `turbo typecheck`)
+```
+@repo/web:typecheck: app/pages/auth/login.vue(6,16): error TS2304: Cannot find name 'useRouter'.
+@repo/web:typecheck: app/pages/auth/login.vue(7,15): error TS2304: Cannot find name 'useRoute'.
+@repo/web:typecheck: app/pages/auth/login.vue(9,15): error TS2304: Cannot find name 'ref'.
+@repo/web:typecheck: app/pages/auth/login.vue(10,18): error TS2304: Cannot find name 'ref'.
+...
+```
 
-### Recommended Fix
+**Root Cause:** The `vue-tsc` typecheck cannot find Nuxt auto-imported composables (useRoute, useRouter, useAuth, ref, computed, navigateTo, etc.). This suggests:
 
-Resolving the build issue (adding `@types/cookie`) will automatically fix typecheck failures.
+1. The `.nuxt` types directory may not be properly included in type resolution
+2. The `nuxt prepare` step may not have run to generate types
+3. The tsconfig may be missing the Nuxt types reference
+
+### Recommended Fixes
+
+1. **Run nuxt prepare before typecheck:**
+   ```json
+   // apps/web/package.json
+   "typecheck": "nuxt prepare && nuxt typecheck"
+   ```
+
+2. **Add explicit type references to tsconfig.json:**
+   ```json
+   {
+     "extends": "./.nuxt/tsconfig.json",
+     "compilerOptions": {
+       "types": ["node"]
+     }
+   }
+   ```
+
+3. **Check if .nuxt/imports.d.ts exists and is properly generated**
 
 ---
 
 ## Linting Results
 
-**Status:** ❌ FAILED
+**Status:** ✗ FAILED
 **Exit Code:** 1
-**Duration:** ~1 second
+**Duration:** ~7s
 
-**Tool:** Biome 2.0.0
-**Checks:** Both linting and formatting
+**Tool:** Biome 2.4.8
+**Checks:** Linting and formatting
 
 ### Summary Statistics
 
-- **Total Errors:** 167
-- **Total Warnings:** 133
-- **Files Checked:** 223
-- **Files with Issues:** Multiple
+| Category | Count |
+|----------|-------|
+| **Errors** | 3,271 |
+| **Warnings** | 2,783 |
+| **Infos** | 362 |
+| **Files Checked** | 302 |
 
 ### Critical Issues (by category)
 
-#### 1. Unused Variables (Primary Issue)
+#### 1. Generated Files Included in Lint
 
-**Count:** Multiple instances across Vue components
+**Problem:** Biome is checking generated files in `.nuxt/` directory:
+- `.nuxt/types/app.config.d.ts`
+- `.nuxt/imports.d.ts`
 
-**Examples:**
-- `apps/web/app/components/AppFooter.vue:28` - unused variable `year`
-- `apps/web/app/components/CookieBanner.vue:45` - unused variable `showBanner`
-- `apps/web/app/components/CookieBanner.vue:47` - unused function `handleAccept`
-- `apps/web/app/components/CookieBanner.vue:51` - unused function `handleReject`
-- `apps/web/app/components/CookieConsent.vue:64` - unused function `accept`
-- `apps/web/app/components/CookieConsent.vue:69` - unused function `decline`
+**Impact:** 6,396+ diagnostics from auto-generated files that should be excluded.
 
-**Impact:** Indicates incomplete refactoring or dead code. These are correctness issues that should be fixed, not ignored.
+**Recommended Fix:**
+```json
+// biome.json
+"files": {
+  "includes": ["**"],
+  "excludes": [
+    "**/node_modules",
+    "**/dist",
+    "**/.turbo",
+    "**/build",
+    "**/.nuxt",          // Add this
+    "**/.react-router",
+    "**/coverage",
+    "**/.vercel",
+    "**/.cursor",
+    "**/.history",
+    "**/*.log",
+    "**/pnpm-lock.yaml",
+    "**/yarn.lock",
+    "**/package-lock.json"
+  ]
+}
+```
 
 #### 2. Formatting Issues
 
-**Count:** Extensive across codebase
+**Problem:** Extensive formatting inconsistencies across the codebase:
+
+- **JSON files:** Missing trailing newlines, array formatting
+  - `PR_LIST.json` - needs full reformat
+  - Multiple `tsconfig.json` files - references array formatting
+  
+- **TypeScript files:** Indentation inconsistencies in middleware files
 
 **Examples:**
-- `.mcp.json` - Indentation formatting (args array formatting)
-- `package.json` - Missing trailing newline
-- Multiple `tsconfig.json` files - Multiline array formatting inconsistency
-- Vue component middleware files - Tab/space indentation inconsistency
+```
+packages/ai/tsconfig.json - references should be single line:
+  "references": [{ "path": "../config" }]
+```
 
-**Impact:** Biome formatter would modify 20+ files. Build pipeline is inconsistent with team standards.
+**Recommended Fix:**
+```bash
+pnpm lint:fix
+```
 
-#### 3. Import Organization
+#### 3. Linter Rule Violations
 
-**Count:** Multiple files
-
-**Examples:**
-- `apps/web/app/composables/useAnalytics.ts` - Imports not sorted
-- `packages/vue-ui-kit/src/utils/cn.ts` - Type imports not sorted correctly
-
-**Impact:** Code maintainability issue; inconsistent import ordering across packages.
+**Categories of errors:**
+- `lint/suspicious/noExplicitAny` - Using `any` type instead of specific types
+- Import sorting issues
+- Unused variables (from previous audit)
 
 ### Recommended Fixes
 
-1. **Fix unused variables immediately:**
+1. **Fix biome.json excludes immediately:**
+   Add `.nuxt/**` to excludes list
+
+2. **Run automated fixes:**
    ```bash
    pnpm lint:fix
    ```
-   This will resolve the formatting issues and help identify actual unused code.
 
-2. **Review and remove unused code in Vue components:**
-   - `CookieBanner.vue` - `showBanner`, `handleAccept`, `handleReject` are defined but not used in templates. Either use them or remove them.
-   - `CookieConsent.vue` - `accept`, `decline` functions are unused. Check if these should be exported or removed.
+3. **Address remaining lint issues manually:**
+   - Add explicit types instead of `any`
+   - Fix unused variables
+   - Sort imports correctly
 
-3. **Commit formatting fixes:**
-   After running `pnpm lint:fix`, stage and commit the formatting changes to establish a clean baseline.
+4. **Commit formatting changes:**
+   After fixes, commit to establish clean baseline
 
-4. **Enforce linting in CI/CD:**
-   Add a pre-commit hook or CI check to prevent future linting failures:
-   ```bash
-   pnpm lint
+5. **Add CI gate:**
+   ```yaml
+   # .github/workflows/quality.yml
+   lint:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+       - uses: pnpm/action-setup@v4
+       - run: pnpm install --frozen-lockfile
+       - run: pnpm lint
    ```
 
 ---
@@ -168,21 +235,38 @@ The `test` script in `package.json` is a placeholder:
 
 ### Recommended Actions
 
-1. **Set up test framework:** Choose a test framework (recommended: Vitest for monorepo)
-2. **Create test files:** Add `*.test.ts` and `*.spec.ts` files in packages
-3. **Configure test runner:** Update turbo.json and package.json scripts
-4. **Set coverage goals:** Aim for >80% coverage on core packages
+1. **Set up test framework:** Vitest is already a dependency in some packages (e.g., @repo/core has `"test": "vitest run"`)
+
+2. **Configure test scripts:**
+   ```json
+   "test": "turbo test",
+   ```
+
+3. **Add test configuration to packages with tests:**
+   - Create `vitest.config.ts` files
+   - Add `*.test.ts` files
+
+4. **Target coverage:** Aim for >80% on core packages
 
 ---
 
 ## Summary of Findings
 
-| Check | Status | Severity | Action Required |
-|-------|--------|----------|-----------------|
-| Build | FAILED | CRITICAL | Add missing @types/cookie dependency |
-| Typecheck | FAILED | CRITICAL | Resolve build issue first |
-| Lint | FAILED | HIGH | Fix unused variables and formatting |
-| Test | SKIPPED | MEDIUM | Implement test infrastructure |
+| Check | Status | Severity | Previous Status | Change |
+|-------|--------|----------|----------------|--------|
+| Build | PASSED | - | FAILED | ✓ Fixed |
+| Typecheck | FAILED | CRITICAL | FAILED | ⚠ Same |
+| Lint | FAILED | HIGH | FAILED | ⚠ Worse (3271 vs 167 errors) |
+| Test | SKIPPED | MEDIUM | SKIPPED | ⚠ Same |
+
+### Issues Fixed Since Last Audit
+- ✓ `@types/cookie` dependency added to @repo/core
+- ✓ Build now completes successfully
+
+### New/Current Issues
+- ✗ Nuxt type generation not working with vue-tsc
+- ✗ Biome linting 3,271 errors (many from .nuxt files)
+- ✗ No test infrastructure
 
 ---
 
@@ -190,26 +274,31 @@ The `test` script in `package.json` is a placeholder:
 
 ### 🔴 CRITICAL (Block All Deploys)
 
-1. **Add `@types/cookie` to @repo/core dependencies**
-   - Unblock: build, typecheck
-   - Estimated effort: 5 minutes
-   - Files to change: `packages/core/package.json`
+1. **Fix Nuxt type generation for @repo/web**
+   - Unblock: typecheck
+   - Files: `apps/web/package.json`, `apps/web/tsconfig.json`
+   - Add `nuxt prepare` before typecheck or fix .nuxt type resolution
+
+2. **Exclude .nuxt from biome.json**
+   - Unblock: lint (reduces ~6,000 diagnostics)
+   - Files: `biome.json`
+   - Add `"**/.nuxt/**"` to excludes
 
 ### 🟠 HIGH (Must Fix Before Deploy)
 
-2. **Remove unused code from Vue components**
-   - Fix: CookieBanner.vue, CookieConsent.vue, AppFooter.vue
-   - Estimated effort: 15-30 minutes
-   - Type: Code cleanup
+3. **Run pnpm lint:fix to resolve formatting issues**
+   - Fix: remaining lint errors after excluding .nuxt
+   - Files: Multiple JSON and TypeScript files
+   - Estimated effort: 5-10 minutes + review
 
-3. **Run formatter and commit results**
-   - Fix: 167 linting errors, formatting inconsistency
-   - Estimated effort: 5 minutes + review
-   - Type: Formatting/style
+4. **Fix remaining lint rule violations**
+   - Address `noExplicitAny` warnings
+   - Sort imports correctly
+   - Remove unused variables
 
 ### 🟡 MEDIUM (Before Next Release)
 
-4. **Implement automated tests**
+5. **Implement automated tests**
    - Add: Test infrastructure and baseline tests
    - Estimated effort: 2-4 hours
    - Type: Infrastructure
@@ -218,17 +307,17 @@ The `test` script in `package.json` is a placeholder:
 
 ## Verification Steps
 
-To verify fixes:
-
 ```bash
-# 1. Add @types/cookie and install
-pnpm install
+# 1. Ensure nuxt prepare generates types
+cd apps/web
+npx nuxt prepare
+cd ../..
 
-# 2. Run build (should pass)
-pnpm build
-
-# 3. Run typecheck (should pass)
+# 2. Run typecheck (should pass after fix)
 pnpm typecheck
+
+# 3. Fix biome excludes
+# Add "**/.nuxt/**" to biome.json excludes
 
 # 4. Run lint with fixes
 pnpm lint:fix
@@ -236,8 +325,8 @@ pnpm lint:fix
 # 5. Verify remaining lint issues
 pnpm lint
 
-# 6. Test (will still echo, but ready for implementation)
-pnpm test
+# 6. Run build
+pnpm build
 ```
 
 ---
@@ -247,12 +336,19 @@ pnpm test
 - **Node Version:** v22.17.0
 - **pnpm Version:** 10.0.0
 - **Package Manager:** pnpm workspace (monorepo)
-- **Build Tool:** Turbo
-- **Linter:** Biome 2.0.0
-- **Dependencies Installed:** 1,076 packages
+- **Build Tool:** Turbo 2.8.20
+- **Linter:** Biome 2.4.8
+- **Dependencies Installed:** 1,110 packages
+- **Nuxt Version:** 4.4.2
 
 ---
 
 ## Conclusion
 
-The repository has **critical build failures** that must be resolved before any deployment. Once the missing dependency is added, the codebase will compile, but **linting standards must be enforced** through code review or CI/CD gates. **Test infrastructure should be implemented** as soon as possible to prevent regressions.
+The repository has made progress with the build now passing, but **typecheck and lint failures remain blocking issues**. The most impactful fixes are:
+
+1. Fix Nuxt type generation to unblock typecheck
+2. Exclude `.nuxt/` from biome to reduce lint noise
+3. Run `pnpm lint:fix` to address formatting issues
+
+Once these are resolved, the codebase will be in a better state for production deployment. Test infrastructure remains a medium-term goal.
