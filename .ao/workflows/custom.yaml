@@ -310,6 +310,11 @@ agents:
       - a task for that workflow already exists in backlog, ready,
         in-progress, blocked, or on-hold status
       - OR a workflow for that workflow_ref is already running or paused
+      - OR a task for that workflow_ref reached 'failed' or 'error' status
+        within the last 60 minutes (check ao.task.list for recent failed tasks
+        by workflow_ref and compare updated_at timestamp to now). This prevents
+        rapid re-dispatch loops when a push precondition or other transient
+        condition has not changed since the last failure.
       Treat paused manual-gate workflows as active work even when ao.queue.list
       is empty. Cancelled/done tasks are OK to re-create only if there is
       genuinely new input to process.
@@ -1085,6 +1090,12 @@ agents:
         If no merged PR found, set task back to "ready"
       - Check for tasks stuck in "in-progress" >2 hours with no active workflow
         Set them back to "ready"
+      - Check for tasks with status "backlog" or "ready" that have a MERGED PR:
+        ao.task.list (filter status=backlog and status=ready), then for each:
+        gh pr list --state merged --search "<task-id>"
+        If a merged PR is found, set task to "done" via ao.task.status
+        This closes the gap where a workflow completes and merges a PR but the
+        task status was never updated from backlog/ready to done.
 
       RULES:
       - Process max 10 PRs per run to avoid rate limits
@@ -1279,8 +1290,14 @@ phases:
             fi
             git push origin "HEAD:$BRANCH"
           else
-            if git rev-parse --verify --quiet "@{upstream}" >/dev/null 2>&1; then
-              git push origin HEAD
+            if git rev-parse --verify "origin/$BRANCH" >/dev/null 2>&1; then
+              LOCAL_HEAD=$(git rev-parse HEAD)
+              REMOTE_HEAD=$(git rev-parse "origin/$BRANCH")
+              if [ "$LOCAL_HEAD" = "$REMOTE_HEAD" ]; then
+                echo "Branch $BRANCH already synced with origin — skipping push"
+                exit 0
+              fi
+              git push --force-with-lease origin HEAD
             else
               git push -u origin HEAD
             fi
@@ -1935,7 +1952,9 @@ phases:
       - Changes requested → queue rework
       - Ready for review → check diff vs task requirements and acceptance criteria
       - Merge if good, request changes if not
-      - Reconcile done tasks without merged PRs
+      After sweeping PRs, reconcile task states in BOTH directions:
+      - Done tasks without merged PRs → set back to ready
+      - Backlog/ready tasks whose PR was already merged → set to done
       Log all actions to knowledge/logs/reviewer.log.
     capabilities:
       mutates_state: true
