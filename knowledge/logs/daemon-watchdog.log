@@ -1,13 +1,3 @@
-2026-03-22T07:30:07Z ao-cli: healthy
-2026-03-22T07:30:07Z nextjs: healthy
-2026-03-22T07:30:07Z nuxt: healthy
-2026-03-22T07:35:05Z brain: healthy
-2026-03-22T07:30:07Z sveltekit: healthy
-2026-03-22T07:35:05Z ao-cli: healthy
-2026-03-22T07:35:05Z nextjs: healthy
-2026-03-22T07:35:05Z nuxt: healthy
-2026-03-22T07:35:05Z sveltekit: healthy
-2026-03-22T07:40:06Z brain: healthy
 2026-03-22T07:40:06Z ao-cli: healthy
 2026-03-22T07:40:06Z nextjs: healthy
 2026-03-22T07:40:06Z nuxt: healthy
@@ -498,3 +488,13 @@
 2026-03-22T15:55:02Z nextjs: restart result=stopped
 2026-03-22T15:55:02Z nuxt: healthy
 2026-03-22T15:55:02Z sveltekit: healthy
+2026-03-22T16:00:00Z ao-cli: stopped — restarting (pool=3 interval=15)
+2026-03-22T16:05:02Z brain: healthy
+2026-03-22T16:05:02Z ao-cli: healthy
+2026-03-22T16:05:02Z nextjs: healthy
+2026-03-22T16:05:02Z nuxt: healthy
+2026-03-22T16:05:02Z sveltekit: healthy
+2026-03-22T16:00:00Z ao-cli: restart result=running
+2026-03-22T16:00:00Z nextjs: healthy
+2026-03-22T16:00:00Z nuxt: healthy
+2026-03-22T16:00:00Z sveltekit: healthy
