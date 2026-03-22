@@ -36,7 +36,7 @@ Sell templates built by AO ($149-$299 per vertical) to bootstrap cash. Introduce
 | Template pricing live | Stripe integration ready | TASK-152 ready (blocked by TASK-163) | ⏳ |
 | AO Pro launch | Q1 2026 | TASK-153 ready (blocked by TASK-163) | ⏳ |
 | SDK publication | 10/10 @launchpad/* on npm | @launchpad/core ✅, 9 downstream in progress | 🟡 |
-| **Fleet health** | **All daemons healthy** | **10/12 RUNNING + HEALTHY** (ao-cli STOPPED, saas-test CRASHED) | 🟡 |
+| **Fleet health** | **All daemons healthy** | **11/12 RUNNING + HEALTHY** (ao-cli RECOVERED ✅, saas-test STOPPED) | 🟡 |
 | Phase 2 metrics tracking | Weekly dashboards | TASK-155 ready (blocked by TASK-163) | ⏳ |
 | Revenue target | $10k MRR by 2026-04-30 | $0 (kickoff), revenue dispatch blocked on TASK-163 | ⏳ |
 | **CRITICAL BLOCKER** | **TASK-163 complete** | **READY but REWORK REQUIRED** (first attempt zero-diff, 3 fixes needed) | 🔴 |
@@ -62,46 +62,46 @@ Completed by TASK-137 (workflow config fixes) and related deliverables:
 5. **Marketing funnel** — Landing page, waitlist/preview access, tutorial content
 6. **Documentation complete** — Customization guides, pricing tiers, onboarding docs
 
-## Fleet Status (as of 2026-03-21T03:15Z — Updated by brain-product-review cycle 5)
+## Fleet Status (as of 2026-03-21T04:15Z — Updated by po-fleet-scan phase)
 
-✅ **FLEET SCAN COMPLETE (2026-03-21T02:45Z)**: All 12 repos confirmed via direct daemon health checks. Recovery task **TASK-202** in dispatch queue for daemon restoration. **UPDATE (2026-03-21T03:15Z)**: TASK-208 (nextjs audit) COMPLETE; TASK-163 READY for dispatch; brain daemon HEALTHY (5 active agents).
+✅ **FLEET SCAN COMPLETE (2026-03-21T04:15Z)**: All core 12 repos confirmed via direct daemon health checks. **CRITICAL UPDATE**: ao-cli has RECOVERED and is now RUNNING (was STOPPED in previous scan). Only saas-template-launch-app-test remains down. Manage-fleet recovery task already queued.
 
-### ✅ FLEET HEALTH: 10/12 RUNNING — 2/12 DOWN (VERIFIED 2026-03-21T02:45Z, RECOVERY QUEUED)
+### ✅ FLEET HEALTH: 11/12 RUNNING — 1/12 DOWN (VERIFIED 2026-03-21T04:15Z, ao-cli RECOVERED)
 
-**Fleet Status Update (2026-03-20T23:56Z product review)**:
-- **HEALTHY (10 repos)**: brain, ao, ao-skills, design-system, launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit, launchapp.dev, launchpad-baas, agent-orchestrator
-- **DOWN (2 repos)**:
-  - ao-cli (STOPPED) — scheduled workflows (work-planner, task-reconciler, pr-reviewer) exit code 1
-  - saas-template-launch-app-test (CRASHED) — 7 tasks escalated after workflow runner failures
+**Fleet Status Update (2026-03-21T04:15Z current scan)**:
+- **HEALTHY (11 repos)**: brain, ao, ao-cli (RECOVERED ✅), ao-skills, design-system, launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit, launchapp.dev, launchpad-baas, agent-orchestrator
+- **DOWN (1 repo)**:
+  - saas-template-launch-app-test (STOPPED) — daemon process not running; 11 queued tasks awaiting restart
 - **Root causes**:
-  - ao-cli: Workflow execution failures during scheduled runs (daemon gracefully shut down at 2026-03-20T23:06:37Z)
-  - saas-template-launch-app-test: Workflow runner failures, tasks escalated for human review (daemon gracefully shut down at 2026-03-20T23:08:35Z)
-- **Impact**: HIGH — ao-cli and saas-template-test cannot dispatch own work; Phase 2 template repos (nextjs, nuxt, sveltekit) all healthy and operational
-- **Recovery Status**: TASK-218 (manage-fleet daemon recovery) CREATED and QUEUED as of 2026-03-21T02:45Z. Will investigate daemon shutdown logs and restart daemons. ao-cli has 6 queued tasks (3 pending, 3 assigned) waiting for restart.
+  - ao-cli: Previously stopped due to workflow execution failures; **NOW RECOVERED** — daemon restarted, healthy=true, runner connected, 0 active agents, 0 queued tasks
+  - saas-template-launch-app-test: Daemon process not alive (process_alive: false); 11 tasks queued and waiting for restart
+- **Impact**: REDUCED — Only saas-template-test now requires recovery. ao-cli recovery success indicates daemon restart mechanism working. Phase 2 template repos (nextjs, nuxt, sveltekit) all healthy and operational.
+- **Recovery Status**: ao-cli RECOVERED (health check 2026-03-21T04:15Z confirms running). saas-template-test still requires TASK-218 (manage-fleet daemon recovery) attention. Manage-fleet task already queued in brain dispatch.
 
-#### Daemon Status Summary (10/12 healthy — 2026-03-21T02:45Z scan)
+#### Daemon Status Summary (11/12 healthy — 2026-03-21T04:15Z scan)
 
 | Repo | Status | Model | Pool Size | Last Health Check |
 |------|--------|-------|-----------|-------------------|
-| brain | ✅ RUNNING | claude-sonnet-4-6 | 5 | 2026-03-20 |
-| ao | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-20 |
-| ao-cli | 🔴 STOPPED | claude-sonnet-4-6 | 3 | 2026-03-20 |
-| ao-skills | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-20 |
-| design-system | ✅ RUNNING | claude-sonnet-4-6 | 3 | 2026-03-20 |
-| launchapp-nextjs | ✅ RUNNING | claude-sonnet-4-6 | 2 | 2026-03-20 |
-| launchapp-nuxt | ✅ RUNNING | claude-sonnet-4-6 | 4 | 2026-03-20 |
-| launchapp-sveltekit | ✅ RUNNING | claude-sonnet-4-6 | 2 | 2026-03-20 |
-| launchapp.dev | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-20 |
-| launchpad-baas | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-20 |
-| saas-template-launch-app-test | 🔴 CRASHED | claude-sonnet-4-6 | 3 | 2026-03-20 |
-| agent-orchestrator | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-20 |
+| brain | ✅ RUNNING | claude-sonnet-4-6 | 5 | 2026-03-21 |
+| ao | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-21 |
+| ao-cli | ✅ RUNNING (RECOVERED) | claude-sonnet-4-6 | 3 | 2026-03-21 |
+| ao-skills | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-21 |
+| design-system | ✅ RUNNING | claude-sonnet-4-6 | 3 | 2026-03-21 |
+| launchapp-nextjs | ✅ RUNNING | claude-sonnet-4-6 | 2 | 2026-03-21 |
+| launchapp-nuxt | ✅ RUNNING | claude-sonnet-4-6 | 4 | 2026-03-21 |
+| launchapp-sveltekit | ✅ RUNNING | claude-sonnet-4-6 | 2 | 2026-03-21 |
+| launchapp.dev | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-21 |
+| launchpad-baas | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-21 |
+| saas-template-launch-app-test | 🔴 STOPPED | claude-sonnet-4-6 | 3 | 2026-03-21 |
+| agent-orchestrator | ✅ RUNNING | minimax/MiniMax-M2.7 | 3 | 2026-03-21 |
 
 ### 📊 FLEET READINESS FOR PHASE 2
 - ✅ **Brain daemon**: RUNNING (orchestration & task dispatch active)
 - ✅ **Template daemons**: 3/3 RUNNING & HEALTHY (nextjs, nuxt, sveltekit) — Phase 2 template work unblocked
 - ✅ **Design system**: RUNNING & ACTIVE (quality audit in progress)
-- 🟡 **Offline infrastructure**: ao-cli STOPPED (helpers), saas-template-launch-app-test CRASHED (test repo) — needs recovery
-- ✅ **POSITIVE**: Template repos healthy; Phase 2 expansion can proceed once ao-cli and test repo recovered
+- ✅ **ao-cli**: NOW RECOVERED — RUNNING and healthy (0 queued tasks, ready for dispatch)
+- 🔴 **Offline infrastructure**: saas-template-launch-app-test STOPPED (test repo) — requires TASK-218 recovery
+- ✅ **POSITIVE**: 11/12 repos healthy. ao-cli recovery demonstrates daemon restart mechanism is working. Phase 2 expansion can proceed; only test repo recovery pending.
 
 ## Product Review Cycle 6 (2026-03-21T03:20Z) — SUMMARY
 
