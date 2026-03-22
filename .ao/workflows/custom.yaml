@@ -2122,6 +2122,32 @@ workflows:
       - create-pr
       - brain-pr-review
 
+  # === STANDARD TASK WORKFLOWS (used by conductor/planner for general work) ===
+  - id: standard
+    name: "Standard Brain Task"
+    description: "Plan → Implement → Push → PR → Review"
+    phases:
+      - brain-product-review
+      - push-branch
+      - create-pr
+      - brain-pr-review
+
+  - id: scaffold
+    name: "Scaffold"
+    description: "Implement knowledge/workflow changes → Push → PR → Review"
+    phases:
+      - push-branch
+      - create-pr
+      - brain-pr-review
+
+  - id: quick-fix
+    name: "Quick Fix"
+    description: "Fast implementation → Push → PR → Review"
+    phases:
+      - push-branch
+      - create-pr
+      - brain-pr-review
+
   - id: manage-fleet
     name: "Fleet Manager"
     description: "Monitor, start, stop, and configure AO daemons across all repos"
