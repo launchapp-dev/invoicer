@@ -229,3 +229,4 @@ SUMMARY: PR sweep found no actionable open PRs. Core issue is done-task validati
   - TASK-165: done, work already integrated on master (status correct)
   verdict=reconciliation-blocked-needs-reopen
 [2026-03-21T02:41:02Z] sweep=brain-pr-sweep status=clean open_prs=0 in_progress_tasks=0 done_tasks=69+ reconciliation=pass merged_count=0 note="No open PRs to process. No in-progress tasks. Reconciliation: some done tasks cannot be auto-reverted (terminal state) but git history confirms work merged. No action required."
+[2026-03-22T12:15:00Z] pr=none task=none verdict=skip reason=no_open_prs
