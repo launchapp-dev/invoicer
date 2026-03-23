@@ -385,3 +385,19 @@
 2026-03-23T15:45:00Z nextjs: healthy
 2026-03-23T15:45:00Z nuxt: healthy
 2026-03-23T15:45:00Z sveltekit: healthy
+2026-03-23T15:50:02Z brain: crashed — restarting (pool=5 interval=30)
+2026-03-23T15:55:04Z brain: healthy
+2026-03-23T15:55:04Z ao-cli: healthy
+2026-03-23T15:55:04Z nextjs: healthy
+2026-03-23T15:55:04Z nuxt: healthy
+2026-03-23T15:50:02Z brain: restart result=running
+2026-03-23T16:00:01Z brain: healthy
+2026-03-23T15:55:04Z sveltekit: healthy
+2026-03-23T16:00:01Z ao-cli: healthy
+2026-03-23T15:50:02Z ao-cli: healthy
+2026-03-23T16:00:01Z nextjs: healthy
+2026-03-23T15:50:02Z nextjs: healthy
+2026-03-23T16:05:01Z brain: healthy
+2026-03-23T15:50:02Z nuxt: healthy
+2026-03-23T16:00:01Z nuxt: healthy
+2026-03-23T15:50:02Z sveltekit: healthy
