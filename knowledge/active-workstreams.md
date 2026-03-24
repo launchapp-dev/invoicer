@@ -1,11 +1,18 @@
 # Active Workstreams
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T20:53Z).
-> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-20T20:53Z, including post-16:27Z activity: framework template model-routing churn in response to Claude rate limits (launchapp-sveltekit/nuxt/nextjs 19:38–20:53Z), design-system docs/CI fixes (through 14:18Z), saas-template-launch-app-test rate-limit agent routing fix (20:19:38Z), and launchapp-nextjs quality issue #14 (20:39:45Z). Full 2026-03-20 update cycle verified for ao-cli, design-system, saas-template-launch-app-test, launchapp-sveltekit, launchapp-nextjs, launchapp-nuxt, and brain.
+> Last updated: 2026-03-24 by knowledge-curator agent (through 2026-03-24T08:10Z).
+> Verified with authenticated GitHub CLI access across private repos. Status below reflects the current default-branch and merged-PR state as of 2026-03-24T08:10Z, including quality audit activity: launchapp-react-router first audit (all gates PASS), launchapp-nextjs build FAIL (TypeScript blocker), launchapp-sveltekit lint stable at 391 errors, launchapp-nuxt lint improved to 3 errors (57% reduction).
 
 ## Summary
 
-As of 2026-03-20, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), plus emerging velocity in framework variants (`launchapp-sveltekit`, `launchapp-nextjs`, `launchapp-nuxt`). Key narrative shifts in 2026-03-20 cycle (through 12:43Z): brain repo added PR review gating (brain-reviewer) and continuous PR sweep (brain-pr-sweep) to prevent incomplete work and handle conflicts; ao-cli released v0.0.11 and stabilized post-release with planner MCP crash fix, macOS codesign fix, and bundled packs embedding; design-system completed Phase 4 with Timeline block, CLI scaffolding, layout transitions, palettes documentation, and landing/blog/error blocks; saas-template-launch-app-test expanded auth (2FA/OTP), billing capabilities, and added @ai-sdk/mistral provider support; launchapp-sveltekit added Vitest test suite plus multi-tier pricing and org schema migration; launchapp-nextjs integrated billing/subscription email workflows; launchapp-nuxt added cookie consent and GDPR compliance. All products are now AO-native with continuous delivery pipelines.
+As of 2026-03-24, the org has 4 very high-velocity workstreams (`saas-template-launch-app-test`, `design-system`, `ao-cli`, `brain`), plus emerging velocity in framework variants (`launchapp-sveltekit`, `launchapp-nextjs`, `launchapp-nuxt`, `launchapp-react-router`). **Quality audit burst completed 2026-03-24** with significant findings:
+
+- **launchapp-react-router**: First audit shows **excellent health** — Build PASS, Lint PASS, Test PASS (102 tests). Ready for deployment.
+- **launchapp-nextjs**: **Build FAIL** — TypeScript type mismatch in organizations.ts blocks deployment (15 PRs merged #225-#208).
+- **launchapp-sveltekit**: Lint stable at **391 errors** — no improvement, no regression (8 PRs merged).
+- **launchapp-nuxt**: Lint improved to **3 errors** — 57% reduction from 7 errors (7 PRs merged).
+
+PO Review Cycle 34 complete with Phase 2 active and 37 days to $10k MRR deadline. Fleet scan Cycle 29 shows design-system daemon STOPPED (TASK-640 in backlog) and saas-template runner disconnected (TASK-630 READY).
 
 ---
 
@@ -124,14 +131,23 @@ The release train moved from self-healing failover work into a same-day workflow
 
 ---
 
-## 4. launchapp-sveltekit — Emerging Framework Variant
+## 4. launchapp-sveltekit — SvelteKit Variant
 
 **Repo:** `launchapp-sveltekit`
 **Owner:** Shooksie
 **Who is doing the work:** AO-managed implementation workflows
-**Status:** Emerging velocity — rapid iteration in progress (through 2026-03-20T20:53Z)
+**Status:** Active — **Stable lint debt at 391 errors** (through 2026-03-24T08:10Z)
 
 This repo represents the org's SvelteKit-based SaaS template offering, built to parallel the flagship React Router 7 template while exploring alternative JavaScript frameworks.
+
+**Quality Audit Results (2026-03-24):**
+| Gate | Status | Details |
+|------|--------|---------|
+| Build | Unknown | — |
+| Lint | **391 errors** | Stable debt level, no improvement/regression |
+| Test | Unknown | Vitest infrastructure in place |
+
+**Note**: Highest lint debt among templates; technical debt acknowledged. 8 PRs merged 2026-03-24.
 
 **Current focus:**
 - Establish parity with the flagship template in billing and auth capabilities.
@@ -146,7 +162,26 @@ This repo represents the org's SvelteKit-based SaaS template offering, built to 
 - **Frontend (2026-03-20):** Tailwind CSS 4 styling, root layout structure for page organization.
 - **Auth (2026-03-20):** Auth middleware integrated for protected routes and role-based access control.
 - **Organization (2026-03-20):** Org schema migration added for multi-tenant support.
-- **AO agent routing (2026-03-20, 19:38–20:53Z):** Framework template rapid model-routing iteration in response to Claude rate limits (Sonnet limited through 2026-03-24). Iterative fallback via Haiku→Codex→Gemini→oai-runner. Resolved by 20:53Z with workflow gates removed. No code impact to template itself.
+
+---
+
+## 4a. launchapp-react-router — New Healthy Template
+
+**Repo:** `launchapp-react-router`
+**Owner:** Shooksie
+**Who is doing the work:** AO-managed implementation workflows
+**Status:** **Excellent health** — first quality audit completed 2026-03-24
+
+This is the newest framework template and shows the healthiest quality metrics across all templates.
+
+**Quality Audit Results (2026-03-24, first audit):**
+| Gate | Status | Details |
+|------|--------|---------|
+| Build | **PASS** | Clean build, no errors |
+| Lint | **PASS** | No lint errors |
+| Test | **PASS** | 102 tests passing |
+
+**Deployment readiness**: **READY** — all gates passing, no blockers for production deployment. This is the healthiest template in the fleet.
 
 ---
 
@@ -155,15 +190,22 @@ This repo represents the org's SvelteKit-based SaaS template offering, built to 
 **Repo:** `launchapp-nextjs`
 **Owner:** Shooksie
 **Who is doing the work:** AO-managed implementation workflows
-**Status:** Active — Phase 1 template development with emerging QA signal (through 2026-03-20T20:53Z)
+**Status:** Active — **Build FAIL (TypeScript blocker)** (through 2026-03-24T08:10Z)
 
-Next.js App Router-based SaaS template, completing parity with flagship template capabilities.
+Next.js App Router-based SaaS template. **15 PRs merged** in recent burst (#225-#208).
+
+**Quality Audit Results (2026-03-24):**
+| Gate | Status | Details |
+|------|--------|---------|
+| Build | **FAIL** | TypeScript type mismatch in `organizations.ts` |
+| Lint | Unknown | — |
+| Test | Unknown | — |
+
+**Blocker**: TypeScript type mismatch must be resolved before deployment.
 
 **Recent highlights (verified 2026-03-20T20:53Z):**
 - **Billing & Email (2026-03-20):** Billing and subscription email workflows integrated (PRs at 03:31Z, 03:34Z).
-- **Aligns launchapp-nextjs with the flagship template's billing/email capabilities.**
-- **AO agent routing (2026-03-20, 19:38–20:53Z):** Framework template rapid model-routing iteration in response to Claude rate limits (Sonnet limited through 2026-03-24). Iterative fallback via Haiku→Codex→Gemini→oai-runner. Resolved by 20:53Z with workflow gates removed. No code impact to template itself.
-- **Quality issue #14 (2026-03-20, 20:39:45Z):** "[QUALITY] Fix Biome lint config - .next directory not excluded" opened. Biome incorrectly scanning Next.js build output. Candidate for next sprint.
+- **Quality issue #14 (2026-03-20, 20:39:45Z):** "[QUALITY] Fix Biome lint config - .next directory not excluded" opened.
 
 ---
 
@@ -172,14 +214,22 @@ Next.js App Router-based SaaS template, completing parity with flagship template
 **Repo:** `launchapp-nuxt`
 **Owner:** Shooksie
 **Who is doing the work:** AO-managed implementation workflows
-**Status:** Active — Phase 1 template development with rapid iteration (through 2026-03-20T20:53Z)
+**Status:** Active — **Lint improving** (3 errors, 57% reduction) (through 2026-03-24T08:10Z)
 
-Nuxt 4-based SaaS template with privacy-first focus.
+Nuxt 4-based SaaS template with privacy-first focus. **7 PRs merged** 2026-03-24.
+
+**Quality Audit Results (2026-03-24):**
+| Gate | Status | Details |
+|------|--------|---------|
+| Build | Unknown | — |
+| Lint | **3 errors** | **57% reduction** from 7 errors |
+| Test | Unknown | — |
+
+**Trend**: Active lint debt reduction in progress.
 
 **Recent highlights (verified 2026-03-20T20:53Z):**
 - **Privacy & Compliance (2026-03-20):** Cookie consent and GDPR compliance work integrated (through 03:10Z).
 - **Establishes privacy-first approach aligned with launchapp-nuxt's target market in EU.**
-- **AO agent routing (2026-03-20, 19:38–20:53Z):** Framework template rapid model-routing iteration in response to Claude rate limits (Sonnet limited through 2026-03-24). Iterative fallback via Haiku→Codex→Gemini→oai-runner. Resolved by 20:53Z with workflow gates removed. No code impact to template itself.
 
 ---
 
@@ -188,23 +238,23 @@ Nuxt 4-based SaaS template with privacy-first focus.
 **Repo:** `brain`
 **Owner:** Shooksie
 **Who is doing the work:** conductor + 20-agent roster (knowledge-curator/product-doc-writer/toolmaker/reviewer/brain-reviewer/brain-pr-sweep and others)
-**Status:** Extremely active — 58+ merged PRs since the repo was created on 2026-03-19
+**Status:** Extremely active — quality audit burst completed 2026-03-24
 
-The brain repo moved beyond markdown curation into structured data + typed MCP access, and then into explicit operator workflows, on 2026-03-19. On 2026-03-20, it added a dedicated PR review layer to prevent premature task completion and continuous PR sweep to handle conflicts and stale work.
+The brain repo maintains the org-wide knowledge base with continuous updates.
 
 **Current focus:**
 - Keep the knowledge base aligned with same-day org changes (running knowledge-update workflows continuously).
-- Add machine-readable access paths for repo and product data.
-- Add operator workflows for quality, decisions, and cross-repo execution.
+- Capture quality audit results so agents can reason about deployment readiness without re-running audits.
 - Stabilize conductor scheduling and writing workflows.
-- Prevent incomplete/conflicting work from being marked done (new brain-reviewer gate).
 
-**Recent highlights (verified through 2026-03-20T12:43Z):**
-- **PR review gating (2026-03-20, 06:26Z):** `brain-reviewer` agent added to verify all PRs match task requirements before merge; prevents marking tasks done if diff is incomplete or knowledge files are placeholders.
-- **Continuous PR sweeping (2026-03-20, 06:28Z):** `brain-pr-sweep` workflow added, runs every 3 minutes, handles conflicting PRs (queue rebase), change requests (queue rework), and reconciles stale task states.
-- **ao-cli quality audit (2026-03-20):** Post-release stability tracking for ao-cli v0.0.11 with crash fix, macOS codesign fix, and bundled packs.
-- **LaunchPad SDK catalog refresh (2026-03-20):** Documented SDK consistency initiative and npm publishing milestones.
-- Earlier highlights: SQLite-backed data layer, `brain-knowledge-mcp` and `brain-products-mcp` servers, conductor deduplication, quality-audit/decision-pipeline/cross-repo-execute workflows.
+**Recent highlights (2026-03-24):**
+- **Quality audit burst completed**: 4 templates audited with findings documented in knowledge/repos/
+- `launchapp-react-router` captured as fully healthy template (build+test+lint all pass) — **READY for deployment**
+- `launchapp-sveltekit` lint debt documented (391 errors, stable) — highest debt, acknowledged
+- `launchapp-nextjs` TypeScript blocker documented (build FAIL) — **deployment blocked**
+- `launchapp-nuxt` lint improvement captured (3 errors, 57% reduction from 7) — **improving trend**
+- PO Review Cycle 34 complete: Phase 2 active, 37 days to $10k MRR deadline, TASK-526/527 READY for revenue execution
+- Fleet scan Cycle 29: design-system daemon STOPPED (TASK-640 in backlog), saas-template runner disconnected (TASK-630 READY)
 
 ---
 

@@ -111,31 +111,55 @@ packages/
 
 ## Framework-Specific Variants (New 2026-03-19)
 
-Three new **pure framework ports** of the flagship template were scaffolded on 2026-03-19. These repos use identical architecture, monorepo structure, and @repo/* package naming — only the frontend framework differs. Each is maintained continuously by AO via autonomous agents that compare against the flagship template to prevent divergence.
+Four **pure framework ports** of the flagship template now exist. These repos use identical architecture, monorepo structure, and @repo/* package naming — only the frontend framework differs. Each is maintained continuously by AO via autonomous agents that compare against the flagship template to prevent divergence.
+
+### Quality Audit Summary (2026-03-24)
+
+| Template | Build | Lint | Test | Health |
+|----------|-------|------|------|--------|
+| `launchapp-react-router` | **PASS** | **PASS** | **PASS (102)** | **Excellent** |
+| `launchapp-nuxt` | Unknown | 3 errors (↓57%) | Unknown | Good |
+| `launchapp-sveltekit` | Unknown | 391 errors (stable) | Unknown | Debt |
+| `launchapp-nextjs` | **FAIL** | Unknown | Unknown | Blocked |
+
+### `launchapp-react-router` (private)
+
+- **Framework**: React Router 7 (SSR)
+- **Description**: Production SaaS starter for React Router 7
+- **Status**: **Healthy** — first audit shows all gates passing
+- **Last updated**: 2026-03-24T08:10Z (first quality audit)
+- **Quality**: Build PASS, Lint PASS, Test PASS (102 tests)
+- **Structure**: Same @repo/* packages as flagship, with React Router 7 in `apps/web`
+- **Deployment readiness**: READY — no blockers
 
 ### `launchapp-nextjs` (private)
 
 - **Framework**: Next.js App Router (SSR)
 - **Description**: Production SaaS starter for Next.js
-- **Status**: Early development, core monorepo structure in place
-- **Last updated**: 2026-03-20T00:37:58Z (PR #9, #10 merged)
+- **Status**: **Blocked** — TypeScript build failure
+- **Last updated**: 2026-03-24T08:10Z (15-PR merge burst #225-#208)
+- **Quality**: Build FAIL (type mismatch in organizations.ts), Lint Unknown, Test Unknown
 - **Structure**: Same @repo/* packages as flagship, with Next.js in `apps/web`
+- **Blocker**: TypeScript type mismatch must be resolved before deployment
 
 ### `launchapp-nuxt` (private)
 
 - **Framework**: Nuxt 4 (SSR)
 - **Description**: Production SaaS starter for Nuxt 4
-- **Status**: Early development, core monorepo structure in place
-- **Last updated**: 2026-03-20T00:36:04Z (PR #11 merged)
+- **Status**: **Improving** — lint debt reducing
+- **Last updated**: 2026-03-24T08:10Z (7-PR merge burst)
+- **Quality**: Build Unknown, Lint 3 errors (57% reduction), Test Unknown
 - **Structure**: Same @repo/* packages as flagship, with Nuxt in `apps/web`
 
 ### `launchapp-sveltekit` (private)
 
 - **Framework**: SvelteKit (SSR)
 - **Description**: Production SaaS starter for SvelteKit
-- **Status**: Early development, core monorepo structure in place
-- **Last updated**: 2026-03-20T00:36:31Z (PR #7, #8 merged)
+- **Status**: **Stable debt** — high lint error count, no regression
+- **Last updated**: 2026-03-24T08:10Z (8 PRs merged)
+- **Quality**: Build Unknown, Lint 391 errors (stable), Test Unknown
 - **Structure**: Same @repo/* packages as flagship, with SvelteKit in `apps/web`
+- **Note**: Highest lint debt among templates; technical debt acknowledged
 
 ### Architecture Pattern
 

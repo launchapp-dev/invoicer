@@ -128,13 +128,59 @@ Older lightweight SaaS starter with React Router 7, Hono, Better Auth, Drizzle, 
 
 SaaS template built with SvelteKit, focusing on lightweight modern frameworks.
 
+**Recent 2026-03-24 quality audit:**
+- **Lint debt**: 391 errors (stable, no improvement/regression)
+- Highest lint debt among active templates; acknowledged technical debt
+
 **Recent 2026-03-20 updates:**
-- **Billing:** Multi-plan pricing tiers implemented (Starter/Pro/Enterprise) with full Stripe integration.
-- **Frontend:** Tailwind CSS 4 styling, root layout structure, auth middleware for protected routes.
-- **Routing:** Route groups for organizing pages, organization schema migration for multi-tenant support.
-- **Auth:** Auth middleware integrated for route protection and role-based access control.
+- Vitest test suite infrastructure added for unit/integration testing
+- Multi-plan pricing tiers implemented with Stripe integration
+- Tailwind CSS 4 styling, root layout structure
+- Auth middleware integrated for protected routes
+- Organization schema migration for multi-tenant support
 
 This template represents the org's Svelte-first SaaS offering and differs from the flagship React Router 7 template in tech choices while maintaining parity in billing and auth capabilities.
+
+---
+
+### launchapp-nextjs
+
+SaaS template built with Next.js App Router.
+
+**Recent 2026-03-24 quality audit:**
+- **Build**: **FAIL** — TypeScript type mismatch in `organizations.ts` blocks deployment
+- **15 PRs merged** in recent burst (#225-#208) introduced type regression
+
+**Recent 2026-03-20 updates:**
+- Billing and subscription email workflows integrated
+- Aligns with flagship template's billing/email capabilities
+
+---
+
+### launchapp-nuxt
+
+SaaS template built with Nuxt 4.
+
+**Recent 2026-03-24 quality audit:**
+- **Lint**: **3 errors** — **57% reduction** from 7 errors (improvement trend)
+- **7 PRs merged** 2026-03-24
+
+**Recent 2026-03-20 updates:**
+- Cookie consent and GDPR compliance work integrated
+- Privacy-first approach for EU market
+
+---
+
+### launchapp-react-router
+
+SaaS template built with React Router 7.
+
+**Recent 2026-03-24 quality audit (first audit):**
+- **Build**: **PASS**
+- **Lint**: **PASS**
+- **Test**: **PASS** (102 tests)
+
+**Status**: **Excellent health** — healthiest template in the fleet. Ready for deployment with no blockers.
 
 ---
 
