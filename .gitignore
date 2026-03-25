@@ -7,3 +7,12 @@ brain.db
 brain.db-shm
 brain.db-wal
 tools/brain-fleet-mcp/node_modules
+storyforge/
+ao-cli/
+design-system/
+launchapp-nextjs/
+launchapp-nuxt/
+launchapp-sveltekit/
+saas-template-launch-app-test/
+EOF
+OF
