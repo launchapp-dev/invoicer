@@ -21,3 +21,4 @@ Tracks feature propagation across launchapp-nextjs, launchapp-nuxt, and launchap
 | 2026-03-21 | launchapp-nextjs | #39 | PACKAGE (database seeding) | launchapp-sveltekit | TASK-204 |
 | 2026-03-21 | launchapp-nextjs | #9 | PACKAGE (@repo/api-hooks) | launchapp-nuxt, launchapp-sveltekit | TASK-229, TASK-205 |
 | 2026-03-21 | launchapp-sveltekit | #12 | UI (email preview dev route) | launchapp-nextjs, launchapp-nuxt | TASK-211, TASK-230 |
+| 2026-03-24 | template-sync scan | N/A | ANALYSIS | all templates | TASK-395 - Full package audit, dependency diff, route parity check |

@@ -20,3 +20,22 @@
 [2026-03-20T23:11:25Z] gap=task_without_pr original=TASK-185 type=redo-sdk-audit status=done no_merged_pr=true evidence="offline-sdk and testing-sdk still have open SDK-CONSISTENCY issues" new=TASK-196
 [2026-03-20T23:11:25Z] gap=known_backlog type=brain-knowledge-mcp original=TASK-195 status=backlog action=exists
 [2026-03-20T23:11:25Z] RESULT=success: Found 1 done task without merged PR (TASK-185). Created TASK-196 to redo SDK audit. All other done tasks verified merged or no PR expected. Total new tasks: 1.
+
+[2026-03-24T16:15:00Z] RUN brain-reconcile: Analyzing done tasks vs merged PRs and requirements gaps
+[2026-03-24T16:15:00Z] gap=systemic_runner_failure count=11 tasks="TASK-526, TASK-527, TASK-656, TASK-579, TASK-588, TASK-398, TASK-451, TASK-449, TASK-370, TASK-452, TASK-207" error="workflow runner exited unsuccessfully with status Some(1)"
+[2026-03-24T16:15:00Z] gap=requirement_incomplete type=REQ-003-AC4 criteria="phase-transition action file" original=REQ-003 evidence="req-003-verification.md shows missing phase-2-bootstrap.md action file" new=TASK-665
+[2026-03-24T16:15:00Z] gap=critical_revenue_blocker type=runner_failure blocking="TASK-526 (Stripe), TASK-527 (AO Pro)" impact="$0 MRR, 37 days to deadline" new=TASK-664
+[2026-03-24T16:15:00Z] gap=fleet_self_healing_missing type=no_auto_recovery reason="fleet-manager detects but cannot auto-recover from runner failures" new=TASK-663
+[2026-03-24T16:15:00Z] RESULT=success: Created 3 new tasks to address gaps. TASK-663 (fleet self-healing), TASK-664 (runner reliability), TASK-665 (phase-transition doc). All done tasks verified have merged PRs. No stale knowledge files (>7 days) found.
+
+[2026-03-24T18:45:00Z] RUN brain-reconcile: Analyzing done tasks vs merged PRs and requirements gaps
+[2026-03-24T18:45:00Z] gap=REQ-001-incomplete type=brain-db-not-initialized original=REQ-001 criteria="SQLite DB stores all knowledge types" evidence="brain.db does not exist at project root" existing_task=TASK-174 status=cancelled action=needs-recreation
+[2026-03-24T18:45:00Z] gap=REQ-002-incomplete type=mcp-not-wired original=REQ-002 criteria="brain-products-mcp operational and used by agents" evidence=".mcp.json only has 'ao' server, missing brain-products and brain-fleet" existing_task=TASK-177 status=backlog
+[2026-03-24T18:45:00Z] done_task_verified type=quality-audit task=TASK-609 pr=#101 evidence="launchapp-nuxt audit committed" status=confirmed
+[2026-03-24T18:45:00Z] done_task_verified type=quality-audit task=TASK-616 pr=#102 evidence="launchapp-react-router audit committed" status=confirmed
+[2026-03-24T18:45:00Z] done_task_verified type=quality-audit task=TASK-628 pr=#104 evidence="launchapp-sveltekit audit committed" status=confirmed
+[2026-03-24T18:45:00Z] done_task_verified type=action-file task=TASK-665 pr=#96 evidence="phase-2-bootstrap.md exists and committed" status=confirmed
+[2026-03-24T18:45:00Z] existing_backlog type=fleet-self-healing task=TASK-663 status=backlog
+[2026-03-24T18:45:00Z] existing_backlog type=runner-reliability task=TASK-664 status=backlog
+[2026-03-24T18:45:00Z] existing_backlog type=mcp-rewire task=TASK-177 status=backlog
+[2026-03-24T18:45:00Z] RESULT=success: All done tasks verified with merged PRs. REQ-001 gap (brain.db not initialized, TASK-174 was cancelled). REQ-002 gap (MCP servers not wired, covered by TASK-177). No new tasks created (max 5 limit, existing backlog covers gaps).

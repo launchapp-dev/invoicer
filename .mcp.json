@@ -1,17 +1,55 @@
 {
   "mcpServers": {
     "ao": {
+      "type": "stdio",
+      "command": "/Users/samishukri/.local/bin/ao",
       "args": [
-        "run",
-        "--manifest-path",
-        "/Users/samishukri/brain/crates/orchestrator-cli/Cargo.toml",
-        "--",
         "--project-root",
         "/Users/samishukri/brain",
         "mcp",
         "serve"
-      ],
-      "command": "cargo"
+      ]
+    },
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com"
+    },
+    "railway": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@railway/mcp-server"]
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    },
+    "rust-docs": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "mcp-rust-docs"]
+    },
+    "docker": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-docker"]
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
     }
   }
 }

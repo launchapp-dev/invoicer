@@ -1,1 +1,2 @@
 [2026-03-20T12:55:54Z] area=operational-fixes improvement=Created TASK-157 for rate-limit backoff/requeue handling and TASK-158 for conductor runner/state self-healing after failed workflow analysis.
+[2026-03-24T15:58:00Z] area=fleet-efficiency improvement=Created REQ-007, TASK-661, TASK-662 for fleet self-healing automation. Addresses agent stalls (launchapp-nuxt: 102 queued, 0 agents), pool overload (design-system: 133% util), and runner disconnects (saas-template). Fleet-manager prompt needs automatic restart/scale mandates.

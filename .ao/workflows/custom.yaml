@@ -399,7 +399,7 @@ agents:
 
       Use ao.task.create and ao.queue.enqueue MCP tools.
       Do not commit or modify knowledge/ files other than logs — your only job is to observe, cache, dispatch, and log.
-    model: claude-sonnet-4-6
+    model: kimi-code/kimi-for-coding
     tool: claude
     mcp_servers: ["ao", "github"]
 

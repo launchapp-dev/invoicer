@@ -1,9 +1,9 @@
 # Phase 2: Bootstrap Revenue — Current Status
 
-**Date Updated**: 2026-03-21 (product review at 2026-03-21T03:20Z, scheduled execution — CYCLE 6)
+**Date Updated**: 2026-03-24 (po-fleet-scan CYCLE 42 at 2026-03-24T18:15Z)
 **Current Phase**: Phase 2: Bootstrap Revenue
-**Target Duration**: 4-6 weeks (starting 2026-03-20, completion 2026-04-30 — **40 days remaining**)
-**Phase Status**: 🟢 ACTIVE — All Phase 1 criteria met; Phase 2 entry fully unblocked; CRITICAL BLOCKER: TASK-163 (brain state sync) rework required before revenue tasks dispatch
+**Target Duration**: 4-6 weeks (starting 2026-03-20, completion 2026-04-30 — **36 days remaining**)
+**Phase Status**: 🟢 ACTIVE — Fleet healthy; 6/6 key daemons RUNNING (correction: earlier null PID readings were from stale state directories)
 
 ## Vision
 
@@ -27,21 +27,21 @@ Sell templates built by AO ($149-$299 per vertical) to bootstrap cash. Introduce
 ### ⏳ Not Yet Started (Phase 3 scope)
 - **AO Enterprise** — On-prem deployment, SSO/SAML, compliance controls, SLA support
 
-## Key Metrics (Phase 2) — Updated 2026-03-22T19:25:00Z (CYCLE 23 - po-fleet-scan)
+## Key Metrics (Phase 2) — Updated 2026-03-24T16:30Z (CYCLE 41 - brain-product-review)
 
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
 | Revenue-ready templates | 3+ verticals | SaaS (live), AI/Marketplace (planned via TASK-154) | 🔴 |
-| Template quality gates | All pass build/test/lint | **nextjs**: lint ❌ (.next/ exclusion), **nuxt**: build ❌ (missing @types/cookie), **sveltekit**: lint ❌ (.svelte-kit/ exclusion) | 🔴 |
-| Template pricing live | Stripe integration ready | TASK-152 ready (blocked by TASK-163) | ⏳ |
-| AO Pro launch | Q1 2026 | TASK-153 ready (blocked by TASK-163) | ⏳ |
+| Template quality gates | All pass build/test/lint | **nextjs**: 30q processing, **nuxt**: 87q (5a active), **sveltekit**: processing | 🟡 |
+| Template pricing live | Stripe integration ready | TASK-526 BLOCKED (workflow runner failure) | 🔴 |
+| AO Pro launch | Q1 2026 | TASK-527 BLOCKED (workflow runner failure) | 🔴 |
 | SDK publication | 10/10 @launchpad/* on npm | @launchpad/core ✅, 9 downstream in progress | 🟡 |
-| **Fleet health** | **All key daemons healthy** | **6/7 KEY RUNNING + HEALTHY** (templates ✅ operational at 80-100% util, design-system ❌ stopped 5th consecutive scan, ao-cli ✅ healthy) | 🟢 |
-| Phase 2 metrics tracking | Weekly dashboards | TASK-155 ready (blocked by TASK-163) | ⏳ |
-| Revenue target | $10k MRR by 2026-04-30 | $0 (kickoff), revenue dispatch blocked on TASK-163 | ⏳ |
-| **CRITICAL BLOCKER** | **TASK-163 complete** | **READY but REWORK REQUIRED** (first attempt zero-diff, 3 fixes needed) | 🔴 |
-| Work queued across fleet | Balanced load | ~228 tasks (saas-test 103q, nuxt 54q, sveltekit 49q, nextjs 5q, brain 16q, design-system 1q, ao-cli 0q) | 🟢 |
-| Days remaining | — | **39 days** (2026-03-22 → 2026-04-30) | ⏳ |
+| **Fleet health** | **All key daemons healthy** | **6/6 DAEMONS RUNNING** (nuxt PID 68282, sveltekit PID 54710, design-system PID 94739) | 🟢 |
+| Phase 2 metrics tracking | Weekly dashboards | TASK-155 ready (unassigned) | 🔴 |
+| Revenue target | $10k MRR by 2026-04-30 | $0 (kickoff), revenue blocked on workflow failures | 🔴 |
+| **Critical Blocker** | **Workflow runner reliability** | **TASK-526/527 blocked** — runner exits with status 1 | 🔴 |
+| Work queued across fleet | Balanced load | ~137 tasks (nuxt 87q processing, nextjs 30q processing) | 🟡 |
+| Days remaining | — | **36 days** (2026-03-24 → 2026-04-30) | 🔴 |
 
 ## Phase 2 Entry Criteria (MET 2026-03-20T13:30Z)
 
@@ -61,6 +61,154 @@ Completed by TASK-137 (workflow config fixes) and related deliverables:
 4. **Pricing & payment** — Stripe integration, recurring billing, customer portal
 5. **Marketing funnel** — Landing page, waitlist/preview access, tutorial content
 6. **Documentation complete** — Customization guides, pricing tiers, onboarding docs
+
+## Fleet Status (as of 2026-03-24T18:30Z — po-fleet-scan CYCLE 42 CORRECTED)
+
+🟢 **FLEET HEALTHY — CORRECTION**: Initial scan read from **stale state directories**. `ao status` correctly identifies active daemons. All 6 key daemons are RUNNING.
+
+**Root Cause**: Multiple `.ao/` state directories exist per repo (orphaned/dead vs active). Always use `ao status` or verify non-null PID in the most recently modified state directory.
+
+| Repo | Stale Dir (null PID) | Active Dir (PID) | ao status | Actual |
+|------|---------------------|------------------|-----------|--------|
+| launchapp-nuxt | 3bb581a4dfde | 7b659680c7d4 (68282) | ✅ running | ✅ RUNNING |
+| launchapp-sveltekit | 2cfd0807d23f | 51aab1a77fe3 (54710) | ✅ running | ✅ RUNNING |
+| design-system | 0dadf99315d8 | afed83519faf (94739) | ✅ running | ✅ RUNNING |
+
+### Daemon Status Summary (6/6 RUNNING — 2026-03-24T18:30Z CORRECTED)
+
+| Repo | Status | PID | Pool | Agents | Queued | Health | Notes |
+|------|--------|-----|------|--------|--------|--------|-------|
+| **brain** | ✅ RUNNING | 94671 | 5 | 1 | 0 | healthy | Orchestrator healthy |
+| **launchapp-nextjs** | ✅ RUNNING | 47092 | 5 | 5 | 30 | healthy | 5 agents processing |
+| **saas-template-test** | ✅ RUNNING | 96982 | 5 | 2 | 4 | healthy | 2 agents active |
+| **launchapp-nuxt** | ✅ RUNNING | 68282 | 5 | 5 | 87 | healthy | 5 agents processing |
+| **launchapp-sveltekit** | ✅ RUNNING | 54710 | 5 | 5 | 0 | healthy | 5 agents active |
+| **design-system** | ✅ RUNNING | 94739 | 3 | 3 | 1 | healthy | 3 agents active |
+
+**Queue Summary**: ~122 total ready tasks (nuxt 87q, nextjs 30q, saas-test 4q, design-system 1q)
+**Active Agents**: 21 across fleet
+**Fleet Health**: 6/6 RUNNING ✅
+
+### Phase 2 Revenue Blockers
+
+| Blocker | Task | Status | Impact |
+|---------|------|--------|--------|
+| Stripe integration | TASK-526 | BLOCKED — workflow runner | $0 MRR, no sales |
+| AO Pro launch | TASK-527 | BLOCKED — workflow runner | $0 recurring revenue |
+| Metrics dashboard | TASK-155 | backlog/unassigned | No visibility |
+
+**Decision**: Fleet is HEALTHY. No daemon recovery needed. Focus shifts to workflow runner reliability for TASK-526/527.
+
+---
+
+## Fleet Status (as of 2026-03-24T18:15Z — po-fleet-scan CYCLE 42 INCORRECT)
+
+🟢 **FLEET RECOVERY CONFIRMED**: launchapp-nuxt agent stall **RESOLVED** — now has 3/5 active agents processing 102 queued tasks. All 6 key Phase 2 template daemons healthy and operational.
+
+### Daemon Status Summary (6/6 healthy — 2026-03-24T16:30Z real-time health check)
+
+| Repo | Status | Pool | Utilization | Queued | Agents | Health | Notes |
+|------|--------|------|-------------|--------|--------|--------|-------|
+| **brain** | ✅ RUNNING | 5 | 60% | 0 | 3 | healthy | Orchestrator healthy |
+| **launchapp-nextjs** | ✅ RUNNING | 5 | 100% | 30 | 5 | healthy | Phase 2 template, processing |
+| **launchapp-nuxt** | ✅ RUNNING | 5 | 60% | 102 | 3 | healthy | 🔧 **RECOVERED** — was 0 agents |
+| **launchapp-sveltekit** | ✅ RUNNING | 5 | 80% | 0 | 4 | healthy | Phase 2 template, CLEAR |
+| **design-system** | ✅ RUNNING | 3 | 100% | 1 | 3 | healthy | Normal operation |
+| **saas-template-test** | ✅ RUNNING | 5 | 40% | 4 | 2 | degraded | Runner connected |
+
+**Queue Summary**: ~133 total ready tasks (nuxt 102q, nextjs 30q, design-system 1q, saas-test 4q)
+**Active Agents**: 17 across fleet (brain 3, nextjs 5, nuxt 3, sveltekit 4, design-system 3, saas-test 2)
+
+### Phase 2 Revenue Blockers (UPDATED)
+
+| Blocker | Task | Status | Impact |
+|---------|------|--------|--------|
+| Nuxt template stalled | TASK-656/TASK-660 | **RECOVERED** — 3 agents active | 102 tasks now processing |
+| Stripe integration | TASK-526 | **BLOCKED** — workflow runner failed | $0 MRR, no sales |
+| AO Pro launch | TASK-527 | **BLOCKED** — workflow runner failed | $0 recurring revenue |
+| Metrics dashboard | TASK-155 | backlog/unassigned | No visibility |
+
+**Decision**: Fleet recovery successful. New critical blocker: workflow runner failures preventing TASK-526/527 execution. Need systemic runner reliability fix.
+
+---
+
+## Fleet Status (as of 2026-03-24T16:15Z — Product Owner Review CYCLE 40)
+
+🔴 **CRITICAL FLEET ISSUE — launchapp-nuxt AGENT STALL CONFIRMED**: Daemon running (PID 55822) but **0 active agents processing 102 ready tasks**. This is a **Phase 2 revenue blocker** — nuxt template work completely stalled.
+
+### Daemon Status Summary (5/6 healthy — 2026-03-24T16:15Z real-time health check)
+
+| Repo | Status | Pool | Utilization | Queued | Agents | Health | Notes |
+|------|--------|------|-------------|--------|--------|--------|-------|
+| **brain** | ✅ RUNNING | 5 | 100% | 1 | 5 | healthy | Orchestrator at capacity |
+| **launchapp-nextjs** | ✅ RUNNING | 5 | 100% | 35 | 5 | healthy | Phase 2 template, processing |
+| **launchapp-nuxt** | 🔴 RUNNING | 5 | **0%** | **102** | **0** | **CRITICAL** | 🔴 **AGENT STALL** — needs recovery |
+| **launchapp-sveltekit** | ✅ RUNNING | 5 | 100% | 1 | 5 | healthy | Phase 2 template, clear |
+| **design-system** | ✅ RUNNING | 3 | 66% | 2 | 2 | healthy | Normal operation |
+| **saas-template-test** | ⚠️ RUNNING | 5 | 40% | 4 | 2 | degraded | Runner disconnected |
+
+**Queue Summary**: ~145 total ready tasks (nuxt 102q, nextjs 35q, brain 1q, design-system 2q, sveltekit 1q, saas-test 4q)
+**Active Agents**: 19 across fleet (brain 5, nextjs 5, nuxt **0**, sveltekit 5, design-system 2, saas-test 2)
+
+### Recovery Actions Required
+
+1. **🔴 CRITICAL — launchapp-nuxt agent stall**: NO EXISTING TASK FOUND — need to create manage-fleet recovery task
+   - **Impact**: 102 Phase 2 template tasks blocked, nuxt vertical at risk
+   - **Action needed**: Create task for fleet-manager to restart nuxt daemon/agents
+
+2. **🟡 LOW — saas-template-test runner disconnected**: TASK-650 exists in backlog
+
+### Phase 2 Revenue Blockers
+
+| Blocker | Task | Status | Impact |
+|---------|------|--------|--------|
+| Nuxt template stalled | **TASK-660** | **backlog/unassigned** | 102 tasks blocked |
+| Stripe integration | TASK-526 | ready/unassigned | $0 MRR, no sales |
+| AO Pro launch | TASK-527 | ready/unassigned | $0 recurring revenue |
+| Metrics dashboard | TASK-155 | backlog/unassigned | No visibility |
+
+**Decision**: Create manage-fleet task for nuxt recovery immediately. Prioritize TASK-526/527 assignment.
+
+---
+
+## Fleet Status (as of 2026-03-24T15:15:00Z — Product Owner Review CYCLE 39)
+
+🔴 **CRITICAL FLEET ISSUE — launchapp-nuxt AGENT STALL**: Daemon running (PID 55822) but **0 active agents processing 102 queued tasks**. This is a **Phase 2 revenue blocker** — nuxt template work completely stalled.
+
+### Daemon Status Summary (5/6 healthy — 2026-03-24T15:15:00Z direct health check)
+
+| Repo | Status | Pool | Utilization | Queued | Agents | Health | Notes |
+|------|--------|------|-------------|--------|--------|--------|-------|
+| **brain** | ✅ RUNNING | 5 | 100% | 2 | 5 | healthy | Orchestrator at capacity |
+| **launchapp-nextjs** | ✅ RUNNING | 5 | 60% | 27 | 3 | healthy | Phase 2 template, processing |
+| **launchapp-nuxt** | ⚠️ RUNNING | 5 | **0%** | **102** | **0** | degraded | 🔴 **AGENT STALL** — critical |
+| **launchapp-sveltekit** | ✅ RUNNING | 5 | 100% | 0 | 5 | healthy | Phase 2 template, clear |
+| **design-system** | ✅ RUNNING | 3 | 66% | 2 | 2 | healthy | Normal operation |
+| **saas-template-test** | ⚠️ RUNNING | 5 | N/A | 0 | — | degraded | Runner disconnected, 0 queued |
+
+**Queue Summary**: ~133 total tasks (nuxt 102q, nextjs 27q, brain 2q, design-system 2q, sveltekit 0q, saas-test 0q)
+**Active Agents**: 15 across fleet (brain 5, nextjs 3, nuxt **0**, sveltekit 5, design-system 2, saas-test 0)
+
+### Recovery Actions Required
+
+1. **🔴 CRITICAL — launchapp-nuxt agent stall**: TASK-656 exists in backlog (unassigned) for manage-fleet recovery
+   - **Impact**: 102 Phase 2 template tasks blocked, nuxt vertical at risk
+   - **Action needed**: Dispatch TASK-656 to fleet-manager immediately
+
+2. **🟡 LOW — saas-template-test runner disconnected**: 0 queued work, can wait
+
+### Phase 2 Revenue Blockers
+
+| Blocker | Task | Status | Impact |
+|---------|------|--------|--------|
+| Nuxt template stalled | TASK-656 | backlog/unassigned | 102 tasks blocked |
+| Stripe integration | TASK-526 | ready/unassigned | $0 MRR, no sales |
+| AO Pro launch | TASK-527 | ready/unassigned | $0 recurring revenue |
+| Metrics dashboard | TASK-155 | backlog/unassigned | No visibility |
+
+**Decision**: Prioritize TASK-656 dispatch (nuxt recovery) and assign TASK-526/527 to agents for immediate execution.
+
+---
 
 ## Fleet Status (as of 2026-03-22T19:25:00Z — po-fleet-scan CYCLE 23)
 
