@@ -31,7 +31,8 @@ AO is a local-first daemon that runs an autonomous engineering org on your machi
 - 180+ PRs merged autonomously in first week of operation
 - 6 daemons running 24/7 across the portfolio
 - 20 specialized agents (planner, reviewer, security-monitor, sdk-auditor, etc.)
-- 108k LOC Rust codebase (16 crates), built by solo founder
+- Rust codebase (16 crates)
+- Design system bootstrapped by AO, now used across our products (70+ PRs merged)
 - 54+ repos managed from a single "brain" command center
 - External users: ___ (NEED THIS)
 - GitHub stars: ___ (NEED THIS)
@@ -68,9 +69,13 @@ AO is not competing with Cursor (IDE) or Devin (cloud agent). AO is a **local au
 3. Enterprises want AI agents but won't send code to cloud services
 4. The "AI engineer" category is forming — no one owns "autonomous local orchestration" yet
 
-## Why Me
+## Why Us
 
-Solo technical founder who built the entire system — 108k LOC of Rust, 16 crates, fleet orchestration, multi-model routing, YAML workflow engine — and then used it to autonomously build 4 SaaS templates across 4 frameworks in a week. The product proves itself by existing.
+**Sami Shukri (Technical Lead)** — Full-stack engineer who built the AO orchestration engine in ~11 weeks — 16 Rust crates covering fleet orchestration, multi-model routing, and a YAML workflow engine — plus the full LaunchApp ecosystem from LaunchPad BaaS to the brain repo.
+
+**Rafael (Product)** — Experience across startups and enterprise. Brings product discipline, go-to-market strategy, and market perspective. Complements the technical foundation with execution focus.
+
+Together: one founder builds the engine, the other makes sure it ships to the right people. After ~11 weeks of building AO, we pointed it at 4 SaaS frameworks and it shipped 180+ PRs autonomously in its first week of operation. We also used AO to bootstrap our design system, which is now integrated across our products. The product proves itself by existing.
 
 ## Ask
 
@@ -78,7 +83,7 @@ $500K (standard YC deal) to:
 1. Get to 500+ users running AO on their repos
 2. Ship AO Cloud (hosted orchestration, no CLI setup)
 3. Hit $10K MRR from templates + packs
-4. Hire first engineer (Rust/systems)
+4. Hire first engineer
 
 ## The Demo
 
@@ -99,7 +104,7 @@ $500K (standard YC deal) to:
 AO is an autonomous software engineering team that runs locally on your machine. Define agents and workflows in YAML, and AO dispatches AI models to plan, code, review, test, and merge — 24/7, without human intervention.
 
 ### Why did you pick this idea to work on?
-I was building SaaS templates and realized I was doing the same work over and over across 4 frameworks. I built AO to do it for me. It shipped 180+ PRs in its first week. The tool became more valuable than the templates it was building.
+We were building SaaS templates and realized we were doing the same work over and over across 4 frameworks. We built AO to do it for us. It shipped 180+ PRs in its first week. The tool became more valuable than the templates it was building.
 
 ### What's new about what you're making?
 Every AI coding tool is either an IDE assistant (Cursor, Copilot) or a cloud sandbox (Devin, Factory). AO is neither — it's a local daemon that runs a full engineering team: planning, coding, reviewing, testing, and merging. It uses git worktrees for real branch isolation, routes across 6+ LLM providers, and runs PM/EM review loops autonomously. No one else does local-first, multi-model, multi-phase autonomous orchestration.
