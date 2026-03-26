@@ -175,7 +175,7 @@ function extractKeywords(text: string): string[] {
 // ---- AO Task Query ----
 
 function fetchBacklogTasks(projectRoot: string): AoTask[] {
-  const cmd = `ao task list --status backlog --output json --project-root "${projectRoot}"`;
+  const cmd = `ao task list --status backlog --json --project-root "${projectRoot}"`;
   let raw: string;
   try {
     raw = execSync(cmd, { encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"] });
@@ -192,6 +192,7 @@ function fetchBacklogTasks(projectRoot: string): AoTask[] {
   try {
     const parsed = JSON.parse(raw.trim());
     if (Array.isArray(parsed)) return parsed as AoTask[];
+    if (parsed.ok === true && Array.isArray(parsed.data)) return parsed.data as AoTask[];
     if (parsed.tasks && Array.isArray(parsed.tasks)) return parsed.tasks as AoTask[];
     return [];
   } catch {

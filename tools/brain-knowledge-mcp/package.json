@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node --experimental-strip-types server.ts",
-    "build": "tsc"
+    "build": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
