@@ -1,4 +1,4 @@
-# 200 Pipelines AO Can Orchestrate
+# 300 Pipelines AO Can Orchestrate
 
 AO is not a coding agent. It's a general-purpose autonomous production system. Software engineering was the first vertical. Media production (StoryForge) was the second. The same architecture — daemon + YAML workflows + MCP servers + multi-model routing + persistent state — handles any multi-phase workflow that requires coordination, quality gates, and autonomous execution.
 
@@ -243,6 +243,126 @@ AO is not a coding agent. It's a general-purpose autonomous production system. S
 198. **Freight brokerage pipeline** — receive shipment request → match carriers → negotiate rate → book → track → invoice
 199. **Warehouse slotting optimization** — analyze pick patterns → calculate optimal placement → generate move plan → execute → measure improvement
 200. **Cross-border shipping** — classify goods → calculate duties → generate customs docs → broker clearance → track → deliver
+
+## Agriculture & Food (201-210)
+201. **Crop monitoring pipeline** — satellite imagery → vegetation index analysis → disease detection → treatment recommendation → dispatch → verify
+202. **Food safety audit** — schedule inspection → checklist execution → document findings → corrective actions → follow-up → certify
+203. **Supply chain traceability** — tag at source → track through processing → record handling → generate provenance certificate → consumer lookup
+204. **Recipe development pipeline** — nutritional targets → ingredient sourcing → recipe generation → kitchen testing → cost analysis → publish
+205. **Irrigation optimization** — soil moisture sensors → weather forecast → calculate water needs → schedule irrigation → monitor → adjust
+206. **Livestock health monitoring** — sensor data → detect anomalies → alert vet → diagnosis → treatment plan → recovery tracking
+207. **Farm-to-table certification** — audit farm practices → verify processing → track distribution → generate certification → consumer QR code
+208. **Food waste reduction** — inventory monitoring → expiry prediction → markdown recommendations → donation routing → composting → report
+209. **Pest management pipeline** — scout fields → identify pests → determine thresholds → select treatment → apply → monitor effectiveness
+210. **Agricultural loan underwriting** — farm data collection → yield history → weather risk → soil analysis → credit decision → disbursement
+
+## Automotive (211-220)
+211. **Vehicle recall pipeline** — identify defect → scope affected VINs → notify owners → parts procurement → dealer scheduling → repair verification
+212. **Connected car data pipeline** — collect telemetry → process → detect maintenance needs → alert owner → schedule service → parts ordering
+213. **Autonomous driving validation** — define test scenarios → simulate → analyze results → flag edge cases → retrain → regression test
+214. **Dealer inventory optimization** — analyze demand by region → recommend allocation → transfer vehicles → track sell-through → adjust
+215. **Warranty analytics** — aggregate claims → identify patterns → root cause analysis → supplier recovery → design change → cost tracking
+216. **Electric vehicle charging network** — site selection → permits → installation → commissioning → monitoring → maintenance scheduling
+217. **Vehicle configuration pipeline** — customer selections → validate combinations → pricing → production order → build slot → delivery scheduling
+218. **Emissions compliance** — test vehicle → compare to standards → document results → submit to regulators → track certification → recall if needed
+219. **Used vehicle valuation** — inspect condition → pull history report → market comparison → appraise → price → list
+220. **Parts catalog management** — ingest engineering changes → update fitment data → generate diagrams → translate → publish → distribute
+
+## Telecommunications (221-230)
+221. **Network capacity planning** — traffic analysis → growth modeling → identify bottlenecks → upgrade planning → budgeting → implementation
+222. **Customer provisioning** — order received → validate address → assign resources → configure equipment → install → activate → verify
+223. **Billing dispute resolution** — receive dispute → pull usage records → analyze → determine validity → adjust/deny → communicate → close
+224. **Network fault management** — detect alarm → correlate → diagnose root cause → dispatch repair → verify fix → update ticket → RCA
+225. **Spectrum management** — inventory frequencies → monitor usage → detect interference → optimize allocation → regulatory filing
+226. **Tower site acquisition** — site identification → landlord negotiation → zoning/permitting → construction → commissioning → lease management
+227. **Number porting pipeline** — receive request → validate → coordinate with donor carrier → provision → activate → confirm
+228. **Service quality monitoring** — collect QoS metrics → benchmark → identify degradation → prioritize fixes → implement → verify improvement
+229. **Fraud detection (telecom)** — monitor usage patterns → flag anomalies → investigate → block/suspend → notify customer → resolve
+230. **Product launch pipeline** — define offering → configure billing → train support → update systems → launch → monitor adoption
+
+## Aviation & Aerospace (231-240)
+231. **Flight operations pipeline** — crew scheduling → fuel planning → weather assessment → flight plan → dispatch → monitor → debrief
+232. **Aircraft maintenance** — track flight hours → schedule inspections → generate work orders → parts procurement → execute → certify airworthy
+233. **Passenger rebooking** — detect disruption → identify affected passengers → find alternatives → rebook → notify → compensate if needed
+234. **Safety reporting (ASAP)** — receive report → de-identify → analyze → trend identification → corrective action → share findings
+235. **Cargo operations** — booking → dangerous goods check → load planning → weight and balance → manifest → track → deliver
+236. **Pilot training pipeline** — assess competency → design training plan → schedule simulator → evaluate → certify → recurrent scheduling
+237. **Airport slot management** — request slots → evaluate capacity → coordinate with airlines → allocate → monitor compliance → reallocate
+238. **Parts lifecycle tracking** — install → track cycles/hours → predict replacement → order part → schedule swap → return core → document
+239. **Airspace management** — monitor traffic → detect conflicts → issue clearances → sequence approaches → coordinate handoffs → log
+240. **Satellite operations** — command scheduling → telemetry monitoring → orbit maintenance → anomaly detection → resolution → reporting
+
+## Sports & Entertainment (241-250)
+241. **Event production pipeline** — concept → venue booking → talent booking → ticket setup → marketing → day-of coordination → post-event report
+242. **Athlete performance tracking** — collect biometric data → analyze workload → injury risk scoring → recommend adjustments → track outcomes
+243. **Sports analytics pipeline** — ingest game data → statistical analysis → opponent scouting → game plan generation → coach review
+244. **Ticket dynamic pricing** — monitor demand → competitor analysis → adjust pricing → test → publish → revenue reporting
+245. **Broadcast production** — schedule → crew assignment → equipment prep → rehearsal → live production → post-production → distribution
+246. **Esports tournament management** — registration → seeding → scheduling → match monitoring → results → prize distribution → content
+247. **Venue maintenance pipeline** — inspection schedule → work orders → prioritize → execute → verify → compliance documentation
+248. **Fan engagement pipeline** — segment fans → personalize content → deliver across channels → track engagement → optimize → measure ROI
+249. **Talent scouting pipeline** — identify prospects → collect data → evaluate → rank → compare → present to decision makers → recruit
+250. **Merchandise pipeline** — design → sample → cost analysis → production order → quality check → distribute → track sales
+
+## Travel & Hospitality (251-260)
+251. **Revenue management** — forecast demand → adjust rates → monitor competitors → optimize allocation → review → report
+252. **Guest experience pipeline** — pre-arrival profiling → room assignment → welcome personalization → during-stay service → post-stay survey → loyalty
+253. **Restaurant operations** — menu planning → ingredient sourcing → prep scheduling → service execution → waste tracking → cost analysis
+254. **Tour package creation** — destination research → itinerary design → supplier negotiation → pricing → marketing → booking → fulfillment
+255. **Hotel maintenance pipeline** — guest requests → work order generation → prioritize → dispatch → complete → verify → update PMS
+256. **Travel disruption management** — monitor events → assess impact → rebook affected travelers → communicate → claim processing
+257. **Food and beverage cost control** — recipe costing → purchase orders → receiving → inventory → variance analysis → adjust menus
+258. **Loyalty program optimization** — analyze member behavior → segment tiers → design promotions → deliver → track redemption → ROI
+259. **Group booking pipeline** — inquiry → availability check → proposal → contract → room block management → billing → post-event review
+260. **Housekeeping optimization** — check departure list → prioritize rooms → assign staff → track completion → inspect → release rooms
+
+## Insurance (261-270)
+261. **Policy lifecycle management** — quote → bind → issue → endorsements → renewals → cancellations → archive
+262. **Claims adjudication pipeline** — FNOL → coverage verification → investigation → reserve setting → settlement → payment → subrogation
+263. **Catastrophe response** — detect event → model exposure → mobilize adjusters → triage claims → expedite payments → reinsurance recovery
+264. **Actuarial modeling pipeline** — collect loss data → build models → validate → price products → file with regulators → deploy rates
+265. **Agent onboarding** — application → background check → licensing verification → training → system access → appointment → monitor production
+266. **Subrogation pipeline** — identify recovery opportunities → investigate liability → demand letter → negotiate → settle → collect → close
+267. **Reinsurance placement** — analyze exposure → design program → market to reinsurers → negotiate terms → bind → document → administer
+268. **Regulatory filing pipeline** — prepare forms → actuarial support → legal review → submit → respond to objections → secure approval
+269. **Policyholder communication** — trigger event → generate personalized document → compliance review → deliver → track receipt → archive
+270. **Loss control pipeline** — schedule inspection → conduct survey → document hazards → recommend improvements → follow-up → premium adjustment
+
+## Media & Advertising (271-280)
+271. **Ad campaign pipeline** — brief → audience research → creative development → media planning → launch → optimize → report
+272. **Programmatic ad optimization** — collect performance data → analyze → adjust bids → reallocate budget → A/B test creatives → report
+273. **Brand monitoring** — scrape mentions → sentiment analysis → competitive comparison → alert on crises → generate report → distribute
+274. **Influencer campaign management** — identify influencers → vet → negotiate → brief → content review → publish → measure ROI
+275. **Content moderation at scale** — ingest UGC → AI classification → flag violations → human review → action → appeal handling → report
+276. **Podcast network management** — source shows → onboard → schedule production → distribute → monetize → analytics → talent management
+277. **Print production pipeline** — editorial calendar → assign stories → write → edit → layout → proof → print → distribute
+278. **Video ad production** — creative brief → script → storyboard → shoot/generate → edit → review → format for platforms → traffic
+279. **Audience development** — analyze demographics → identify growth segments → content strategy → execute → measure → iterate
+280. **Rights and royalties** — track content usage → calculate royalties → generate statements → pay → audit → reconcile
+
+## Pharmaceutical (281-290)
+281. **Drug discovery pipeline** — target identification → compound screening → lead optimization → preclinical testing → IND filing
+282. **Clinical trial management** — protocol design → site selection → patient recruitment → data collection → monitoring → analysis → publication
+283. **Regulatory submission** — compile dossier → format per regional requirements → quality review → submit → respond to queries → approval
+284. **Pharmacovigilance** — collect adverse events → assess causality → signal detection → evaluate risk → update labeling → report to authorities
+285. **Manufacturing batch record** — initiate batch → in-process checks → deviation management → release testing → QP release → ship
+286. **Drug supply chain** — forecast demand → production planning → distribution → cold chain monitoring → pharmacy delivery → track expiry
+287. **Medical affairs pipeline** — literature monitoring → evidence synthesis → KOL engagement → advisory boards → publications → congress planning
+288. **Labeling pipeline** — regulatory requirement → draft label → medical review → legal review → regulatory review → artwork → approve
+289. **Post-market surveillance** — monitor real-world evidence → benefit-risk assessment → periodic safety reports → regulatory submission
+290. **Compassionate use pipeline** — physician request → eligibility assessment → ethics review → supply → treatment monitoring → reporting
+
+## Personal & Consumer (291-300)
+291. **Personal finance management** — connect accounts → categorize spending → set budgets → track → alert on overages → monthly report
+292. **Home renovation pipeline** — scope project → design → contractor selection → permitting → construction management → inspection → punchlist
+293. **Wedding planning pipeline** — budget → venue selection → vendor booking → timeline → invitations → day-of coordination → thank yous
+294. **Immigration case management** — assess eligibility → compile documents → prepare application → legal review → file → track status → respond to RFEs
+295. **Estate planning pipeline** — inventory assets → draft will/trust → beneficiary designation → legal review → execute → store → periodic review
+296. **Fitness program pipeline** — assess baseline → design program → schedule workouts → track progress → adjust → monthly review
+297. **Home buying pipeline** — pre-approval → house hunting → offer → inspection → appraisal → closing → move-in
+298. **College application pipeline** — school research → essay writing → application assembly → submission → financial aid → decision tracking → commit
+299. **Meal planning pipeline** — dietary preferences → recipe selection → grocery list → delivery order → prep schedule → cook → review
+300. **Pet care management** — vet scheduling → medication tracking → grooming appointments → diet planning → exercise tracking → health records
 
 ---
 
