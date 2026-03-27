@@ -6,22 +6,23 @@
 
 ## One-Liner
 
-AO is an autonomous software engineering team you define in YAML — it shipped 180+ PRs across 4 frameworks in its first week, with zero human code review.
+AO is a general-purpose autonomous production system you define in YAML — software, media, data pipelines, and 300+ workflow types across 30 verticals, all running on the same daemon + YAML + MCP architecture.
 
 ## The Problem
 
-Software teams spend most of their time on work that's predictable: bug fixes, dependency updates, code review, test coverage, boilerplate features. Hiring is slow, expensive, and doesn't scale. AI coding assistants (Copilot, Cursor) help individual developers write code faster, but they don't replace the *team* — the planning, reviewing, testing, merging, and shipping cycle.
+Organizations across every industry spend most of their time on work that's predictable and multi-phase: software teams on bug fixes, code review, and test coverage; media teams on scripting, asset generation, and assembly; legal teams on contract review and compliance; data teams on ETL and validation. Hiring is slow, expensive, and doesn't scale. AI tools help individual workers go faster, but they don't replace the *team* — the planning, executing, reviewing, quality-gating, and shipping cycle that every multi-phase workflow requires.
 
 ## The Solution
 
-AO is a local-first daemon that runs an autonomous engineering org on your machine. You define agents, workflows, and quality gates in YAML. AO dispatches AI agents to git worktrees, runs multi-phase pipelines (requirements → architecture → implementation → review → test → merge), and ships code 24/7 without human intervention.
+AO is a local-first daemon that runs autonomous production teams on your machine. You define agents, workflows, and quality gates in YAML. The same daemon + YAML + MCP architecture that ships software (requirements → architecture → implementation → review → test → merge) also orchestrates media production, data pipelines, legal workflows, healthcare compliance, and any other multi-phase process — AO is domain-agnostic by design.
 
 **Key differentiators:**
-- **YAML-defined teams** — your engineering org is a config file, not a headcount
-- **Local-first, BYOK** — your machine, your API keys, your code never leaves your network
+- **Domain-agnostic orchestration** — the same architecture handles code, media, data pipelines, legal, healthcare, and 300+ pipeline types across 30 verticals
+- **YAML-defined teams** — your production org is a config file, not a headcount
+- **Local-first, BYOK** — your machine, your API keys, your data never leaves your network
 - **Multi-model routing** — Claude, GPT, Gemini, Kimi, GLM, MiniMax with automatic fallback
 - **Git worktree isolation** — each task gets a real branch, not a cloud sandbox
-- **Autonomous PM/EM loops** — agents don't just code, they review, approve, and merge
+- **Autonomous PM/EM loops** — agents don't just execute, they review, approve, and merge
 - **Self-healing** — daemon restarts, retries, and adapts to model rate limits automatically
 
 ## Traction
@@ -33,6 +34,8 @@ AO is a local-first daemon that runs an autonomous engineering org on your machi
 - 20 specialized agents (planner, reviewer, security-monitor, sdk-auditor, etc.)
 - Rust codebase (16 crates)
 - Design system bootstrapped by AO, now used across our products (70+ PRs merged)
+- **StoryForge** — AO orchestrates a full media production pipeline (world-building, script writing, image generation, voice synthesis, music composition, video assembly) using the same daemon + YAML architecture that ships code
+- 300+ pipeline use cases identified across 30 verticals, proving domain-agnostic generalizability
 - 54+ repos managed from a single "brain" command center
 - External users: ___ (NEED THIS)
 - GitHub stars: ___ (NEED THIS)
@@ -54,20 +57,21 @@ Free CLI binary (closed source) → monetize ecosystem:
 
 ## Market
 
-- AI coding tools: $40B+ market
+- AI coding tools: $40B+ market — but every player is fighting over the same "coding agent" niche
 - Cursor: $29.3B valuation, $1B+ ARR
 - Devin (Cognition): $10.2B valuation, $73M ARR
 - Factory AI: $300M valuation
 - GitHub Copilot: largest user base (bundled with GitHub)
+- Autonomous workflow orchestration across all verticals: untapped
 
-AO is not competing with Cursor (IDE) or Devin (cloud agent). AO is a **local autonomous engineering org** — different buyer, different use case.
+AO is not competing with Cursor (IDE) or Devin (cloud agent). They're building coding tools. AO is building a **general-purpose autonomous production system** — different architecture, different market, vastly larger TAM.
 
 ## Why Now
 
 1. LLMs are good enough to write production code (SWE-bench: 78%+ for top models)
 2. Multi-model availability means no single-provider dependency
 3. Enterprises want AI agents but won't send code to cloud services
-4. The "AI engineer" category is forming — no one owns "autonomous local orchestration" yet
+4. The "AI engineer" category is forming — but everyone is fighting over coding agents. No one owns "general-purpose autonomous orchestration" yet. Cursor/Devin can't just add this — they're architecturally locked into code editing. AO's daemon + YAML + MCP architecture is domain-agnostic from the ground up.
 
 ## Why Us
 
@@ -101,16 +105,16 @@ $500K (standard YC deal) to:
 ## YC Application Answers (Draft)
 
 ### What does your company do?
-AO is an autonomous software engineering team that runs locally on your machine. Define agents and workflows in YAML, and AO dispatches AI models to plan, code, review, test, and merge — 24/7, without human intervention.
+AO is a general-purpose autonomous production system that runs locally on your machine. Define agents and workflows in YAML, and AO dispatches AI models to execute multi-phase pipelines — software delivery, media production, data processing, and any domain — 24/7, without human intervention.
 
 ### Why did you pick this idea to work on?
 We were building SaaS templates and realized we were doing the same work over and over across 4 frameworks. We built AO to do it for us. It shipped 180+ PRs in its first week. The tool became more valuable than the templates it was building.
 
 ### What's new about what you're making?
-Every AI coding tool is either an IDE assistant (Cursor, Copilot) or a cloud sandbox (Devin, Factory). AO is neither — it's a local daemon that runs a full engineering team: planning, coding, reviewing, testing, and merging. It uses git worktrees for real branch isolation, routes across 6+ LLM providers, and runs PM/EM review loops autonomously. No one else does local-first, multi-model, multi-phase autonomous orchestration.
+Every competitor is locked into the "coding agent" framing — 204+ tools all fighting over the same IDE/sandbox niche. AO is a general-purpose autonomous production system. The same daemon + YAML + MCP architecture that ships software also orchestrates media production (StoryForge: world-building → scripting → image gen → voice → music → assembly), data pipelines, legal workflows, and 300+ pipeline types across 30 verticals. It uses git worktrees for real isolation, routes across 6+ LLM providers, and runs PM/EM review loops autonomously. No one else is building domain-agnostic, local-first, multi-model autonomous orchestration.
 
 ### Who are your competitors?
-Cursor ($29.3B) is an IDE — it helps one developer write code faster. Devin ($10.2B) is a cloud agent — it runs in a sandbox you can't audit. GitHub Copilot is an autocomplete. OpenHands is open-source but lacks orchestration. AO is the only local-first, BYOK autonomous engineering org defined in YAML.
+Cursor ($29.3B) is an IDE — it helps one developer write code faster. Devin ($10.2B) is a cloud agent — it runs in a sandbox you can't audit. GitHub Copilot is an autocomplete. OpenHands is open-source but lacks orchestration. Composio is the closest — it dispatches coding agents in worktrees — but it's a thin dispatch layer, not a full orchestration engine. All of them are coding-only. AO is the only general-purpose, local-first, BYOK autonomous production system — the same architecture handles software, media, data pipelines, and any multi-phase workflow.
 
 ### How do or will you make money?
 Free CLI binary for adoption. Revenue from: SaaS templates built by AO ($149-299), workflow packs ($15-49), AO Team for fleet management ($99/seat/mo), AO Enterprise for on-prem ($custom), and eventually AO Cloud for hosted orchestration.

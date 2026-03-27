@@ -161,9 +161,9 @@ These are app builders for AI products, not AI agents that build apps.
 
 Composio ships an open-source agent orchestrator that spawns parallel coding agents in git worktrees, auto-fixes CI failures, and opens PRs. It uses YAML config. It manages fleets.
 
-This is the first tool we've seen that even attempts what AO does. Credit where it's due.
+This is the closest competitor we've seen. Credit where it's due — they're the only ones even attempting fleet orchestration.
 
-But Composio is a thin wrapper around other agents (Claude Code, Codex, Aider). It doesn't have:
+But Composio is fundamentally a thin dispatch layer — a wrapper around other agents (Claude Code, Codex, Aider) that sends tasks out and collects results. It doesn't have:
 - Autonomous PM/EM review loops
 - Multi-phase workflows (requirements → architecture → implementation → review → test → merge)
 - Self-healing daemon with model fallback chains
@@ -171,7 +171,23 @@ But Composio is a thin wrapper around other agents (Claude Code, Codex, Aider). 
 - Quality gates, security audits, and risk-based merge policies
 - The ability to run a full engineering org 24/7 without human intervention
 
-Composio dispatches agents. AO runs an engineering team.
+Composio dispatches agents. AO runs entire production organizations. And unlike Composio — which is locked into the coding-agent vertical — AO's architecture is domain-agnostic. The same daemon orchestrates software delivery, media production, data pipelines, and 300+ workflow types across 30 verticals.
+
+---
+
+## The Coding Agent Trap
+
+Here's what none of these companies realize: they're all fighting over the same tiny slice of the autonomy market.
+
+204+ tools. $40B+ raised. Every single one locked into the "coding agent" framing. They're building better hammers while the entire world of production work — media, data, legal, healthcare, operations — sits there waiting for orchestration.
+
+We know because we've already broken out of the trap. **StoryForge** is a media production pipeline — world-building, script writing, image generation, voice synthesis, music composition, video assembly — orchestrated by the same AO daemon, the same YAML configs, the same MCP architecture that ships our software. No new engine. No custom system. Just a different workflow definition.
+
+That's not a demo. That's proof of generalizability. We've mapped **300+ pipeline use cases across 30 verticals** that fit AO's architecture without modification. Software delivery is use case #1. The other 299 are where the real TAM lives.
+
+Cursor can't do this — it's an IDE. Devin can't do this — it's a cloud sandbox for code. Composio can't do this — it's a dispatch layer wrapping coding agents. Their architectures are structurally incapable of orchestrating non-code production work.
+
+AO's architecture doesn't care what domain it's orchestrating. That's not a feature. That's the entire point.
 
 ---
 
@@ -206,6 +222,8 @@ We're not another YAML file that calls an LLM.
 
 **AO routes across models.** Claude, GPT, Gemini, Kimi, GLM, MiniMax — with automatic fallback chains. When one provider rate-limits you, AO switches to the next. No single point of failure.
 
+**AO is domain-agnostic.** The same architecture that ships software also runs StoryForge — a full media production pipeline. World-building, scripting, image generation, voice synthesis, music, video assembly. Same daemon. Same YAML. Same MCP tools. 300+ pipeline types across 30 verticals, all without architectural changes.
+
 **AO shipped 180+ PRs in its first week of operation.** Not in a benchmark. Not in a demo. Across 4 real SaaS frameworks, with a design system now used in our actual products.
 
 ---
@@ -220,11 +238,12 @@ The AI coding market raised $40B+ to build tools that:
 - Cost $200-500/month in API fees
 - Lose all memory between sessions
 - Can't coordinate a two-step workflow
+- Are architecturally locked into a single vertical (code)
 
-We built an autonomous engineering org that runs locally, heals itself, and ships code while you sleep.
+While 204+ companies fight over who gets to be the best coding assistant, we built a general-purpose autonomous production system that runs locally, heals itself, and orchestrates any multi-phase workflow — software, media, data, legal, healthcare, and 300+ pipeline types across 30 verticals.
 
-They have $40 billion. We have a working product.
+They have $40 billion and a coding tool. We have a working product and the entire production economy as our market.
 
 ---
 
-*Last updated: 2026-03-24*
+*Last updated: 2026-03-25*
