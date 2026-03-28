@@ -18,6 +18,9 @@ const lineItemSchema = z.object({
   amount: z.number().min(0),
 });
 
+export const RECURRING_FREQUENCIES = ["weekly", "biweekly", "monthly", "quarterly", "annually"] as const;
+export type RecurringFrequency = typeof RECURRING_FREQUENCIES[number];
+
 export const invoiceSchema = z.object({
   id: z.string(),
   invoiceNumber: z.string().min(1, "Invoice number is required"),
@@ -34,6 +37,8 @@ export const invoiceSchema = z.object({
   total: z.number(),
   notes: z.string(),
   currency: z.string().min(1),
+  recurring: z.boolean().optional(),
+  recurringFrequency: z.enum(RECURRING_FREQUENCIES).optional(),
 }).refine(
   (data) => !data.issueDate || !data.dueDate || data.dueDate >= data.issueDate,
   { message: "Due date must be on or after issue date", path: ["dueDate"] }

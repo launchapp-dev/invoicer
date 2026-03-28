@@ -22,6 +22,7 @@ import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
 import { saveInvoice, getNextInvoiceNumber, getMySettings } from "@/lib/storage";
+import { createRecurringInvoice } from "@/lib/recurring-actions";
 import { toast } from "@/components/ui/sonner";
 import { authClient } from "@/lib/auth-client";
 import type { Invoice } from "@/types/invoice";
@@ -99,6 +100,15 @@ export default function NewInvoicePage() {
   const handleSave = form.handleSubmit(async (values) => {
     try {
       await saveInvoice(values as Invoice);
+      if (values.recurring && values.recurringFrequency && session?.user?.id) {
+        const today = new Date().toISOString().split("T")[0];
+        await createRecurringInvoice(session.user.id, {
+          title: values.invoiceNumber || "Recurring Invoice",
+          frequency: values.recurringFrequency,
+          nextRunAt: today,
+          template: values,
+        });
+      }
       form.reset(values);
       setSavedId(values.id);
       toast.success("Invoice saved");
