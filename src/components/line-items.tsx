@@ -47,7 +47,7 @@ export function LineItems() {
                 <Input
                   {...register(`lineItems.${index}.description`)}
                   placeholder="Item description"
-                  aria-label={index > 0 ? `Line item ${index + 1} description` : undefined}
+                  aria-label={`Line item ${index + 1} description`}
                 />
               </div>
               <div className="grid gap-1">
@@ -58,7 +58,7 @@ export function LineItems() {
                   step="0.01"
                   value={lineItems[index]?.quantity ?? field.quantity}
                   onChange={(e) => handleLineChange(index, "quantity", e.target.value)}
-                  aria-label={index > 0 ? `Line item ${index + 1} quantity` : undefined}
+                  aria-label={`Line item ${index + 1} quantity`}
                 />
               </div>
               <div className="grid gap-1">
@@ -69,7 +69,7 @@ export function LineItems() {
                   step="0.01"
                   value={lineItems[index]?.rate ?? field.rate}
                   onChange={(e) => handleLineChange(index, "rate", e.target.value)}
-                  aria-label={index > 0 ? `Line item ${index + 1} rate` : undefined}
+                  aria-label={`Line item ${index + 1} rate`}
                 />
               </div>
               <div className="grid gap-1">
@@ -79,6 +79,7 @@ export function LineItems() {
                   tabIndex={-1}
                   value={(lineItems[index]?.amount ?? 0).toFixed(2)}
                   className="bg-muted"
+                  aria-label={`Line item ${index + 1} amount (read-only)`}
                 />
               </div>
               <Button
