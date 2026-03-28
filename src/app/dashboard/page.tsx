@@ -138,7 +138,7 @@ export default async function DashboardPage({
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <InvoiceActions invoiceId={invoice.id} />
+                        <InvoiceActions invoiceId={invoice.id} status={invoice.status} />
                       </TableCell>
                     </TableRow>
                   ))}

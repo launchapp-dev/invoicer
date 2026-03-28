@@ -163,6 +163,14 @@ export async function deleteInvoice(id: string): Promise<void> {
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
 }
 
+export async function updateInvoiceStatus(id: string, status: InvoiceStatus): Promise<void> {
+  const userId = await getCurrentUserId();
+  await db
+    .update(invoices)
+    .set({ status, updatedAt: new Date().toISOString() })
+    .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
+}
+
 export async function duplicateInvoice(id: string): Promise<Invoice | null> {
   const userId = await getCurrentUserId();
   const [row] = await db

@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, Loader2 } from "lucide-react";
+import { MoreHorizontal, Loader2, Check } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -23,13 +26,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteInvoice, duplicateInvoice } from "@/lib/storage";
+import { deleteInvoice, duplicateInvoice, updateInvoiceStatus } from "@/lib/storage";
+import type { InvoiceStatus } from "@/types/invoice";
+
+const STATUSES: { value: InvoiceStatus; label: string }[] = [
+  { value: "draft", label: "Draft" },
+  { value: "sent", label: "Sent" },
+  { value: "paid", label: "Paid" },
+  { value: "overdue", label: "Overdue" },
+  { value: "cancelled", label: "Cancelled" },
+];
 
 interface InvoiceActionsProps {
   invoiceId: string;
+  status: InvoiceStatus;
 }
 
-export function InvoiceActions({ invoiceId }: InvoiceActionsProps) {
+export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [pending, setPending] = React.useState(false);
@@ -61,6 +74,19 @@ export function InvoiceActions({ invoiceId }: InvoiceActionsProps) {
     }
   }
 
+  async function handleStatusChange(newStatus: InvoiceStatus) {
+    setPending(true);
+    try {
+      await updateInvoiceStatus(invoiceId, newStatus);
+      router.refresh();
+      toast.success("Status updated");
+    } catch {
+      toast.error("Failed to update status");
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -76,6 +102,22 @@ export function InvoiceActions({ invoiceId }: InvoiceActionsProps) {
           <DropdownMenuItem asChild>
             <Link href={`/invoices/${invoiceId}/preview`}>Preview</Link>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger disabled={pending}>Change Status</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              {STATUSES.map(({ value, label }) => (
+                <DropdownMenuItem
+                  key={value}
+                  onSelect={() => handleStatusChange(value)}
+                  className="flex items-center gap-2"
+                >
+                  <Check className={`h-4 w-4 ${value === status ? "opacity-100" : "opacity-0"}`} />
+                  {label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={handleDuplicate}>
             Duplicate
