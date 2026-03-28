@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -126,6 +126,7 @@ export function InvoiceHistory({ onLoad, onDuplicate }: InvoiceHistoryProps) {
       <SheetContent side="right" className="w-[400px] sm:max-w-[400px]">
         <SheetHeader>
           <SheetTitle>Invoice History</SheetTitle>
+          <SheetDescription>Your saved invoices. Load, duplicate, or delete.</SheetDescription>
         </SheetHeader>
         {open && (
           <InvoiceHistoryPanel
