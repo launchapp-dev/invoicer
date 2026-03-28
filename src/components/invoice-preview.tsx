@@ -14,6 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { calcSubtotal, calcTaxAmount, calcTotal, formatCurrency } from "@/lib/calculations";
+import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
 
 const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destructive" | "outline"> = {
@@ -46,6 +47,8 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
       a.download = `${invoice.invoiceNumber || "invoice"}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
+    } catch {
+      toast.error("Failed to generate PDF");
     } finally {
       setDownloading(false);
     }
