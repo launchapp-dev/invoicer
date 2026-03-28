@@ -436,8 +436,27 @@ agents:
       The app runs at http://localhost:3000.
 
       ═══════════════════════════════════════════════════════════
-      E2E TEST SUITE — Execute ALL tests in order
+      STEP 0 — READ & UPDATE TEST PLAN (mandatory, always first)
       ═══════════════════════════════════════════════════════════
+
+      a) Read QA.md — this is your living test plan document.
+      b) Read VISION.md — understand what features should exist.
+      c) Call ao.requirements.list — get all current requirements.
+      d) Call ao.task.list — check recently completed tasks (status "done").
+      e) COMPARE: Are there new features in VISION.md or recently completed
+         tasks that are NOT covered by QA.md's Test Coverage section?
+         If yes, ADD new test cases to QA.md under the appropriate section.
+         For example, if a "Client Management" feature was just built but
+         QA.md has no "Client Management" test section, add one.
+      f) UPDATE QA.md's "Last Run" section with today's date.
+      g) Commit QA.md changes: git add QA.md && git commit -m "qa: update test plan"
+
+      ═══════════════════════════════════════════════════════════
+      E2E TEST SUITE — Execute ALL tests from QA.md
+      ═══════════════════════════════════════════════════════════
+
+      Run every test case listed in QA.md's Test Coverage section.
+      Check off items that pass. Note items that fail.
 
       CONSOLE ERROR CHECKING — After EVERY step:
         Call browser_console_messages to check for errors.
@@ -484,24 +503,28 @@ agents:
         c) Each unique console error or failed network request = a bug.
 
       ═══════════════════════════════════════════════════════════
-      REPORTING
+      REPORTING — Write results to QA.md
       ═══════════════════════════════════════════════════════════
       After each step, report PASS or FAIL with details.
       Take screenshots at key points using browser_take_screenshot.
       Check browser_console_messages after each step for errors.
       If a step fails, continue testing the remaining steps.
 
-      At the end, produce a summary:
-        - Steps passed: N/5
-        - Critical failures: (list)
-        - Bugs found: (list with steps to reproduce)
-
-      If you find bugs, call ao.task.create for each one with:
-        - Title: "E2E bug: <description>"
-        - Priority: high (if blocking) or medium (if cosmetic)
-        - Type: bugfix
-        - Description: steps to reproduce, expected vs actual behavior
-      Check ao.task.list first — do NOT create duplicate bug tasks.
+      When all tests are done:
+      a) UPDATE QA.md:
+         - Update "Last Run" table with results summary
+         - Append a row to "Test Results History"
+         - Update "Known Issues" — add new bugs, remove fixed ones
+         - Update "Regression Tracker" if a previously passing test now fails
+         - Check/uncheck items in "Test Coverage" based on results
+      b) Commit QA.md: git add QA.md && git commit -m "qa: test results [date]"
+         Push: git push origin main
+      c) Create bug tasks for NEW failures (not already in Known Issues):
+         - Title: "E2E bug: <description>"
+         - Priority: high (if blocking) or medium (if cosmetic)
+         - Type: bugfix
+         - Description: steps to reproduce, expected vs actual
+         Check ao.task.list first — do NOT create duplicate bug tasks.
     model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "playwright", "context7"]
