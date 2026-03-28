@@ -190,8 +190,20 @@ agents:
            Within same priority, oldest first.
         c) For each ready task (up to 3 per run):
            i.   DUPLICATE CHECK: If task ID already in queue, SKIP.
-           ii.  DEPENDENCY CHECK: Parse "Depends on:" from description.
-                ALL dependencies must be "done" or "cancelled". Skip if not.
+           ii.  DEPENDENCY CHECK (CRITICAL — never skip):
+                - Call ao.task.get for the task to read full details.
+                - Parse "Depends on: TASK-XXX" from the description text.
+                - Also check the task's linked_requirements — if a requirement
+                  references prior tasks, those are implicit dependencies.
+                - For EACH dependency task ID found:
+                  * Call ao.task.get to check its status.
+                  * The dependency must be "done" or "cancelled".
+                  * Also check: does the dependency have a MERGED PR?
+                    Run: gh pr list --state merged --search "TASK-XXX" --repo launchapp-dev/invoicer
+                  * If the dependency is "done" but has NO merged PR, it was
+                    marked done prematurely — treat it as NOT met.
+                - If ANY dependency is not met -> SKIP this task entirely.
+                  Log which dependency is blocking it.
            iii. ENQUEUE: ao.queue.enqueue with workflow_ref="triage".
         d) Max 3 new enqueues per run.
 
@@ -199,7 +211,9 @@ agents:
       - NEVER enqueue a task already in the queue.
       - NEVER enqueue a task with unmet dependencies.
       - NEVER exceed queue limit of 8.
+      - NEVER treat a task as "done" if its PR was never merged.
       - ALWAYS process rework before rebase before new work.
+      - ALWAYS verify dependencies are truly complete (merged PR) not just status.
     model: claude-haiku-4-5
     tool: claude
     mcp_servers: ["ao", "github"]
