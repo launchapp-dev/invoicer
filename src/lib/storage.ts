@@ -849,6 +849,69 @@ export async function getCashFlowData(): Promise<CashFlowData> {
   return { expectedThisMonth, expectedThisMonthCount, atRisk, atRiskCount, upcomingByWeek, currency };
 }
 
+export type DuplicateSuspect = {
+  id: string;
+  invoiceNumber: string;
+  total: number;
+  clientName: string;
+  issueDate: string;
+};
+
+export async function checkDuplicateInvoice(
+  clientId: string | null,
+  clientName: string | null,
+  total: number,
+  excludeId?: string
+): Promise<DuplicateSuspect[]> {
+  const userId = await getCurrentUserId();
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 90);
+  const cutoffStr = cutoff.toISOString().split("T")[0];
+
+  const rows = await db
+    .select({
+      id: invoices.id,
+      invoiceNumber: invoices.invoiceNumber,
+      total: invoices.total,
+      toJson: invoices.toJson,
+      issueDate: invoices.issueDate,
+      clientId: invoices.clientId,
+    })
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.userId, userId),
+        gte(invoices.issueDate, cutoffStr),
+        inArray(invoices.status, ["draft", "sent", "viewed", "partial", "overdue"]),
+        excludeId ? ne(invoices.id, excludeId) : undefined
+      )
+    );
+
+  const lowerBound = total * 0.95;
+  const upperBound = total * 1.05;
+
+  return rows
+    .filter((row) => {
+      if (row.total < lowerBound || row.total > upperBound) return false;
+      if (clientId) return row.clientId === clientId;
+      if (clientName) {
+        const to = safeJsonParse<{ name?: string }>(row.toJson, {});
+        return to.name === clientName;
+      }
+      return false;
+    })
+    .map((row) => {
+      const to = safeJsonParse<{ name?: string }>(row.toJson, {});
+      return {
+        id: row.id,
+        invoiceNumber: row.invoiceNumber,
+        total: row.total,
+        clientName: to.name ?? "",
+        issueDate: row.issueDate,
+      };
+    });
+}
+
 export async function getInvoiceByShareToken(token: string): Promise<Invoice | null> {
   const [row] = await db
     .select()
