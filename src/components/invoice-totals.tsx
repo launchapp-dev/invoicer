@@ -48,7 +48,7 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
           </div>
           <div className="flex items-center gap-3">
             <Label htmlFor="discount" className="w-32 shrink-0">
-              Discount ($)
+              Discount
             </Label>
             <Input
               id="discount"
