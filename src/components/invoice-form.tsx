@@ -12,6 +12,14 @@ import { calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
 import { LineItems } from "@/components/line-items";
 import type { InvoiceFormValues } from "@/lib/invoice-schema";
 
+const STATUSES = [
+  { value: "draft", label: "Draft" },
+  { value: "sent", label: "Sent" },
+  { value: "paid", label: "Paid" },
+  { value: "overdue", label: "Overdue" },
+  { value: "cancelled", label: "Cancelled" },
+] as const;
+
 const CURRENCIES = [
   { code: "USD", label: "USD — US Dollar" },
   { code: "EUR", label: "EUR — Euro" },
@@ -85,6 +93,7 @@ export function InvoiceForm() {
   const taxRate = watch("taxRate");
   const currency = watch("currency");
   const discount = watch("discount");
+  const status = watch("status");
 
   useEffect(() => {
     const subtotal = calcSubtotal(lineItems || []);
@@ -131,6 +140,19 @@ export function InvoiceForm() {
               <SelectContent>
                 {CURRENCIES.map((c) => (
                   <SelectItem key={c.code} value={c.code}>{c.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </SelectRoot>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="status">Status</Label>
+            <SelectRoot value={status} onValueChange={(val) => setValue("status", val as InvoiceFormValues["status"])}>
+              <SelectTrigger id="status">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                {STATUSES.map((s) => (
+                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
                 ))}
               </SelectContent>
             </SelectRoot>
