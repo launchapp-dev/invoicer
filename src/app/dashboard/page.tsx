@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { listInvoices, countInvoices } from "@/lib/storage";
-import { formatCurrency } from "@/lib/calculations";
+import { formatCurrency, formatDate } from "@/lib/calculations";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -30,14 +30,6 @@ const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" 
   overdue: "destructive",
   cancelled: "outline",
 };
-
-function formatDate(iso: string): string {
-  if (!iso) return "—";
-  const [year, month, day] = iso.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
-    year: "numeric", month: "short", day: "numeric",
-  });
-}
 
 const LIMIT = 25;
 
