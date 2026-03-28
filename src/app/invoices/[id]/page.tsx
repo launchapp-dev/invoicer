@@ -72,6 +72,13 @@ export default function EditInvoicePage() {
       });
   }, [session, params?.id, form, router]);
 
+  useEffect(() => {
+    if (!form.formState.isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [form.formState.isDirty]);
+
   const handleSave = form.handleSubmit(async (values) => {
     try {
       await saveInvoice(values);
