@@ -82,6 +82,8 @@ pnpm db:push      # Push schema to database
 pnpm db:migrate   # Run migrations
 ```
 
+**CRITICAL**: Run `pnpm db:push` in the project root (`/Users/samishukri/brain/repos/invoicer`) after any PR that modifies `src/db/schema.ts` is merged. Skipping this causes `SqliteError: table X has no column named Y` at runtime — the in-memory Drizzle schema diverges from the on-disk SQLite file. This brought down the dashboard and invoice save (TASK-289).
+
 ## Working Rules
 
 - Install UI components from the design system registry — never build custom buttons, inputs, cards, etc.
