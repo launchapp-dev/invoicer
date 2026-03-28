@@ -141,6 +141,7 @@ export function InvoiceForm() {
               id="dueDate"
               type="date"
               {...register("dueDate")}
+              error={!!errors.dueDate}
               aria-invalid={!!errors.dueDate}
               aria-describedby={errors.dueDate ? "due-date-error" : undefined}
             />
