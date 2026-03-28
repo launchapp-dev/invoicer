@@ -86,6 +86,11 @@ export default function NewInvoicePage() {
     } catch (error) {
       console.error(error);
       const msg = error instanceof Error ? error.message : "Failed to save invoice";
+      if (msg === "Unauthorized") {
+        toast.error("Your session has expired. Please sign in again.");
+        router.push("/login");
+        return;
+      }
       toast.error(msg);
     }
   });

@@ -80,6 +80,12 @@ export default function EditInvoicePage() {
       .catch((err) => {
         console.error(err);
         setLoading(false);
+        const msg = err instanceof Error ? err.message : "Failed to load invoice";
+        if (msg === "Unauthorized") {
+          toast.error("Your session has expired. Please sign in again.");
+          router.replace("/login");
+          return;
+        }
         toast.error("Failed to load invoice");
         router.replace("/dashboard");
       });
@@ -118,6 +124,11 @@ export default function EditInvoicePage() {
     } catch (error) {
       console.error(error);
       const msg = error instanceof Error ? error.message : "Failed to save invoice";
+      if (msg === "Unauthorized") {
+        toast.error("Your session has expired. Please sign in again.");
+        router.push("/login");
+        return;
+      }
       toast.error(msg);
     }
   });
