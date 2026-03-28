@@ -24,10 +24,13 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
   const discount = useWatch({ control, name: "discount", defaultValue: 0 });
   const currency = useWatch({ control, name: "currency", defaultValue: "USD" });
 
+  const safeTaxRate = Number.isNaN(taxRate) ? 0 : (taxRate ?? 0);
+  const safeDiscount = Number.isNaN(discount) ? 0 : (discount ?? 0);
+
   const subtotal = calcSubtotal(lineItems ?? []);
-  const taxAmount = calcTaxAmount(subtotal, taxRate ?? 0);
-  const total = calcTotal(subtotal, taxAmount, discount ?? 0);
-  const isDiscountExcessive = (discount ?? 0) > subtotal + taxAmount;
+  const taxAmount = calcTaxAmount(subtotal, safeTaxRate);
+  const total = calcTotal(subtotal, taxAmount, safeDiscount);
+  const isDiscountExcessive = safeDiscount > subtotal + taxAmount;
 
   return (
     <Card>
@@ -72,18 +75,18 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
             <span className="text-muted-foreground">Subtotal</span>
             <span>{formatCurrency(subtotal, currency)}</span>
           </div>
-          {(taxRate ?? 0) > 0 && (
+          {safeTaxRate > 0 && (
             <div className="flex justify-between">
               <span className="text-muted-foreground">
-                Tax ({(taxRate ?? 0).toFixed(2)}%)
+                Tax ({safeTaxRate.toFixed(2)}%)
               </span>
               <span>{formatCurrency(taxAmount, currency)}</span>
             </div>
           )}
-          {(discount ?? 0) > 0 && (
+          {safeDiscount > 0 && (
             <div className="flex justify-between">
               <span className="text-muted-foreground">Discount</span>
-              <span>-{formatCurrency(discount ?? 0, currency)}</span>
+              <span>-{formatCurrency(safeDiscount, currency)}</span>
             </div>
           )}
         </div>

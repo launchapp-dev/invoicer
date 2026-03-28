@@ -105,10 +105,12 @@ export function InvoiceForm() {
 
   useEffect(() => {
     const subtotal = calcSubtotal(lineItems || []);
-    const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
+    const safeTaxRate = Number.isNaN(taxRate) ? 0 : (taxRate ?? 0);
+    const safeDiscount = Number.isNaN(discount) ? 0 : (discount ?? 0);
+    const taxAmount = calcTaxAmount(subtotal, safeTaxRate);
     setValue("subtotal", subtotal);
     setValue("taxAmount", taxAmount);
-    setValue("total", calcTotal(subtotal, taxAmount, discount || 0));
+    setValue("total", calcTotal(subtotal, taxAmount, safeDiscount));
   }, [lineItems, taxRate, discount, setValue]);
 
   return (
