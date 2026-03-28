@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ao": {
+      "command": "ao",
+      "args": ["--project-root", "/Users/samishukri/brain/repos/invoicer", "mcp", "serve"]
+    }
+  }
+}
