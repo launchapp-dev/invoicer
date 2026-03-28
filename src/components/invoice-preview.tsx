@@ -161,6 +161,12 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
               <span>{formatCurrency(taxAmount, invoice.currency)}</span>
             </div>
           )}
+          {(invoice.discount ?? 0) > 0 && (
+            <div className="flex justify-between w-56">
+              <span className="text-muted-foreground">Discount</span>
+              <span>-{formatCurrency(invoice.discount, invoice.currency)}</span>
+            </div>
+          )}
           <Separator className="w-56" />
           <div className="flex justify-between w-56 font-semibold text-base">
             <span>Total</span>

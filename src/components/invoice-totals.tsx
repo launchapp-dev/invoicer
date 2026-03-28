@@ -66,12 +66,14 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
             <span className="text-muted-foreground">Subtotal</span>
             <span>{formatCurrency(subtotal, currency)}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">
-              Tax ({(taxRate ?? 0).toFixed(2)}%)
-            </span>
-            <span>{formatCurrency(taxAmount, currency)}</span>
-          </div>
+          {(taxRate ?? 0) > 0 && (
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                Tax ({(taxRate ?? 0).toFixed(2)}%)
+              </span>
+              <span>{formatCurrency(taxAmount, currency)}</span>
+            </div>
+          )}
           {(discount ?? 0) > 0 && (
             <div className="flex justify-between">
               <span className="text-muted-foreground">Discount</span>
