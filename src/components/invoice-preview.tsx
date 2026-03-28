@@ -13,6 +13,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import { Building2 } from "lucide-react";
 import { calcSubtotal, calcTaxAmount, calcTotal, formatCurrency } from "@/lib/calculations";
 import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
@@ -60,7 +61,7 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
         <div className="flex items-start justify-between">
           <div>
             <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center mb-3">
-              <span className="text-muted-foreground text-xs font-semibold">LOGO</span>
+              <Building2 className="h-5 w-5 text-muted-foreground" />
             </div>
             <p className="text-xs text-muted-foreground uppercase tracking-widest">Invoice</p>
             <p className="text-2xl font-bold text-foreground mt-1">
