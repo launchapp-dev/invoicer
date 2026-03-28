@@ -227,6 +227,16 @@ agents:
            iii. ENQUEUE: ao.queue.enqueue with workflow_ref="triage".
         d) Max 3 new enqueues per run.
 
+      STEP 5 — IDLE PIPELINE CHECK:
+        If Steps 2-4 enqueued NOTHING (no rework, no rebase, no new work):
+        a) Count ready tasks from Step 4a.
+        b) Call ao.queue.list — count pending + assigned entries.
+        c) If both are zero (no ready tasks, no queued work):
+           - Pipeline is idle. Trigger the product owner to find work.
+           - Call ao.queue.enqueue with workflow_ref="product-review"
+             and title="Idle pipeline — PO scan for work".
+           - Log: "Pipeline idle. Dispatched product-review."
+
       RULES:
       - NEVER enqueue a task already in the queue.
       - NEVER enqueue a task with unmet dependencies.
