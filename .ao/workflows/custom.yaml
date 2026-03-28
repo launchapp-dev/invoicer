@@ -370,6 +370,54 @@ agents:
     tool: claude
     mcp_servers: ["ao"]
 
+  pr-sweep:
+    system_prompt: |
+      You are the PR Sweep agent for Invoicer. You scan all open PRs and
+      review/merge them one by one.
+
+      EXACT PROCESS — Execute for EVERY open PR:
+
+      STEP 1 — LIST OPEN PRs:
+        Run: gh pr list --state open --json number,title,mergeable --repo launchapp-dev/invoicer
+        Process each PR in order (oldest first).
+
+      STEP 2 — FOR EACH PR:
+        a) Get PR details: gh pr view <number> --json number,title,state,mergeable,files,additions,deletions
+        b) Extract the task ID from the title or branch (e.g., "ao/task 001" -> TASK-001).
+
+        SKIP CONDITIONS:
+        - If PR is not mergeable (CONFLICTING): queue ao.queue.enqueue with
+          workflow_ref="rebase-and-retry" for the task, then move to next PR.
+
+        FAST-PATH MERGE:
+        - If the diff is dependencies-only or docs-only -> merge immediately.
+
+        DEEP REVIEW:
+        - Get the diff: gh pr diff <number>
+        - Check for blocking issues:
+          * Security vulnerabilities
+          * Broken imports
+          * Type errors
+          * Missing exports
+        - If NO blocking issues:
+          1. Run: gh pr merge <number> --squash --delete-branch
+          2. Verify: gh pr view <number> --json state (must be "MERGED")
+          3. Call ao.task.status to set task to "done"
+        - If blocking issues found:
+          1. Run: gh pr review <number> --request-changes --body "<details>"
+          2. Queue ao.queue.enqueue with workflow_ref="rework" for the task.
+
+      STEP 3 — SUMMARY:
+        Log: PRs reviewed: N, Merged: N, Changes requested: N, Rebased: N
+
+      RULES:
+      - ALWAYS run gh pr merge to merge. Never just mark task as done.
+      - ALWAYS verify merge succeeded before setting task to done.
+      - Process ALL open PRs, not just one.
+    model: claude-haiku-4-5
+    tool: claude
+    mcp_servers: ["ao", "github"]
+
   reconciler:
     system_prompt: |
       You are the Reconciler for Invoicer. You maintain consistency between
@@ -547,6 +595,16 @@ phases:
       Execute all reconciliation steps: UNBLOCK blocked tasks, PROMOTE
       backlog, RE-ROUTE failed tasks, CLEAN stale queue, MARK DONE.
 
+  pr-reviewer-sweep:
+    mode: agent
+    agent: pr-sweep
+    directive: |
+      Scan ALL open PRs on launchapp-dev/invoicer. For each PR:
+      review the diff, merge if clean (gh pr merge --squash --delete-branch),
+      request changes if blocking issues, queue rebase if conflicting.
+      Process every open PR, not just one. Always verify merge before
+      marking task as done.
+
 workflows:
   - id: standard
     name: Standard Task Workflow
@@ -623,6 +681,12 @@ workflows:
     phases:
       - reconciliation
 
+  - id: pr-reviewer
+    name: PR Reviewer Sweep
+    description: Scan and review/merge all open PRs
+    phases:
+      - pr-reviewer-sweep
+
 schedules:
   - id: work-planner
     cron: "*/5 * * * *"
@@ -632,6 +696,11 @@ schedules:
   - id: task-reconciler
     cron: "2-59/10 * * * *"
     workflow_ref: task-reconciler
+    enabled: true
+
+  - id: pr-reviewer
+    cron: "*/3 * * * *"
+    workflow_ref: pr-reviewer
     enabled: true
 
   - id: product-review
