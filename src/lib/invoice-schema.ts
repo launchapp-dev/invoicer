@@ -34,6 +34,9 @@ export const invoiceSchema = z.object({
   total: z.number(),
   notes: z.string(),
   currency: z.string().min(1),
-});
+}).refine(
+  (data) => !data.issueDate || !data.dueDate || data.dueDate >= data.issueDate,
+  { message: "Due date must be on or after issue date", path: ["dueDate"] }
+);
 
 export type InvoiceFormValues = z.infer<typeof invoiceSchema>;
