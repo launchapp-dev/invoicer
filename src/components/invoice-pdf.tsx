@@ -2,6 +2,14 @@ import { Document, Page, View, Text, Image, StyleSheet } from "@react-pdf/render
 import type { Invoice } from "@/types/invoice";
 import { formatCurrency, formatDate } from "@/lib/calculations";
 
+const PAYMENT_TERMS_LABELS: Record<NonNullable<Invoice["paymentTerms"]>, string> = {
+  net15: "Net 15",
+  net30: "Net 30",
+  net60: "Net 60",
+  due_on_receipt: "Due on Receipt",
+  custom: "Custom",
+};
+
 const styles = StyleSheet.create({
   page: {
     padding: 48,
@@ -179,6 +187,11 @@ export function InvoicePDF({ invoice, logoUrl }: InvoicePDFProps) {
               Issued: {formatDate(invoice.issueDate)}
             </Text>
             <Text style={styles.dateText}>Due: {formatDate(invoice.dueDate)}</Text>
+            {invoice.paymentTerms && (
+              <Text style={styles.dateText}>
+                Terms: {PAYMENT_TERMS_LABELS[invoice.paymentTerms]}
+              </Text>
+            )}
           </View>
         </View>
 
