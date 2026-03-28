@@ -49,7 +49,7 @@ export default function SignupPage() {
       setAuthError(error.message ?? "Sign up failed");
       return;
     }
-    router.push("/");
+    router.push("/dashboard");
   };
 
   return (
