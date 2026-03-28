@@ -36,7 +36,7 @@ function defaultValues(): InvoiceFormValues {
     dueDate: due,
     from: { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" },
     to: { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" },
-    lineItems: [],
+    lineItems: [{ id: crypto.randomUUID(), description: "", quantity: 1, rate: 0, amount: 0 }],
     subtotal: 0,
     taxRate: 0,
     taxAmount: 0,
