@@ -619,6 +619,8 @@ function rowToClient(row: typeof clients.$inferSelect): Client {
     zip: row.zip,
     country: row.country,
     notes: row.notes,
+    taxId: row.taxId,
+    currencyPreference: row.currencyPreference,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };

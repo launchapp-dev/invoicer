@@ -1,0 +1,2 @@
+ALTER TABLE clients ADD COLUMN tax_id TEXT NOT NULL DEFAULT '';
+ALTER TABLE clients ADD COLUMN currency_preference TEXT NOT NULL DEFAULT '';

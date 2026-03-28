@@ -41,11 +41,12 @@ const CURRENCIES = [
   { code: "AED", label: "AED — UAE Dirham" },
 ];
 
-function ContactSection({ prefix, title, clients, onClientSelect }: {
+function ContactSection({ prefix, title, clients, onClientSelect, onCurrencyChange }: {
   prefix: "from" | "to";
   title: string;
   clients?: Client[];
   onClientSelect?: (clientId: string | null) => void;
+  onCurrencyChange?: (currency: string) => void;
 }) {
   const { register, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
   const [selectedClientId, setSelectedClientId] = useState<string>("");
@@ -84,6 +85,12 @@ function ContactSection({ prefix, title, clients, onClientSelect }: {
       setValue(`${prefix}.state`, client.state, { shouldDirty: true });
       setValue(`${prefix}.zip`, client.zip, { shouldDirty: true });
       setValue(`${prefix}.country`, client.country, { shouldDirty: true });
+      if (client.taxId) {
+        setValue(`${prefix}.taxId`, client.taxId, { shouldDirty: true });
+      }
+      if (client.currencyPreference) {
+        onCurrencyChange?.(client.currencyPreference);
+      }
     }
   }
 
@@ -366,7 +373,13 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
 
       <div className="grid gap-6 sm:grid-cols-2">
         <ContactSection prefix="from" title="From" />
-        <ContactSection prefix="to" title="Bill To" clients={clients} onClientSelect={(id) => { setSelectedClientId(id); setValue("clientId", id ?? undefined, { shouldDirty: true }); }} />
+        <ContactSection
+          prefix="to"
+          title="Bill To"
+          clients={clients}
+          onClientSelect={(id) => { setSelectedClientId(id); setValue("clientId", id ?? undefined, { shouldDirty: true }); }}
+          onCurrencyChange={(cur) => setValue("currency", cur, { shouldDirty: true })}
+        />
       </div>
 
       <Card>

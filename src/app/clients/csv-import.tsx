@@ -119,7 +119,7 @@ export function CsvImportButton({ existingEmails }: CsvImportProps) {
     if (validRows.length === 0) return;
     setLoading(true);
     try {
-      const res = await batchUpsertClients(validRows.map(({ _status, _reason, ...r }) => r));
+      const res = await batchUpsertClients(validRows.map(({ _status, _reason, ...r }) => ({ taxId: "", currencyPreference: "", ...r })));
       setResult(res);
       setRows([]);
       if (fileRef.current) fileRef.current.value = "";
