@@ -5,6 +5,15 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { listInvoices, deleteInvoice } from "@/lib/storage";
 import { formatCurrency } from "@/lib/calculations";
 import type { Invoice } from "@/types/invoice";
@@ -16,13 +25,15 @@ interface InvoiceHistoryProps {
 
 function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryProps & { onClose: () => void }) {
   const [invoices, setInvoices] = useState<Invoice[]>(() => listInvoices());
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; invoiceNumber: string } | null>(null);
 
   const refresh = useCallback(() => setInvoices(listInvoices()), []);
 
-  const handleDelete = (id: string, invoiceNumber: string) => {
-    if (!window.confirm(`Delete invoice ${invoiceNumber}?`)) return;
-    deleteInvoice(id);
+  const handleDeleteConfirm = () => {
+    if (!deleteTarget) return;
+    deleteInvoice(deleteTarget.id);
     refresh();
+    setDeleteTarget(null);
   };
 
   const handleLoad = (invoice: Invoice) => {
@@ -72,13 +83,24 @@ function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryPro
               size="sm"
               variant="outline"
               className="ml-auto text-destructive hover:text-destructive"
-              onClick={() => handleDelete(invoice.id, invoice.invoiceNumber)}
+              onClick={() => setDeleteTarget({ id: invoice.id, invoiceNumber: invoice.invoiceNumber })}
             >
               Delete
             </Button>
           </div>
         </div>
       ))}
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete invoice {deleteTarget?.invoiceNumber}?</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
