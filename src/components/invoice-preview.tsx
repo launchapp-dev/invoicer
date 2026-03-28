@@ -55,7 +55,7 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
   }
 
   return (
-    <Card className="shadow-xl border-border bg-white min-h-[700px]">
+    <Card className="shadow-xl border-border bg-card min-h-[700px]">
       <CardContent className="p-8 space-y-6">
         <div className="flex items-start justify-between">
           <div>
