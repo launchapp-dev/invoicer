@@ -603,7 +603,10 @@ phases:
       review the diff, merge if clean (gh pr merge --squash --delete-branch),
       request changes if blocking issues, queue rebase if conflicting.
       Process every open PR, not just one. Always verify merge before
-      marking task as done.
+      marking task as done. You MUST actually run gh pr merge for each
+      approved PR — do not just summarize, actually merge them.
+    capabilities:
+      mutates_state: true
 
 workflows:
   - id: standard
