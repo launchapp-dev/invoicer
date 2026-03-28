@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
-  calculateSubtotal,
-  calculateTaxAmount,
-  calculateTotal,
+  calcSubtotal,
+  calcTaxAmount,
+  calcTotal,
   formatCurrency,
 } from "@/lib/calculations";
 import type { InvoiceFormValues } from "@/lib/invoice-schema";
@@ -24,9 +24,9 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
   const discount = useWatch({ control, name: "discount", defaultValue: 0 });
   const currency = useWatch({ control, name: "currency", defaultValue: "USD" });
 
-  const subtotal = calculateSubtotal(lineItems ?? []);
-  const taxAmount = calculateTaxAmount(subtotal, taxRate ?? 0);
-  const total = calculateTotal(subtotal, taxAmount, discount ?? 0);
+  const subtotal = calcSubtotal(lineItems ?? []);
+  const taxAmount = calcTaxAmount(subtotal, taxRate ?? 0);
+  const total = calcTotal(subtotal, taxAmount, discount ?? 0);
 
   return (
     <Card>

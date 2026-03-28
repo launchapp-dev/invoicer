@@ -16,17 +16,6 @@ export function calcTotal(subtotal: number, taxAmount: number, discount = 0): nu
   return Math.round((subtotal + taxAmount - discount) * 100) / 100;
 }
 
-export function calculateSubtotal(lineItems: LineItem[]): number {
-  return lineItems.reduce((sum, item) => sum + item.amount, 0);
-}
-
-export function calculateTaxAmount(subtotal: number, taxRate: number): number {
-  return subtotal * (taxRate / 100);
-}
-
-export function calculateTotal(subtotal: number, taxAmount: number, discount: number): number {
-  return subtotal + taxAmount - discount;
-}
 
 export function formatCurrency(amount: number, currency = "USD"): string {
   return new Intl.NumberFormat("en-US", {
