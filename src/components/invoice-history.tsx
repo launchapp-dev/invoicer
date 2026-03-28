@@ -44,7 +44,7 @@ function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryPro
     setError(null);
     listInvoices()
       .then(setInvoices)
-      .catch(() => setError("Failed to load invoices. Please try again."))
+      .catch((error) => { console.error(error); setError("Failed to load invoices. Please try again."); })
       .finally(() => setLoading(false));
   }, []);
 
@@ -55,7 +55,8 @@ function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryPro
     try {
       await deleteInvoice(deleteTarget.id);
       refresh();
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to delete invoice. Please try again.");
     }
     setDeleteTarget(null);

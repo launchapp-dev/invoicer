@@ -62,7 +62,8 @@ export default function NewInvoicePage() {
       form.reset(values);
       setSavedId(values.id);
       toast.success("Invoice saved");
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to save invoice");
     }
   });

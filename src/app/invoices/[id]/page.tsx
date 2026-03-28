@@ -85,7 +85,8 @@ export default function EditInvoicePage() {
       await saveInvoice(values);
       form.reset(values);
       toast.success("Invoice saved");
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to save invoice");
     }
   });
