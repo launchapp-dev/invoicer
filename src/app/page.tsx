@@ -6,6 +6,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { InvoiceHistory } from "@/components/invoice-history";
@@ -38,6 +39,7 @@ function defaultValues(): InvoiceFormValues {
 
 export default function Home() {
   const [isDark, setIsDark] = useState(false);
+  const [showNewDialog, setShowNewDialog] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
@@ -80,9 +82,10 @@ export default function Home() {
 
   const handleNew = () => {
     if (form.formState.isDirty) {
-      if (!confirm("Discard unsaved changes?")) return;
+      setShowNewDialog(true);
+    } else {
+      form.reset(defaultValues());
     }
-    form.reset(defaultValues());
   };
 
   const handleLoad = (inv: Invoice) => {
@@ -143,6 +146,19 @@ export default function Home() {
           <InvoicePreview invoice={invoice} />
         </div>
       </div>
+
+      <AlertDialog open={showNewDialog} onOpenChange={setShowNewDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogDescription>Any unsaved changes will be lost.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { form.reset(defaultValues()); setShowNewDialog(false); }}>Discard</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
