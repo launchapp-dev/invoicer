@@ -110,7 +110,7 @@ export const invoices = sqliteTable("invoices", {
   userId: text("user_id").notNull(),
   invoiceNumber: text("invoice_number").notNull(),
   status: text("status", {
-    enum: ["draft", "sent", "paid", "overdue", "cancelled"],
+    enum: ["draft", "sent", "paid", "overdue", "cancelled", "partial"],
   })
     .notNull()
     .default("draft"),
@@ -141,3 +141,14 @@ export const invoices = sqliteTable("invoices", {
   index("invoices_updated_at_idx").on(table.updatedAt),
   uniqueIndex("invoices_user_invoice_number_uniq").on(table.userId, table.invoiceNumber),
 ]);
+
+export const payments = sqliteTable("payments", {
+  id: text("id").primaryKey(),
+  invoiceId: text("invoice_id").notNull().references(() => invoices.id, { onDelete: "cascade" }),
+  userId: text("user_id").notNull(),
+  amount: real("amount").notNull(),
+  paidAt: text("paid_at").notNull(),
+  method: text("method").notNull(),
+  reference: text("reference"),
+  createdAt: text("created_at").notNull(),
+});

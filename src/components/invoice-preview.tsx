@@ -24,6 +24,7 @@ const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destr
   paid: "default",
   overdue: "destructive",
   cancelled: "outline",
+  partial: "outline",
 };
 
 interface InvoicePreviewProps {

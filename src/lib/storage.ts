@@ -3,9 +3,9 @@
 import { and, asc, count, desc, eq, gte, inArray, like, lte, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
-import { clients, invoices, userSettings } from "@/db/schema";
+import { clients, invoices, payments, userSettings } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import type { Invoice, InvoiceStatus } from "@/types/invoice";
+import type { Invoice, InvoiceStatus, Payment } from "@/types/invoice";
 import type { Client } from "@/types/client";
 
 async function getCurrentUserId(): Promise<string> {
@@ -28,7 +28,7 @@ function safeJsonParse<T>(json: string, fallback: T): T {
 
 const emptyParty = { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" };
 
-function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
+function rowToInvoice(row: typeof invoices.$inferSelect, paymentRows?: typeof payments.$inferSelect[]): Invoice {
   const taxLines = row.taxLinesJson
     ? safeJsonParse(row.taxLinesJson, null)
     : null;
@@ -57,6 +57,18 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
     ...(row.paidAt ? { paidAt: row.paidAt } : {}),
     ...(row.paidMethod ? { paidMethod: row.paidMethod as Invoice["paidMethod"] } : {}),
     ...(row.paidReference ? { paidReference: row.paidReference } : {}),
+    ...(paymentRows
+      ? {
+          payments: paymentRows.map((p) => ({
+            id: p.id,
+            invoiceId: p.invoiceId,
+            amount: p.amount,
+            paidAt: p.paidAt,
+            method: p.method,
+            ...(p.reference ? { reference: p.reference } : {}),
+          })),
+        }
+      : {}),
   };
 }
 
@@ -170,7 +182,7 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
     )
     .limit(limit)
     .offset(offset);
-  return rows.map(rowToInvoice);
+  return rows.map((row) => rowToInvoice(row));
 }
 
 export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
@@ -202,7 +214,13 @@ export async function loadInvoice(id: string): Promise<Invoice | null> {
     .select()
     .from(invoices)
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
-  return row ? rowToInvoice(row) : null;
+  if (!row) return null;
+  const paymentRows = await db
+    .select()
+    .from(payments)
+    .where(and(eq(payments.invoiceId, id), eq(payments.userId, userId)))
+    .orderBy(asc(payments.paidAt));
+  return rowToInvoice(row, paymentRows);
 }
 
 export async function deleteInvoice(id: string): Promise<void> {
@@ -299,6 +317,80 @@ export async function recordPayment(
       updatedAt: new Date().toISOString(),
     })
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
+}
+
+async function recalculateInvoiceStatus(invoiceId: string, userId: string): Promise<void> {
+  const [inv] = await db
+    .select({ total: invoices.total })
+    .from(invoices)
+    .where(and(eq(invoices.id, invoiceId), eq(invoices.userId, userId)));
+  if (!inv) return;
+  const rows = await db
+    .select({ amount: payments.amount })
+    .from(payments)
+    .where(and(eq(payments.invoiceId, invoiceId), eq(payments.userId, userId)));
+  const totalPaid = rows.reduce((sum, r) => sum + r.amount, 0);
+  let status: InvoiceStatus;
+  if (totalPaid >= inv.total) {
+    status = "paid";
+  } else if (totalPaid > 0) {
+    status = "partial";
+  } else {
+    status = "sent";
+  }
+  await db
+    .update(invoices)
+    .set({ status, updatedAt: new Date().toISOString() })
+    .where(and(eq(invoices.id, invoiceId), eq(invoices.userId, userId)));
+}
+
+export async function addPayment(
+  invoiceId: string,
+  payment: Omit<Payment, "id" | "invoiceId">
+): Promise<Payment> {
+  const userId = await getCurrentUserId();
+  const id = crypto.randomUUID();
+  const now = new Date().toISOString();
+  await db.insert(payments).values({
+    id,
+    invoiceId,
+    userId,
+    amount: payment.amount,
+    paidAt: payment.paidAt,
+    method: payment.method,
+    reference: payment.reference ?? null,
+    createdAt: now,
+  });
+  await recalculateInvoiceStatus(invoiceId, userId);
+  return { id, invoiceId, amount: payment.amount, paidAt: payment.paidAt, method: payment.method, ...(payment.reference ? { reference: payment.reference } : {}) };
+}
+
+export async function getPaymentsForInvoice(invoiceId: string): Promise<Payment[]> {
+  const userId = await getCurrentUserId();
+  const rows = await db
+    .select()
+    .from(payments)
+    .where(and(eq(payments.invoiceId, invoiceId), eq(payments.userId, userId)))
+    .orderBy(asc(payments.paidAt));
+  return rows.map((p) => ({
+    id: p.id,
+    invoiceId: p.invoiceId,
+    amount: p.amount,
+    paidAt: p.paidAt,
+    method: p.method,
+    ...(p.reference ? { reference: p.reference } : {}),
+  }));
+}
+
+export async function deletePayment(paymentId: string): Promise<void> {
+  const userId = await getCurrentUserId();
+  const [row] = await db
+    .select({ invoiceId: payments.invoiceId })
+    .from(payments)
+    .where(and(eq(payments.id, paymentId), eq(payments.userId, userId)));
+  if (!row) return;
+  await db.delete(payments).where(and(eq(payments.id, paymentId), eq(payments.userId, userId)));
+  await recalculateInvoiceStatus(row.invoiceId, userId);
 }
 
 export async function getUserSettings(userId: string): Promise<typeof userSettings.$inferSelect | null> {
@@ -481,5 +573,5 @@ export async function getClientInvoices(clientName: string): Promise<Invoice[]> 
       )
     )
     .orderBy(desc(invoices.issueDate));
-  return rows.map(rowToInvoice);
+  return rows.map((row) => rowToInvoice(row));
 }
