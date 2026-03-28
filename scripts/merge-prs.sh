@@ -3,17 +3,21 @@ set -euo pipefail
 
 REPO="launchapp-dev/invoicer"
 PROJECT_ROOT="$(git rev-parse --show-toplevel)"
-QUEUED=0
+QUEUED_REVIEW=0
+QUEUED_REBASE=0
 SKIPPED=0
 
-prs=$(gh pr list --repo "$REPO" --state open --json number,title --jq '.[].title')
+prs=$(gh pr list --repo "$REPO" --state open --json number,title,mergeable --jq '.[] | "\(.number)\t\(.title)\t\(.mergeable)"')
 
 if [ -z "$prs" ]; then
   echo "No open PRs found."
   exit 0
 fi
 
-while IFS= read -r title; do
+# Pull latest main so rebases work against current state
+git fetch origin main --quiet 2>/dev/null || true
+
+while IFS=$'\t' read -r pr_num title mergeable; do
   task_num=$(echo "$title" | grep -oE '[0-9]+' | head -1)
   [ -z "$task_num" ] && continue
   task_id=$(printf 'TASK-%03d' "$task_num")
@@ -25,10 +29,16 @@ while IFS= read -r title; do
     continue
   fi
 
-  echo "QUEUE $task_id for review"
-  ao --project-root "$PROJECT_ROOT" queue enqueue --task-id "$task_id" --workflow-ref pr-reviewer 2>/dev/null || true
-  QUEUED=$((QUEUED + 1))
+  if [ "$mergeable" = "CONFLICTING" ]; then
+    echo "REBASE $task_id (PR #$pr_num conflicting)"
+    ao --project-root "$PROJECT_ROOT" queue enqueue --task-id "$task_id" --workflow-ref rebase-and-retry 2>/dev/null || true
+    QUEUED_REBASE=$((QUEUED_REBASE + 1))
+  else
+    echo "REVIEW $task_id (PR #$pr_num)"
+    ao --project-root "$PROJECT_ROOT" queue enqueue --task-id "$task_id" --workflow-ref pr-reviewer 2>/dev/null || true
+    QUEUED_REVIEW=$((QUEUED_REVIEW + 1))
+  fi
 done <<< "$prs"
 
 echo ""
-echo "Summary: queued=$QUEUED skipped=$SKIPPED"
+echo "Summary: review=$QUEUED_REVIEW rebase=$QUEUED_REBASE skipped=$SKIPPED"
