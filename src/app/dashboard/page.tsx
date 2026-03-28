@@ -80,6 +80,12 @@ export default async function DashboardPage({
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">{session.user.email}</span>
             <Link
+              href="/dashboard/recurring"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Recurring
+            </Link>
+            <Link
               href="/settings"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >

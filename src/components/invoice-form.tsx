@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectRoot, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { InvoiceTotals } from "@/components/invoice-totals";
 import { calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
 import { LineItems } from "@/components/line-items";
-import type { InvoiceFormValues } from "@/lib/invoice-schema";
+import { RECURRING_FREQUENCIES, type InvoiceFormValues } from "@/lib/invoice-schema";
 
 const STATUSES = [
   { value: "draft", label: "Draft" },
@@ -94,6 +95,14 @@ function ContactSection({ prefix, title }: { prefix: "from" | "to"; title: strin
   );
 }
 
+const FREQUENCY_LABELS: Record<string, string> = {
+  weekly: "Weekly",
+  biweekly: "Bi-weekly",
+  monthly: "Monthly",
+  quarterly: "Quarterly",
+  annually: "Annually",
+};
+
 export function InvoiceForm() {
   const { register, control, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
 
@@ -102,6 +111,8 @@ export function InvoiceForm() {
   const currency = watch("currency");
   const discount = watch("discount");
   const status = watch("status");
+  const recurring = watch("recurring");
+  const recurringFrequency = watch("recurringFrequency");
 
   useEffect(() => {
     const subtotal = calcSubtotal(lineItems || []);
@@ -223,6 +234,42 @@ export function InvoiceForm() {
         <CardContent className="pt-6 grid gap-2">
           <Label htmlFor="notes">Notes / Terms</Label>
           <Textarea id="notes" rows={3} {...register("notes")} placeholder="Payment terms, thank you note, etc." />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="pt-6 grid gap-4">
+          <div className="flex items-center gap-3">
+            <Switch
+              id="recurring"
+              checked={!!recurring}
+              onCheckedChange={(checked) => {
+                setValue("recurring", checked, { shouldDirty: true });
+                if (!checked) setValue("recurringFrequency", undefined, { shouldDirty: true });
+              }}
+            />
+            <Label htmlFor="recurring">Make this recurring</Label>
+          </div>
+          {recurring && (
+            <div className="grid gap-2">
+              <Label htmlFor="recurringFrequency">Frequency</Label>
+              <SelectRoot
+                value={recurringFrequency ?? ""}
+                onValueChange={(val) =>
+                  setValue("recurringFrequency", val as InvoiceFormValues["recurringFrequency"], { shouldDirty: true })
+                }
+              >
+                <SelectTrigger id="recurringFrequency">
+                  <SelectValue placeholder="Select frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  {RECURRING_FREQUENCIES.map((f) => (
+                    <SelectItem key={f} value={f}>{FREQUENCY_LABELS[f]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </SelectRoot>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -71,6 +71,19 @@ export const userSettings = sqliteTable("user_settings", {
   updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
 });
 
+export const recurringInvoices = sqliteTable("recurring_invoices", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  frequency: text("frequency", { enum: ["weekly", "biweekly", "monthly", "quarterly", "annually"] }).notNull(),
+  nextRunAt: text("next_run_at").notNull(),
+  lastRunAt: text("last_run_at"),
+  status: text("status", { enum: ["active", "paused"] }).notNull().default("active"),
+  templateJson: text("template_json").notNull(),
+  createdAt: text("created_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
+});
+
 export const invoices = sqliteTable("invoices", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull(),
