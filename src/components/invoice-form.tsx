@@ -7,8 +7,22 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { SelectRoot, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { calcLineAmount, calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
 import type { InvoiceFormValues } from "@/lib/invoice-schema";
+
+const CURRENCIES = [
+  { code: "USD", label: "USD — US Dollar" },
+  { code: "EUR", label: "EUR — Euro" },
+  { code: "GBP", label: "GBP — British Pound" },
+  { code: "JPY", label: "JPY — Japanese Yen" },
+  { code: "CAD", label: "CAD — Canadian Dollar" },
+  { code: "AUD", label: "AUD — Australian Dollar" },
+  { code: "CHF", label: "CHF — Swiss Franc" },
+  { code: "INR", label: "INR — Indian Rupee" },
+  { code: "SGD", label: "SGD — Singapore Dollar" },
+  { code: "AED", label: "AED — UAE Dirham" },
+];
 
 function ContactSection({ prefix, title }: { prefix: "from" | "to"; title: string }) {
   const { register, formState: { errors } } = useFormContext<InvoiceFormValues>();
@@ -65,6 +79,7 @@ export function InvoiceForm() {
 
   const lineItems = watch("lineItems");
   const taxRate = watch("taxRate");
+  const currency = watch("currency");
 
   const handleLineChange = (index: number, field: "quantity" | "rate", value: string) => {
     const num = parseFloat(value) || 0;
@@ -119,6 +134,19 @@ export function InvoiceForm() {
           <div className="grid gap-2">
             <Label htmlFor="dueDate">Due Date</Label>
             <Input id="dueDate" type="date" {...register("dueDate")} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="currency">Currency</Label>
+            <SelectRoot value={currency} onValueChange={(val) => setValue("currency", val)}>
+              <SelectTrigger id="currency">
+                <SelectValue placeholder="Select currency" />
+              </SelectTrigger>
+              <SelectContent>
+                {CURRENCIES.map((c) => (
+                  <SelectItem key={c.code} value={c.code}>{c.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </SelectRoot>
           </div>
         </CardContent>
       </Card>
