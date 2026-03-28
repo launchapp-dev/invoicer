@@ -131,6 +131,7 @@ export const invoices = sqliteTable("invoices", {
   paidMethod: text("paid_method"),
   paidReference: text("paid_reference"),
   shareToken: text("share_token").unique(),
+  paymentTerms: text("payment_terms"),
   createdAt: text("created_at")
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),

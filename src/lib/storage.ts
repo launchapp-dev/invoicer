@@ -70,6 +70,7 @@ function rowToInvoice(row: typeof invoices.$inferSelect, paymentRows?: typeof pa
         }
       : {}),
     ...(row.shareToken ? { shareToken: row.shareToken } : {}),
+    ...(row.paymentTerms ? { paymentTerms: row.paymentTerms as Invoice["paymentTerms"] } : {}),
   };
 }
 
@@ -119,6 +120,7 @@ export async function saveInvoice(invoice: Invoice): Promise<void> {
     paidAt: invoice.paidAt ?? null,
     paidMethod: invoice.paidMethod ?? null,
     paidReference: invoice.paidReference ?? null,
+    paymentTerms: invoice.paymentTerms ?? null,
   };
   const existing = await db
     .select({ id: invoices.id })

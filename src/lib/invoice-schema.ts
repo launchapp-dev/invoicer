@@ -46,6 +46,7 @@ export const invoiceSchema = z.object({
   currency: z.string().min(1),
   recurring: z.boolean().optional(),
   recurringFrequency: z.enum(RECURRING_FREQUENCIES).optional(),
+  paymentTerms: z.enum(["net15", "net30", "net60", "due_on_receipt", "custom"]).optional(),
 }).refine(
   (data) => !data.issueDate || !data.dueDate || data.dueDate >= data.issueDate,
   { message: "Due date must be on or after issue date", path: ["dueDate"] }

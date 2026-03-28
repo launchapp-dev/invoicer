@@ -165,6 +165,24 @@ const FREQUENCY_LABELS: Record<string, string> = {
   annually: "Annually",
 };
 
+const PAYMENT_TERMS = [
+  { value: "due_on_receipt", label: "Due on Receipt" },
+  { value: "net15", label: "Net 15" },
+  { value: "net30", label: "Net 30" },
+  { value: "net60", label: "Net 60" },
+  { value: "custom", label: "Custom" },
+] as const;
+
+function calcDueDate(issueDate: string, terms: string): string {
+  if (!issueDate) return "";
+  const date = new Date(issueDate);
+  if (terms === "due_on_receipt") return issueDate;
+  if (terms === "net15") { date.setDate(date.getDate() + 15); }
+  else if (terms === "net30") { date.setDate(date.getDate() + 30); }
+  else if (terms === "net60") { date.setDate(date.getDate() + 60); }
+  return date.toISOString().slice(0, 10);
+}
+
 export function InvoiceForm({ clients }: { clients?: Client[] }) {
   const { register, control, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
 
@@ -175,6 +193,8 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
   const status = watch("status");
   const recurring = watch("recurring");
   const recurringFrequency = watch("recurringFrequency");
+  const paymentTerms = watch("paymentTerms");
+  const issueDate = watch("issueDate");
 
   useEffect(() => {
     const subtotal = calcSubtotal(lineItems || []);
@@ -188,6 +208,12 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
     setValue("taxAmount", taxAmount);
     setValue("total", calcTotal(subtotal, taxAmount, safeDiscount));
   }, [lineItems, taxLines, discount, setValue]);
+
+  useEffect(() => {
+    if (paymentTerms && paymentTerms !== "custom" && issueDate) {
+      setValue("dueDate", calcDueDate(issueDate, paymentTerms), { shouldDirty: true });
+    }
+  }, [issueDate, paymentTerms, setValue]);
 
   return (
     <div className="grid gap-6">
@@ -224,11 +250,28 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
             )}
           </div>
           <div className="grid gap-2">
+            <Label htmlFor="paymentTerms">Payment Terms</Label>
+            <SelectRoot
+              value={paymentTerms ?? "net30"}
+              onValueChange={(val) => setValue("paymentTerms", val as InvoiceFormValues["paymentTerms"], { shouldDirty: true })}
+            >
+              <SelectTrigger id="paymentTerms">
+                <SelectValue placeholder="Select payment terms" />
+              </SelectTrigger>
+              <SelectContent>
+                {PAYMENT_TERMS.map((t) => (
+                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </SelectRoot>
+          </div>
+          <div className="grid gap-2">
             <Label htmlFor="dueDate">Due Date</Label>
             <Input
               id="dueDate"
               type="date"
               {...register("dueDate")}
+              disabled={!!paymentTerms && paymentTerms !== "custom"}
               error={!!errors.dueDate}
               aria-invalid={!!errors.dueDate}
               aria-describedby={errors.dueDate ? "due-date-error" : undefined}
