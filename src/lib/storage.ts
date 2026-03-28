@@ -242,6 +242,29 @@ export async function upsertUserSettings(
     });
 }
 
+export async function saveMyBusinessProfile(data: {
+  businessName?: string;
+  businessEmail?: string;
+  businessAddress?: string;
+  businessCity?: string;
+  businessState?: string;
+  businessZip?: string;
+  businessCountry?: string;
+}): Promise<void> {
+  const userId = await getCurrentUserId();
+  await upsertUserSettings(userId, data);
+}
+
+export async function saveMyInvoiceDefaults(data: {
+  defaultCurrency?: string;
+  defaultTaxRate?: number;
+  defaultNotes?: string;
+  invoiceNumberPrefix?: string;
+}): Promise<void> {
+  const userId = await getCurrentUserId();
+  await upsertUserSettings(userId, data);
+}
+
 export async function duplicateInvoice(id: string): Promise<Invoice | null> {
   const userId = await getCurrentUserId();
   const [row] = await db
