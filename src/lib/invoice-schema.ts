@@ -8,6 +8,7 @@ const contactInfoSchema = z.object({
   state: z.string(),
   zip: z.string(),
   country: z.string(),
+  taxId: z.string().optional(),
 });
 
 const lineItemSchema = z.object({

@@ -71,6 +71,7 @@ export const userSettings = sqliteTable("user_settings", {
   logoUrl: text("logo_url").notNull().default(""),
   theme: text("theme", { enum: ["light", "dark", "system"] }).notNull().default("system"),
   invoiceTemplate: text("invoice_template", { enum: ["classic", "modern", "minimal"] }).notNull().default("classic"),
+  businessTaxId: text("business_tax_id").notNull().default(""),
   updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
 });
 

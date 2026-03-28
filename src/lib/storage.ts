@@ -429,6 +429,7 @@ export async function saveMyBusinessProfile(data: {
   businessState?: string;
   businessZip?: string;
   businessCountry?: string;
+  businessTaxId?: string;
 }): Promise<void> {
   const userId = await getCurrentUserId();
   await upsertUserSettings(userId, data);

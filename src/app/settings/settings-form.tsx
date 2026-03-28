@@ -30,6 +30,7 @@ const businessProfileSchema = z.object({
   businessState: z.string(),
   businessZip: z.string(),
   businessCountry: z.string(),
+  businessTaxId: z.string(),
 });
 
 const invoiceDefaultsSchema = z.object({
@@ -66,6 +67,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
       businessState: settings?.businessState ?? "",
       businessZip: settings?.businessZip ?? "",
       businessCountry: settings?.businessCountry ?? "",
+      businessTaxId: settings?.businessTaxId ?? "",
     },
   });
 
@@ -231,6 +233,14 @@ export function SettingsForm({ settings }: SettingsFormProps) {
               <Input
                 id="businessCountry"
                 {...businessForm.register("businessCountry")}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="businessTaxId">Business Tax ID <span className="text-muted-foreground font-normal">(VAT / EIN / ABN, optional)</span></Label>
+              <Input
+                id="businessTaxId"
+                placeholder="e.g. GB123456789"
+                {...businessForm.register("businessTaxId")}
               />
             </div>
             <Button type="submit" disabled={savingProfile}>

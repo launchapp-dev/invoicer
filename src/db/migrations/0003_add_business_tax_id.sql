@@ -1,0 +1,1 @@
+ALTER TABLE `user_settings` ADD `business_tax_id` text DEFAULT '' NOT NULL;
