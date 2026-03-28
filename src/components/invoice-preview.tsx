@@ -18,6 +18,14 @@ import { calcSubtotal, calcTotal, formatCurrency, formatDate } from "@/lib/calcu
 import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
 
+const PAYMENT_TERMS_LABELS: Record<NonNullable<Invoice["paymentTerms"]>, string> = {
+  net15: "Net 15",
+  net30: "Net 30",
+  net60: "Net 60",
+  due_on_receipt: "Due on Receipt",
+  custom: "Custom",
+};
+
 const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destructive" | "outline"> = {
   draft: "secondary",
   sent: "outline",
@@ -90,6 +98,9 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl }: Invoi
             <div className="text-xs text-muted-foreground mt-2">
               <p>Issued: {formatDate(invoice.issueDate)}</p>
               <p>Due: {formatDate(invoice.dueDate)}</p>
+              {invoice.paymentTerms && (
+                <p>Terms: {PAYMENT_TERMS_LABELS[invoice.paymentTerms]}</p>
+              )}
             </div>
           </div>
         </div>
