@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { LogoutButton } from "./logout-button";
+import { InvoiceActions } from "./invoice-actions";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" | "destructive"> = {
@@ -96,7 +97,9 @@ export default async function DashboardPage() {
                       {invoice.status}
                     </Badge>
                   </TableCell>
-                  <TableCell />
+                  <TableCell className="text-right">
+                    <InvoiceActions invoiceId={invoice.id} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
