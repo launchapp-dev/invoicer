@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useFormContext } from "react-hook-form";
+import { Sparkles, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,10 +11,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { SelectRoot, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Combobox } from "@/components/ui/combobox";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { InvoiceTotals } from "@/components/invoice-totals";
 import { calcSubtotal, calcTaxLines, calcTaxAmountFromLines, calcTotal } from "@/lib/calculations";
 import { LineItems } from "@/components/line-items";
 import { RECURRING_FREQUENCIES, type InvoiceFormValues } from "@/lib/invoice-schema";
+import { suggestLineItems, type SuggestedLineItem } from "@/lib/ai";
 import type { Client } from "@/types/client";
 
 const STATUSES = [
@@ -37,7 +41,12 @@ const CURRENCIES = [
   { code: "AED", label: "AED — UAE Dirham" },
 ];
 
-function ContactSection({ prefix, title, clients }: { prefix: "from" | "to"; title: string; clients?: Client[] }) {
+function ContactSection({ prefix, title, clients, onClientSelect }: {
+  prefix: "from" | "to";
+  title: string;
+  clients?: Client[];
+  onClientSelect?: (clientId: string | null) => void;
+}) {
   const { register, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const e = errors[prefix];
@@ -54,6 +63,7 @@ function ContactSection({ prefix, title, clients }: { prefix: "from" | "to"; tit
   function handleClientSelect(clientId: string) {
     if (!clientId || clientId === "__clear__") {
       setSelectedClientId("");
+      onClientSelect?.(null);
       setValue(`${prefix}.name`, "", { shouldDirty: true });
       setValue(`${prefix}.email`, "", { shouldDirty: true });
       setValue(`${prefix}.address`, "", { shouldDirty: true });
@@ -64,6 +74,7 @@ function ContactSection({ prefix, title, clients }: { prefix: "from" | "to"; tit
       return;
     }
     setSelectedClientId(clientId);
+    onClientSelect?.(clientId);
     const client = (clients ?? []).find((c) => c.id === clientId);
     if (client) {
       setValue(`${prefix}.name`, client.name, { shouldDirty: true });
@@ -185,6 +196,46 @@ function calcDueDate(issueDate: string, terms: string): string {
 
 export function InvoiceForm({ clients }: { clients?: Client[] }) {
   const { register, control, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<SuggestedLineItem[] | null>(null);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  useEffect(() => {
+    setSuggestions(null);
+    setLoadingSuggestions(false);
+  }, [selectedClientId]);
+
+  async function handleSuggestLineItems() {
+    if (!selectedClientId) return;
+    setLoadingSuggestions(true);
+    setSuggestions(null);
+    try {
+      const items = await suggestLineItems(selectedClientId);
+      setSuggestions(items);
+    } catch {
+      setSuggestions([]);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  }
+
+  function addSuggestion(item: SuggestedLineItem) {
+    const current = lineItems || [];
+    setValue(
+      "lineItems",
+      [
+        ...current,
+        {
+          id: crypto.randomUUID(),
+          description: item.description,
+          quantity: item.quantity,
+          rate: item.unitPrice,
+          amount: item.quantity * item.unitPrice,
+        },
+      ],
+      { shouldDirty: true }
+    );
+  }
 
   const lineItems = watch("lineItems");
   const taxLines = watch("taxLines");
@@ -311,14 +362,64 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
 
       <div className="grid gap-6 sm:grid-cols-2">
         <ContactSection prefix="from" title="From" />
-        <ContactSection prefix="to" title="Bill To" clients={clients} />
+        <ContactSection prefix="to" title="Bill To" clients={clients} onClientSelect={setSelectedClientId} />
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle>Line Items</CardTitle>
+          {selectedClientId && suggestions === null && !loadingSuggestions && (
+            <Button type="button" variant="outline" size="sm" onClick={handleSuggestLineItems} className="gap-1.5">
+              <Sparkles className="h-3.5 w-3.5" />
+              Suggest line items
+            </Button>
+          )}
         </CardHeader>
         <CardContent className="grid gap-4">
+          {loadingSuggestions && (
+            <div className="grid gap-2 rounded-lg border border-border bg-muted/30 p-3">
+              <Skeleton className="h-7 w-full" />
+              <Skeleton className="h-7 w-3/4" />
+              <Skeleton className="h-7 w-1/2" />
+            </div>
+          )}
+          {!loadingSuggestions && suggestions !== null && (
+            <div className="rounded-lg border border-border bg-muted/30 p-3 grid gap-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">AI suggestions from past invoices</p>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs"
+                  onClick={() => setSuggestions(null)}
+                >
+                  Dismiss
+                </Button>
+              </div>
+              {suggestions.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.map((item, i) => (
+                    <div key={i} className="flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-sm">
+                      <span className="max-w-[200px] truncate">{item.description}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-5 w-5 p-0 shrink-0"
+                        onClick={() => addSuggestion(item)}
+                        title={`Add: ${item.description}`}
+                      >
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">No suggestions available for this client.</p>
+              )}
+            </div>
+          )}
           <LineItems />
           {errors.lineItems?.root?.message && (
             <p role="alert" className="text-xs text-destructive">

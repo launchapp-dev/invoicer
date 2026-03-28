@@ -600,6 +600,27 @@ export async function deleteClient(id: string): Promise<void> {
     .where(and(eq(clients.id, id), eq(clients.userId, userId)));
 }
 
+export async function getInvoicesByClientId(clientId: string, limit = 10): Promise<Invoice[]> {
+  const userId = await getCurrentUserId();
+  const [clientRow] = await db
+    .select({ name: clients.name })
+    .from(clients)
+    .where(and(eq(clients.id, clientId), eq(clients.userId, userId)));
+  if (!clientRow) return [];
+  const rows = await db
+    .select()
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.userId, userId),
+        sql`json_extract(${invoices.toJson}, '$.name') = ${clientRow.name}`
+      )
+    )
+    .orderBy(desc(invoices.issueDate))
+    .limit(limit);
+  return rows.map((row) => rowToInvoice(row));
+}
+
 export async function getClientInvoices(clientName: string): Promise<Invoice[]> {
   const userId = await getCurrentUserId();
   const rows = await db

@@ -3,6 +3,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import type { CashFlowData } from "@/lib/storage";
+import { getInvoicesByClientId } from "@/lib/storage";
 
 const LineItemSchema = z.object({
   description: z.string(),
@@ -190,6 +191,99 @@ export async function generatePaymentReminder(input: PaymentReminderInput): Prom
     return block?.type === "text" ? block.text : fallback;
   } catch {
     return fallback;
+  }
+}
+
+export interface SuggestedLineItem {
+  description: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export async function suggestLineItems(clientId: string): Promise<SuggestedLineItem[]> {
+  const pastInvoices = await getInvoicesByClientId(clientId, 10);
+  if (pastInvoices.length === 0) return [];
+
+  const allItems = pastInvoices.flatMap((inv) =>
+    inv.lineItems.map((li) => ({
+      description: li.description,
+      quantity: li.quantity,
+      unitPrice: li.rate,
+    }))
+  );
+
+  if (allItems.length === 0) return [];
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    const seen = new Set<string>();
+    return allItems
+      .filter((li) => {
+        if (!li.description || seen.has(li.description)) return false;
+        seen.add(li.description);
+        return true;
+      })
+      .slice(0, 6);
+  }
+
+  try {
+    const client = new Anthropic({ apiKey });
+    const response = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 512,
+      system:
+        "You are an invoice assistant. Analyze past line items and suggest the most relevant ones for a new invoice. Deduplicate by description and rank by recency and frequency. Always call suggest_line_items.",
+      tools: [
+        {
+          name: "suggest_line_items",
+          description: "Return deduplicated, ranked line item suggestions",
+          input_schema: {
+            type: "object" as const,
+            properties: {
+              items: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    description: { type: "string" },
+                    quantity: { type: "number" },
+                    unitPrice: { type: "number" },
+                  },
+                  required: ["description", "quantity", "unitPrice"],
+                },
+              },
+            },
+            required: ["items"],
+          },
+        },
+      ],
+      tool_choice: { type: "tool", name: "suggest_line_items" },
+      messages: [
+        {
+          role: "user",
+          content: `Past line items from this client's invoices:\n${JSON.stringify(allItems, null, 2)}\n\nSuggest the top 6 most relevant line items for a new invoice.`,
+        },
+      ],
+    });
+
+    const toolUse = response.content.find((b) => b.type === "tool_use");
+    if (!toolUse || toolUse.type !== "tool_use") return [];
+
+    const parsed = z
+      .object({
+        items: z.array(
+          z.object({
+            description: z.string(),
+            quantity: z.number(),
+            unitPrice: z.number(),
+          })
+        ),
+      })
+      .parse(toolUse.input);
+
+    return parsed.items;
+  } catch {
+    return [];
   }
 }
 
