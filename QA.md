@@ -7,11 +7,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | Field | Value |
 |-------|-------|
 | Date | 2026-03-28 (run 5) |
-| Result | IN PROGRESS |
-| Steps Passed | TBD |
-| Duration | TBD |
-| Console Errors | TBD |
-| Network Errors | TBD |
+| Result | 6 PASS / 1 FAIL |
+| Steps Passed | 1,2,3,5,6 PASS — Step 4 (PDF generation) FAIL |
+| Duration | ~25 min |
+| Console Errors | 1 (Inter font 404 on PDF generate) |
+| Network Errors | 1 (Inter .woff 404 from fonts.gstatic.com) |
 
 ## Test Results History
 
@@ -21,11 +21,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | 5 | 2 | 2 | /clients 404; AI command bar missing from dashboard |
 | 2026-03-28 | 4 | 3 | 2 | /clients 404 persists (TASK-235 regression); auth login failure + duplicate signup bug (TASK-240); AI command bar now fixed |
 | 2026-03-28 | 4 | 2 | 1 | TASK-239 (/clients 404) FIXED; TASK-240 (auth) FIXED; new CRITICAL: missing @radix-ui/react-popover + cmdk packages crash entire app (TASK-249) |
+| 2026-03-28 | 6 | 1 | 1 | TASK-249 FIXED (app no longer crashes); PDF generation fails — Inter font 404 from Google CDN; .env BETTER_AUTH_URL was :3000 not :3002 (fixed in env); all new features (expenses, templates, brand style, CSV export, share link) present |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
-- **[2026-03-28] Missing npm packages crash entire app — TASK-249** — `@radix-ui/react-popover` and `cmdk` are imported by `combobox.tsx` (added in TASK-241 for client autofill) but not installed. This causes a build error that makes ALL pages return HTTP 500. The Next.js dev overlay blocks the login page entirely. Fix: `pnpm add @radix-ui/react-popover cmdk`. CRITICAL — complete app crash.
+- **[2026-03-28] PDF generation fails — Inter font 404** — Clicking "Download PDF" shows "Failed to generate PDF" toast. Console error: `Failed to load resource: 404 @ https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff`. @react-pdf/renderer attempts to fetch Inter font from Google Fonts CDN but the `.woff` URL returns 404. Fix: bundle the font locally or use a valid font URL. Affects all PDF downloads across all invoice templates.
 
 ## Regression Tracker
 
@@ -33,7 +34,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | Date | Test | Was | Now | Suspected Cause |
 |------|------|-----|-----|-----------------|
 | 2026-03-28 | Login with existing credentials | PASS | ~~FAIL~~ PASS | TASK-240 fixed — login now works correctly |
-| 2026-03-28 | /invoices/new and /invoices/[id] — all pages | PASS | FAIL | TASK-241 added combobox.tsx importing missing packages (TASK-249) |
+| 2026-03-28 | /invoices/new and /invoices/[id] — all pages | PASS | ~~FAIL~~ PASS | TASK-249 fixed — combobox packages now installed, invoice form works |
 
 ## Test Coverage
 
@@ -56,7 +57,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Auto-calculations update in real-time
 - [x] Save invoice succeeds
 - [x] Saved invoice appears in dashboard
-- [ ] Payment terms presets available (Net 15, Net 30, Net 60, Due on Receipt, Custom)
+- [x] Payment terms presets available (Net 15, Net 30, Net 60, Due on Receipt, Custom)
 - [ ] Custom payment terms field appears when "Custom" selected
 
 ### Invoice Dashboard
@@ -72,12 +73,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Bulk select checkboxes appear
 - [ ] Bulk delete works
 - [ ] Bulk mark-as-sent works
-- [ ] Client filter dropdown works (filter by client name)
-- [ ] Currency filter dropdown works
+- [ ] Client filter dropdown works (filter by client name) — **NOT VISIBLE: may only appear when clients exist**
+- [x] Currency filter dropdown works
 
 ### PDF Generation
 - [x] Generate PDF button exists
-- [x] PDF downloads without errors
+- [ ] PDF downloads without errors — **FAIL: Inter font 404 from Google CDN (new bug)**
 - [ ] PDF contains correct invoice data
 
 ### Live Preview
@@ -95,8 +96,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Uploaded logo renders in generated PDF
 - [ ] Dark mode toggle exists in settings
 - [ ] Dark mode toggle switches theme
-- [ ] Brand color customization field present in settings
-- [ ] Font customization field present in settings
+- [x] Brand color customization field present in settings
+- [x] Font customization field present in settings
 - [ ] Brand color applies to invoice PDF output
 
 ### Client Management
@@ -104,6 +105,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Create new client works — form saves, redirects to detail page
 - [x] /clients/[id] detail page loads with invoice history — shows total billed, outstanding, overdue stats and invoice table
 - [ ] Client autofill works when creating new invoice — **BLOCKED: missing packages (TASK-249) crash invoice form**
+- [x] Client CSV import button present on /clients page
 - [ ] Client CSV import works (import clients from CSV file)
 
 ### Payment Recording
@@ -129,7 +131,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] AI dialog opens without errors and accepts natural language input
 
 ### Navigation
-- [ ] All nav links work (no 404s) — **PARTIAL: /dashboard/recurring and /settings crash (TASK-249 build error)**
+- [x] All nav links work (no 404s) — **FIXED: TASK-249 resolved, all routes load correctly**
 - [ ] Mobile navigation works
 - [ ] Back/forward browser buttons work
 - [x] Settings nav link present in authenticated layout
@@ -137,9 +139,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Clients nav link present in authenticated layout
 
 ### Console & Network
-- [ ] No console.error messages — **FAIL: 22 errors — missing @radix-ui/react-popover and cmdk (TASK-249)**
-- [ ] No uncaught exceptions — **FAIL: build error throws uncaught exception**
-- [ ] No failed network requests (4xx/5xx) — **FAIL: all pages return 500 after build error triggered**
+- [ ] No console.error messages — **FAIL: 1 error — Inter font 404 on PDF generate**
+- [x] No uncaught exceptions
+- [ ] No failed network requests (4xx/5xx) — **FAIL: fonts.gstatic.com Inter .woff returns 404 on PDF generate**
 - [x] No CORS errors
 
 ### Multi-Currency
@@ -151,25 +153,25 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Each rate is labeled and calculated independently
 
 ### File Attachments
-- [ ] File attachment button/area exists on invoice form
+- [x] File attachment button/area exists on invoice form (drag-and-drop + Add files button)
 - [ ] Can attach a file (contract, receipt, SOW) to an invoice
 - [ ] Attached file persists after saving invoice
 
 ### Bulk CSV Export
-- [ ] Bulk CSV export button/option exists on dashboard
+- [x] Bulk CSV export button exists on dashboard (Export CSV)
 - [ ] Exporting invoices downloads a CSV file
 - [ ] CSV contains correct invoice data
 
 ### Expense Tracking
-- [ ] /expenses page loads
+- [x] /expenses page loads with Add Expense button
 - [ ] Can upload/add an expense
 - [ ] AI receipt extraction works (extracts vendor, amount, date from uploaded receipt)
 - [ ] Expenses linked to clients show in P&L view
 - [ ] Client P&L shows revenue minus expenses
 
 ### AI Cash Flow Forecasting
-- [ ] Cash flow forecasting widget appears on dashboard
-- [ ] Widget shows "Expected this month" vs "At risk" breakdown
+- [x] Cash flow forecasting widget appears on dashboard
+- [ ] Widget shows "Expected this month" vs "At risk" breakdown (shows empty state with no outstanding invoices)
 
 ### AI Payment Reminders
 - [ ] AI payment reminder feature accessible for overdue invoices
@@ -180,8 +182,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Searching "unpaid invoices" returns filtered results
 
 ### Invoice Templates
-- [ ] /settings/templates page loads
-- [ ] Multiple invoice templates available for selection
+- [x] /settings/templates page loads
+- [x] Multiple invoice templates available for selection (Classic, Modern, Minimal)
 - [ ] Selecting a template applies to invoice preview/PDF
 
 ## Environment Notes
