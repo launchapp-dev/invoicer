@@ -1,4 +1,4 @@
-import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 import type { Invoice } from "@/types/invoice";
 import { formatCurrency, formatDate } from "@/lib/calculations";
 
@@ -151,18 +151,24 @@ const styles = StyleSheet.create({
 
 interface InvoicePDFProps {
   invoice: Invoice;
+  logoUrl?: string;
 }
 
-export function InvoicePDF({ invoice }: InvoicePDFProps) {
+export function InvoicePDF({ invoice, logoUrl }: InvoicePDFProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <View>
-            <Text style={styles.invoiceLabel}>Invoice</Text>
-            <Text style={styles.invoiceNumber}>
-              {invoice.invoiceNumber || "INV-001"}
-            </Text>
+          <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
+            {logoUrl ? (
+              <Image src={logoUrl} style={{ height: 48, maxWidth: 120, objectFit: "contain" }} />
+            ) : null}
+            <View>
+              <Text style={styles.invoiceLabel}>Invoice</Text>
+              <Text style={styles.invoiceNumber}>
+                {invoice.invoiceNumber || "INV-001"}
+              </Text>
+            </View>
           </View>
           <View style={{ alignItems: "flex-end" }}>
             <Text style={styles.statusBadge}>

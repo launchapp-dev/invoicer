@@ -29,9 +29,10 @@ const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destr
 interface InvoicePreviewProps {
   invoice: Invoice;
   hideDownload?: boolean;
+  logoUrl?: string;
 }
 
-export function InvoicePreview({ invoice, hideDownload = false }: InvoicePreviewProps) {
+export function InvoicePreview({ invoice, hideDownload = false, logoUrl }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
   const taxAmount = calcTaxAmount(subtotal, invoice.taxRate);
   const total = calcTotal(subtotal, taxAmount, invoice.discount);
@@ -42,7 +43,7 @@ export function InvoicePreview({ invoice, hideDownload = false }: InvoicePreview
     try {
       const { pdf } = await import("@react-pdf/renderer");
       const { InvoicePDF } = await import("@/components/invoice-pdf");
-      const blob = await pdf(<InvoicePDF invoice={invoice} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -60,14 +61,25 @@ export function InvoicePreview({ invoice, hideDownload = false }: InvoicePreview
     <Card className="shadow-xl border-border bg-card min-h-[700px]">
       <CardContent className="p-8 space-y-6">
         <div className="flex items-start justify-between">
-          <div>
-            <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center mb-3">
-              <Building2 className="h-5 w-5 text-muted-foreground" />
+          <div className="flex items-start gap-3">
+            {logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={logoUrl}
+                alt="Business logo"
+                className="h-12 w-auto max-w-[120px] object-contain"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                <Building2 className="h-5 w-5 text-muted-foreground" />
+              </div>
+            )}
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest">Invoice</p>
+              <p className="text-2xl font-bold text-foreground mt-1">
+                {invoice.invoiceNumber || "INV-001"}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest">Invoice</p>
-            <p className="text-2xl font-bold text-foreground mt-1">
-              {invoice.invoiceNumber || "INV-001"}
-            </p>
           </div>
           <div className="text-right space-y-1">
             <Badge variant={STATUS_VARIANT[invoice.status]}>

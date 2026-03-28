@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InvoicePreview } from "@/components/invoice-preview";
-import { loadInvoice } from "@/lib/storage";
+import { loadInvoice, getMySettings } from "@/lib/storage";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
@@ -22,6 +22,7 @@ export default function PreviewInvoicePage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string>("");
 
   async function handleDownload() {
     if (!invoice) return;
@@ -29,7 +30,7 @@ export default function PreviewInvoicePage() {
     try {
       const { pdf } = await import("@react-pdf/renderer");
       const { InvoicePDF } = await import("@/components/invoice-pdf");
-      const blob = await pdf(<InvoicePDF invoice={invoice} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -51,6 +52,7 @@ export default function PreviewInvoicePage() {
 
   useEffect(() => {
     if (!session || !params?.id) return;
+    getMySettings().then((s) => { if (s?.logoUrl) setLogoUrl(s.logoUrl); }).catch(() => {});
     loadInvoice(params.id)
       .then((data) => {
         if (!data) {
@@ -162,7 +164,7 @@ export default function PreviewInvoicePage() {
             </CardContent>
           </Card>
         )}
-        {invoice && <InvoicePreview invoice={invoice} hideDownload />}
+        {invoice && <InvoicePreview invoice={invoice} hideDownload logoUrl={logoUrl} />}
       </div>
     </div>
   );

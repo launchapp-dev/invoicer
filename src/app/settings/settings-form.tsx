@@ -17,7 +17,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { saveMyBusinessProfile, saveMyInvoiceDefaults } from "@/lib/storage";
+import { saveMyBusinessProfile, saveMyInvoiceDefaults, saveMyLogoUrl } from "@/lib/storage";
 import type { userSettings } from "@/db/schema";
 
 type UserSettings = typeof userSettings.$inferSelect;
@@ -51,6 +51,8 @@ interface SettingsFormProps {
 export function SettingsForm({ settings }: SettingsFormProps) {
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingDefaults, setSavingDefaults] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string>(settings?.logoUrl ?? "");
+  const [savingLogo, setSavingLogo] = useState(false);
 
   const businessForm = useForm<BusinessProfileValues>({
     resolver: zodResolver(businessProfileSchema),
@@ -84,6 +86,43 @@ export function SettingsForm({ settings }: SettingsFormProps) {
       toast.error("Failed to save business profile");
     } finally {
       setSavingProfile(false);
+    }
+  }
+
+  async function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Logo must be under 2MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      setLogoUrl(dataUrl);
+      setSavingLogo(true);
+      try {
+        await saveMyLogoUrl(dataUrl);
+        toast.success("Logo saved");
+      } catch {
+        toast.error("Failed to save logo");
+      } finally {
+        setSavingLogo(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function handleRemoveLogo() {
+    setLogoUrl("");
+    setSavingLogo(true);
+    try {
+      await saveMyLogoUrl("");
+      toast.success("Logo removed");
+    } catch {
+      toast.error("Failed to remove logo");
+    } finally {
+      setSavingLogo(false);
     }
   }
 
@@ -168,6 +207,49 @@ export function SettingsForm({ settings }: SettingsFormProps) {
               {savingProfile ? "Saving…" : "Save Profile"}
             </Button>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Business Logo</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {logoUrl ? (
+              <div className="flex items-center gap-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={logoUrl}
+                  alt="Business logo"
+                  className="h-16 w-auto max-w-[200px] object-contain rounded border border-border"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRemoveLogo}
+                  disabled={savingLogo}
+                >
+                  {savingLogo ? "Removing…" : "Remove Logo"}
+                </Button>
+              </div>
+            ) : null}
+            <div className="space-y-2">
+              <Label htmlFor="logoUpload">
+                {logoUrl ? "Replace Logo" : "Upload Logo"}
+              </Label>
+              <Input
+                id="logoUpload"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleLogoChange}
+                disabled={savingLogo}
+              />
+              <p className="text-xs text-muted-foreground">
+                PNG, JPG, or WebP — max 2MB
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
