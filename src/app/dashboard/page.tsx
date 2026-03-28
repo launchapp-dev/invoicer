@@ -20,6 +20,7 @@ import { LogoutButton } from "./logout-button";
 import { InvoiceActions } from "./invoice-actions";
 import { PaginationControls } from "./pagination-controls";
 import { DashboardFilters } from "./dashboard-filters";
+import { DashboardStats } from "./dashboard-stats";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const VALID_STATUSES: InvoiceStatus[] = ["draft", "sent", "paid", "overdue", "cancelled"];
@@ -90,6 +91,16 @@ export default async function DashboardPage({
             <Link href="/invoices/new">New Invoice</Link>
           </Button>
         </div>
+
+        <Suspense fallback={
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
+            <Skeleton className="h-24 rounded-lg" />
+            <Skeleton className="h-24 rounded-lg" />
+            <Skeleton className="h-24 rounded-lg" />
+          </div>
+        }>
+          <DashboardStats />
+        </Suspense>
 
         <Suspense fallback={
           <div className="flex items-center gap-2 mb-4">

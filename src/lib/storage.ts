@@ -168,6 +168,53 @@ export async function deleteInvoice(id: string): Promise<void> {
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
 }
 
+export async function getInvoiceStats(): Promise<{
+  totalOutstanding: number;
+  outstandingCount: number;
+  paidThisMonth: number;
+  paidThisMonthCount: number;
+  overdueAmount: number;
+  overdueCount: number;
+  currency: string;
+}> {
+  const userId = await getCurrentUserId();
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  const [statsRow, currencyRow] = await Promise.all([
+    db
+      .select({
+        totalOutstanding: sql<number>`COALESCE(SUM(CASE WHEN ${invoices.status} IN ('draft', 'sent') THEN ${invoices.total} ELSE 0 END), 0)`,
+        outstandingCount: sql<number>`COUNT(CASE WHEN ${invoices.status} IN ('draft', 'sent') THEN 1 ELSE NULL END)`,
+        paidThisMonth: sql<number>`COALESCE(SUM(CASE WHEN ${invoices.status} = 'paid' AND strftime('%Y-%m', ${invoices.updatedAt}) = ${currentMonth} THEN ${invoices.total} ELSE 0 END), 0)`,
+        paidThisMonthCount: sql<number>`COUNT(CASE WHEN ${invoices.status} = 'paid' AND strftime('%Y-%m', ${invoices.updatedAt}) = ${currentMonth} THEN 1 ELSE NULL END)`,
+        overdueAmount: sql<number>`COALESCE(SUM(CASE WHEN ${invoices.status} = 'overdue' THEN ${invoices.total} ELSE 0 END), 0)`,
+        overdueCount: sql<number>`COUNT(CASE WHEN ${invoices.status} = 'overdue' THEN 1 ELSE NULL END)`,
+      })
+      .from(invoices)
+      .where(eq(invoices.userId, userId))
+      .then((rows) => rows[0]),
+    db
+      .select({ currency: invoices.currency, cnt: count() })
+      .from(invoices)
+      .where(eq(invoices.userId, userId))
+      .groupBy(invoices.currency)
+      .orderBy(desc(count()))
+      .limit(1)
+      .then((rows) => rows[0]),
+  ]);
+
+  return {
+    totalOutstanding: statsRow?.totalOutstanding ?? 0,
+    outstandingCount: statsRow?.outstandingCount ?? 0,
+    paidThisMonth: statsRow?.paidThisMonth ?? 0,
+    paidThisMonthCount: statsRow?.paidThisMonthCount ?? 0,
+    overdueAmount: statsRow?.overdueAmount ?? 0,
+    overdueCount: statsRow?.overdueCount ?? 0,
+    currency: currencyRow?.currency ?? "USD",
+  };
+}
+
 export async function updateInvoiceStatus(id: string, status: InvoiceStatus): Promise<void> {
   const userId = await getCurrentUserId();
   await db
