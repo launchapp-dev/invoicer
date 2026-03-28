@@ -1,6 +1,6 @@
 "use server";
 
-import { and, asc, count, desc, eq, gte, inArray, like, lte, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray, like, lt, lte, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { unlink } from "fs/promises";
 import path from "path";
@@ -254,6 +254,18 @@ export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
 
 export async function loadInvoice(id: string): Promise<Invoice | null> {
   const userId = await getCurrentUserId();
+  const today = new Date().toISOString().split("T")[0];
+  await db
+    .update(invoices)
+    .set({ status: "overdue", updatedAt: new Date().toISOString() })
+    .where(
+      and(
+        eq(invoices.id, id),
+        eq(invoices.userId, userId),
+        inArray(invoices.status, ["sent", "viewed", "partial"]),
+        lt(invoices.dueDate, today)
+      )
+    );
   const [row] = await db
     .select()
     .from(invoices)
@@ -365,6 +377,31 @@ export async function bulkUpdateInvoiceStatus(ids: string[], status: InvoiceStat
     .update(invoices)
     .set({ status, updatedAt: new Date().toISOString() })
     .where(and(eq(invoices.userId, userId), inArray(invoices.id, ids)));
+}
+
+export async function markOverdueInvoices(userId: string): Promise<number> {
+  const today = new Date().toISOString().split("T")[0];
+  const overdue = await db
+    .select({ id: invoices.id })
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.userId, userId),
+        inArray(invoices.status, ["sent", "viewed", "partial"]),
+        lt(invoices.dueDate, today)
+      )
+    );
+  if (overdue.length === 0) return 0;
+  await db
+    .update(invoices)
+    .set({ status: "overdue", updatedAt: new Date().toISOString() })
+    .where(
+      and(
+        eq(invoices.userId, userId),
+        inArray(invoices.id, overdue.map((r) => r.id))
+      )
+    );
+  return overdue.length;
 }
 
 export async function updateInvoiceStatus(id: string, status: InvoiceStatus): Promise<void> {
