@@ -3,11 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, Loader2, Check, Link2 } from "lucide-react";
+import { MoreHorizontal, Loader2, Check, Link2, Bell } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,6 +46,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { deleteInvoice, duplicateInvoice, updateInvoiceStatus, recordPayment, generateShareLink } from "@/lib/storage";
+import { generatePaymentReminder } from "@/lib/ai";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const STATUSES: { value: InvoiceStatus; label: string }[] = [
@@ -57,6 +61,11 @@ const STATUSES: { value: InvoiceStatus; label: string }[] = [
 interface InvoiceActionsProps {
   invoiceId: string;
   status: InvoiceStatus;
+  invoiceNumber: string;
+  clientName: string;
+  total: number;
+  dueDate: string;
+  currency: string;
 }
 
 const PAYMENT_METHODS = [
@@ -67,10 +76,16 @@ const PAYMENT_METHODS = [
   { value: "other", label: "Other" },
 ];
 
-export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
+const REMINDER_STATUSES: InvoiceStatus[] = ["overdue", "sent", "partial"];
+
+export function InvoiceActions({ invoiceId, status, invoiceNumber, clientName, total, dueDate, currency }: InvoiceActionsProps) {
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [recordPaymentOpen, setRecordPaymentOpen] = React.useState(false);
+  const [reminderOpen, setReminderOpen] = React.useState(false);
+  const [reminderLoading, setReminderLoading] = React.useState(false);
+  const [reminderMessage, setReminderMessage] = React.useState("");
+  const [markAsSent, setMarkAsSent] = React.useState(false);
   const [pending, setPending] = React.useState(false);
   const [paymentDate, setPaymentDate] = React.useState(() => new Date().toISOString().split("T")[0]);
   const [paymentMethod, setPaymentMethod] = React.useState("");
@@ -161,6 +176,33 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
     }
   }
 
+  async function handleOpenReminder() {
+    setReminderOpen(true);
+    setReminderMessage("");
+    setMarkAsSent(false);
+    setReminderLoading(true);
+    try {
+      const daysOverdue = Math.max(0, Math.floor((Date.now() - new Date(dueDate).getTime()) / 86400000));
+      const message = await generatePaymentReminder({ invoiceNumber, clientName, total, dueDate, daysOverdue, currency });
+      setReminderMessage(message);
+    } finally {
+      setReminderLoading(false);
+    }
+  }
+
+  async function handleCopyReminder() {
+    try {
+      await navigator.clipboard.writeText(reminderMessage);
+      toast.success("Reminder copied to clipboard");
+      if (markAsSent && status !== "sent") {
+        await updateInvoiceStatus(invoiceId, "sent");
+        router.refresh();
+      }
+    } catch {
+      toast.error("Failed to copy to clipboard");
+    }
+  }
+
   async function handleStatusChange(newStatus: InvoiceStatus) {
     setPending(true);
     try {
@@ -199,6 +241,12 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
           {status !== "paid" && (
             <DropdownMenuItem onSelect={() => setRecordPaymentOpen(true)}>
               Record Payment
+            </DropdownMenuItem>
+          )}
+          {REMINDER_STATUSES.includes(status) && (
+            <DropdownMenuItem onSelect={handleOpenReminder} className="flex items-center gap-2">
+              <Bell className="h-4 w-4" />
+              Send Reminder
             </DropdownMenuItem>
           )}
           <DropdownMenuSub>
@@ -256,6 +304,50 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Sheet open={reminderOpen} onOpenChange={setReminderOpen}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Payment Reminder</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-4 mt-4">
+            {reminderLoading ? (
+              <div className="flex flex-col gap-2">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+              </div>
+            ) : (
+              <Textarea
+                value={reminderMessage}
+                onChange={(e) => setReminderMessage(e.target.value)}
+                rows={10}
+                className="resize-none"
+              />
+            )}
+            {!reminderLoading && status !== "sent" && (
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="mark-as-sent"
+                  checked={markAsSent}
+                  onCheckedChange={(v) => setMarkAsSent(v === true)}
+                />
+                <Label htmlFor="mark-as-sent" className="text-sm cursor-pointer">
+                  Mark invoice as sent after copying
+                </Label>
+              </div>
+            )}
+          </div>
+          <SheetFooter className="mt-4">
+            <Button onClick={handleCopyReminder} disabled={reminderLoading || !reminderMessage}>
+              Copy to Clipboard
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
 
       <Sheet open={recordPaymentOpen} onOpenChange={setRecordPaymentOpen}>
         <SheetContent>

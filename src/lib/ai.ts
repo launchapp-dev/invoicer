@@ -141,6 +141,58 @@ export async function parseSearchQuery(query: string): Promise<SearchFilters | n
   }
 }
 
+export interface PaymentReminderInput {
+  invoiceNumber: string;
+  clientName: string;
+  total: number;
+  dueDate: string;
+  daysOverdue: number;
+  currency: string;
+}
+
+export async function generatePaymentReminder(input: PaymentReminderInput): Promise<string> {
+  const { invoiceNumber, clientName, total, dueDate, daysOverdue, currency } = input;
+  const formattedAmount = fmtAmount(total, currency);
+  const formattedDue = new Date(dueDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+
+  const fallback =
+    daysOverdue <= 7
+      ? `Hi ${clientName},\n\nI hope you're doing well! I wanted to follow up on invoice ${invoiceNumber} for ${formattedAmount}, which was due on ${formattedDue}. It may have slipped through the cracks — no worries at all.\n\nCould you let me know when we might expect payment? Please don't hesitate to reach out if you have any questions.\n\nThank you!`
+      : daysOverdue <= 30
+      ? `Dear ${clientName},\n\nThis is a reminder that invoice ${invoiceNumber} for ${formattedAmount} was due on ${formattedDue} and remains outstanding.\n\nI'd appreciate it if you could arrange payment at your earliest convenience. Please let me know if there's anything I can help with.\n\nBest regards`
+      : `Dear ${clientName},\n\nI'm writing regarding invoice ${invoiceNumber} for ${formattedAmount}, which was due on ${formattedDue} and is now ${daysOverdue} days overdue.\n\nThis matter requires your immediate attention. Please arrange payment promptly or contact me to discuss a resolution. Continued non-payment may require further action.\n\nRegards`;
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return fallback;
+
+  const tone =
+    daysOverdue <= 7
+      ? "friendly and understanding, assume it was an oversight"
+      : daysOverdue <= 30
+      ? "polite but firm, referencing the invoice number and amount"
+      : "professional and direct, mentioning potential consequences of continued non-payment";
+
+  try {
+    const client = new Anthropic({ apiKey });
+    const response = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 300,
+      system: `You are a professional invoice follow-up assistant. Write a concise payment reminder email body (no subject line, no sign-off with a name). Tone: ${tone}. Plain text only, no markdown.`,
+      messages: [
+        {
+          role: "user",
+          content: `Invoice number: ${invoiceNumber}\nClient: ${clientName}\nAmount due: ${formattedAmount}\nDue date: ${formattedDue}\nDays overdue: ${daysOverdue}`,
+        },
+      ],
+    });
+
+    const block = response.content.find((b) => b.type === "text");
+    return block?.type === "text" ? block.text : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export async function parseInvoiceIntent(prompt: string): Promise<ParsedInvoice> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
