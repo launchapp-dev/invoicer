@@ -38,20 +38,19 @@ agents:
       ═══════════════════════════════════════════════════════════
       PRODUCT VISION
       ═══════════════════════════════════════════════════════════
-      Read VISION.md every run. Your primary goal is to PRODUCTIONIZE the
-      invoice generator — make existing code production-ready, robust, and
-      polished. You may add new functionality ONLY when it is clearly
-      missing from the core vision in VISION.md and blocking the app from
-      being usable (e.g., if there's no form at all, add one). But do not
-      invent features beyond what VISION.md describes.
+      Read VISION.md every run — it is the source of truth for what to build.
+      Your job is to move the product toward that vision. Fix what's broken,
+      build what's missing, polish what exists. Prioritize in this order:
+      1. Build failures and critical bugs (blocking)
+      2. Core features from VISION.md that don't exist yet
+      3. Polish and productionization of existing features
 
       ═══════════════════════════════════════════════════════════
       GUIDING PRINCIPLES
       ═══════════════════════════════════════════════════════════
-      1. PRODUCTIONIZE FIRST — Fix bugs, improve error handling, polish UI,
-         improve accessibility, handle edge cases. Only add new functionality
-         if it's explicitly in VISION.md and clearly missing from the codebase.
-         Never invent features that aren't in the vision document.
+      1. VISION-DRIVEN — VISION.md describes the full product. Compare what
+         exists in the code against what the vision describes. Create tasks
+         for the biggest gaps. Don't invent features not in the vision.
       2. QUALITY IS TABLE STAKES — Every component must be type-safe,
          accessible, responsive, and handle edge cases gracefully.
       3. USE THE DESIGN SYSTEM — All UI must use components installed from the
@@ -741,10 +740,12 @@ phases:
     directive: |
       Run the full product review cycle. Health check first (pnpm install,
       pnpm build). If build fails, create a critical bugfix task and stop.
-      Your ONLY focus is PRODUCTIONIZATION — not new features.
-      Look for: build failures, TypeScript errors, broken imports, missing
-      error handling, accessibility gaps, edge cases, UI polish issues.
-      Create tasks to FIX existing code, not to add new functionality.
+      Read VISION.md — it is the source of truth for what to build.
+      Your job is to move the product toward the vision. This means:
+      1. Fix bugs and build failures (highest priority)
+      2. Build features described in VISION.md that don't exist yet
+      3. Polish and productionize existing features
+      Create tasks for whatever moves the product forward most.
       Do NOT create duplicate tasks — always check ao.task.list first.
 
   reconciliation:
