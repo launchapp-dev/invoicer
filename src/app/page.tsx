@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Moon, Sun } from "lucide-react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +14,7 @@ import { InvoiceHistory } from "@/components/invoice-history";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
 import { saveInvoice } from "@/lib/storage";
 import { toast } from "@/components/ui/sonner";
+import { authClient } from "@/lib/auth-client";
 import type { Invoice } from "@/types/invoice";
 
 function defaultValues(): InvoiceFormValues {
@@ -38,8 +40,16 @@ function defaultValues(): InvoiceFormValues {
 }
 
 export default function Home() {
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
   const [isDark, setIsDark] = useState(false);
   const [showNewDialog, setShowNewDialog] = useState(false);
+
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.replace("/login");
+    }
+  }, [isPending, session, router]);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
@@ -101,18 +111,29 @@ export default function Home() {
     });
   };
 
+  if (isPending || !session) {
+    return <div className="min-h-screen bg-background" />;
+  }
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.push("/login");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
         <div className="flex items-center justify-between px-6 py-3">
           <h1 className="text-lg font-semibold">Invoicer</h1>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground hidden sm:block">{session.user.email}</span>
             <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
               {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
             <Button variant="outline" onClick={handleNew}>New</Button>
             <InvoiceHistory onLoad={handleLoad} onDuplicate={handleDuplicate} />
             <Button onClick={handleSave}>Save Invoice</Button>
+            <Button variant="outline" size="sm" onClick={handleLogout}>Sign out</Button>
           </div>
         </div>
       </header>
