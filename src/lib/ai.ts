@@ -66,6 +66,81 @@ export async function getCashFlowInsight(data: CashFlowData): Promise<string> {
   }
 }
 
+const SearchFiltersSchema = z.object({
+  status: z.enum(["draft", "sent", "viewed", "paid", "overdue", "cancelled"]).optional(),
+  dateFrom: z.string().optional(),
+  dateTo: z.string().optional(),
+  minAmount: z.number().optional(),
+  maxAmount: z.number().optional(),
+  search: z.string().optional(),
+});
+
+export type SearchFilters = z.infer<typeof SearchFiltersSchema>;
+
+export async function parseSearchQuery(query: string): Promise<SearchFilters | null> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const client = new Anthropic({ apiKey });
+    const today = new Date().toISOString().slice(0, 10);
+
+    const response = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 256,
+      system:
+        `You are an invoice search assistant. Today's date is ${today}. ` +
+        "Extract search filters from the user's natural language query. Always call extract_search_filters.",
+      tools: [
+        {
+          name: "extract_search_filters",
+          description: "Extract structured search filters from a natural language invoice search query",
+          input_schema: {
+            type: "object" as const,
+            properties: {
+              status: {
+                type: "string",
+                enum: ["draft", "sent", "viewed", "paid", "overdue", "cancelled"],
+                description: "Invoice status filter",
+              },
+              dateFrom: {
+                type: "string",
+                description: "Start date (YYYY-MM-DD) for issue date range",
+              },
+              dateTo: {
+                type: "string",
+                description: "End date (YYYY-MM-DD) for issue date range",
+              },
+              minAmount: {
+                type: "number",
+                description: "Minimum invoice total amount",
+              },
+              maxAmount: {
+                type: "number",
+                description: "Maximum invoice total amount",
+              },
+              search: {
+                type: "string",
+                description: "Client name or invoice number text to search for",
+              },
+            },
+            required: [],
+          },
+        },
+      ],
+      tool_choice: { type: "tool", name: "extract_search_filters" },
+      messages: [{ role: "user", content: query }],
+    });
+
+    const toolUse = response.content.find((b) => b.type === "tool_use");
+    if (!toolUse || toolUse.type !== "tool_use") return null;
+
+    return SearchFiltersSchema.parse(toolUse.input);
+  } catch {
+    return null;
+  }
+}
+
 export async function parseInvoiceIntent(prompt: string): Promise<ParsedInvoice> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {

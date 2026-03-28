@@ -41,14 +41,21 @@ export default async function DashboardPage({
   const dateTo = (params.dateTo as string) ?? "";
   const sortParam = (params.sort as string) ?? "";
   const sort = VALID_SORTS.includes(sortParam as InvoiceSort) ? (sortParam as InvoiceSort) : "date_desc";
+  const minAmountParam = (params.minAmount as string) ?? "";
+  const maxAmountParam = (params.maxAmount as string) ?? "";
+  const minAmount = minAmountParam ? parseFloat(minAmountParam) : undefined;
+  const maxAmount = maxAmountParam ? parseFloat(maxAmountParam) : undefined;
+  const nlQuery = (params.nlQuery as string) ?? "";
   const filters = {
     ...(search ? { search } : {}),
     ...(status ? { status } : {}),
     ...(dateFrom ? { dateFrom } : {}),
     ...(dateTo ? { dateTo } : {}),
+    ...(minAmount !== undefined && !isNaN(minAmount) ? { minAmount } : {}),
+    ...(maxAmount !== undefined && !isNaN(maxAmount) ? { maxAmount } : {}),
     sort,
   };
-  const hasFilters = !!(search || statusParam || dateFrom || dateTo);
+  const hasFilters = !!(search || statusParam || dateFrom || dateTo || minAmountParam || maxAmountParam);
 
   const [invoices, totalCount] = await Promise.all([
     listInvoices(LIMIT, offset, filters),
@@ -63,6 +70,9 @@ export default async function DashboardPage({
     if (statusParam) redirectParams.set("status", statusParam);
     if (dateFrom) redirectParams.set("dateFrom", dateFrom);
     if (dateTo) redirectParams.set("dateTo", dateTo);
+    if (minAmountParam) redirectParams.set("minAmount", minAmountParam);
+    if (maxAmountParam) redirectParams.set("maxAmount", maxAmountParam);
+    if (nlQuery) redirectParams.set("nlQuery", nlQuery);
     if (sortParam && sortParam !== "date_desc") redirectParams.set("sort", sortParam);
     redirect(`/dashboard${redirectParams.size ? `?${redirectParams}` : ""}`);
   }
@@ -128,7 +138,7 @@ export default async function DashboardPage({
             <Skeleton className="h-9 w-40" />
           </div>
         }>
-          <DashboardFilters />
+          <DashboardFilters nlQuery={nlQuery} />
         </Suspense>
 
         {invoices.length === 0 && page === 1 ? (
