@@ -19,6 +19,14 @@ import { listInvoices, deleteInvoice } from "@/lib/storage";
 import { formatCurrency } from "@/lib/calculations";
 import type { Invoice } from "@/types/invoice";
 
+const STATUS_VARIANT: Record<string, "secondary" | "outline" | "default" | "destructive"> = {
+  draft: "secondary",
+  sent: "outline",
+  paid: "default",
+  overdue: "destructive",
+  cancelled: "outline",
+};
+
 interface InvoiceHistoryProps {
   onLoad: (invoice: Invoice) => void;
   onDuplicate: (invoice: Invoice) => void;
@@ -63,7 +71,7 @@ function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryPro
             <div className="grid gap-1">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-sm">{invoice.invoiceNumber}</span>
-                <Badge variant="secondary" className="text-xs">{invoice.status}</Badge>
+                <Badge variant={STATUS_VARIANT[invoice.status] ?? "secondary"} className="text-xs">{invoice.status}</Badge>
               </div>
               <p className="text-sm text-foreground">{invoice.to.name || "—"}</p>
               <p className="text-xs text-muted-foreground">{invoice.issueDate}</p>
