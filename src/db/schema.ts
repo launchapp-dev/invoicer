@@ -115,7 +115,7 @@ export const invoices = sqliteTable("invoices", {
   userId: text("user_id").notNull(),
   invoiceNumber: text("invoice_number").notNull(),
   status: text("status", {
-    enum: ["draft", "sent", "viewed", "paid", "overdue", "cancelled", "partial"],
+    enum: ["draft", "sent", "viewed", "paid", "overdue", "cancelled", "partial", "archived"],
   })
     .notNull()
     .default("draft"),

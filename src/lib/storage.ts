@@ -1,6 +1,6 @@
 "use server";
 
-import { and, asc, count, desc, eq, gte, inArray, like, lt, lte, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray, like, lt, lte, ne, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { unlink } from "fs/promises";
 import path from "path";
@@ -194,7 +194,7 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
               sql`json_extract(${invoices.toJson}, '$.email') LIKE ${"%" + escapeLike(filters.search) + "%"} ESCAPE '\\'`
             )
           : undefined,
-        filters?.status ? eq(invoices.status, filters.status) : undefined,
+        filters?.status ? eq(invoices.status, filters.status) : ne(invoices.status, "archived"),
         filters?.dateFrom ? gte(invoices.issueDate, filters.dateFrom) : undefined,
         filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
         filters?.minAmount !== undefined ? gte(invoices.total, filters.minAmount) : undefined,
@@ -240,7 +240,7 @@ export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
               sql`json_extract(${invoices.toJson}, '$.email') LIKE ${"%" + escapeLike(filters.search) + "%"} ESCAPE '\\'`
             )
           : undefined,
-        filters?.status ? eq(invoices.status, filters.status) : undefined,
+        filters?.status ? eq(invoices.status, filters.status) : ne(invoices.status, "archived"),
         filters?.dateFrom ? gte(invoices.issueDate, filters.dateFrom) : undefined,
         filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
         filters?.minAmount !== undefined ? gte(invoices.total, filters.minAmount) : undefined,

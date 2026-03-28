@@ -35,6 +35,7 @@ const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" 
   overdue: "destructive",
   cancelled: "outline",
   partial: "outline",
+  archived: "outline",
 };
 
 function formatCurrency(amount: number, currency: string) {
