@@ -174,3 +174,17 @@ export const payments = sqliteTable("payments", {
   reference: text("reference"),
   createdAt: text("created_at").notNull(),
 });
+
+export const attachments = sqliteTable("attachments", {
+  id: text("id").primaryKey(),
+  invoiceId: text("invoice_id").notNull(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  fileName: text("file_name").notNull(),
+  filePath: text("file_path").notNull(),
+  fileSize: integer("file_size").notNull(),
+  mimeType: text("mime_type").notNull(),
+  createdAt: text("created_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
+}, (table) => [
+  index("attachments_invoice_id_idx").on(table.invoiceId),
+  index("attachments_user_id_idx").on(table.userId),
+]);

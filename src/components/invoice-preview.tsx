@@ -13,7 +13,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Building2 } from "lucide-react";
+import { Building2, Paperclip } from "lucide-react";
 import { calcSubtotal, calcTotal, formatCurrency, formatDate } from "@/lib/calculations";
 import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
@@ -42,9 +42,10 @@ interface InvoicePreviewProps {
   hideDownload?: boolean;
   logoUrl?: string;
   template?: InvoiceTemplate;
+  attachmentCount?: number;
 }
 
-export function InvoicePreview({ invoice, hideDownload = false, logoUrl, template = "classic" }: InvoicePreviewProps) {
+export function InvoicePreview({ invoice, hideDownload = false, logoUrl, template = "classic", attachmentCount = 0 }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
   const taxAmount = invoice.taxAmount;
   const total = calcTotal(subtotal, taxAmount, invoice.discount);
@@ -252,6 +253,16 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl, templat
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Notes</p>
               <p className="text-sm text-muted-foreground whitespace-pre-line">{invoice.notes}</p>
+            </div>
+          </>
+        )}
+
+        {attachmentCount > 0 && (
+          <>
+            <Separator />
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Paperclip className="h-3.5 w-3.5" />
+              <span>{attachmentCount} attachment{attachmentCount !== 1 ? "s" : ""}</span>
             </div>
           </>
         )}

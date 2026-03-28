@@ -2,11 +2,22 @@
 
 import { and, asc, count, desc, eq, gte, inArray, like, lte, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
+import { unlink } from "fs/promises";
+import path from "path";
 import { db } from "@/db";
-import { clients, invoices, payments, userSettings } from "@/db/schema";
+import { attachments, clients, invoices, payments, userSettings } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import type { Invoice, InvoiceStatus, Payment } from "@/types/invoice";
 import type { Client } from "@/types/client";
+
+export type Attachment = {
+  id: string;
+  invoiceId: string;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  createdAt: string;
+};
 
 async function getCurrentUserId(): Promise<string> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -234,9 +245,38 @@ export async function loadInvoice(id: string): Promise<Invoice | null> {
 
 export async function deleteInvoice(id: string): Promise<void> {
   const userId = await getCurrentUserId();
+  const attachmentRows = await db
+    .select({ filePath: attachments.filePath })
+    .from(attachments)
+    .where(and(eq(attachments.invoiceId, id), eq(attachments.userId, userId)));
+  for (const row of attachmentRows) {
+    try {
+      await unlink(path.join(/*turbopackIgnore: true*/ process.cwd(), row.filePath));
+    } catch {
+      // ignore missing files
+    }
+  }
+  await db.delete(attachments).where(and(eq(attachments.invoiceId, id), eq(attachments.userId, userId)));
   await db
     .delete(invoices)
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
+}
+
+export async function listAttachments(invoiceId: string): Promise<Attachment[]> {
+  const userId = await getCurrentUserId();
+  const rows = await db
+    .select()
+    .from(attachments)
+    .where(and(eq(attachments.invoiceId, invoiceId), eq(attachments.userId, userId)))
+    .orderBy(asc(attachments.createdAt));
+  return rows.map((r) => ({
+    id: r.id,
+    invoiceId: r.invoiceId,
+    fileName: r.fileName,
+    fileSize: r.fileSize,
+    mimeType: r.mimeType,
+    createdAt: r.createdAt,
+  }));
 }
 
 export async function getInvoiceStats(): Promise<{
