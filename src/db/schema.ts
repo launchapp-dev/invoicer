@@ -55,6 +55,22 @@ export const verification = sqliteTable("verification", {
   updatedAt: integer("updated_at", { mode: "timestamp" }),
 });
 
+export const userSettings = sqliteTable("user_settings", {
+  userId: text("user_id").primaryKey().references(() => user.id, { onDelete: "cascade" }),
+  businessName: text("business_name").notNull().default(""),
+  businessEmail: text("business_email").notNull().default(""),
+  businessAddress: text("business_address").notNull().default(""),
+  businessCity: text("business_city").notNull().default(""),
+  businessState: text("business_state").notNull().default(""),
+  businessZip: text("business_zip").notNull().default(""),
+  businessCountry: text("business_country").notNull().default(""),
+  defaultCurrency: text("default_currency").notNull().default("USD"),
+  defaultTaxRate: real("default_tax_rate").notNull().default(0),
+  defaultNotes: text("default_notes").notNull().default(""),
+  invoiceNumberPrefix: text("invoice_number_prefix").notNull().default("INV-"),
+  updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
+});
+
 export const invoices = sqliteTable("invoices", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull(),
