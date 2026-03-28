@@ -12,12 +12,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CsvImportButton } from "./csv-import";
 
 export default async function ClientsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
 
   const clients = await listClients();
+  const existingEmails = clients.map((c) => c.email).filter(Boolean);
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,9 +46,12 @@ export default async function ClientsPage() {
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-semibold">Clients</h1>
-          <Button asChild>
-            <Link href="/clients/new">New Client</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <CsvImportButton existingEmails={existingEmails} />
+            <Button asChild>
+              <Link href="/clients/new">New Client</Link>
+            </Button>
+          </div>
         </div>
 
         {clients.length === 0 ? (
