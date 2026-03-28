@@ -23,7 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
-import { saveInvoice, loadInvoice, listClients } from "@/lib/storage";
+import { saveInvoice, loadInvoice, listClients, getMySettings } from "@/lib/storage";
 import type { Client } from "@/types/client";
 import { toast } from "@/components/ui/sonner";
 import { authClient } from "@/lib/auth-client";
@@ -37,6 +37,7 @@ export default function EditInvoicePage() {
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
   const [leaveDestination, setLeaveDestination] = useState<string | null>(null);
   const [clients, setClients] = useState<Client[]>([]);
+  const [logoUrl, setLogoUrl] = useState<string>("");
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -70,6 +71,7 @@ export default function EditInvoicePage() {
   useEffect(() => {
     if (!session || !params?.id) return;
     listClients().then(setClients).catch(() => {});
+    getMySettings().then((s) => { if (s?.logoUrl) setLogoUrl(s.logoUrl); }).catch(() => {});
     loadInvoice(params.id)
       .then((data) => {
         if (!data) {
@@ -242,7 +244,7 @@ export default function EditInvoicePage() {
             </FormProvider>
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
-            <InvoicePreview invoice={invoice} />
+            <InvoicePreview invoice={invoice} logoUrl={logoUrl} />
           </TabsContent>
         </Tabs>
       </div>

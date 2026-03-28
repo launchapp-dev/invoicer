@@ -79,6 +79,7 @@ function NewInvoicePageContent() {
   const [savedId, setSavedId] = useState<string | null>(null);
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
+  const [logoUrl, setLogoUrl] = useState<string>("");
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -116,6 +117,7 @@ function NewInvoicePageContent() {
         setValue("currency", s.defaultCurrency, { shouldDirty: false });
         setValue("taxRate", s.defaultTaxRate, { shouldDirty: false });
         if (s.defaultNotes) setValue("notes", s.defaultNotes, { shouldDirty: false });
+        if (s.logoUrl) setLogoUrl(s.logoUrl);
       }
 
       if (clientsResult.status === "fulfilled") {
@@ -281,7 +283,7 @@ function NewInvoicePageContent() {
             </FormProvider>
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
-            <InvoicePreview invoice={invoice} />
+            <InvoicePreview invoice={invoice} logoUrl={logoUrl} />
           </TabsContent>
         </Tabs>
       </div>

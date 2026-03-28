@@ -320,6 +320,11 @@ export async function saveMyInvoiceDefaults(data: {
   await upsertUserSettings(userId, data);
 }
 
+export async function saveMyLogoUrl(logoUrl: string): Promise<void> {
+  const userId = await getCurrentUserId();
+  await upsertUserSettings(userId, { logoUrl });
+}
+
 export async function duplicateInvoice(id: string): Promise<Invoice | null> {
   const userId = await getCurrentUserId();
   const [row] = await db

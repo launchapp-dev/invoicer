@@ -68,6 +68,7 @@ export const userSettings = sqliteTable("user_settings", {
   defaultTaxRate: real("default_tax_rate").notNull().default(0),
   defaultNotes: text("default_notes").notNull().default(""),
   invoiceNumberPrefix: text("invoice_number_prefix").notNull().default("INV-"),
+  logoUrl: text("logo_url").notNull().default(""),
   updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
 });
 
