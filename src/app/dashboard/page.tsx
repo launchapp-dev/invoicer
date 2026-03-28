@@ -78,16 +78,14 @@ export default async function DashboardPage() {
             </TableHeader>
             <TableBody>
               {invoices.map((invoice) => (
-                <TableRow key={invoice.id} className="relative cursor-pointer hover:bg-muted/50">
-                  <td className="absolute inset-0 z-0 p-0">
+                <TableRow key={invoice.id} className="hover:bg-muted/50">
+                  <TableCell className="font-medium">
                     <Link
                       href={`/invoices/${invoice.id}`}
-                      className="block w-full h-full"
-                      aria-label={`Edit invoice ${invoice.invoiceNumber}`}
-                    />
-                  </td>
-                  <TableCell className="font-medium">
-                    {invoice.invoiceNumber}
+                      className="text-primary hover:underline"
+                    >
+                      {invoice.invoiceNumber}
+                    </Link>
                   </TableCell>
                   <TableCell>{invoice.to.name || "—"}</TableCell>
                   <TableCell>{invoice.issueDate}</TableCell>
@@ -98,14 +96,7 @@ export default async function DashboardPage() {
                       {invoice.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="relative z-10">
-                    <Link
-                      href={`/invoices/${invoice.id}`}
-                      className="relative text-sm font-medium text-primary hover:underline"
-                    >
-                      Edit
-                    </Link>
-                  </TableCell>
+                  <TableCell />
                 </TableRow>
               ))}
             </TableBody>
