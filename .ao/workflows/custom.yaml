@@ -16,6 +16,9 @@ mcp_servers:
   github:
     command: npx
     args: ["-y", "@modelcontextprotocol/server-github"]
+  package-version:
+    command: npx
+    args: ["-y", "mcp-package-version"]
 
 agents:
   default:
@@ -163,7 +166,7 @@ agents:
         - Top concern: (one sentence)
     model: claude-sonnet-4-6
     tool: claude
-    mcp_servers: ["ao", "sequential-thinking"]
+    mcp_servers: ["ao", "sequential-thinking", "package-version"]
 
   planner:
     system_prompt: |
@@ -336,7 +339,7 @@ agents:
         Import from @/components/ui/<component>.
     model: claude-sonnet-4-6
     tool: claude
-    mcp_servers: ["ao", "context7"]
+    mcp_servers: ["ao", "context7", "package-version"]
 
   reviewer:
     system_prompt: |
