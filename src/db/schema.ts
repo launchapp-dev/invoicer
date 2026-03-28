@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -85,4 +85,5 @@ export const invoices = sqliteTable("invoices", {
 }, (table) => [
   index("invoices_user_id_idx").on(table.userId),
   index("invoices_updated_at_idx").on(table.updatedAt),
+  uniqueIndex("invoices_user_invoice_number_uniq").on(table.userId, table.invoiceNumber),
 ]);
