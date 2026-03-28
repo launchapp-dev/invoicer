@@ -1,11 +1,11 @@
 "use server";
 
-import { and, count, desc, eq, like } from "drizzle-orm";
+import { and, count, desc, eq, like, or } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { invoices } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import type { Invoice } from "@/types/invoice";
+import type { Invoice, InvoiceStatus } from "@/types/invoice";
 
 async function getCurrentUserId(): Promise<string> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -99,24 +99,51 @@ export async function saveInvoice(invoice: Invoice): Promise<void> {
   }
 }
 
-export async function listInvoices(limit = 25, offset = 0): Promise<Invoice[]> {
+interface InvoiceFilters {
+  search?: string;
+  status?: InvoiceStatus;
+}
+
+export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilters): Promise<Invoice[]> {
   const userId = await getCurrentUserId();
   const rows = await db
     .select()
     .from(invoices)
-    .where(eq(invoices.userId, userId))
+    .where(
+      and(
+        eq(invoices.userId, userId),
+        filters?.search
+          ? or(
+              like(invoices.invoiceNumber, `%${filters.search}%`),
+              like(invoices.toJson, `%${filters.search}%`)
+            )
+          : undefined,
+        filters?.status ? eq(invoices.status, filters.status) : undefined,
+      )
+    )
     .orderBy(desc(invoices.updatedAt))
     .limit(limit)
     .offset(offset);
   return rows.map(rowToInvoice);
 }
 
-export async function countInvoices(): Promise<number> {
+export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
   const userId = await getCurrentUserId();
   const [result] = await db
     .select({ total: count() })
     .from(invoices)
-    .where(eq(invoices.userId, userId));
+    .where(
+      and(
+        eq(invoices.userId, userId),
+        filters?.search
+          ? or(
+              like(invoices.invoiceNumber, `%${filters.search}%`),
+              like(invoices.toJson, `%${filters.search}%`)
+            )
+          : undefined,
+        filters?.status ? eq(invoices.status, filters.status) : undefined,
+      )
+    );
   return result?.total ?? 0;
 }
 
