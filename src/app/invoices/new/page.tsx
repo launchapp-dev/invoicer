@@ -21,6 +21,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
+import { InvoiceAttachments } from "@/components/invoice-attachments";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
 import { saveInvoice, getNextInvoiceNumber, getMySettings, listClients } from "@/lib/storage";
 import type { Client } from "@/types/client";
@@ -81,6 +82,7 @@ function NewInvoicePageContent() {
   const [clients, setClients] = useState<Client[]>([]);
   const [logoUrl, setLogoUrl] = useState<string>("");
   const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
+  const [attachmentCount, setAttachmentCount] = useState(0);
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -282,25 +284,27 @@ function NewInvoicePageContent() {
               <TabsTrigger value="preview" className="flex-1">Preview</TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value="form" className="mt-0 p-4">
+          <TabsContent value="form" className="mt-0 p-4 space-y-6">
             <FormProvider {...form}>
               <InvoiceForm clients={clients} />
             </FormProvider>
+            <InvoiceAttachments invoiceId={invoice.id} onCountChange={setAttachmentCount} />
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
-            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} />
+            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} />
           </TabsContent>
         </Tabs>
       </div>
 
       <div className="hidden lg:flex h-[calc(100vh-57px)]">
-        <div className="w-1/2 overflow-y-auto border-r border-border bg-background p-6">
+        <div className="w-1/2 overflow-y-auto border-r border-border bg-background p-6 space-y-6">
           <FormProvider {...form}>
             <InvoiceForm clients={clients} />
           </FormProvider>
+          <InvoiceAttachments invoiceId={invoice.id} onCountChange={setAttachmentCount} />
         </div>
         <div className="w-1/2 overflow-y-auto bg-muted/30 p-8">
-          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} />
+          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} />
         </div>
       </div>
     </div>
