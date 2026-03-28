@@ -348,6 +348,11 @@ export async function saveMyLogoUrl(logoUrl: string): Promise<void> {
   await upsertUserSettings(userId, { logoUrl });
 }
 
+export async function saveMyTheme(theme: "light" | "dark" | "system"): Promise<void> {
+  const userId = await getCurrentUserId();
+  await upsertUserSettings(userId, { theme });
+}
+
 export async function duplicateInvoice(id: string): Promise<Invoice | null> {
   const userId = await getCurrentUserId();
   const [row] = await db

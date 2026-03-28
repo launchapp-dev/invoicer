@@ -17,7 +17,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { saveMyBusinessProfile, saveMyInvoiceDefaults, saveMyLogoUrl } from "@/lib/storage";
+import { saveMyBusinessProfile, saveMyInvoiceDefaults, saveMyLogoUrl, saveMyTheme } from "@/lib/storage";
 import type { userSettings } from "@/db/schema";
 
 type UserSettings = typeof userSettings.$inferSelect;
@@ -53,6 +53,8 @@ export function SettingsForm({ settings }: SettingsFormProps) {
   const [savingDefaults, setSavingDefaults] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string>(settings?.logoUrl ?? "");
   const [savingLogo, setSavingLogo] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark" | "system">(settings?.theme ?? "system");
+  const [savingTheme, setSavingTheme] = useState(false);
 
   const businessForm = useForm<BusinessProfileValues>({
     resolver: zodResolver(businessProfileSchema),
@@ -123,6 +125,34 @@ export function SettingsForm({ settings }: SettingsFormProps) {
       toast.error("Failed to remove logo");
     } finally {
       setSavingLogo(false);
+    }
+  }
+
+  async function handleThemeChange(value: string) {
+    const newTheme = value as "light" | "dark" | "system";
+    setTheme(newTheme);
+    try {
+      localStorage.setItem("theme", newTheme);
+      if (newTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else if (newTheme === "light") {
+        document.documentElement.classList.remove("dark");
+      } else {
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+    } catch {}
+    setSavingTheme(true);
+    try {
+      await saveMyTheme(newTheme);
+      toast.success("Theme saved");
+    } catch {
+      toast.error("Failed to save theme");
+    } finally {
+      setSavingTheme(false);
     }
   }
 
@@ -249,6 +279,27 @@ export function SettingsForm({ settings }: SettingsFormProps) {
                 PNG, JPG, or WebP — max 2MB
               </p>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Appearance</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Label htmlFor="theme">Theme</Label>
+            <SelectRoot value={theme} onValueChange={handleThemeChange} disabled={savingTheme}>
+              <SelectTrigger id="theme">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="system">System</SelectItem>
+              </SelectContent>
+            </SelectRoot>
           </div>
         </CardContent>
       </Card>
