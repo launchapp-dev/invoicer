@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq, like } from "drizzle-orm";
+import { and, count, desc, eq, like } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { invoices } from "@/db/schema";
@@ -91,14 +91,25 @@ export async function saveInvoice(invoice: Invoice): Promise<void> {
   }
 }
 
-export async function listInvoices(): Promise<Invoice[]> {
+export async function listInvoices(limit = 25, offset = 0): Promise<Invoice[]> {
   const userId = await getCurrentUserId();
   const rows = await db
     .select()
     .from(invoices)
     .where(eq(invoices.userId, userId))
-    .orderBy(desc(invoices.updatedAt));
+    .orderBy(desc(invoices.updatedAt))
+    .limit(limit)
+    .offset(offset);
   return rows.map(rowToInvoice);
+}
+
+export async function countInvoices(): Promise<number> {
+  const userId = await getCurrentUserId();
+  const [result] = await db
+    .select({ total: count() })
+    .from(invoices)
+    .where(eq(invoices.userId, userId));
+  return result?.total ?? 0;
 }
 
 export async function loadInvoice(id: string): Promise<Invoice | null> {
