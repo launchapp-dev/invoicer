@@ -104,6 +104,8 @@ export const clients = sqliteTable("clients", {
   zip: text("zip").notNull().default(""),
   country: text("country").notNull().default(""),
   notes: text("notes").notNull().default(""),
+  taxId: text("tax_id").notNull().default(""),
+  currencyPreference: text("currency_preference").notNull().default(""),
   createdAt: text("created_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
   updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
 }, (table) => [

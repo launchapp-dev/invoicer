@@ -2,14 +2,28 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { SelectRoot, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { createClient } from "@/lib/storage";
+
+const CURRENCIES = [
+  { code: "USD", label: "USD — US Dollar" },
+  { code: "EUR", label: "EUR — Euro" },
+  { code: "GBP", label: "GBP — British Pound" },
+  { code: "JPY", label: "JPY — Japanese Yen" },
+  { code: "CAD", label: "CAD — Canadian Dollar" },
+  { code: "AUD", label: "AUD — Australian Dollar" },
+  { code: "CHF", label: "CHF — Swiss Franc" },
+  { code: "INR", label: "INR — Indian Rupee" },
+  { code: "SGD", label: "SGD — Singapore Dollar" },
+  { code: "AED", label: "AED — UAE Dirham" },
+];
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -22,6 +36,8 @@ const schema = z.object({
   zip: z.string(),
   country: z.string(),
   notes: z.string(),
+  taxId: z.string(),
+  currencyPreference: z.string(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -31,6 +47,7 @@ export default function NewClientPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -45,6 +62,8 @@ export default function NewClientPage() {
       zip: "",
       country: "",
       notes: "",
+      taxId: "",
+      currencyPreference: "",
     },
   });
 
@@ -121,6 +140,32 @@ export default function NewClientPage() {
           <div className="space-y-1.5">
             <Label htmlFor="country">Country</Label>
             <Input id="country" {...register("country")} />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="taxId">Tax ID / VAT / EIN</Label>
+              <Input id="taxId" {...register("taxId")} placeholder="e.g. GB123456789" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="currencyPreference">Currency Preference</Label>
+              <Controller
+                control={control}
+                name="currencyPreference"
+                render={({ field }) => (
+                  <SelectRoot value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="currencyPreference">
+                      <SelectValue placeholder="Select currency…" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CURRENCIES.map((c) => (
+                        <SelectItem key={c.code} value={c.code}>{c.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </SelectRoot>
+                )}
+              />
+            </div>
           </div>
 
           <div className="space-y-1.5">

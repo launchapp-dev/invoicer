@@ -10,6 +10,8 @@ export interface Client {
   zip: string;
   country: string;
   notes: string;
+  taxId: string;
+  currencyPreference: string;
   createdAt: string;
   updatedAt: string;
 }
