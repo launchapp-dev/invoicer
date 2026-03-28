@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useWatch, useFieldArray, type Control, type UseFormRegister } from "react-hook-form";
+import { useWatch, type Control, type UseFormRegister, type FieldArrayWithId } from "react-hook-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -189,15 +189,22 @@ function TaxPresetPicker({ onSelect }: { onSelect: (preset: TaxPreset) => void }
 interface InvoiceTotalsProps {
   control: Control<InvoiceFormValues>;
   register: UseFormRegister<InvoiceFormValues>;
+  taxLineFields: FieldArrayWithId<InvoiceFormValues, "taxLines">[];
+  appendTaxLine: (value: InvoiceFormValues["taxLines"][number]) => void;
+  removeTaxLine: (index: number) => void;
+  updateTaxLine: (index: number, value: InvoiceFormValues["taxLines"][number]) => void;
 }
 
-export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
+export function InvoiceTotals({ control, register, taxLineFields, appendTaxLine, removeTaxLine, updateTaxLine }: InvoiceTotalsProps) {
   const lineItems = useWatch({ control, name: "lineItems", defaultValue: [] });
   const taxLinesWatch = useWatch({ control, name: "taxLines", defaultValue: [] });
   const discount = useWatch({ control, name: "discount", defaultValue: 0 });
   const currency = useWatch({ control, name: "currency", defaultValue: "USD" });
 
-  const { fields, append, remove, update } = useFieldArray({ control, name: "taxLines" });
+  const fields = taxLineFields;
+  const append = appendTaxLine;
+  const remove = removeTaxLine;
+  const update = updateTaxLine;
 
   const safeDiscount = Number.isNaN(discount) ? 0 : (discount ?? 0);
   const subtotal = calcSubtotal(lineItems ?? []);
