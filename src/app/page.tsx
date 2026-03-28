@@ -51,6 +51,10 @@ export default function Home() {
     }
   };
 
+  const handleNew = () => {
+    form.reset(defaultValues());
+  };
+
   const handleLoad = (inv: Invoice) => {
     form.reset(inv as InvoiceFormValues);
   };
@@ -70,6 +74,7 @@ export default function Home() {
         <div className="flex items-center justify-between px-6 py-3">
           <h1 className="text-lg font-semibold">Invoicer</h1>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={handleNew}>New</Button>
             <InvoiceHistory onLoad={handleLoad} onDuplicate={handleDuplicate} />
             <Button onClick={handleSave}>Save Invoice</Button>
           </div>
