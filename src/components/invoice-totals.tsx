@@ -58,11 +58,13 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
               type="number"
               min="0"
               step="0.01"
+              aria-invalid={isDiscountExcessive}
+              aria-describedby={isDiscountExcessive ? "discount-error" : undefined}
               {...register("discount", { valueAsNumber: true })}
             />
           </div>
           {isDiscountExcessive && (
-            <p role="alert" className="text-xs text-destructive">
+            <p id="discount-error" role="alert" className="text-xs text-destructive">
               Discount exceeds invoice total — total is clamped to {formatCurrency(0, currency)}
             </p>
           )}
