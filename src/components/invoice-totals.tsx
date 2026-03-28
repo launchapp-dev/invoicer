@@ -27,6 +27,7 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
   const subtotal = calcSubtotal(lineItems ?? []);
   const taxAmount = calcTaxAmount(subtotal, taxRate ?? 0);
   const total = calcTotal(subtotal, taxAmount, discount ?? 0);
+  const isDiscountExcessive = (discount ?? 0) > subtotal + taxAmount;
 
   return (
     <Card>
@@ -57,6 +58,11 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
               {...register("discount", { valueAsNumber: true })}
             />
           </div>
+          {isDiscountExcessive && (
+            <p role="alert" className="text-xs text-destructive">
+              Discount exceeds invoice total — total is clamped to $0.00
+            </p>
+          )}
         </div>
 
         <Separator />
