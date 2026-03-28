@@ -662,18 +662,14 @@ phases:
       Execute all reconciliation steps: UNBLOCK blocked tasks, PROMOTE
       backlog, RE-ROUTE failed tasks, CLEAN stale queue, MARK DONE.
 
-  pr-reviewer-sweep:
-    mode: agent
-    agent: pr-sweep
-    directive: |
-      Scan ALL open PRs on launchapp-dev/invoicer. For each PR:
-      review the diff, merge if clean (gh pr merge --squash --delete-branch),
-      request changes if blocking issues, queue rebase if conflicting.
-      Process every open PR, not just one. Always verify merge before
-      marking task as done. You MUST actually run gh pr merge for each
-      approved PR — do not just summarize, actually merge them.
-    capabilities:
-      mutates_state: true
+  merge-open-prs:
+    mode: command
+    directive: Scan all open mergeable PRs and merge them via gh CLI
+    command:
+      program: bash
+      args: ["scripts/merge-prs.sh"]
+      cwd_mode: project_root
+      timeout_secs: 300
 
 workflows:
   - id: standard
@@ -752,10 +748,10 @@ workflows:
       - reconciliation
 
   - id: pr-reviewer
-    name: PR Reviewer Sweep
-    description: Scan and review/merge all open PRs
+    name: PR Merge Sweep
+    description: Merge all open mergeable PRs and mark tasks done
     phases:
-      - pr-reviewer-sweep
+      - merge-open-prs
 
 schedules:
   - id: work-planner
