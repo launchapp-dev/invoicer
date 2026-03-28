@@ -287,6 +287,71 @@ export async function suggestLineItems(clientId: string): Promise<SuggestedLineI
   }
 }
 
+const ExtractedReceiptSchema = z.object({
+  vendor: z.string(),
+  amount: z.number(),
+  date: z.string().optional(),
+  category: z.enum(["software", "hardware", "travel", "meals", "contractor", "marketing", "other"]).optional(),
+  description: z.string().optional(),
+});
+
+export type ExtractedReceipt = z.infer<typeof ExtractedReceiptSchema>;
+
+export async function extractReceiptData(imageBase64: string): Promise<ExtractedReceipt | null> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const client = new Anthropic({ apiKey });
+    const response = await client.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 512,
+      system:
+        "You are a receipt parsing assistant. Extract expense data from the receipt image. Always call extract_receipt_data.",
+      tools: [
+        {
+          name: "extract_receipt_data",
+          description: "Extract structured expense data from a receipt image",
+          input_schema: {
+            type: "object" as const,
+            properties: {
+              vendor: { type: "string", description: "Name of the vendor or merchant" },
+              amount: { type: "number", description: "Total amount paid (numeric, no currency symbol)" },
+              date: { type: "string", description: "Date of the expense (YYYY-MM-DD format if possible)" },
+              category: {
+                type: "string",
+                enum: ["software", "hardware", "travel", "meals", "contractor", "marketing", "other"],
+                description: "Best-fit expense category",
+              },
+              description: { type: "string", description: "Brief description of what was purchased" },
+            },
+            required: ["vendor", "amount"],
+          },
+        },
+      ],
+      tool_choice: { type: "tool", name: "extract_receipt_data" },
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image",
+              source: { type: "base64", media_type: "image/jpeg", data: imageBase64 },
+            },
+            { type: "text", text: "Extract the expense details from this receipt." },
+          ],
+        },
+      ],
+    });
+
+    const toolUse = response.content.find((b) => b.type === "tool_use");
+    if (!toolUse || toolUse.type !== "tool_use") return null;
+    return ExtractedReceiptSchema.parse(toolUse.input);
+  } catch {
+    return null;
+  }
+}
+
 export async function parseInvoiceIntent(prompt: string): Promise<ParsedInvoice> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {

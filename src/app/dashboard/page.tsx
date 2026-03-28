@@ -91,6 +91,12 @@ export default async function DashboardPage({
               Clients
             </Link>
             <Link
+              href="/expenses"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Expenses
+            </Link>
+            <Link
               href="/dashboard/recurring"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >

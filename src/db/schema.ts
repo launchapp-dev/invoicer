@@ -146,6 +146,24 @@ export const invoices = sqliteTable("invoices", {
   uniqueIndex("invoices_user_invoice_number_uniq").on(table.userId, table.invoiceNumber),
 ]);
 
+export const expenses = sqliteTable("expenses", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  clientId: text("client_id").references(() => clients.id, { onDelete: "set null" }),
+  vendor: text("vendor").notNull(),
+  amount: integer("amount").notNull(),
+  currency: text("currency").notNull().default("USD"),
+  date: text("date").notNull(),
+  category: text("category", {
+    enum: ["software", "hardware", "travel", "meals", "contractor", "marketing", "other"],
+  }).notNull().default("other"),
+  description: text("description").notNull().default(""),
+  receiptPath: text("receipt_path"),
+  createdAt: text("created_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
+}, (table) => [
+  index("expenses_user_id_idx").on(table.userId),
+]);
+
 export const payments = sqliteTable("payments", {
   id: text("id").primaryKey(),
   invoiceId: text("invoice_id").notNull().references(() => invoices.id, { onDelete: "cascade" }),
