@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { listInvoices } from "@/lib/invoice-actions";
+import { listInvoices } from "@/lib/storage";
 import { formatCurrency } from "@/lib/calculations";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +32,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const invoices = await listInvoices(session.user.id);
+  const invoices = await listInvoices();
 
   return (
     <div className="min-h-screen bg-background">
