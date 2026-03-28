@@ -41,7 +41,7 @@ export default function LoginPage() {
       setAuthError(error.message ?? "Sign in failed");
       return;
     }
-    router.push("/");
+    router.push("/dashboard");
   };
 
   return (
