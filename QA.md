@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-28 |
-| Result | PARTIAL PASS (1 new critical bug; 2 prior bugs fixed) |
-| Steps Passed | 4/6 (Step 5 partial — build error crashes app; Step 6 fail — 22 console errors) |
-| Duration | ~20 min |
-| Console Errors | 22 (missing @radix-ui/react-popover and cmdk — crashes entire app) |
-| Network Errors | Multiple 500s (all pages after build error triggered) |
+| Date | 2026-03-28 (run 4) |
+| Result | IN PROGRESS |
+| Steps Passed | TBD |
+| Duration | TBD |
+| Console Errors | TBD |
+| Network Errors | TBD |
 
 ## Test Results History
 
@@ -56,12 +56,15 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Auto-calculations update in real-time
 - [x] Save invoice succeeds
 - [x] Saved invoice appears in dashboard
+- [ ] Payment terms presets available (Net 15, Net 30, Net 60, Due on Receipt, Custom)
+- [ ] Custom payment terms field appears when "Custom" selected
 
 ### Invoice Dashboard
 - [x] Dashboard loads with invoice list
 - [x] Search works — filters by recipient name, shows Clear button
 - [ ] Status filter works
 - [x] Date range filter works (Issue Date From/To fields present)
+- [ ] Sort controls work (date, amount, status, client)
 - [x] Edit invoice navigates correctly — actions menu → Edit opens /invoices/[id]
 - [ ] Delete invoice with confirmation works
 - [ ] Duplicate invoice works
@@ -85,6 +88,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Business profile fields (name, address, logo, tax ID) render
 - [x] Invoice defaults section renders (payment terms, tax rate, notes)
 - [ ] Settings pre-fill new invoice form with saved defaults
+- [ ] Business logo upload works and persists
+- [ ] Uploaded logo renders in invoice preview
+- [ ] Uploaded logo renders in generated PDF
+- [ ] Dark mode toggle exists in settings
+- [ ] Dark mode toggle switches theme
 
 ### Client Management
 - [x] /clients page loads and lists clients — **FIXED (TASK-239)**
@@ -95,6 +103,16 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 ### Payment Recording
 - [ ] Mark invoice as paid with date, method, reference number
 - [ ] Paid status is reflected in dashboard
+
+### Partial Payments
+- [ ] Multiple payments can be recorded against one invoice
+- [ ] Payment total tracks cumulative amount paid
+- [ ] Remaining balance shown correctly after partial payment
+
+### Public Invoice Share Link
+- [ ] Share link is generated and accessible for an invoice
+- [ ] Opening share link auto-updates invoice status to "Viewed"
+- [ ] Share link is accessible without login
 
 ### Recurring Invoices
 - [x] Recurring invoice schedule UI is accessible (/dashboard/recurring loads)
