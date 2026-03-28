@@ -34,6 +34,7 @@ export default function EditInvoicePage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
+  const [leaveDestination, setLeaveDestination] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -93,9 +94,19 @@ export default function EditInvoicePage() {
 
   function handleDashboardClick() {
     if (form.formState.isDirty) {
+      setLeaveDestination("/dashboard");
       setShowLeaveDialog(true);
     } else {
       router.push("/dashboard");
+    }
+  }
+
+  function handlePreviewClick() {
+    if (form.formState.isDirty) {
+      setLeaveDestination(`/invoices/${params.id}/preview`);
+      setShowLeaveDialog(true);
+    } else {
+      router.push(`/invoices/${params.id}/preview`);
     }
   }
 
@@ -176,7 +187,7 @@ export default function EditInvoicePage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Continue Editing</AlertDialogCancel>
-            <AlertDialogAction onClick={() => router.push("/dashboard")}>
+            <AlertDialogAction onClick={() => leaveDestination && router.push(leaveDestination)}>
               Discard
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -190,8 +201,8 @@ export default function EditInvoicePage() {
             <Button variant="outline" onClick={handleDashboardClick}>
               Dashboard
             </Button>
-            <Button variant="outline" asChild>
-              <Link href={`/invoices/${params.id}/preview`}>Preview</Link>
+            <Button variant="outline" onClick={handlePreviewClick}>
+              Preview
             </Button>
             <Button onClick={handleSave} disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (
