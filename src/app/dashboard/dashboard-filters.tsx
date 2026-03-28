@@ -15,21 +15,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { parseSearchQuery } from "@/lib/ai";
+import { CURRENCIES } from "@/lib/calculations";
 
 const STATUSES = ["draft", "sent", "viewed", "paid", "overdue", "cancelled", "archived"] as const;
 
-const CURRENCIES = [
-  { code: "USD", label: "USD — US Dollar" },
-  { code: "EUR", label: "EUR — Euro" },
-  { code: "GBP", label: "GBP — British Pound" },
-  { code: "JPY", label: "JPY — Japanese Yen" },
-  { code: "CAD", label: "CAD — Canadian Dollar" },
-  { code: "AUD", label: "AUD — Australian Dollar" },
-  { code: "CHF", label: "CHF — Swiss Franc" },
-  { code: "INR", label: "INR — Indian Rupee" },
-  { code: "SGD", label: "SGD — Singapore Dollar" },
-  { code: "AED", label: "AED — UAE Dirham" },
-];
 
 const SORT_OPTIONS = [
   { value: "date_desc", label: "Date: Newest first" },

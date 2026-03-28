@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { saveMyBusinessProfile, saveMyInvoiceDefaults, saveMyLogoUrl, saveMyTheme, saveMyBrandSettings, saveMyPaymentInstructions } from "@/lib/storage";
+import { CURRENCIES } from "@/lib/calculations";
 import type { userSettings } from "@/db/schema";
 
 type UserSettings = typeof userSettings.$inferSelect;
@@ -44,7 +45,6 @@ const invoiceDefaultsSchema = z.object({
 type BusinessProfileValues = z.infer<typeof businessProfileSchema>;
 type InvoiceDefaultsValues = z.infer<typeof invoiceDefaultsSchema>;
 
-const CURRENCIES = ["USD", "EUR", "GBP", "CAD", "AUD", "JPY", "CHF"];
 
 interface SettingsFormProps {
   settings: UserSettings | null;
@@ -433,8 +433,8 @@ export function SettingsForm({ settings }: SettingsFormProps) {
                   </SelectTrigger>
                   <SelectContent>
                     {CURRENCIES.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
+                      <SelectItem key={c.code} value={c.code}>
+                        {c.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

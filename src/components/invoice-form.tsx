@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InvoiceTotals } from "@/components/invoice-totals";
-import { calcSubtotal, calcTaxLines, calcTaxAmountFromLines, calcTotal } from "@/lib/calculations";
+import { calcSubtotal, calcTaxLines, calcTaxAmountFromLines, calcTotal, CURRENCIES } from "@/lib/calculations";
 import { LineItems } from "@/components/line-items";
 import { RECURRING_FREQUENCIES, type InvoiceFormValues } from "@/lib/invoice-schema";
 import { suggestLineItems, type SuggestedLineItem } from "@/lib/ai";
@@ -31,18 +31,6 @@ const STATUSES = [
   { value: "archived", label: "Archived" },
 ] as const;
 
-const CURRENCIES = [
-  { code: "USD", label: "USD — US Dollar" },
-  { code: "EUR", label: "EUR — Euro" },
-  { code: "GBP", label: "GBP — British Pound" },
-  { code: "JPY", label: "JPY — Japanese Yen" },
-  { code: "CAD", label: "CAD — Canadian Dollar" },
-  { code: "AUD", label: "AUD — Australian Dollar" },
-  { code: "CHF", label: "CHF — Swiss Franc" },
-  { code: "INR", label: "INR — Indian Rupee" },
-  { code: "SGD", label: "SGD — Singapore Dollar" },
-  { code: "AED", label: "AED — UAE Dirham" },
-];
 
 function ContactSection({ prefix, title, clients, onClientSelect, onCurrencyChange }: {
   prefix: "from" | "to";
