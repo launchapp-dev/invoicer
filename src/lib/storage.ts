@@ -166,10 +166,21 @@ interface InvoiceFilters {
   minAmount?: number;
   maxAmount?: number;
   sort?: InvoiceSort;
+  clientId?: string;
+  currency?: string;
 }
 
 export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilters): Promise<Invoice[]> {
   const userId = await getCurrentUserId();
+  let clientName: string | undefined;
+  if (filters?.clientId) {
+    const [clientRow] = await db
+      .select({ name: clients.name })
+      .from(clients)
+      .where(and(eq(clients.id, filters.clientId), eq(clients.userId, userId)));
+    if (!clientRow) return [];
+    clientName = clientRow.name;
+  }
   const rows = await db
     .select()
     .from(invoices)
@@ -188,6 +199,8 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
         filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
         filters?.minAmount !== undefined ? gte(invoices.total, filters.minAmount) : undefined,
         filters?.maxAmount !== undefined ? lte(invoices.total, filters.maxAmount) : undefined,
+        clientName ? sql`json_extract(${invoices.toJson}, '$.name') = ${clientName}` : undefined,
+        filters?.currency ? eq(invoices.currency, filters.currency) : undefined,
       )
     )
     .orderBy(
@@ -205,6 +218,15 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
 
 export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
   const userId = await getCurrentUserId();
+  let clientName: string | undefined;
+  if (filters?.clientId) {
+    const [clientRow] = await db
+      .select({ name: clients.name })
+      .from(clients)
+      .where(and(eq(clients.id, filters.clientId), eq(clients.userId, userId)));
+    if (!clientRow) return 0;
+    clientName = clientRow.name;
+  }
   const [result] = await db
     .select({ total: count() })
     .from(invoices)
@@ -223,6 +245,8 @@ export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
         filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
         filters?.minAmount !== undefined ? gte(invoices.total, filters.minAmount) : undefined,
         filters?.maxAmount !== undefined ? lte(invoices.total, filters.maxAmount) : undefined,
+        clientName ? sql`json_extract(${invoices.toJson}, '$.name') = ${clientName}` : undefined,
+        filters?.currency ? eq(invoices.currency, filters.currency) : undefined,
       )
     );
   return result?.total ?? 0;
