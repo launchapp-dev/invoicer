@@ -63,47 +63,49 @@ export default async function DashboardPage() {
             </Button>
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Invoice #</TableHead>
-                <TableHead>Recipient</TableHead>
-                <TableHead>Issue Date</TableHead>
-                <TableHead>Due Date</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-16">
-                  <span className="sr-only">Actions</span>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {invoices.map((invoice) => (
-                <TableRow key={invoice.id} className="hover:bg-muted/50">
-                  <TableCell className="font-medium">
-                    <Link
-                      href={`/invoices/${invoice.id}`}
-                      className="text-primary hover:underline"
-                    >
-                      {invoice.invoiceNumber}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{invoice.to.name || "—"}</TableCell>
-                  <TableCell>{invoice.issueDate}</TableCell>
-                  <TableCell>{invoice.dueDate}</TableCell>
-                  <TableCell>{formatCurrency(invoice.total, invoice.currency)}</TableCell>
-                  <TableCell>
-                    <Badge variant={STATUS_VARIANT[invoice.status] ?? "secondary"}>
-                      {invoice.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <InvoiceActions invoiceId={invoice.id} />
-                  </TableCell>
+          <div className="overflow-x-auto rounded-md border border-border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Invoice #</TableHead>
+                  <TableHead>Recipient</TableHead>
+                  <TableHead className="hidden sm:table-cell">Issue Date</TableHead>
+                  <TableHead className="hidden sm:table-cell">Due Date</TableHead>
+                  <TableHead>Total</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-16">
+                    <span className="sr-only">Actions</span>
+                  </TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {invoices.map((invoice) => (
+                  <TableRow key={invoice.id} className="hover:bg-muted/50">
+                    <TableCell className="font-medium">
+                      <Link
+                        href={`/invoices/${invoice.id}`}
+                        className="text-primary hover:underline"
+                      >
+                        {invoice.invoiceNumber}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{invoice.to.name || "—"}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{invoice.issueDate}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{invoice.dueDate}</TableCell>
+                    <TableCell>{formatCurrency(invoice.total, invoice.currency)}</TableCell>
+                    <TableCell>
+                      <Badge variant={STATUS_VARIANT[invoice.status] ?? "secondary"}>
+                        {invoice.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <InvoiceActions invoiceId={invoice.id} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </main>
     </div>
