@@ -89,6 +89,18 @@
   to { height: 0; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --animate-accordion-down: none 0s;
+    --animate-accordion-up: none 0s;
+    --animate-fade-in: none 0s;
+    --animate-fade-out: none 0s;
+    --animate-scale-in: none 0s;
+    --animate-collapsible-down: none 0s;
+    --animate-collapsible-up: none 0s;
+  }
+}
+
 @layer base {
   :root {
     --la-background: 0 0% 100%;
