@@ -40,6 +40,7 @@ export default function EditInvoicePage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [logoUrl, setLogoUrl] = useState<string>("");
   const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
+  const [brandColor, setBrandColor] = useState<string>("#2563eb");
   const [attachmentCount, setAttachmentCount] = useState(0);
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function EditInvoicePage() {
     getMySettings().then((s) => {
       if (s?.logoUrl) setLogoUrl(s.logoUrl);
       if (s?.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
+      if (s?.brandColor) setBrandColor(s.brandColor);
     }).catch(() => {});
     loadInvoice(params.id)
       .then((data) => {
@@ -251,7 +253,7 @@ export default function EditInvoicePage() {
             <InvoiceAttachments invoiceId={params.id} onCountChange={setAttachmentCount} />
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
-            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} />
+            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} />
           </TabsContent>
         </Tabs>
       </div>
@@ -264,7 +266,7 @@ export default function EditInvoicePage() {
           <InvoiceAttachments invoiceId={params.id} onCountChange={setAttachmentCount} />
         </div>
         <div className="w-1/2 overflow-y-auto bg-muted/30 p-8">
-          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} />
+          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} />
         </div>
       </div>
     </div>

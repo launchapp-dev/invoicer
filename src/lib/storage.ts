@@ -500,6 +500,11 @@ export async function saveMyTemplate(invoiceTemplate: "classic" | "modern" | "mi
   await upsertUserSettings(userId, { invoiceTemplate });
 }
 
+export async function saveMyBrandSettings(data: { brandColor?: string; brandFont?: "inter" | "roboto" | "playfair" | "merriweather" }): Promise<void> {
+  const userId = await getCurrentUserId();
+  await upsertUserSettings(userId, data);
+}
+
 export async function duplicateInvoice(id: string): Promise<Invoice | null> {
   const userId = await getCurrentUserId();
   const [row] = await db
