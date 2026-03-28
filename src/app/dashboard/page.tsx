@@ -63,6 +63,13 @@ export default async function DashboardPage({
 
   const totalPages = Math.ceil(totalCount / LIMIT);
 
+  if (invoices.length === 0 && page > 1) {
+    const redirectParams = new URLSearchParams();
+    if (search) redirectParams.set("search", search);
+    if (statusParam) redirectParams.set("status", statusParam);
+    redirect(`/dashboard${redirectParams.size ? `?${redirectParams}` : ""}`);
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border">
