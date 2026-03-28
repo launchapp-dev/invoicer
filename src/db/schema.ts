@@ -110,7 +110,7 @@ export const invoices = sqliteTable("invoices", {
   userId: text("user_id").notNull(),
   invoiceNumber: text("invoice_number").notNull(),
   status: text("status", {
-    enum: ["draft", "sent", "paid", "overdue", "cancelled", "partial"],
+    enum: ["draft", "sent", "viewed", "paid", "overdue", "cancelled", "partial"],
   })
     .notNull()
     .default("draft"),
@@ -130,6 +130,7 @@ export const invoices = sqliteTable("invoices", {
   paidAt: text("paid_at"),
   paidMethod: text("paid_method"),
   paidReference: text("paid_reference"),
+  shareToken: text("share_token").unique(),
   createdAt: text("created_at")
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),

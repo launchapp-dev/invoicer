@@ -21,6 +21,7 @@ import type { Invoice } from "@/types/invoice";
 const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destructive" | "outline"> = {
   draft: "secondary",
   sent: "outline",
+  viewed: "secondary",
   paid: "default",
   overdue: "destructive",
   cancelled: "outline",

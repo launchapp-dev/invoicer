@@ -69,6 +69,7 @@ function rowToInvoice(row: typeof invoices.$inferSelect, paymentRows?: typeof pa
           })),
         }
       : {}),
+    ...(row.shareToken ? { shareToken: row.shareToken } : {}),
   };
 }
 
@@ -574,4 +575,42 @@ export async function getClientInvoices(clientName: string): Promise<Invoice[]> 
     )
     .orderBy(desc(invoices.issueDate));
   return rows.map((row) => rowToInvoice(row));
+}
+
+export async function generateShareLink(invoiceId: string): Promise<string> {
+  const userId = await getCurrentUserId();
+  const [row] = await db
+    .select({ shareToken: invoices.shareToken })
+    .from(invoices)
+    .where(and(eq(invoices.id, invoiceId), eq(invoices.userId, userId)));
+  if (!row) throw new Error("Invoice not found");
+  if (row.shareToken) return `/i/${row.shareToken}`;
+  const token = crypto.randomUUID();
+  await db
+    .update(invoices)
+    .set({ shareToken: token, updatedAt: new Date().toISOString() })
+    .where(and(eq(invoices.id, invoiceId), eq(invoices.userId, userId)));
+  return `/i/${token}`;
+}
+
+export async function getInvoiceByShareToken(token: string): Promise<Invoice | null> {
+  const [row] = await db
+    .select()
+    .from(invoices)
+    .where(eq(invoices.shareToken, token));
+  return row ? rowToInvoice(row) : null;
+}
+
+export async function markInvoiceViewed(token: string): Promise<void> {
+  const [row] = await db
+    .select({ id: invoices.id, status: invoices.status })
+    .from(invoices)
+    .where(eq(invoices.shareToken, token));
+  if (!row) return;
+  if (row.status === "sent") {
+    await db
+      .update(invoices)
+      .set({ status: "viewed", updatedAt: new Date().toISOString() })
+      .where(eq(invoices.shareToken, token));
+  }
 }

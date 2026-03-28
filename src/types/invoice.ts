@@ -1,4 +1,4 @@
-export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue" | "cancelled" | "partial";
+export type InvoiceStatus = "draft" | "sent" | "viewed" | "paid" | "overdue" | "cancelled" | "partial";
 
 export interface Payment {
   id: string;
@@ -55,5 +55,6 @@ export interface Invoice {
   paidMethod?: "bank_transfer" | "cash" | "check" | "card" | "other";
   paidReference?: string;
   payments?: Payment[];
+  shareToken?: string;
 }
 
