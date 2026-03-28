@@ -4,7 +4,6 @@ import { auth } from "@/lib/auth";
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isAuthPage = pathname === "/login" || pathname === "/signup";
-  const shouldRedirectToDashboard = isAuthPage || pathname === "/";
 
   const session = await auth.api.getSession({
     headers: request.headers,
@@ -14,7 +13,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (session && shouldRedirectToDashboard) {
+  if (session && isAuthPage) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -23,6 +22,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
+    "/((?!$|api/auth|_next/static|_next/image|favicon.ico).*)",
   ],
 };
