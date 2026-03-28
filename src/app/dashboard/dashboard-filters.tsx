@@ -18,6 +18,19 @@ import { parseSearchQuery } from "@/lib/ai";
 
 const STATUSES = ["draft", "sent", "viewed", "paid", "overdue", "cancelled"] as const;
 
+const CURRENCIES = [
+  { code: "USD", label: "USD — US Dollar" },
+  { code: "EUR", label: "EUR — Euro" },
+  { code: "GBP", label: "GBP — British Pound" },
+  { code: "JPY", label: "JPY — Japanese Yen" },
+  { code: "CAD", label: "CAD — Canadian Dollar" },
+  { code: "AUD", label: "AUD — Australian Dollar" },
+  { code: "CHF", label: "CHF — Swiss Franc" },
+  { code: "INR", label: "INR — Indian Rupee" },
+  { code: "SGD", label: "SGD — Singapore Dollar" },
+  { code: "AED", label: "AED — UAE Dirham" },
+];
+
 const SORT_OPTIONS = [
   { value: "date_desc", label: "Date: Newest first" },
   { value: "date_asc", label: "Date: Oldest first" },
@@ -35,9 +48,10 @@ function isNaturalLanguage(value: string): boolean {
 
 interface DashboardFiltersProps {
   nlQuery?: string;
+  clients?: { id: string; name: string }[];
 }
 
-export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
+export function DashboardFilters({ nlQuery, clients = [] }: DashboardFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [inputValue, setInputValue] = useState(
@@ -52,6 +66,8 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
   const currentSort = searchParams.get("sort") ?? "date_desc";
   const currentMinAmount = searchParams.get("minAmount") ?? "";
   const currentMaxAmount = searchParams.get("maxAmount") ?? "";
+  const currentClientId = searchParams.get("clientId") ?? "";
+  const currentCurrency = searchParams.get("currency") ?? "";
 
   function buildUrl(opts: {
     search?: string;
@@ -62,6 +78,8 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
     minAmount?: string;
     maxAmount?: string;
     nlQuery?: string;
+    clientId?: string;
+    currency?: string;
   }) {
     const params = new URLSearchParams();
     if (opts.search) params.set("search", opts.search);
@@ -72,6 +90,8 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
     if (opts.minAmount) params.set("minAmount", opts.minAmount);
     if (opts.maxAmount) params.set("maxAmount", opts.maxAmount);
     if (opts.nlQuery) params.set("nlQuery", opts.nlQuery);
+    if (opts.clientId) params.set("clientId", opts.clientId);
+    if (opts.currency) params.set("currency", opts.currency);
     const str = params.toString();
     return str ? `?${str}` : "";
   }
@@ -108,6 +128,10 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
         dateFrom,
         dateTo,
         sort: currentSort,
+        minAmount: currentMinAmount,
+        maxAmount: currentMaxAmount,
+        clientId: currentClientId,
+        currency: currentCurrency,
       }));
     }, 600);
   }
@@ -123,6 +147,8 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
       sort: currentSort,
       minAmount: currentMinAmount,
       maxAmount: currentMaxAmount,
+      clientId: currentClientId,
+      currency: currentCurrency,
     }));
   }
 
@@ -137,6 +163,8 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
       sort: currentSort,
       minAmount: currentMinAmount,
       maxAmount: currentMaxAmount,
+      clientId: currentClientId,
+      currency: currentCurrency,
     }));
   }
 
@@ -151,6 +179,8 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
       sort: currentSort,
       minAmount: currentMinAmount,
       maxAmount: currentMaxAmount,
+      clientId: currentClientId,
+      currency: currentCurrency,
     }));
   }
 
@@ -164,6 +194,40 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
       sort: value,
       minAmount: currentMinAmount,
       maxAmount: currentMaxAmount,
+      clientId: currentClientId,
+      currency: currentCurrency,
+    }));
+  }
+
+  function handleClientChange(value: string) {
+    const newClientId = value === "all" ? "" : value;
+    router.push(buildUrl({
+      search: nlQuery ? undefined : inputValue,
+      nlQuery,
+      status: currentStatus,
+      dateFrom,
+      dateTo,
+      sort: currentSort,
+      minAmount: currentMinAmount,
+      maxAmount: currentMaxAmount,
+      clientId: newClientId,
+      currency: currentCurrency,
+    }));
+  }
+
+  function handleCurrencyChange(value: string) {
+    const newCurrency = value === "all" ? "" : value;
+    router.push(buildUrl({
+      search: nlQuery ? undefined : inputValue,
+      nlQuery,
+      status: currentStatus,
+      dateFrom,
+      dateTo,
+      sort: currentSort,
+      minAmount: currentMinAmount,
+      maxAmount: currentMaxAmount,
+      clientId: currentClientId,
+      currency: newCurrency,
     }));
   }
 
@@ -181,6 +245,8 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
     dateTo ||
     currentMinAmount ||
     currentMaxAmount ||
+    currentClientId ||
+    currentCurrency ||
     (currentSort && currentSort !== "date_desc");
 
   const aiBadges: { label: string }[] = [];
@@ -200,6 +266,13 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
     }
     if (searchParams.get("search")) {
       aiBadges.push({ label: `Client: ${searchParams.get("search")}` });
+    }
+    if (currentClientId) {
+      const clientName = clients.find((c) => c.id === currentClientId)?.name ?? currentClientId;
+      aiBadges.push({ label: `Client: ${clientName}` });
+    }
+    if (currentCurrency) {
+      aiBadges.push({ label: `Currency: ${currentCurrency}` });
     }
   }
 
@@ -227,6 +300,34 @@ export function DashboardFilters({ nlQuery }: DashboardFiltersProps) {
             {STATUSES.map((s) => (
               <SelectItem key={s} value={s} className="capitalize">
                 {s.charAt(0).toUpperCase() + s.slice(1)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </SelectRoot>
+        {clients.length > 0 && (
+          <SelectRoot value={currentClientId || "all"} onValueChange={handleClientChange}>
+            <SelectTrigger className="w-44">
+              <SelectValue placeholder="All clients" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All clients</SelectItem>
+              {clients.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectRoot>
+        )}
+        <SelectRoot value={currentCurrency || "all"} onValueChange={handleCurrencyChange}>
+          <SelectTrigger className="w-44">
+            <SelectValue placeholder="All currencies" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All currencies</SelectItem>
+            {CURRENCIES.map((c) => (
+              <SelectItem key={c.code} value={c.code}>
+                {c.label}
               </SelectItem>
             ))}
           </SelectContent>

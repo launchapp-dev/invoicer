@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { listInvoices, countInvoices, type InvoiceSort } from "@/lib/storage";
+import { listInvoices, countInvoices, listClients, type InvoiceSort } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LogoutButton } from "./logout-button";
@@ -46,6 +46,8 @@ export default async function DashboardPage({
   const minAmount = minAmountParam ? parseFloat(minAmountParam) : undefined;
   const maxAmount = maxAmountParam ? parseFloat(maxAmountParam) : undefined;
   const nlQuery = (params.nlQuery as string) ?? "";
+  const clientId = (params.clientId as string) ?? "";
+  const currency = (params.currency as string) ?? "";
   const filters = {
     ...(search ? { search } : {}),
     ...(status ? { status } : {}),
@@ -53,13 +55,16 @@ export default async function DashboardPage({
     ...(dateTo ? { dateTo } : {}),
     ...(minAmount !== undefined && !isNaN(minAmount) ? { minAmount } : {}),
     ...(maxAmount !== undefined && !isNaN(maxAmount) ? { maxAmount } : {}),
+    ...(clientId ? { clientId } : {}),
+    ...(currency ? { currency } : {}),
     sort,
   };
-  const hasFilters = !!(search || statusParam || dateFrom || dateTo || minAmountParam || maxAmountParam);
+  const hasFilters = !!(search || statusParam || dateFrom || dateTo || minAmountParam || maxAmountParam || clientId || currency);
 
-  const [invoices, totalCount] = await Promise.all([
+  const [invoices, totalCount, clientsList] = await Promise.all([
     listInvoices(LIMIT, offset, filters),
     countInvoices(filters),
+    listClients(),
   ]);
 
   const totalPages = Math.ceil(totalCount / LIMIT);
@@ -72,6 +77,8 @@ export default async function DashboardPage({
     if (dateTo) redirectParams.set("dateTo", dateTo);
     if (minAmountParam) redirectParams.set("minAmount", minAmountParam);
     if (maxAmountParam) redirectParams.set("maxAmount", maxAmountParam);
+    if (clientId) redirectParams.set("clientId", clientId);
+    if (currency) redirectParams.set("currency", currency);
     if (nlQuery) redirectParams.set("nlQuery", nlQuery);
     if (sortParam && sortParam !== "date_desc") redirectParams.set("sort", sortParam);
     redirect(`/dashboard${redirectParams.size ? `?${redirectParams}` : ""}`);
@@ -144,7 +151,7 @@ export default async function DashboardPage({
             <Skeleton className="h-9 w-40" />
           </div>
         }>
-          <DashboardFilters nlQuery={nlQuery} />
+          <DashboardFilters nlQuery={nlQuery} clients={clientsList.map((c) => ({ id: c.id, name: c.name }))} />
         </Suspense>
 
         {invoices.length === 0 && page === 1 ? (
