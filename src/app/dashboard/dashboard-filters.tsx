@@ -27,7 +27,7 @@ export function DashboardFilters() {
     if (newSearch) params.set("search", newSearch);
     if (newStatus) params.set("status", newStatus);
     const str = params.toString();
-    return str ? `?${str}` : "?";
+    return str ? `?${str}` : "";
   }
 
   function handleSearchChange(value: string) {
@@ -45,7 +45,7 @@ export function DashboardFilters() {
 
   function handleClear() {
     setInputValue("");
-    router.push("?");
+    router.push("/dashboard");
   }
 
   const hasFilters = inputValue || currentStatus;
@@ -53,6 +53,7 @@ export function DashboardFilters() {
   return (
     <div className="flex items-center gap-2 mb-4">
       <Input
+        aria-label="Search invoices"
         placeholder="Search by invoice # or recipient..."
         value={inputValue}
         onChange={(e) => handleSearchChange(e.target.value)}
