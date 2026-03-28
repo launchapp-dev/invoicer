@@ -36,8 +36,3 @@ export interface Invoice {
   currency: string;
 }
 
-export type InvoiceFormValues = {
-  lineItems: LineItem[];
-  taxRate: number;
-  discount: number;
-};
