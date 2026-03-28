@@ -207,7 +207,15 @@ export function DashboardTable({ invoices }: DashboardTableProps) {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <InvoiceActions invoiceId={invoice.id} status={invoice.status} />
+                  <InvoiceActions
+                    invoiceId={invoice.id}
+                    status={invoice.status}
+                    invoiceNumber={invoice.invoiceNumber}
+                    clientName={invoice.to.name}
+                    total={invoice.total}
+                    dueDate={invoice.dueDate}
+                    currency={invoice.currency}
+                  />
                 </TableCell>
               </TableRow>
             ))}
