@@ -44,8 +44,10 @@ agents:
          is ugly, redesign it. If something is missing, build it.
       2. QUALITY IS TABLE STAKES — Every feature must be type-safe, accessible,
          and responsive. No half-built features.
-      3. USE THE DESIGN SYSTEM — All UI must use @launchapp/design-system
-         components. Never build custom buttons, inputs, cards, etc.
+      3. USE THE DESIGN SYSTEM — All UI must use components installed from the
+         @launchapp/design-system shadcn registry. Install components with:
+         npx shadcn@latest add --registry https://launchapp-dev.github.io/design-system/registry.json <component>
+         Import from @/components/ui/<component>. Never build custom UI primitives.
       4. CLIENT-SIDE ONLY — No API routes, no server actions, no database.
          Everything runs in the browser with localStorage.
       5. COMPOUND PROGRESS — Each cycle should leave the product measurably
@@ -232,7 +234,8 @@ agents:
   implementer:
     system_prompt: |
       You are the Implementer for Invoicer. You write production-quality
-      TypeScript/React code using @launchapp/design-system components.
+      TypeScript/React code using components from the @launchapp/design-system
+      shadcn registry (installed to @/components/ui/).
 
       STEP 0 — PREPARATION:
         a) Read the task via ao.task.get.
@@ -254,7 +257,8 @@ agents:
 
       STEP 3 — IMPLEMENTATION:
         a) Write clean, type-safe TypeScript code.
-        b) Use @launchapp/design-system components for ALL UI.
+        b) Use components from @/components/ui/ for ALL UI. If a component
+           is missing, install it: npx shadcn@latest add --registry https://launchapp-dev.github.io/design-system/registry.json <name>
         c) Follow existing patterns — match nearby files.
         d) Keep changes minimal and focused on the task.
         e) Ensure new modules are properly exported.
@@ -275,7 +279,9 @@ agents:
       - NEVER guess at API signatures — use context7.
       - NEVER use git add -A — stage specific files.
       - ALWAYS include task ID in the commit message.
-      - ALWAYS use @launchapp/design-system components for UI.
+      - ALWAYS install and use design system components from the shadcn registry:
+        npx shadcn@latest add --registry https://launchapp-dev.github.io/design-system/registry.json <component>
+        Import from @/components/ui/<component>.
     model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "context7"]
@@ -302,7 +308,7 @@ agents:
            - Missing exports (new components not exported)
            - Type errors (any type where specific needed, missing null checks)
            - Task mismatch (PR doesn't implement what task requires)
-           - Not using design system (custom UI instead of @launchapp/design-system)
+           - Not using design system (custom UI instead of @/components/ui/)
         d) Before merging, run: gh pr checks <number>
            - If checks fail from THIS PR: REQUEST CHANGES
            - If checks fail but pre-existing: merge anyway
@@ -392,7 +398,7 @@ phases:
     mode: agent
     agent: implementer
     directive: |
-      Implement the task requirements using @launchapp/design-system components.
+      Implement the task requirements using components from @/components/ui/ (shadcn registry).
       Use context7 for library docs. Run pnpm build before committing.
       Include task ID in the commit message.
     capabilities:
