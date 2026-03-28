@@ -163,6 +163,10 @@ function ContactSection({ prefix, title, clients, onClientSelect }: {
             <Input id={`${prefix}.country`} {...register(`${prefix}.country`)} />
           </div>
         </div>
+        <div className="grid gap-2">
+          <Label htmlFor={`${prefix}.taxId`}>Tax ID / VAT No. <span className="text-muted-foreground font-normal">(optional)</span></Label>
+          <Input id={`${prefix}.taxId`} {...register(`${prefix}.taxId`)} placeholder="e.g. GB123456789" />
+        </div>
       </CardContent>
     </Card>
   );

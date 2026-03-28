@@ -38,8 +38,8 @@ function defaultValues(): InvoiceFormValues {
     status: "draft",
     issueDate: today,
     dueDate: due,
-    from: { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" },
-    to: { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" },
+    from: { name: "", email: "", address: "", city: "", state: "", zip: "", country: "", taxId: "" },
+    to: { name: "", email: "", address: "", city: "", state: "", zip: "", country: "", taxId: "" },
     lineItems: [{ id: crypto.randomUUID(), description: "", quantity: 1, rate: 0, amount: 0 }],
     subtotal: 0,
     taxLines: [{ id: crypto.randomUUID(), name: "Tax", rate: 0, amount: 0 }],
@@ -115,6 +115,7 @@ function NewInvoicePageContent() {
         if (s.businessState) setValue("from.state", s.businessState, { shouldDirty: false });
         if (s.businessZip) setValue("from.zip", s.businessZip, { shouldDirty: false });
         if (s.businessCountry) setValue("from.country", s.businessCountry, { shouldDirty: false });
+        if (s.businessTaxId) setValue("from.taxId", s.businessTaxId, { shouldDirty: false });
         setValue("currency", s.defaultCurrency, { shouldDirty: false });
         if (s.defaultTaxRate) {
           setValue("taxLines", [{ id: crypto.randomUUID(), name: "Tax", rate: s.defaultTaxRate, amount: 0 }], { shouldDirty: false });

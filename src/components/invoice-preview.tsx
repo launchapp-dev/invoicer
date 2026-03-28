@@ -160,6 +160,9 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl, templat
               </p>
             )}
             <p className="text-sm text-muted-foreground">{invoice.from.country}</p>
+            {invoice.from.taxId && (
+              <p className="text-sm text-muted-foreground">Tax ID: {invoice.from.taxId}</p>
+            )}
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Bill To</p>
@@ -172,6 +175,9 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl, templat
               </p>
             )}
             <p className="text-sm text-muted-foreground">{invoice.to.country}</p>
+            {invoice.to.taxId && (
+              <p className="text-sm text-muted-foreground">Tax ID: {invoice.to.taxId}</p>
+            )}
           </div>
         </div>
 

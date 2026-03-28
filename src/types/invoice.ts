@@ -17,6 +17,7 @@ export interface ContactInfo {
   state: string;
   zip: string;
   country: string;
+  taxId?: string;
 }
 
 export interface LineItem {

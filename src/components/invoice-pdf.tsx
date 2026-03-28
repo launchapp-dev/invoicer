@@ -504,6 +504,7 @@ function ClassicPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }
               </Text>
             ) : null}
             {invoice.from.country ? <Text style={s.mutedText}>{invoice.from.country}</Text> : null}
+            {invoice.from.taxId ? <Text style={s.mutedText}>Tax ID: {invoice.from.taxId}</Text> : null}
           </View>
           <View style={s.column}>
             <Text style={s.sectionLabel}>Bill To</Text>
@@ -516,6 +517,7 @@ function ClassicPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }
               </Text>
             ) : null}
             {invoice.to.country ? <Text style={s.mutedText}>{invoice.to.country}</Text> : null}
+            {invoice.to.taxId ? <Text style={s.mutedText}>Tax ID: {invoice.to.taxId}</Text> : null}
           </View>
         </View>
 
@@ -621,6 +623,7 @@ function ModernPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string })
                 </Text>
               ) : null}
               {invoice.from.country ? <Text style={s.mutedText}>{invoice.from.country}</Text> : null}
+              {invoice.from.taxId ? <Text style={s.mutedText}>Tax ID: {invoice.from.taxId}</Text> : null}
             </View>
             <View style={s.column}>
               <Text style={s.sectionLabel}>Bill To</Text>
@@ -633,6 +636,7 @@ function ModernPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string })
                 </Text>
               ) : null}
               {invoice.to.country ? <Text style={s.mutedText}>{invoice.to.country}</Text> : null}
+              {invoice.to.taxId ? <Text style={s.mutedText}>Tax ID: {invoice.to.taxId}</Text> : null}
             </View>
           </View>
 
@@ -741,6 +745,7 @@ function MinimalPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }
               </Text>
             ) : null}
             {invoice.from.country ? <Text style={s.mutedText}>{invoice.from.country}</Text> : null}
+            {invoice.from.taxId ? <Text style={s.mutedText}>Tax ID: {invoice.from.taxId}</Text> : null}
           </View>
           <View style={s.column}>
             <Text style={s.sectionLabel}>Bill To</Text>
@@ -753,6 +758,7 @@ function MinimalPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }
               </Text>
             ) : null}
             {invoice.to.country ? <Text style={s.mutedText}>{invoice.to.country}</Text> : null}
+            {invoice.to.taxId ? <Text style={s.mutedText}>Tax ID: {invoice.to.taxId}</Text> : null}
           </View>
         </View>
 
