@@ -13,14 +13,20 @@ export function calcTaxAmount(subtotal: number, taxRate: number): number {
 }
 
 export function calcTotal(subtotal: number, taxAmount: number, discount = 0): number {
-  return Math.round((subtotal + taxAmount - discount) * 100) / 100;
+  return Math.max(0, Math.round((subtotal + taxAmount - discount) * 100) / 100);
 }
 
 
 export function formatCurrency(amount: number, currency = "USD"): string {
+  let safeCurrency = currency;
+  try {
+    new Intl.NumberFormat("en-US", { style: "currency", currency });
+  } catch {
+    safeCurrency = "USD";
+  }
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency,
+    currency: safeCurrency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount);
