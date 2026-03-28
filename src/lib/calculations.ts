@@ -1,5 +1,18 @@
 import type { LineItem, TaxLine } from "@/types/invoice";
 
+const CURRENCY_LOCALE: Record<string, string> = {
+  USD: 'en-US',
+  EUR: 'fr-FR',
+  GBP: 'en-GB',
+  JPY: 'ja-JP',
+  CAD: 'en-CA',
+  AUD: 'en-AU',
+  CHF: 'de-CH',
+  INR: 'en-IN',
+  SGD: 'en-SG',
+  AED: 'ar-AE',
+};
+
 export function calcLineAmount(quantity: number, rate: number): number {
   return Math.round(quantity * rate * 100) / 100;
 }
@@ -27,7 +40,6 @@ export function calcTotal(subtotal: number, taxAmount: number, discount = 0): nu
   return Math.max(0, Math.round((subtotal + taxAmount - discount) * 100) / 100);
 }
 
-
 export function formatDate(iso: string): string {
   if (!iso) return "—";
   const [year, month, day] = iso.split("-").map(Number);
@@ -43,7 +55,8 @@ export function formatCurrency(amount: number, currency = "USD"): string {
   } catch {
     safeCurrency = "USD";
   }
-  return new Intl.NumberFormat("en-US", {
+  const locale = CURRENCY_LOCALE[safeCurrency] ?? "en-US";
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: safeCurrency,
   }).format(amount);
