@@ -557,6 +557,31 @@ export async function updateClient(id: string, data: Partial<Omit<Client, "id" |
     .where(and(eq(clients.id, id), eq(clients.userId, userId)));
 }
 
+export async function batchUpsertClients(
+  rows: Array<Omit<Client, "id" | "createdAt" | "updatedAt">>
+): Promise<{ imported: number; skipped: number }> {
+  const userId = await getCurrentUserId();
+  const existingRows = await db
+    .select({ email: clients.email })
+    .from(clients)
+    .where(eq(clients.userId, userId));
+  const emailSet = new Set(existingRows.map((r) => r.email).filter(Boolean));
+  let imported = 0;
+  let skipped = 0;
+  const now = new Date().toISOString();
+  for (const row of rows) {
+    if (row.email && emailSet.has(row.email)) {
+      skipped++;
+      continue;
+    }
+    const id = crypto.randomUUID();
+    await db.insert(clients).values({ ...row, id, userId, createdAt: now, updatedAt: now });
+    if (row.email) emailSet.add(row.email);
+    imported++;
+  }
+  return { imported, skipped };
+}
+
 export async function deleteClient(id: string): Promise<void> {
   const userId = await getCurrentUserId();
   await db
