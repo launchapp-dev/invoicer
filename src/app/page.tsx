@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Moon, Sun } from "lucide-react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -129,6 +130,9 @@ export default function Home() {
             <span className="text-sm text-muted-foreground hidden sm:block">{session.user.email}</span>
             <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
               {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/dashboard">Dashboard</Link>
             </Button>
             <Button variant="outline" onClick={handleNew}>New</Button>
             <InvoiceHistory onLoad={handleLoad} onDuplicate={handleDuplicate} />
