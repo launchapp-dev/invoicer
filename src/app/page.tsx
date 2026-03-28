@@ -87,7 +87,8 @@ export default function Home() {
       await saveInvoice(values as Invoice);
       form.reset(values);
       toast.success("Invoice saved");
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to save invoice");
     }
   });
@@ -111,7 +112,8 @@ export default function Home() {
         form.reset(copy as InvoiceFormValues);
         toast.success("Invoice duplicated");
       }
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to duplicate invoice");
     }
   };
