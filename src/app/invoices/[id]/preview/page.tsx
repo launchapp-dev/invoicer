@@ -65,11 +65,7 @@ export default function PreviewInvoicePage() {
       });
   }, [session, params?.id, router]);
 
-  if (isPending || !session) {
-    return <div className="min-h-screen bg-background" />;
-  }
-
-  if (loading) {
+  if (isPending || !session || loading) {
     return (
       <div className="min-h-screen bg-background">
         <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
