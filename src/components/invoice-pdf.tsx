@@ -190,6 +190,14 @@ export function InvoicePDF({ invoice }: InvoicePDFProps) {
             {invoice.from.address ? (
               <Text style={styles.mutedText}>{invoice.from.address}</Text>
             ) : null}
+            {(invoice.from.city || invoice.from.state || invoice.from.zip) ? (
+              <Text style={styles.mutedText}>
+                {[invoice.from.city, invoice.from.state, invoice.from.zip].filter(Boolean).join(", ")}
+              </Text>
+            ) : null}
+            {invoice.from.country ? (
+              <Text style={styles.mutedText}>{invoice.from.country}</Text>
+            ) : null}
           </View>
           <View style={styles.column}>
             <Text style={styles.sectionLabel}>Bill To</Text>
@@ -201,6 +209,14 @@ export function InvoicePDF({ invoice }: InvoicePDFProps) {
             ) : null}
             {invoice.to.address ? (
               <Text style={styles.mutedText}>{invoice.to.address}</Text>
+            ) : null}
+            {(invoice.to.city || invoice.to.state || invoice.to.zip) ? (
+              <Text style={styles.mutedText}>
+                {[invoice.to.city, invoice.to.state, invoice.to.zip].filter(Boolean).join(", ")}
+              </Text>
+            ) : null}
+            {invoice.to.country ? (
+              <Text style={styles.mutedText}>{invoice.to.country}</Text>
             ) : null}
           </View>
         </View>
