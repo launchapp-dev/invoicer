@@ -28,6 +28,7 @@ const STATUSES = [
   { value: "paid", label: "Paid" },
   { value: "overdue", label: "Overdue" },
   { value: "cancelled", label: "Cancelled" },
+  { value: "archived", label: "Archived" },
 ] as const;
 
 const CURRENCIES = [
