@@ -11,7 +11,7 @@ import {
   calculateTotal,
   formatCurrency,
 } from "@/lib/calculations";
-import type { InvoiceFormValues } from "@/types/invoice";
+import type { InvoiceFormValues } from "@/lib/invoice-schema";
 
 interface InvoiceTotalsProps {
   control: Control<InvoiceFormValues>;
@@ -22,6 +22,7 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
   const lineItems = useWatch({ control, name: "lineItems", defaultValue: [] });
   const taxRate = useWatch({ control, name: "taxRate", defaultValue: 0 });
   const discount = useWatch({ control, name: "discount", defaultValue: 0 });
+  const currency = useWatch({ control, name: "currency", defaultValue: "USD" });
 
   const subtotal = calculateSubtotal(lineItems ?? []);
   const taxAmount = calculateTaxAmount(subtotal, taxRate ?? 0);
@@ -63,18 +64,18 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Subtotal</span>
-            <span>{formatCurrency(subtotal)}</span>
+            <span>{formatCurrency(subtotal, currency)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">
               Tax ({(taxRate ?? 0).toFixed(2)}%)
             </span>
-            <span>{formatCurrency(taxAmount)}</span>
+            <span>{formatCurrency(taxAmount, currency)}</span>
           </div>
           {(discount ?? 0) > 0 && (
             <div className="flex justify-between">
               <span className="text-muted-foreground">Discount</span>
-              <span>-{formatCurrency(discount ?? 0)}</span>
+              <span>-{formatCurrency(discount ?? 0, currency)}</span>
             </div>
           )}
         </div>
@@ -83,7 +84,7 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
 
         <div className="flex justify-between font-semibold">
           <span>Total</span>
-          <span>{formatCurrency(total)}</span>
+          <span>{formatCurrency(total, currency)}</span>
         </div>
       </CardContent>
     </Card>

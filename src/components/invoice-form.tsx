@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useFormContext, type Control, type UseFormRegister } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,6 @@ import { InvoiceTotals } from "@/components/invoice-totals";
 import { calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
 import { LineItems } from "@/components/line-items";
 import type { InvoiceFormValues } from "@/lib/invoice-schema";
-import type { InvoiceFormValues as TotalsFormValues } from "@/types/invoice";
 
 const CURRENCIES = [
   { code: "USD", label: "USD — US Dollar" },
@@ -146,8 +145,8 @@ export function InvoiceForm() {
       </Card>
 
       <InvoiceTotals
-        control={control as unknown as Control<TotalsFormValues>}
-        register={register as unknown as UseFormRegister<TotalsFormValues>}
+        control={control}
+        register={register}
       />
 
       <Card>
