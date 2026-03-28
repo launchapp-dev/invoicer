@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { loadInvoice } from "@/lib/storage";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
 
 export default function PreviewInvoicePage() {
@@ -36,7 +37,9 @@ export default function PreviewInvoicePage() {
         }
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to load invoice");
         router.replace("/dashboard");
       });
   }, [session, params?.id, router]);
