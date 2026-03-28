@@ -14,7 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Building2 } from "lucide-react";
-import { calcSubtotal, calcTaxAmount, calcTotal, formatCurrency } from "@/lib/calculations";
+import { calcSubtotal, calcTaxAmount, calcTotal, formatCurrency, formatDate } from "@/lib/calculations";
 import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
 
@@ -74,8 +74,8 @@ export function InvoicePreview({ invoice, hideDownload = false }: InvoicePreview
               {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
             </Badge>
             <div className="text-xs text-muted-foreground mt-2">
-              <p>Issued: {invoice.issueDate || "—"}</p>
-              <p>Due: {invoice.dueDate || "—"}</p>
+              <p>Issued: {formatDate(invoice.issueDate)}</p>
+              <p>Due: {formatDate(invoice.dueDate)}</p>
             </div>
           </div>
         </div>

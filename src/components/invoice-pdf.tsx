@@ -1,6 +1,6 @@
 import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer";
 import type { Invoice } from "@/types/invoice";
-import { formatCurrency } from "@/lib/calculations";
+import { formatCurrency, formatDate } from "@/lib/calculations";
 
 const styles = StyleSheet.create({
   page: {
@@ -170,9 +170,9 @@ export function InvoicePDF({ invoice }: InvoicePDFProps) {
                 invoice.status.slice(1)}
             </Text>
             <Text style={styles.dateText}>
-              Issued: {invoice.issueDate || "—"}
+              Issued: {formatDate(invoice.issueDate)}
             </Text>
-            <Text style={styles.dateText}>Due: {invoice.dueDate || "—"}</Text>
+            <Text style={styles.dateText}>Due: {formatDate(invoice.dueDate)}</Text>
           </View>
         </View>
 

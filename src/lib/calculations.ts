@@ -17,6 +17,14 @@ export function calcTotal(subtotal: number, taxAmount: number, discount = 0): nu
 }
 
 
+export function formatDate(iso: string): string {
+  if (!iso) return "—";
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+    year: "numeric", month: "short", day: "numeric",
+  });
+}
+
 export function formatCurrency(amount: number, currency = "USD"): string {
   let safeCurrency = currency;
   try {
