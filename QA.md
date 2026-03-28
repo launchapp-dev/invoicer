@@ -7,11 +7,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | Field | Value |
 |-------|-------|
 | Date | 2026-03-28 |
-| Result | PARTIAL PASS (2 bugs found) |
-| Steps Passed | 5/6 (Step 5 partial — /clients 404) |
-| Duration | ~10 min |
-| Console Errors | 1 (GET /clients 404) |
-| Network Errors | 1 (GET /clients 404) |
+| Result | PARTIAL PASS (3 bugs found) |
+| Steps Passed | 4/6 (Step 5 partial — /clients 404; Step 2 partial — auth login bug) |
+| Duration | ~15 min |
+| Console Errors | 2 (GET /clients 404; POST /sign-in/email 401) |
+| Network Errors | 2 (GET /clients 404; POST /sign-in/email 401) |
 
 ## Test Results History
 
@@ -19,28 +19,30 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | Date | Passed | Failed | Bugs Created | Notes |
 |------|--------|--------|-------------|-------|
 | 2026-03-28 | 5 | 2 | 2 | /clients 404; AI command bar missing from dashboard |
+| 2026-03-28 | 4 | 3 | 2 | /clients 404 persists (TASK-235 regression); auth login failure + duplicate signup bug (TASK-240); AI command bar now fixed |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
-- **[2026-03-28] /clients returns 404** — Client management page not found. TASK-227 (build /clients page) is marked done but the route does not exist at runtime. Blocks all client management tests.
-- **[2026-03-28] AI command bar missing from dashboard** — TASK-234 (AI smart invoice creation via natural language command bar) is marked done but no command bar or natural language input is visible on the dashboard.
+- **[2026-03-28] /clients returns 404** — TASK-239. Client management page not found. TASK-235 was marked done but route still returns 404 at runtime. Regression. Blocks all client management tests.
+- **[2026-03-28] Duplicate signup with existing email succeeds silently; login fails after session drop** — TASK-240. Signing up with an already-registered email does not show an error — it creates a new session and wipes previous invoice data. Additionally, after a session drop, login with the original credentials returns 401 "Invalid email or password". Likely duplicate user records in DB. High severity — users can lose their data.
 
 ## Regression Tracker
 
 <!-- QA agent: if a previously passing test starts failing, log it here with the date and suspected cause. -->
 | Date | Test | Was | Now | Suspected Cause |
 |------|------|-----|-----|-----------------|
+| 2026-03-28 | Login with existing credentials | PASS | FAIL | Duplicate signup creates new DB record, breaking password auth for original account (TASK-240) |
 
 ## Test Coverage
 
 ### Auth Flow
 - [x] Landing page loads without errors
 - [x] Signup with email/password works
-- [x] Login with existing credentials works
+- [ ] Login with existing credentials works — **FAIL: 401 after session drop (TASK-240)**
 - [x] Protected routes redirect to login when unauthenticated
 - [x] Logout redirects to landing/login
-- [ ] Duplicate signup shows appropriate error
+- [ ] Duplicate signup shows appropriate error — **FAIL: silently succeeds (TASK-240)**
 - [x] Google OAuth button present on login/signup pages
 - [x] GitHub OAuth button present on login/signup pages
 
@@ -58,10 +60,14 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Dashboard loads with invoice list
 - [ ] Search works
 - [ ] Status filter works
+- [x] Date range filter works (Issue Date From/To fields present)
 - [ ] Edit invoice navigates correctly
 - [ ] Delete invoice with confirmation works
 - [ ] Duplicate invoice works
 - [x] Quick stats show total outstanding, paid this month, overdue amount
+- [x] Bulk select checkboxes appear
+- [ ] Bulk delete works
+- [ ] Bulk mark-as-sent works
 
 ### PDF Generation
 - [x] Generate PDF button exists
@@ -94,19 +100,20 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Can set up a recurring invoice (weekly/monthly/etc.)
 
 ### AI Smart Invoice Creation
-- [ ] Command bar or natural language input exists on dashboard — **FAIL: not found**
-- [ ] AI-assisted invoice creation does not throw errors
+- [x] Command bar or natural language input exists on dashboard — "Create with AI" button opens dialog
+- [x] AI dialog opens without errors and accepts natural language input
 
 ### Navigation
-- [ ] All nav links work (no 404s) — **PARTIAL: /clients is 404**
+- [ ] All nav links work (no 404s) — **PARTIAL: /clients is 404 (TASK-239)**
 - [ ] Mobile navigation works
 - [ ] Back/forward browser buttons work
 - [x] Settings nav link present in authenticated layout
+- [x] Recurring nav link present in authenticated layout
 
 ### Console & Network
-- [x] No console.error messages
+- [ ] No console.error messages — **PARTIAL: /clients 404, sign-in 401**
 - [x] No uncaught exceptions
-- [ ] No failed network requests (4xx/5xx) — **PARTIAL: /clients returns 404**
+- [ ] No failed network requests (4xx/5xx) — **PARTIAL: /clients 404; /api/auth/sign-in/email 401**
 - [x] No CORS errors
 
 ## Environment Notes
