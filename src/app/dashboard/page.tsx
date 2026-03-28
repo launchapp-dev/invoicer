@@ -7,6 +7,7 @@ import { listInvoices, countInvoices } from "@/lib/storage";
 import { formatCurrency, formatDate } from "@/lib/calculations";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -90,7 +91,12 @@ export default async function DashboardPage({
           </Button>
         </div>
 
-        <Suspense>
+        <Suspense fallback={
+          <div className="flex items-center gap-2 mb-4">
+            <Skeleton className="h-9 w-[240px]" />
+            <Skeleton className="h-9 w-40" />
+          </div>
+        }>
           <DashboardFilters />
         </Suspense>
 
@@ -154,7 +160,7 @@ export default async function DashboardPage({
             </div>
 
             {totalCount > LIMIT && (
-              <Suspense>
+              <Suspense fallback={<Skeleton className="h-9 w-64 mt-4" />}>
                 <PaginationControls page={page} totalPages={totalPages} />
               </Suspense>
             )}
