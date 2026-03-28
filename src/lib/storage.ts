@@ -152,6 +152,8 @@ interface InvoiceFilters {
   status?: InvoiceStatus;
   dateFrom?: string;
   dateTo?: string;
+  minAmount?: number;
+  maxAmount?: number;
   sort?: InvoiceSort;
 }
 
@@ -173,6 +175,8 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
         filters?.status ? eq(invoices.status, filters.status) : undefined,
         filters?.dateFrom ? gte(invoices.issueDate, filters.dateFrom) : undefined,
         filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
+        filters?.minAmount !== undefined ? gte(invoices.total, filters.minAmount) : undefined,
+        filters?.maxAmount !== undefined ? lte(invoices.total, filters.maxAmount) : undefined,
       )
     )
     .orderBy(
@@ -206,6 +210,8 @@ export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
         filters?.status ? eq(invoices.status, filters.status) : undefined,
         filters?.dateFrom ? gte(invoices.issueDate, filters.dateFrom) : undefined,
         filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
+        filters?.minAmount !== undefined ? gte(invoices.total, filters.minAmount) : undefined,
+        filters?.maxAmount !== undefined ? lte(invoices.total, filters.maxAmount) : undefined,
       )
     );
   return result?.total ?? 0;
