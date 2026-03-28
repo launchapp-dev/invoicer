@@ -38,6 +38,7 @@ export default function EditInvoicePage() {
   const [leaveDestination, setLeaveDestination] = useState<string | null>(null);
   const [clients, setClients] = useState<Client[]>([]);
   const [logoUrl, setLogoUrl] = useState<string>("");
+  const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -71,7 +72,10 @@ export default function EditInvoicePage() {
   useEffect(() => {
     if (!session || !params?.id) return;
     listClients().then(setClients).catch(() => {});
-    getMySettings().then((s) => { if (s?.logoUrl) setLogoUrl(s.logoUrl); }).catch(() => {});
+    getMySettings().then((s) => {
+      if (s?.logoUrl) setLogoUrl(s.logoUrl);
+      if (s?.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
+    }).catch(() => {});
     loadInvoice(params.id)
       .then((data) => {
         if (!data) {
@@ -244,7 +248,7 @@ export default function EditInvoicePage() {
             </FormProvider>
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
-            <InvoicePreview invoice={invoice} logoUrl={logoUrl} />
+            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} />
           </TabsContent>
         </Tabs>
       </div>
@@ -256,7 +260,7 @@ export default function EditInvoicePage() {
           </FormProvider>
         </div>
         <div className="w-1/2 overflow-y-auto bg-muted/30 p-8">
-          <InvoicePreview invoice={invoice} />
+          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} />
         </div>
       </div>
     </div>

@@ -17,6 +17,7 @@ import { Building2 } from "lucide-react";
 import { calcSubtotal, calcTotal, formatCurrency, formatDate } from "@/lib/calculations";
 import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
+import type { InvoiceTemplate } from "@/components/invoice-pdf";
 
 const PAYMENT_TERMS_LABELS: Record<NonNullable<Invoice["paymentTerms"]>, string> = {
   net15: "Net 15",
@@ -40,9 +41,10 @@ interface InvoicePreviewProps {
   invoice: Invoice;
   hideDownload?: boolean;
   logoUrl?: string;
+  template?: InvoiceTemplate;
 }
 
-export function InvoicePreview({ invoice, hideDownload = false, logoUrl }: InvoicePreviewProps) {
+export function InvoicePreview({ invoice, hideDownload = false, logoUrl, template = "classic" }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
   const taxAmount = invoice.taxAmount;
   const total = calcTotal(subtotal, taxAmount, invoice.discount);
@@ -53,7 +55,7 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl }: Invoi
     try {
       const { pdf } = await import("@react-pdf/renderer");
       const { InvoicePDF } = await import("@/components/invoice-pdf");
-      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -67,43 +69,74 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl }: Invoi
     }
   }
 
+  const isModern = template === "modern";
+  const isMinimal = template === "minimal";
+
   return (
-    <Card className="shadow-xl border-border bg-card min-h-[700px]">
-      <CardContent className="p-8 space-y-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-3">
+    <Card className="shadow-xl border-border bg-card min-h-[700px] overflow-hidden">
+      {isModern && (
+        <div className="bg-[#1a1a2e] px-8 py-7 flex items-end justify-between">
+          <div className="flex items-end gap-3">
             {logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={logoUrl}
-                alt="Business logo"
-                className="h-12 w-auto max-w-[120px] object-contain"
-              />
-            ) : (
-              <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
-                <Building2 className="h-5 w-5 text-muted-foreground" />
-              </div>
-            )}
+              <img src={logoUrl} alt="Business logo" className="h-11 w-auto max-w-[110px] object-contain" />
+            ) : null}
             <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest">Invoice</p>
-              <p className="text-2xl font-bold text-foreground mt-1">
-                {invoice.invoiceNumber || "INV-001"}
-              </p>
+              <p className="text-xs text-white/50 uppercase tracking-[0.2em]">Invoice</p>
+              <p className="text-2xl font-bold text-white mt-1">{invoice.invoiceNumber || "INV-001"}</p>
             </div>
           </div>
           <div className="text-right space-y-1">
-            <Badge variant={STATUS_VARIANT[invoice.status]}>
+            <Badge className="bg-transparent border border-white/30 text-white text-[10px] uppercase tracking-wider">
               {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
             </Badge>
-            <div className="text-xs text-muted-foreground mt-2">
+            <div className="text-xs text-white/60 mt-2 space-y-0.5">
               <p>Issued: {formatDate(invoice.issueDate)}</p>
               <p>Due: {formatDate(invoice.dueDate)}</p>
-              {invoice.paymentTerms && (
-                <p>Terms: {PAYMENT_TERMS_LABELS[invoice.paymentTerms]}</p>
-              )}
+              {invoice.paymentTerms && <p>Terms: {PAYMENT_TERMS_LABELS[invoice.paymentTerms]}</p>}
             </div>
           </div>
         </div>
+      )}
+      <CardContent className={isModern ? "p-8 space-y-6" : "p-8 space-y-6"}>
+        {!isModern && (
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-3">
+              {logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={logoUrl}
+                  alt="Business logo"
+                  className="h-12 w-auto max-w-[120px] object-contain"
+                />
+              ) : (
+                !isMinimal && (
+                  <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                    <Building2 className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                )
+              )}
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-widest">Invoice</p>
+                <p className="text-2xl font-bold text-foreground mt-1">
+                  {invoice.invoiceNumber || "INV-001"}
+                </p>
+              </div>
+            </div>
+            <div className="text-right space-y-1">
+              <Badge variant={STATUS_VARIANT[invoice.status]}>
+                {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+              </Badge>
+              <div className="text-xs text-muted-foreground mt-2">
+                <p>Issued: {formatDate(invoice.issueDate)}</p>
+                <p>Due: {formatDate(invoice.dueDate)}</p>
+                {invoice.paymentTerms && (
+                  <p>Terms: {PAYMENT_TERMS_LABELS[invoice.paymentTerms]}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {!hideDownload && (
           <div className="flex justify-end">

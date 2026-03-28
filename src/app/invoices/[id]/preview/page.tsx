@@ -52,6 +52,7 @@ export default function PreviewInvoicePage() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
 
   const [formAmount, setFormAmount] = useState("");
   const [formDate, setFormDate] = useState(new Date().toISOString().slice(0, 10));
@@ -64,7 +65,7 @@ export default function PreviewInvoicePage() {
     try {
       const { pdf } = await import("@react-pdf/renderer");
       const { InvoicePDF } = await import("@/components/invoice-pdf");
-      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -134,7 +135,10 @@ export default function PreviewInvoicePage() {
 
   useEffect(() => {
     if (!session || !params?.id) return;
-    getMySettings().then((s) => { if (s?.logoUrl) setLogoUrl(s.logoUrl); }).catch(() => {});
+    getMySettings().then((s) => {
+      if (s?.logoUrl) setLogoUrl(s.logoUrl);
+      if (s?.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
+    }).catch(() => {});
     loadInvoice(params.id)
       .then((data) => {
         if (!data) {
@@ -221,7 +225,7 @@ export default function PreviewInvoicePage() {
         </div>
       </header>
       <div className="p-6 max-w-3xl mx-auto space-y-4">
-        {invoice && <InvoicePreview invoice={invoice} hideDownload logoUrl={logoUrl} />}
+        {invoice && <InvoicePreview invoice={invoice} hideDownload logoUrl={logoUrl} template={template} />}
 
         {invoice && (
           <Card>
