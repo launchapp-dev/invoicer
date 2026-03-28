@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useFormContext, useFieldArray } from "react-hook-form";
-import { Sparkles, Plus } from "lucide-react";
+import { Sparkles, Plus, TriangleAlert, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,11 +13,13 @@ import { Switch } from "@/components/ui/switch";
 import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InvoiceTotals } from "@/components/invoice-totals";
 import { calcSubtotal, calcTaxLines, calcTaxAmountFromLines, calcTotal } from "@/lib/calculations";
 import { LineItems } from "@/components/line-items";
 import { RECURRING_FREQUENCIES, type InvoiceFormValues } from "@/lib/invoice-schema";
 import { suggestLineItems, type SuggestedLineItem } from "@/lib/ai";
+import { checkDuplicateInvoice, type DuplicateSuspect } from "@/lib/storage";
 import type { Client } from "@/types/client";
 
 const STATUSES = [
@@ -232,6 +234,9 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [taxSuggestion, setTaxSuggestion] = useState<{ name: string; rate: number; countryDisplay: string } | null>(null);
   const [taxSuggestionDismissed, setTaxSuggestionDismissed] = useState(false);
+  const [duplicateSuspects, setDuplicateSuspects] = useState<DuplicateSuspect[]>([]);
+  const [duplicateDismissed, setDuplicateDismissed] = useState(false);
+  const duplicateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { fields: taxLineFields, append: appendTaxLine, remove: removeTaxLine, update: updateTaxLine } = useFieldArray({ control, name: "taxLines" });
 
@@ -290,6 +295,10 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
   const recurringFrequency = watch("recurringFrequency");
   const paymentTerms = watch("paymentTerms");
   const issueDate = watch("issueDate");
+  const total = watch("total");
+  const clientId = watch("clientId");
+  const toName = watch("to.name");
+  const currentId = watch("id");
 
   useEffect(() => {
     const subtotal = calcSubtotal(lineItems || []);
@@ -310,8 +319,67 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
     }
   }, [issueDate, paymentTerms, setValue]);
 
+  useEffect(() => {
+    setDuplicateDismissed(false);
+  }, [clientId, toName]);
+
+  useEffect(() => {
+    if ((!clientId && !toName) || !total || total <= 0) {
+      setDuplicateSuspects([]);
+      return;
+    }
+    if (duplicateTimerRef.current) clearTimeout(duplicateTimerRef.current);
+    duplicateTimerRef.current = setTimeout(async () => {
+      try {
+        const suspects = await checkDuplicateInvoice(clientId ?? null, toName ?? null, total, currentId);
+        setDuplicateSuspects(suspects);
+      } catch {
+        setDuplicateSuspects([]);
+      }
+    }, 800);
+    return () => {
+      if (duplicateTimerRef.current) clearTimeout(duplicateTimerRef.current);
+    };
+  }, [clientId, toName, total, currentId]);
+
   return (
     <div className="grid gap-6">
+      {duplicateSuspects.length > 0 && !duplicateDismissed && (
+        <Alert variant="warning">
+          <TriangleAlert className="h-4 w-4" />
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <AlertTitle>Possible duplicate invoice</AlertTitle>
+              <AlertDescription>
+                This looks similar to{" "}
+                {duplicateSuspects.map((s, i) => (
+                  <span key={s.id}>
+                    {i > 0 && ", "}
+                    <Link
+                      href={`/invoices/${s.id}`}
+                      className="underline underline-offset-2 font-medium"
+                    >
+                      {s.invoiceNumber}
+                    </Link>
+                    {" "}(issued {s.issueDate})
+                  </span>
+                ))}
+                . Review before saving.
+              </AlertDescription>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 p-0 shrink-0 -mt-0.5"
+              onClick={() => setDuplicateDismissed(true)}
+              aria-label="Dismiss duplicate warning"
+            >
+              <X className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </Alert>
+      )}
       <Card>
         <CardHeader>
           <CardTitle>Invoice Details</CardTitle>
