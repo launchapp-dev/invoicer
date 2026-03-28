@@ -12,6 +12,7 @@ import { DashboardFilters } from "./dashboard-filters";
 import { DashboardStats } from "./dashboard-stats";
 import { AiInvoiceCommand } from "./ai-invoice-command";
 import { DashboardTable } from "./dashboard-table";
+import { CashFlowWidget } from "./cash-flow-widget";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const VALID_STATUSES: InvoiceStatus[] = ["draft", "sent", "paid", "overdue", "cancelled"];
@@ -106,6 +107,10 @@ export default async function DashboardPage({
             </Button>
           </div>
         </div>
+
+        <Suspense fallback={<Skeleton className="h-36 rounded-lg mb-6" />}>
+          <CashFlowWidget />
+        </Suspense>
 
         <Suspense fallback={
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
