@@ -1,6 +1,6 @@
 "use server";
 
-import { and, count, desc, eq, inArray, like, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, like, lte, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { clients, invoices, userSettings } from "@/db/schema";
@@ -120,6 +120,8 @@ export async function saveInvoice(invoice: Invoice): Promise<void> {
 interface InvoiceFilters {
   search?: string;
   status?: InvoiceStatus;
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilters): Promise<Invoice[]> {
@@ -138,6 +140,8 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
             )
           : undefined,
         filters?.status ? eq(invoices.status, filters.status) : undefined,
+        filters?.dateFrom ? gte(invoices.issueDate, filters.dateFrom) : undefined,
+        filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
       )
     )
     .orderBy(desc(invoices.updatedAt))
@@ -162,6 +166,8 @@ export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
             )
           : undefined,
         filters?.status ? eq(invoices.status, filters.status) : undefined,
+        filters?.dateFrom ? gte(invoices.issueDate, filters.dateFrom) : undefined,
+        filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
       )
     );
   return result?.total ?? 0;

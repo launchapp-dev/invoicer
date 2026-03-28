@@ -35,11 +35,15 @@ export default async function DashboardPage({
   const search = (params.search as string) ?? "";
   const statusParam = (params.status as string) ?? "";
   const status = VALID_STATUSES.includes(statusParam as InvoiceStatus) ? (statusParam as InvoiceStatus) : undefined;
+  const dateFrom = (params.dateFrom as string) ?? "";
+  const dateTo = (params.dateTo as string) ?? "";
   const filters = {
     ...(search ? { search } : {}),
     ...(status ? { status } : {}),
+    ...(dateFrom ? { dateFrom } : {}),
+    ...(dateTo ? { dateTo } : {}),
   };
-  const hasFilters = !!(search || statusParam);
+  const hasFilters = !!(search || statusParam || dateFrom || dateTo);
 
   const [invoices, totalCount] = await Promise.all([
     listInvoices(LIMIT, offset, filters),
@@ -52,6 +56,8 @@ export default async function DashboardPage({
     const redirectParams = new URLSearchParams();
     if (search) redirectParams.set("search", search);
     if (statusParam) redirectParams.set("status", statusParam);
+    if (dateFrom) redirectParams.set("dateFrom", dateFrom);
+    if (dateTo) redirectParams.set("dateTo", dateTo);
     redirect(`/dashboard${redirectParams.size ? `?${redirectParams}` : ""}`);
   }
 

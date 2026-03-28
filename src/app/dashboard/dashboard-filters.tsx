@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   SelectRoot,
   SelectContent,
@@ -18,14 +19,18 @@ export function DashboardFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [inputValue, setInputValue] = useState(searchParams.get("search") ?? "");
+  const [dateFrom, setDateFrom] = useState(searchParams.get("dateFrom") ?? "");
+  const [dateTo, setDateTo] = useState(searchParams.get("dateTo") ?? "");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentStatus = searchParams.get("status") ?? "";
 
-  function buildUrl(newSearch: string, newStatus: string) {
+  function buildUrl(newSearch: string, newStatus: string, newDateFrom: string, newDateTo: string) {
     const params = new URLSearchParams();
     if (newSearch) params.set("search", newSearch);
     if (newStatus) params.set("status", newStatus);
+    if (newDateFrom) params.set("dateFrom", newDateFrom);
+    if (newDateTo) params.set("dateTo", newDateTo);
     const str = params.toString();
     return str ? `?${str}` : "";
   }
@@ -34,24 +39,36 @@ export function DashboardFilters() {
     setInputValue(value);
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
-      router.push(buildUrl(value, currentStatus));
+      router.push(buildUrl(value, currentStatus, dateFrom, dateTo));
     }, 300);
   }
 
   function handleStatusChange(value: string) {
     const newStatus = value === "all" ? "" : value;
-    router.push(buildUrl(inputValue, newStatus));
+    router.push(buildUrl(inputValue, newStatus, dateFrom, dateTo));
+  }
+
+  function handleDateFromChange(value: string) {
+    setDateFrom(value);
+    router.push(buildUrl(inputValue, currentStatus, value, dateTo));
+  }
+
+  function handleDateToChange(value: string) {
+    setDateTo(value);
+    router.push(buildUrl(inputValue, currentStatus, dateFrom, value));
   }
 
   function handleClear() {
     setInputValue("");
+    setDateFrom("");
+    setDateTo("");
     router.push("/dashboard");
   }
 
-  const hasFilters = inputValue || currentStatus;
+  const hasFilters = inputValue || currentStatus || dateFrom || dateTo;
 
   return (
-    <div className="flex items-center gap-2 mb-4">
+    <div className="flex flex-wrap items-end gap-2 mb-4">
       <Input
         aria-label="Search invoices"
         placeholder="Search by invoice # or recipient..."
@@ -72,6 +89,28 @@ export function DashboardFilters() {
           ))}
         </SelectContent>
       </SelectRoot>
+      <div className="flex items-end gap-1">
+        <div className="flex flex-col gap-1">
+          <Label htmlFor="dateFrom" className="text-xs text-muted-foreground">Issue Date From</Label>
+          <Input
+            id="dateFrom"
+            type="date"
+            value={dateFrom}
+            onChange={(e) => handleDateFromChange(e.target.value)}
+            className="w-40"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <Label htmlFor="dateTo" className="text-xs text-muted-foreground">To</Label>
+          <Input
+            id="dateTo"
+            type="date"
+            value={dateTo}
+            onChange={(e) => handleDateToChange(e.target.value)}
+            className="w-40"
+          />
+        </div>
+      </div>
       {hasFilters && (
         <Button variant="ghost" size="sm" onClick={handleClear}>
           Clear
