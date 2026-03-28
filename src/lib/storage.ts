@@ -1,6 +1,6 @@
 "use server";
 
-import { and, count, desc, eq, like, or } from "drizzle-orm";
+import { and, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { invoices } from "@/db/schema";
@@ -115,7 +115,8 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
         filters?.search
           ? or(
               like(invoices.invoiceNumber, `%${filters.search}%`),
-              like(invoices.toJson, `%${filters.search}%`)
+              like(sql`json_extract(${invoices.toJson}, '$.name')`, `%${filters.search}%`),
+              like(sql`json_extract(${invoices.toJson}, '$.email')`, `%${filters.search}%`)
             )
           : undefined,
         filters?.status ? eq(invoices.status, filters.status) : undefined,
@@ -138,7 +139,8 @@ export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
         filters?.search
           ? or(
               like(invoices.invoiceNumber, `%${filters.search}%`),
-              like(invoices.toJson, `%${filters.search}%`)
+              like(sql`json_extract(${invoices.toJson}, '$.name')`, `%${filters.search}%`),
+              like(sql`json_extract(${invoices.toJson}, '$.email')`, `%${filters.search}%`)
             )
           : undefined,
         filters?.status ? eq(invoices.status, filters.status) : undefined,
