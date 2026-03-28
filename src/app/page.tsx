@@ -9,6 +9,7 @@ import { InvoicePreview } from "@/components/invoice-preview";
 import { InvoiceHistory } from "@/components/invoice-history";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
 import { saveInvoice } from "@/lib/storage";
+import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
 
 function defaultValues(): InvoiceFormValues {
@@ -42,7 +43,12 @@ export default function Home() {
   const invoice = form.watch() as Invoice;
 
   const handleSave = () => {
-    saveInvoice(form.getValues() as Invoice);
+    try {
+      saveInvoice(form.getValues() as Invoice);
+      toast.success("Invoice saved");
+    } catch {
+      toast.error("Failed to save invoice");
+    }
   };
 
   const handleLoad = (inv: Invoice) => {
