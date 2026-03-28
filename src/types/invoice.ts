@@ -1,4 +1,13 @@
-export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue" | "cancelled";
+export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue" | "cancelled" | "partial";
+
+export interface Payment {
+  id: string;
+  invoiceId: string;
+  amount: number;
+  paidAt: string;
+  method: string;
+  reference?: string;
+}
 
 export interface ContactInfo {
   name: string;
@@ -45,5 +54,6 @@ export interface Invoice {
   paidAt?: string;
   paidMethod?: "bank_transfer" | "cash" | "check" | "card" | "other";
   paidReference?: string;
+  payments?: Payment[];
 }
 

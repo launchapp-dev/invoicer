@@ -37,6 +37,7 @@ const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" 
   paid: "default",
   overdue: "destructive",
   cancelled: "outline",
+  partial: "outline",
 };
 
 interface DashboardTableProps {
