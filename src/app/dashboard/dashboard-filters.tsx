@@ -15,6 +15,15 @@ import { Button } from "@/components/ui/button";
 
 const STATUSES = ["draft", "sent", "paid", "overdue", "cancelled"] as const;
 
+const SORT_OPTIONS = [
+  { value: "date_desc", label: "Date: Newest first" },
+  { value: "date_asc", label: "Date: Oldest first" },
+  { value: "amount_desc", label: "Amount: High to low" },
+  { value: "amount_asc", label: "Amount: Low to high" },
+  { value: "status", label: "Status" },
+  { value: "client", label: "Client name: A–Z" },
+] as const;
+
 export function DashboardFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -24,13 +33,15 @@ export function DashboardFilters() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentStatus = searchParams.get("status") ?? "";
+  const currentSort = searchParams.get("sort") ?? "date_desc";
 
-  function buildUrl(newSearch: string, newStatus: string, newDateFrom: string, newDateTo: string) {
+  function buildUrl(newSearch: string, newStatus: string, newDateFrom: string, newDateTo: string, newSort: string) {
     const params = new URLSearchParams();
     if (newSearch) params.set("search", newSearch);
     if (newStatus) params.set("status", newStatus);
     if (newDateFrom) params.set("dateFrom", newDateFrom);
     if (newDateTo) params.set("dateTo", newDateTo);
+    if (newSort && newSort !== "date_desc") params.set("sort", newSort);
     const str = params.toString();
     return str ? `?${str}` : "";
   }
@@ -39,23 +50,27 @@ export function DashboardFilters() {
     setInputValue(value);
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
-      router.push(buildUrl(value, currentStatus, dateFrom, dateTo));
+      router.push(buildUrl(value, currentStatus, dateFrom, dateTo, currentSort));
     }, 300);
   }
 
   function handleStatusChange(value: string) {
     const newStatus = value === "all" ? "" : value;
-    router.push(buildUrl(inputValue, newStatus, dateFrom, dateTo));
+    router.push(buildUrl(inputValue, newStatus, dateFrom, dateTo, currentSort));
   }
 
   function handleDateFromChange(value: string) {
     setDateFrom(value);
-    router.push(buildUrl(inputValue, currentStatus, value, dateTo));
+    router.push(buildUrl(inputValue, currentStatus, value, dateTo, currentSort));
   }
 
   function handleDateToChange(value: string) {
     setDateTo(value);
-    router.push(buildUrl(inputValue, currentStatus, dateFrom, value));
+    router.push(buildUrl(inputValue, currentStatus, dateFrom, value, currentSort));
+  }
+
+  function handleSortChange(value: string) {
+    router.push(buildUrl(inputValue, currentStatus, dateFrom, dateTo, value));
   }
 
   function handleClear() {
@@ -65,7 +80,7 @@ export function DashboardFilters() {
     router.push("/dashboard");
   }
 
-  const hasFilters = inputValue || currentStatus || dateFrom || dateTo;
+  const hasFilters = inputValue || currentStatus || dateFrom || dateTo || (currentSort && currentSort !== "date_desc");
 
   return (
     <div className="flex flex-wrap items-end gap-2 mb-4">
@@ -111,6 +126,18 @@ export function DashboardFilters() {
           />
         </div>
       </div>
+      <SelectRoot value={currentSort} onValueChange={handleSortChange}>
+        <SelectTrigger className="w-48">
+          <SelectValue placeholder="Sort by" />
+        </SelectTrigger>
+        <SelectContent>
+          {SORT_OPTIONS.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value}>
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectRoot>
       {hasFilters && (
         <Button variant="ghost" size="sm" onClick={handleClear}>
           Clear
