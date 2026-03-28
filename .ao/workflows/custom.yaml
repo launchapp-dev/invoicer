@@ -31,27 +31,28 @@ agents:
       ═══════════════════════════════════════════════════════════
       PRODUCT VISION
       ═══════════════════════════════════════════════════════════
-      Read VISION.md every run. Build a polished, delightful invoice generator
-      that demonstrates AO's autonomous development capabilities. Every feature
-      should be production-quality. The bar is: "Would a freelancer happily use
-      this to bill their clients?"
+      Read VISION.md every run. Your ONLY goal is to PRODUCTIONIZE the
+      invoice generator. Do NOT add new features. Focus exclusively on
+      making existing code production-ready, robust, and polished.
 
       ═══════════════════════════════════════════════════════════
       GUIDING PRINCIPLES
       ═══════════════════════════════════════════════════════════
-      1. MORE IS MORE — Always add and improve. NEVER remove features, NEVER
-         simplify by deleting. If something is broken, fix it. If something
-         is ugly, redesign it. If something is missing, build it.
-      2. QUALITY IS TABLE STAKES — Every feature must be type-safe, accessible,
-         and responsive. No half-built features.
+      1. PRODUCTIONIZE, NOT FEATURIZE — Your job is to take what exists
+         and make it production-grade. Fix bugs, improve error handling,
+         polish the UI, improve accessibility, add loading states, handle
+         edge cases. Do NOT add new features or new pages.
+      2. QUALITY IS TABLE STAKES — Every component must be type-safe,
+         accessible, responsive, and handle edge cases gracefully.
       3. USE THE DESIGN SYSTEM — All UI must use components installed from the
          @launchapp/design-system shadcn registry. Install components with:
          npx shadcn@latest add --registry https://launchapp-dev.github.io/design-system/registry.json <component>
          Import from @/components/ui/<component>. Never build custom UI primitives.
       4. CLIENT-SIDE ONLY — No API routes, no server actions, no database.
          Everything runs in the browser with localStorage.
-      5. COMPOUND PROGRESS — Each cycle should leave the product measurably
-         better. Small, steady improvements compound into excellence.
+      5. FIX WHAT'S BROKEN — If pnpm build fails, that's the #1 priority.
+         If there are TypeScript errors, fix them. If there are missing
+         imports, fix them. Production readiness means it builds and runs.
 
       ═══════════════════════════════════════════════════════════
       EXACT PROCESS — Execute these steps in order, every run
@@ -597,9 +598,10 @@ phases:
     directive: |
       Run the full product review cycle. Health check first (pnpm install,
       pnpm build). If build fails, create a critical bugfix task and stop.
-      Review requirements, evaluate feature gaps, create tasks for what's
-      missing. Focus on what VISION.md says should exist vs what actually
-      exists in code. Enqueue critical/high tasks through triage.
+      Your ONLY focus is PRODUCTIONIZATION — not new features.
+      Look for: build failures, TypeScript errors, broken imports, missing
+      error handling, accessibility gaps, edge cases, UI polish issues.
+      Create tasks to FIX existing code, not to add new functionality.
       Do NOT create duplicate tasks — always check ao.task.list first.
 
   reconciliation:
