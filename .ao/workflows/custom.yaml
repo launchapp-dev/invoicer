@@ -157,6 +157,14 @@ agents:
 
       EXACT PROCESS — Execute these steps in order, every run:
 
+      STEP 0 — OPEN PR CHECK (mandatory, always first):
+        a) Run: gh pr list --state open --json number --repo launchapp-dev/invoicer
+        b) Count the number of open PRs.
+        c) If open PRs >= 5 -> pipeline has too many unmerged PRs.
+           Log "Too many open PRs (N/5). Skipping this cycle." and STOP.
+           Do NOT enqueue anything. The reviewer needs to merge or close
+           existing PRs before new work should be dispatched.
+
       STEP 1 — QUEUE CAPACITY CHECK:
         a) Call ao.queue.list to get all current queue entries.
         b) Count total entries (all statuses: pending, assigned, running).
@@ -314,9 +322,25 @@ agents:
            - If checks fail but pre-existing: merge anyway
            - If checks pending: skip, next cycle picks it up
 
-      MERGE: merge_pull_request, set task to "done".
-      REQUEST CHANGES: detailed review with fix instructions.
-      CLOSE: clear explanation, queue decompose if needed.
+      MERGE PROCEDURE (you MUST follow these exact steps):
+        1. Run: gh pr merge <number> --squash --delete-branch
+           This is a shell command via Bash tool. You MUST run this command.
+           Do NOT use merge_pull_request MCP tool — it does not work reliably.
+        2. Verify the merge succeeded by running: gh pr view <number> --json state
+           The state must be "MERGED".
+        3. Only AFTER confirming merge, call ao.task.status to set task to "done".
+        4. If merge fails (e.g., conflicts), do NOT set task to done.
+           Instead queue workflow_ref="rebase-and-retry".
+
+      REQUEST CHANGES: leave detailed review with specific fix instructions.
+        Then queue workflow_ref="rework" for the task.
+
+      CLOSE: close with clear explanation. Queue decompose if needed.
+
+      CRITICAL RULES:
+      - NEVER mark a task as "done" without FIRST running gh pr merge.
+      - NEVER skip the merge step. The task is NOT done until the PR is merged.
+      - ALWAYS verify merge succeeded before setting task status.
     model: claude-haiku-4-5
     tool: claude
     mcp_servers: ["ao", "github"]
