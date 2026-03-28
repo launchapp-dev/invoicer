@@ -21,7 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
-import { saveInvoice, getNextInvoiceNumber } from "@/lib/storage";
+import { saveInvoice, getNextInvoiceNumber, getMySettings } from "@/lib/storage";
 import { toast } from "@/components/ui/sonner";
 import { authClient } from "@/lib/auth-client";
 import type { Invoice } from "@/types/invoice";
@@ -67,13 +67,31 @@ export default function NewInvoicePage() {
 
   const { setValue } = form;
   useEffect(() => {
-    getNextInvoiceNumber()
-      .then((num) => {
-        setValue("invoiceNumber", num, { shouldDirty: false });
-      })
-      .catch(() => {
+    const init = async () => {
+      const [numResult, settingsResult] = await Promise.allSettled([
+        getNextInvoiceNumber(),
+        getMySettings(),
+      ]);
+      if (numResult.status === "fulfilled") {
+        setValue("invoiceNumber", numResult.value, { shouldDirty: false });
+      } else {
         toast.error("Could not auto-generate invoice number. Please enter one manually.");
-      });
+      }
+      if (settingsResult.status === "fulfilled" && settingsResult.value) {
+        const s = settingsResult.value;
+        if (s.businessName) setValue("from.name", s.businessName, { shouldDirty: false });
+        if (s.businessEmail) setValue("from.email", s.businessEmail, { shouldDirty: false });
+        if (s.businessAddress) setValue("from.address", s.businessAddress, { shouldDirty: false });
+        if (s.businessCity) setValue("from.city", s.businessCity, { shouldDirty: false });
+        if (s.businessState) setValue("from.state", s.businessState, { shouldDirty: false });
+        if (s.businessZip) setValue("from.zip", s.businessZip, { shouldDirty: false });
+        if (s.businessCountry) setValue("from.country", s.businessCountry, { shouldDirty: false });
+        setValue("currency", s.defaultCurrency, { shouldDirty: false });
+        setValue("taxRate", s.defaultTaxRate, { shouldDirty: false });
+        if (s.defaultNotes) setValue("notes", s.defaultNotes, { shouldDirty: false });
+      }
+    };
+    init();
   }, [setValue]);
 
   const invoice = form.watch() as Invoice;

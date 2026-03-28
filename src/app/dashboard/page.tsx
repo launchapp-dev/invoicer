@@ -79,6 +79,12 @@ export default async function DashboardPage({
           <span className="font-semibold text-sm">Invoicer</span>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">{session.user.email}</span>
+            <Link
+              href="/settings"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Settings
+            </Link>
             <LogoutButton />
           </div>
         </div>
