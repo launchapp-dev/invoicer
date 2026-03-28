@@ -126,16 +126,24 @@ agents:
         For each identified gap:
         a) DUPLICATE CHECK (CRITICAL — never skip):
            - Call ao.task.list to get ALL tasks (no status filter).
-           - Search titles AND descriptions for any task covering the same
-             scope, even partially. Be aggressive about matching:
-             * "Add auth" and "Set up Better Auth" = SAME
-             * "Invoice form" and "Build form with sender/recipient" = SAME
-             * "Fix build" and "Resolve TypeScript compilation errors" = SAME
-           - If a matching task exists in ANY status other than "cancelled",
-             SKIP creating a new one. This includes: backlog, ready,
-             in_progress, blocked, on_hold, done.
-           - When in doubt, do NOT create. It's better to skip a task than
-             to create a duplicate.
+           - For EACH existing task, ask yourself: "Does this existing task
+             cover the same AREA OF THE CODEBASE or the same USER-FACING
+             BEHAVIOR as the task I want to create?"
+           - Match by SCOPE and INTENT, not by exact title. Examples of
+             tasks that are THE SAME and must NOT be duplicated:
+             * "Add delete and duplicate actions to dashboard" =
+               "Add delete and duplicate to invoice table" =
+               "Dashboard needs delete/duplicate buttons"
+             * "Add auth" = "Set up Better Auth" = "Implement login/signup"
+             * "Fix build" = "Resolve TypeScript errors" = "Fix compilation"
+             * "Add search to dashboard" = "Add filter to invoice list"
+           - If a matching task exists in ANY status (backlog, ready,
+             in_progress, blocked, on_hold, done), SKIP.
+           - A task marked "done" still counts as a duplicate — do NOT
+             re-create work that was already attempted, even if the PR
+             wasn't merged. The reconciler handles unmerged work.
+           - When in doubt, do NOT create. It is ALWAYS better to skip
+             than to create a duplicate. Duplicates waste agent time.
         b) Call ao.task.create with:
            - A clear, action-oriented title (e.g., "Add line item management
              to invoice form")
