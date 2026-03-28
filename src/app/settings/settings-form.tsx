@@ -17,7 +17,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { saveMyBusinessProfile, saveMyInvoiceDefaults, saveMyLogoUrl, saveMyTheme } from "@/lib/storage";
+import { saveMyBusinessProfile, saveMyInvoiceDefaults, saveMyLogoUrl, saveMyTheme, saveMyBrandSettings } from "@/lib/storage";
 import type { userSettings } from "@/db/schema";
 
 type UserSettings = typeof userSettings.$inferSelect;
@@ -56,6 +56,11 @@ export function SettingsForm({ settings }: SettingsFormProps) {
   const [savingLogo, setSavingLogo] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark" | "system">(settings?.theme ?? "system");
   const [savingTheme, setSavingTheme] = useState(false);
+  const [brandColor, setBrandColor] = useState<string>(settings?.brandColor ?? "#2563eb");
+  const [brandFont, setBrandFont] = useState<"inter" | "roboto" | "playfair" | "merriweather">(
+    (settings?.brandFont as "inter" | "roboto" | "playfair" | "merriweather") ?? "inter"
+  );
+  const [savingBrand, setSavingBrand] = useState(false);
 
   const businessForm = useForm<BusinessProfileValues>({
     resolver: zodResolver(businessProfileSchema),
@@ -155,6 +160,18 @@ export function SettingsForm({ settings }: SettingsFormProps) {
       toast.error("Failed to save theme");
     } finally {
       setSavingTheme(false);
+    }
+  }
+
+  async function handleSaveBrandSettings() {
+    setSavingBrand(true);
+    try {
+      await saveMyBrandSettings({ brandColor, brandFont });
+      toast.success("Brand settings saved");
+    } catch {
+      toast.error("Failed to save brand settings");
+    } finally {
+      setSavingBrand(false);
     }
   }
 
@@ -310,6 +327,46 @@ export function SettingsForm({ settings }: SettingsFormProps) {
                 <SelectItem value="system">System</SelectItem>
               </SelectContent>
             </SelectRoot>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Brand &amp; Style</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="brandColor">Brand Color</Label>
+              <div className="flex items-center gap-3">
+                <input
+                  id="brandColor"
+                  type="color"
+                  value={brandColor}
+                  onChange={(e) => setBrandColor(e.target.value)}
+                  className="h-9 w-14 cursor-pointer rounded border border-input bg-transparent p-0.5"
+                />
+                <span className="text-sm font-mono text-muted-foreground">{brandColor}</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="brandFont">Invoice Font</Label>
+              <SelectRoot value={brandFont} onValueChange={(v) => setBrandFont(v as typeof brandFont)}>
+                <SelectTrigger id="brandFont">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="inter">Inter</SelectItem>
+                  <SelectItem value="roboto">Roboto</SelectItem>
+                  <SelectItem value="playfair">Playfair Display</SelectItem>
+                  <SelectItem value="merriweather">Merriweather</SelectItem>
+                </SelectContent>
+              </SelectRoot>
+            </div>
+            <Button onClick={handleSaveBrandSettings} disabled={savingBrand}>
+              {savingBrand ? "Saving…" : "Save Brand & Style"}
+            </Button>
           </div>
         </CardContent>
       </Card>

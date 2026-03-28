@@ -53,6 +53,8 @@ export default function PreviewInvoicePage() {
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
+  const [brandColor, setBrandColor] = useState<string>("#2563eb");
+  const [brandFont, setBrandFont] = useState<string>("inter");
 
   const [formAmount, setFormAmount] = useState("");
   const [formDate, setFormDate] = useState(new Date().toISOString().slice(0, 10));
@@ -65,7 +67,7 @@ export default function PreviewInvoicePage() {
     try {
       const { pdf } = await import("@react-pdf/renderer");
       const { InvoicePDF } = await import("@/components/invoice-pdf");
-      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} brandColor={brandColor} brandFont={brandFont} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -138,6 +140,8 @@ export default function PreviewInvoicePage() {
     getMySettings().then((s) => {
       if (s?.logoUrl) setLogoUrl(s.logoUrl);
       if (s?.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
+      if (s?.brandColor) setBrandColor(s.brandColor);
+      if (s?.brandFont) setBrandFont(s.brandFont);
     }).catch(() => {});
     loadInvoice(params.id)
       .then((data) => {
@@ -225,7 +229,7 @@ export default function PreviewInvoicePage() {
         </div>
       </header>
       <div className="p-6 max-w-3xl mx-auto space-y-4">
-        {invoice && <InvoicePreview invoice={invoice} hideDownload logoUrl={logoUrl} template={template} />}
+        {invoice && <InvoicePreview invoice={invoice} hideDownload logoUrl={logoUrl} template={template} brandColor={brandColor} />}
 
         {invoice && (
           <Card>

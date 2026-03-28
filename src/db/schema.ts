@@ -72,6 +72,8 @@ export const userSettings = sqliteTable("user_settings", {
   theme: text("theme", { enum: ["light", "dark", "system"] }).notNull().default("system"),
   invoiceTemplate: text("invoice_template", { enum: ["classic", "modern", "minimal"] }).notNull().default("classic"),
   businessTaxId: text("business_tax_id").notNull().default(""),
+  brandColor: text("brand_color").notNull().default("#2563eb"),
+  brandFont: text("brand_font", { enum: ["inter", "roboto", "playfair", "merriweather"] }).notNull().default("inter"),
   updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
 });
 

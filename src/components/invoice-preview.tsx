@@ -43,9 +43,10 @@ interface InvoicePreviewProps {
   logoUrl?: string;
   template?: InvoiceTemplate;
   attachmentCount?: number;
+  brandColor?: string;
 }
 
-export function InvoicePreview({ invoice, hideDownload = false, logoUrl, template = "classic", attachmentCount = 0 }: InvoicePreviewProps) {
+export function InvoicePreview({ invoice, hideDownload = false, logoUrl, template = "classic", attachmentCount = 0, brandColor = "#2563eb" }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
   const taxAmount = invoice.taxAmount;
   const total = calcTotal(subtotal, taxAmount, invoice.discount);
@@ -56,7 +57,7 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl, templat
     try {
       const { pdf } = await import("@react-pdf/renderer");
       const { InvoicePDF } = await import("@/components/invoice-pdf");
-      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} brandColor={brandColor} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -76,7 +77,7 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl, templat
   return (
     <Card className="shadow-xl border-border bg-card min-h-[700px] overflow-hidden">
       {isModern && (
-        <div className="bg-[#1a1a2e] px-8 py-7 flex items-end justify-between">
+        <div className="px-8 py-7 flex items-end justify-between" style={{ backgroundColor: brandColor }}>
           <div className="flex items-end gap-3">
             {logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -241,7 +242,7 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl, templat
             </div>
           )}
           <Separator className="w-56" />
-          <div className="flex justify-between w-56 font-semibold text-base">
+          <div className="flex justify-between w-56 font-semibold text-base" style={{ color: brandColor }}>
             <span>Total</span>
             <span>{formatCurrency(total, invoice.currency)}</span>
           </div>

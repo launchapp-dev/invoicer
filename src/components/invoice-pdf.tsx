@@ -1,4 +1,16 @@
-import { Document, Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
+
+Font.register({ family: "Inter", src: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff" });
+Font.register({ family: "Roboto", src: "https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Me5Q.ttf" });
+Font.register({ family: "Playfair Display", src: "https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKd3vXDXbtM.ttf" });
+Font.register({ family: "Merriweather", src: "https://fonts.gstatic.com/s/merriweather/v30/u-440qyriQwlOrhSvowK_l5-fCZM.ttf" });
+
+const FONT_FAMILY_MAP: Record<string, string> = {
+  inter: "Inter",
+  roboto: "Roboto",
+  playfair: "Playfair Display",
+  merriweather: "Merriweather",
+};
 import type { Invoice } from "@/types/invoice";
 import { formatCurrency, formatDate } from "@/lib/calculations";
 
@@ -461,13 +473,16 @@ interface InvoicePDFProps {
   invoice: Invoice;
   logoUrl?: string;
   template?: InvoiceTemplate;
+  brandColor?: string;
+  brandFont?: string;
 }
 
-function ClassicPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }) {
+function ClassicPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter" }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string }) {
+  const fontFamily = FONT_FAMILY_MAP[brandFont] ?? "Helvetica";
   const s = classicStyles;
   return (
     <Document>
-      <Page size="A4" style={s.page}>
+      <Page size="A4" style={[s.page, { fontFamily }]}>
         <View style={s.header}>
           <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
             {logoUrl ? (
@@ -564,8 +579,8 @@ function ClassicPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }
           )}
           <View style={s.totalsSeparator} />
           <View style={s.totalRow}>
-            <Text style={s.totalLabel}>Total</Text>
-            <Text style={s.totalValue}>{formatCurrency(invoice.total, invoice.currency)}</Text>
+            <Text style={[s.totalLabel, { color: brandColor }]}>Total</Text>
+            <Text style={[s.totalValue, { color: brandColor }]}>{formatCurrency(invoice.total, invoice.currency)}</Text>
           </View>
         </View>
 
@@ -583,12 +598,13 @@ function ClassicPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }
   );
 }
 
-function ModernPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }) {
+function ModernPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter" }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string }) {
+  const fontFamily = FONT_FAMILY_MAP[brandFont] ?? "Helvetica";
   const s = modernStyles;
   return (
     <Document>
-      <Page size="A4" style={s.page}>
-        <View style={s.accentHeader}>
+      <Page size="A4" style={[s.page, { fontFamily }]}>
+        <View style={[s.accentHeader, { backgroundColor: brandColor }]}>
           <View style={{ flexDirection: "row", alignItems: "flex-end", gap: 12 }}>
             {logoUrl ? (
               <Image src={logoUrl} style={{ height: 44, maxWidth: 110, objectFit: "contain" }} />
@@ -682,7 +698,7 @@ function ModernPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string })
               </View>
             )}
             <View style={{ marginTop: 8 }}>
-              <View style={s.totalRow}>
+              <View style={[s.totalRow, { backgroundColor: brandColor }]}>
                 <Text style={s.totalLabel}>Total</Text>
                 <Text style={s.totalValue}>{formatCurrency(invoice.total, invoice.currency)}</Text>
               </View>
@@ -704,11 +720,12 @@ function ModernPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string })
   );
 }
 
-function MinimalPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }) {
+function MinimalPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter" }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string }) {
+  const fontFamily = FONT_FAMILY_MAP[brandFont] ?? "Helvetica";
   const s = minimalStyles;
   return (
     <Document>
-      <Page size="A4" style={s.page}>
+      <Page size="A4" style={[s.page, { fontFamily }]}>
         <View style={s.header}>
           <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
             {logoUrl ? (
@@ -805,8 +822,8 @@ function MinimalPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }
           )}
           <View style={s.totalsSeparator} />
           <View style={s.totalRow}>
-            <Text style={s.totalLabel}>Total</Text>
-            <Text style={s.totalValue}>{formatCurrency(invoice.total, invoice.currency)}</Text>
+            <Text style={[s.totalLabel, { color: brandColor }]}>Total</Text>
+            <Text style={[s.totalValue, { color: brandColor }]}>{formatCurrency(invoice.total, invoice.currency)}</Text>
           </View>
         </View>
 
@@ -824,8 +841,8 @@ function MinimalPDF({ invoice, logoUrl }: { invoice: Invoice; logoUrl?: string }
   );
 }
 
-export function InvoicePDF({ invoice, logoUrl, template = "classic" }: InvoicePDFProps) {
-  if (template === "modern") return <ModernPDF invoice={invoice} logoUrl={logoUrl} />;
-  if (template === "minimal") return <MinimalPDF invoice={invoice} logoUrl={logoUrl} />;
-  return <ClassicPDF invoice={invoice} logoUrl={logoUrl} />;
+export function InvoicePDF({ invoice, logoUrl, template = "classic", brandColor = "#2563eb", brandFont = "inter" }: InvoicePDFProps) {
+  if (template === "modern") return <ModernPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} />;
+  if (template === "minimal") return <MinimalPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} />;
+  return <ClassicPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} />;
 }
