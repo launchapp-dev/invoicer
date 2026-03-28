@@ -161,7 +161,7 @@ export function InvoiceForm() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="currency">Currency</Label>
-            <SelectRoot value={currency} onValueChange={(val) => setValue("currency", val)}>
+            <SelectRoot value={currency} onValueChange={(val) => setValue("currency", val, { shouldDirty: true })}>
               <SelectTrigger id="currency">
                 <SelectValue placeholder="Select currency" />
               </SelectTrigger>
@@ -174,7 +174,7 @@ export function InvoiceForm() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="status">Status</Label>
-            <SelectRoot value={status} onValueChange={(val) => setValue("status", val as InvoiceFormValues["status"])}>
+            <SelectRoot value={status} onValueChange={(val) => setValue("status", val as InvoiceFormValues["status"], { shouldDirty: true })}>
               <SelectTrigger id="status">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
