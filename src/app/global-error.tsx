@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function GlobalError({
   error,
@@ -21,13 +22,7 @@ export default function GlobalError({
           <p className="mb-4 text-sm text-gray-500">
             A critical error occurred. Please try again.
           </p>
-          <button
-            onClick={reset}
-            className="rounded px-4 py-2 text-sm font-medium"
-            style={{ background: "hsl(var(--la-primary, 222 47% 11%))", color: "white" }}
-          >
-            Try again
-          </button>
+          <Button onClick={reset}>Try again</Button>
         </div>
       </body>
     </html>
