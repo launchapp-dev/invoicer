@@ -69,6 +69,7 @@ export const userSettings = sqliteTable("user_settings", {
   defaultNotes: text("default_notes").notNull().default(""),
   invoiceNumberPrefix: text("invoice_number_prefix").notNull().default("INV-"),
   logoUrl: text("logo_url").notNull().default(""),
+  theme: text("theme", { enum: ["light", "dark", "system"] }).notNull().default("system"),
   updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
 });
 
