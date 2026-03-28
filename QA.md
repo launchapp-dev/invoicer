@@ -6,7 +6,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-28 (run 4) |
+| Date | 2026-03-28 (run 5) |
 | Result | IN PROGRESS |
 | Steps Passed | TBD |
 | Duration | TBD |
@@ -72,6 +72,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Bulk select checkboxes appear
 - [ ] Bulk delete works
 - [ ] Bulk mark-as-sent works
+- [ ] Client filter dropdown works (filter by client name)
+- [ ] Currency filter dropdown works
 
 ### PDF Generation
 - [x] Generate PDF button exists
@@ -93,12 +95,16 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Uploaded logo renders in generated PDF
 - [ ] Dark mode toggle exists in settings
 - [ ] Dark mode toggle switches theme
+- [ ] Brand color customization field present in settings
+- [ ] Font customization field present in settings
+- [ ] Brand color applies to invoice PDF output
 
 ### Client Management
 - [x] /clients page loads and lists clients — **FIXED (TASK-239)**
 - [x] Create new client works — form saves, redirects to detail page
 - [x] /clients/[id] detail page loads with invoice history — shows total billed, outstanding, overdue stats and invoice table
 - [ ] Client autofill works when creating new invoice — **BLOCKED: missing packages (TASK-249) crash invoice form**
+- [ ] Client CSV import works (import clients from CSV file)
 
 ### Payment Recording
 - [ ] Mark invoice as paid with date, method, reference number
@@ -143,6 +149,40 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 ### Multi-Tax Rate
 - [ ] Multiple tax rates can be added per invoice
 - [ ] Each rate is labeled and calculated independently
+
+### File Attachments
+- [ ] File attachment button/area exists on invoice form
+- [ ] Can attach a file (contract, receipt, SOW) to an invoice
+- [ ] Attached file persists after saving invoice
+
+### Bulk CSV Export
+- [ ] Bulk CSV export button/option exists on dashboard
+- [ ] Exporting invoices downloads a CSV file
+- [ ] CSV contains correct invoice data
+
+### Expense Tracking
+- [ ] /expenses page loads
+- [ ] Can upload/add an expense
+- [ ] AI receipt extraction works (extracts vendor, amount, date from uploaded receipt)
+- [ ] Expenses linked to clients show in P&L view
+- [ ] Client P&L shows revenue minus expenses
+
+### AI Cash Flow Forecasting
+- [ ] Cash flow forecasting widget appears on dashboard
+- [ ] Widget shows "Expected this month" vs "At risk" breakdown
+
+### AI Payment Reminders
+- [ ] AI payment reminder feature accessible for overdue invoices
+- [ ] AI draft reminder message generated for overdue invoice
+
+### Natural Language AI Search
+- [ ] Natural language search input present on dashboard
+- [ ] Searching "unpaid invoices" returns filtered results
+
+### Invoice Templates
+- [ ] /settings/templates page loads
+- [ ] Multiple invoice templates available for selection
+- [ ] Selecting a template applies to invoice preview/PDF
 
 ## Environment Notes
 
