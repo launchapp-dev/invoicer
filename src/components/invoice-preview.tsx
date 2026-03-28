@@ -28,9 +28,10 @@ const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destr
 
 interface InvoicePreviewProps {
   invoice: Invoice;
+  hideDownload?: boolean;
 }
 
-export function InvoicePreview({ invoice }: InvoicePreviewProps) {
+export function InvoicePreview({ invoice, hideDownload = false }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
   const taxAmount = calcTaxAmount(subtotal, invoice.taxRate);
   const total = calcTotal(subtotal, taxAmount, invoice.discount);
@@ -79,11 +80,13 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
           </div>
         </div>
 
-        <div className="flex justify-end">
-          <Button onClick={handleDownload} disabled={downloading} size="sm">
-            {downloading ? "Generating…" : "Download PDF"}
-          </Button>
-        </div>
+        {!hideDownload && (
+          <div className="flex justify-end">
+            <Button onClick={handleDownload} disabled={downloading} size="sm">
+              {downloading ? "Generating…" : "Download PDF"}
+            </Button>
+          </div>
+        )}
 
         <Separator />
 

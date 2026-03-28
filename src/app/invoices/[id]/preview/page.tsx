@@ -19,6 +19,27 @@ export default function PreviewInvoicePage() {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
+  async function handleDownload() {
+    if (!invoice) return;
+    setDownloading(true);
+    try {
+      const { pdf } = await import("@react-pdf/renderer");
+      const { InvoicePDF } = await import("@/components/invoice-pdf");
+      const blob = await pdf(<InvoicePDF invoice={invoice} />).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${invoice.invoiceNumber || "invoice"}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      toast.error("Failed to generate PDF");
+    } finally {
+      setDownloading(false);
+    }
+  }
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -99,11 +120,16 @@ export default function PreviewInvoicePage() {
             <Button variant="outline" asChild>
               <Link href={`/invoices/${params?.id}`}>Back to Edit</Link>
             </Button>
+            {invoice && (
+              <Button onClick={handleDownload} disabled={downloading}>
+                {downloading ? "Generating…" : "Download PDF"}
+              </Button>
+            )}
           </div>
         </div>
       </header>
       <div className="p-6 max-w-3xl mx-auto">
-        {invoice && <InvoicePreview invoice={invoice} />}
+        {invoice && <InvoicePreview invoice={invoice} hideDownload />}
       </div>
     </div>
   );
