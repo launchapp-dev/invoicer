@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { Moon, Sun } from "lucide-react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -35,6 +37,23 @@ function defaultValues(): InvoiceFormValues {
 }
 
 export default function Home() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const dark = stored === "dark" || (!stored && prefersDark);
+    document.documentElement.classList.toggle("dark", dark);
+    setIsDark(dark);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+    setIsDark(next);
+  };
+
   const form = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: defaultValues(),
@@ -74,6 +93,9 @@ export default function Home() {
         <div className="flex items-center justify-between px-6 py-3">
           <h1 className="text-lg font-semibold">Invoicer</h1>
           <div className="flex gap-2">
+            <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
+              {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
             <Button variant="outline" onClick={handleNew}>New</Button>
             <InvoiceHistory onLoad={handleLoad} onDuplicate={handleDuplicate} />
             <Button onClick={handleSave}>Save Invoice</Button>
