@@ -66,9 +66,13 @@ export default function NewInvoicePage() {
 
   const { setValue } = form;
   useEffect(() => {
-    getNextInvoiceNumber().then((num) => {
-      setValue("invoiceNumber", num, { shouldDirty: false });
-    }).catch(() => {});
+    getNextInvoiceNumber()
+      .then((num) => {
+        setValue("invoiceNumber", num, { shouldDirty: false });
+      })
+      .catch(() => {
+        toast.error("Could not auto-generate invoice number. Please enter one manually.");
+      });
   }, [setValue]);
 
   const invoice = form.watch() as Invoice;
