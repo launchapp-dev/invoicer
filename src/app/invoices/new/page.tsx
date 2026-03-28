@@ -22,7 +22,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
-import { saveInvoice, getNextInvoiceNumber, getMySettings } from "@/lib/storage";
+import { saveInvoice, getNextInvoiceNumber, getMySettings, listClients } from "@/lib/storage";
+import type { Client } from "@/types/client";
 import { createRecurringInvoice } from "@/lib/recurring-actions";
 import { toast } from "@/components/ui/sonner";
 import { authClient } from "@/lib/auth-client";
@@ -77,6 +78,7 @@ function NewInvoicePageContent() {
   const { data: session, isPending } = authClient.useSession();
   const [savedId, setSavedId] = useState<string | null>(null);
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
+  const [clients, setClients] = useState<Client[]>([]);
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -92,9 +94,10 @@ function NewInvoicePageContent() {
   const { setValue } = form;
   useEffect(() => {
     const init = async () => {
-      const [numResult, settingsResult] = await Promise.allSettled([
+      const [numResult, settingsResult, clientsResult] = await Promise.allSettled([
         getNextInvoiceNumber(),
         getMySettings(),
+        listClients(),
       ]);
       if (numResult.status === "fulfilled") {
         setValue("invoiceNumber", numResult.value, { shouldDirty: false });
@@ -113,6 +116,10 @@ function NewInvoicePageContent() {
         setValue("currency", s.defaultCurrency, { shouldDirty: false });
         setValue("taxRate", s.defaultTaxRate, { shouldDirty: false });
         if (s.defaultNotes) setValue("notes", s.defaultNotes, { shouldDirty: false });
+      }
+
+      if (clientsResult.status === "fulfilled") {
+        setClients(clientsResult.value);
       }
 
       const prefillParam = searchParams.get("prefill");
@@ -270,7 +277,7 @@ function NewInvoicePageContent() {
           </div>
           <TabsContent value="form" className="mt-0 p-4">
             <FormProvider {...form}>
-              <InvoiceForm />
+              <InvoiceForm clients={clients} />
             </FormProvider>
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">

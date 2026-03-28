@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,10 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectRoot, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Combobox } from "@/components/ui/combobox";
 import { InvoiceTotals } from "@/components/invoice-totals";
 import { calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
 import { LineItems } from "@/components/line-items";
 import { RECURRING_FREQUENCIES, type InvoiceFormValues } from "@/lib/invoice-schema";
+import type { Client } from "@/types/client";
 
 const STATUSES = [
   { value: "draft", label: "Draft" },
@@ -34,15 +36,49 @@ const CURRENCIES = [
   { code: "AED", label: "AED — UAE Dirham" },
 ];
 
-function ContactSection({ prefix, title }: { prefix: "from" | "to"; title: string }) {
-  const { register, formState: { errors } } = useFormContext<InvoiceFormValues>();
+function ContactSection({ prefix, title, clients }: { prefix: "from" | "to"; title: string; clients?: Client[] }) {
+  const { register, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
+  const [selectedClientId, setSelectedClientId] = useState<string>("");
   const e = errors[prefix];
+
+  const clientOptions = (clients ?? []).map((c) => ({
+    value: c.id,
+    label: c.name + (c.email ? ` (${c.email})` : ""),
+  }));
+
+  function handleClientSelect(clientId: string) {
+    setSelectedClientId(clientId);
+    const client = (clients ?? []).find((c) => c.id === clientId);
+    if (client) {
+      setValue(`${prefix}.name`, client.name, { shouldDirty: true });
+      setValue(`${prefix}.email`, client.email, { shouldDirty: true });
+      setValue(`${prefix}.address`, client.address, { shouldDirty: true });
+      setValue(`${prefix}.city`, client.city, { shouldDirty: true });
+      setValue(`${prefix}.state`, client.state, { shouldDirty: true });
+      setValue(`${prefix}.zip`, client.zip, { shouldDirty: true });
+      setValue(`${prefix}.country`, client.country, { shouldDirty: true });
+    }
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
+        {prefix === "to" && (
+          <div className="grid gap-2">
+            <Label>Select client (optional)</Label>
+            <Combobox
+              options={clientOptions}
+              value={selectedClientId}
+              onValueChange={handleClientSelect}
+              placeholder="Select a saved client…"
+              searchPlaceholder="Search by name or email…"
+              emptyText="No clients saved yet"
+            />
+          </div>
+        )}
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.name`}>Name</Label>
           <Input
@@ -103,7 +139,7 @@ const FREQUENCY_LABELS: Record<string, string> = {
   annually: "Annually",
 };
 
-export function InvoiceForm() {
+export function InvoiceForm({ clients }: { clients?: Client[] }) {
   const { register, control, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
 
   const lineItems = watch("lineItems");
@@ -203,7 +239,7 @@ export function InvoiceForm() {
 
       <div className="grid gap-6 sm:grid-cols-2">
         <ContactSection prefix="from" title="From" />
-        <ContactSection prefix="to" title="Bill To" />
+        <ContactSection prefix="to" title="Bill To" clients={clients} />
       </div>
 
       <Card>
