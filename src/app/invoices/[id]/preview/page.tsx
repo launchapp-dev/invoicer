@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { loadInvoice } from "@/lib/storage";
@@ -130,7 +132,36 @@ export default function PreviewInvoicePage() {
           </div>
         </div>
       </header>
-      <div className="p-6 max-w-3xl mx-auto">
+      <div className="p-6 max-w-3xl mx-auto space-y-4">
+        {invoice?.paidAt && (
+          <Card>
+            <CardContent className="pt-4 pb-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge variant="default">Payment Recorded</Badge>
+                <Separator orientation="vertical" className="h-4" />
+                <span className="text-sm text-muted-foreground">
+                  Date: <span className="text-foreground font-medium">{invoice.paidAt}</span>
+                </span>
+                {invoice.paidMethod && (
+                  <>
+                    <Separator orientation="vertical" className="h-4" />
+                    <span className="text-sm text-muted-foreground">
+                      Method: <span className="text-foreground font-medium capitalize">{invoice.paidMethod.replace("_", " ")}</span>
+                    </span>
+                  </>
+                )}
+                {invoice.paidReference && (
+                  <>
+                    <Separator orientation="vertical" className="h-4" />
+                    <span className="text-sm text-muted-foreground">
+                      Reference: <span className="text-foreground font-medium">{invoice.paidReference}</span>
+                    </span>
+                  </>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
         {invoice && <InvoicePreview invoice={invoice} hideDownload />}
       </div>
     </div>
