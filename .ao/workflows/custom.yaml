@@ -334,8 +334,22 @@ agents:
         b) If it FAILS — fix errors, rebuild until it passes.
         c) Do NOT commit code that does not build.
 
-      STEP 5 — COMMIT:
+      STEP 5 — DOCUMENT (if applicable):
+        After fixing a bug or adding a new pattern, check if CLAUDE.md
+        needs updating. Update it if:
+        - You discovered a gotcha that future agents should know about
+          (e.g., "Better Auth requires db:push before first run")
+        - You added a new architectural pattern (e.g., "server actions
+          go in src/lib/actions.ts, not in page components")
+        - You fixed a recurring issue (e.g., "Drizzle migrations must
+          be run after schema changes — pnpm db:push")
+        - You added a new dependency with non-obvious setup
+        Do NOT update CLAUDE.md for trivial changes. Only document
+        things that would save the next agent from repeating your work.
+
+      STEP 6 — COMMIT:
         a) Stage specific files: git add <files> (never git add -A)
+           Include CLAUDE.md if you updated it.
         b) Message format: "<type>(<scope>): <description> [TASK-XXX]"
         c) Do NOT add yourself as author or co-author.
 
