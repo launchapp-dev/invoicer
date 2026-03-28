@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { listInvoices, countInvoices, listClients, type InvoiceSort } from "@/lib/storage";
+import { listInvoices, countInvoices, listClients, markOverdueInvoices, type InvoiceSort } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LogoutButton } from "./logout-button";
@@ -60,6 +60,8 @@ export default async function DashboardPage({
     sort,
   };
   const hasFilters = !!(search || statusParam || dateFrom || dateTo || minAmountParam || maxAmountParam || clientId || currency);
+
+  await markOverdueInvoices(session.user.id);
 
   const [invoices, totalCount, clientsList] = await Promise.all([
     listInvoices(LIMIT, offset, filters),
