@@ -52,15 +52,23 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
 
 export async function getNextInvoiceNumber(): Promise<string> {
   const userId = await getCurrentUserId();
+  const settings = await getUserSettings(userId);
+  const prefix = settings?.invoiceNumberPrefix || "INV-";
   const [row] = await db
     .select({ invoiceNumber: invoices.invoiceNumber })
     .from(invoices)
-    .where(and(eq(invoices.userId, userId), like(invoices.invoiceNumber, "INV-%")))
+    .where(and(eq(invoices.userId, userId), like(invoices.invoiceNumber, escapeLike(prefix) + "%")))
     .orderBy(desc(sql`length(${invoices.invoiceNumber})`), desc(invoices.invoiceNumber))
     .limit(1);
-  const match = row?.invoiceNumber.match(/^INV-(\d+)$/);
+  const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = row?.invoiceNumber.match(new RegExp(`^${escapedPrefix}(\\d+)$`));
   const max = match ? parseInt(match[1], 10) : 0;
-  return `INV-${String(max + 1).padStart(3, "0")}`;
+  return `${prefix}${String(max + 1).padStart(3, "0")}`;
+}
+
+export async function getMySettings(): Promise<typeof userSettings.$inferSelect | null> {
+  const userId = await getCurrentUserId();
+  return getUserSettings(userId);
 }
 
 export async function saveInvoice(invoice: Invoice): Promise<void> {
