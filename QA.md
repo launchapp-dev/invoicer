@@ -6,22 +6,25 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | — |
-| Result | — |
-| Steps Passed | —/6 |
-| Duration | — |
-| Console Errors | — |
-| Network Errors | — |
+| Date | 2026-03-28 |
+| Result | PARTIAL PASS (2 bugs found) |
+| Steps Passed | 5/6 (Step 5 partial — /clients 404) |
+| Duration | ~10 min |
+| Console Errors | 1 (GET /clients 404) |
+| Network Errors | 1 (GET /clients 404) |
 
 ## Test Results History
 
 <!-- QA agent: append each run result here. Format: | Date | Passed | Failed | Bugs Created | Notes | -->
 | Date | Passed | Failed | Bugs Created | Notes |
 |------|--------|--------|-------------|-------|
+| 2026-03-28 | 5 | 2 | 2 | /clients 404; AI command bar missing from dashboard |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
+- **[2026-03-28] /clients returns 404** — Client management page not found. TASK-227 (build /clients page) is marked done but the route does not exist at runtime. Blocks all client management tests.
+- **[2026-03-28] AI command bar missing from dashboard** — TASK-234 (AI smart invoice creation via natural language command bar) is marked done but no command bar or natural language input is visible on the dashboard.
 
 ## Regression Tracker
 
@@ -32,51 +35,79 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 ## Test Coverage
 
 ### Auth Flow
-- [ ] Landing page loads without errors
-- [ ] Signup with email/password works
-- [ ] Login with existing credentials works
-- [ ] Protected routes redirect to login when unauthenticated
-- [ ] Logout redirects to landing/login
+- [x] Landing page loads without errors
+- [x] Signup with email/password works
+- [x] Login with existing credentials works
+- [x] Protected routes redirect to login when unauthenticated
+- [x] Logout redirects to landing/login
 - [ ] Duplicate signup shows appropriate error
+- [x] Google OAuth button present on login/signup pages
+- [x] GitHub OAuth button present on login/signup pages
 
 ### Invoice Creation
-- [ ] New invoice form loads
-- [ ] Sender info fields work
-- [ ] Recipient info fields work
-- [ ] Add line item works
+- [x] New invoice form loads
+- [x] Sender info fields work
+- [x] Recipient info fields work
+- [x] Add line item works
 - [ ] Remove line item works
-- [ ] Auto-calculations update in real-time
-- [ ] Save invoice succeeds
-- [ ] Saved invoice appears in dashboard
+- [x] Auto-calculations update in real-time
+- [x] Save invoice succeeds
+- [x] Saved invoice appears in dashboard
 
 ### Invoice Dashboard
-- [ ] Dashboard loads with invoice list
+- [x] Dashboard loads with invoice list
 - [ ] Search works
 - [ ] Status filter works
 - [ ] Edit invoice navigates correctly
 - [ ] Delete invoice with confirmation works
 - [ ] Duplicate invoice works
+- [x] Quick stats show total outstanding, paid this month, overdue amount
 
 ### PDF Generation
-- [ ] Generate PDF button exists
-- [ ] PDF downloads without errors
+- [x] Generate PDF button exists
+- [x] PDF downloads without errors
 - [ ] PDF contains correct invoice data
 
 ### Live Preview
-- [ ] Preview updates as form is edited
-- [ ] Preview shows sender/recipient info
-- [ ] Preview shows line items and totals
+- [x] Preview updates as form is edited
+- [x] Preview shows sender/recipient info
+- [x] Preview shows line items and totals
+
+### Settings
+- [x] Settings page loads at /settings
+- [x] Business profile fields (name, address, logo, tax ID) render
+- [x] Invoice defaults section renders (payment terms, tax rate, notes)
+- [ ] Settings pre-fill new invoice form with saved defaults
+
+### Client Management
+- [ ] /clients page loads and lists clients — **FAIL: 404**
+- [ ] Create new client works
+- [ ] /clients/[id] detail page loads with invoice history
+- [ ] Client autofill works when creating new invoice
+
+### Payment Recording
+- [ ] Mark invoice as paid with date, method, reference number
+- [ ] Paid status is reflected in dashboard
+
+### Recurring Invoices
+- [x] Recurring invoice schedule UI is accessible (/dashboard/recurring loads)
+- [ ] Can set up a recurring invoice (weekly/monthly/etc.)
+
+### AI Smart Invoice Creation
+- [ ] Command bar or natural language input exists on dashboard — **FAIL: not found**
+- [ ] AI-assisted invoice creation does not throw errors
 
 ### Navigation
-- [ ] All nav links work (no 404s)
+- [ ] All nav links work (no 404s) — **PARTIAL: /clients is 404**
 - [ ] Mobile navigation works
 - [ ] Back/forward browser buttons work
+- [x] Settings nav link present in authenticated layout
 
 ### Console & Network
-- [ ] No console.error messages
-- [ ] No uncaught exceptions
-- [ ] No failed network requests (4xx/5xx)
-- [ ] No CORS errors
+- [x] No console.error messages
+- [x] No uncaught exceptions
+- [ ] No failed network requests (4xx/5xx) — **PARTIAL: /clients returns 404**
+- [x] No CORS errors
 
 ## Environment Notes
 
