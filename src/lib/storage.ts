@@ -434,3 +434,18 @@ export async function deleteClient(id: string): Promise<void> {
     .delete(clients)
     .where(and(eq(clients.id, id), eq(clients.userId, userId)));
 }
+
+export async function getClientInvoices(clientName: string): Promise<Invoice[]> {
+  const userId = await getCurrentUserId();
+  const rows = await db
+    .select()
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.userId, userId),
+        sql`json_extract(${invoices.toJson}, '$.name') = ${clientName}`
+      )
+    )
+    .orderBy(desc(invoices.issueDate));
+  return rows.map(rowToInvoice);
+}
