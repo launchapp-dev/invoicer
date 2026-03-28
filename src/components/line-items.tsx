@@ -44,7 +44,11 @@ export function LineItems() {
             <div key={field.id} className="grid grid-cols-[1fr_100px_100px_100px_44px] gap-2 items-end mb-2">
               <div className="grid gap-1">
                 {index === 0 && <Label>Description</Label>}
-                <Input {...register(`lineItems.${index}.description`)} placeholder="Item description" />
+                <Input
+                  {...register(`lineItems.${index}.description`)}
+                  placeholder="Item description"
+                  aria-label={index > 0 ? `Line item ${index + 1} description` : undefined}
+                />
               </div>
               <div className="grid gap-1">
                 {index === 0 && <Label>Qty</Label>}
@@ -54,6 +58,7 @@ export function LineItems() {
                   step="0.01"
                   value={lineItems[index]?.quantity ?? field.quantity}
                   onChange={(e) => handleLineChange(index, "quantity", e.target.value)}
+                  aria-label={index > 0 ? `Line item ${index + 1} quantity` : undefined}
                 />
               </div>
               <div className="grid gap-1">
@@ -64,6 +69,7 @@ export function LineItems() {
                   step="0.01"
                   value={lineItems[index]?.rate ?? field.rate}
                   onChange={(e) => handleLineChange(index, "rate", e.target.value)}
+                  aria-label={index > 0 ? `Line item ${index + 1} rate` : undefined}
                 />
               </div>
               <div className="grid gap-1">
