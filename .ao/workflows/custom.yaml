@@ -704,8 +704,20 @@ phases:
     mode: agent
     agent: reviewer
     directive: |
-      Review the PR. Check CI status first. Merge if no blocking issues.
-      Request changes with specific fix instructions if blocking issues found.
+      Review the PR. Check CI status first.
+      If no blocking issues: leave an APPROVED review via gh pr review --approve.
+      If blocking issues: leave a CHANGES_REQUESTED review via gh pr review --request-changes.
+      Do NOT merge the PR yourself — the verify-pr phase handles merging.
+      Do NOT mark the task as done — verify-pr handles that too.
+
+  verify-pr:
+    mode: command
+    directive: Check PR review state, merge if approved, queue rework if changes requested
+    command:
+      program: bash
+      args: ["scripts/verify-pr.sh"]
+      cwd_mode: task_root
+      timeout_secs: 120
 
   rebase-on-main:
     mode: agent
@@ -790,7 +802,7 @@ phases:
 workflows:
   - id: standard
     name: Standard Task Workflow
-    description: Implement -> Install -> Build -> Lint -> Push -> PR -> Review
+    description: Implement -> Install -> Build -> Lint -> Push -> PR -> Review -> Verify
     phases:
       - implementation
       - install-deps
@@ -798,10 +810,8 @@ workflows:
       - lint-check
       - push-branch
       - create-pr
-      - pr-review:
-          on_verdict:
-            rework:
-              target: implementation
+      - pr-review
+      - verify-pr
 
   - id: quick-fix
     name: Quick Fix
@@ -812,10 +822,8 @@ workflows:
       - build-check
       - push-branch
       - create-pr
-      - pr-review:
-          on_verdict:
-            rework:
-              target: implementation
+      - pr-review
+      - verify-pr
 
   - id: triage
     name: Task Triage
@@ -830,6 +838,7 @@ workflows:
       - address-review
       - force-push
       - pr-review
+      - verify-pr
 
   - id: rebase-and-retry
     name: Rebase and Retry
@@ -838,6 +847,7 @@ workflows:
       - rebase-on-main
       - force-push
       - pr-review
+      - verify-pr
 
   - id: decompose
     name: Task Decomposition
@@ -865,9 +875,10 @@ workflows:
 
   - id: pr-reviewer
     name: PR Review and Merge
-    description: Review a PR, merge if clean, request changes if not
+    description: Review a PR, then verify-pr merges or routes to rework
     phases:
       - pr-review
+      - verify-pr
 
   - id: pr-scan
     name: PR Scan
