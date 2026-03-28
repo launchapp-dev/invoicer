@@ -17,6 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
@@ -117,7 +118,19 @@ export default function NewInvoicePage() {
   }
 
   if (isPending || !session) {
-    return <div className="min-h-screen bg-background" />;
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
+          <div className="flex items-center justify-between px-6 py-3">
+            <Skeleton className="h-6 w-32" />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-9 w-24" />
+              <Skeleton className="h-9 w-28" />
+            </div>
+          </div>
+        </header>
+      </div>
+    );
   }
 
   return (
