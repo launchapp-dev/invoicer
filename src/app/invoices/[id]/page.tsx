@@ -54,16 +54,23 @@ export default function EditInvoicePage() {
 
   useEffect(() => {
     if (!session || !params?.id) return;
-    loadInvoice(params.id).then((data) => {
-      if (!data) {
-        setNotFound(true);
+    loadInvoice(params.id)
+      .then((data) => {
+        if (!data) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+        form.reset(data as InvoiceFormValues);
         setLoading(false);
-        return;
-      }
-      form.reset(data as InvoiceFormValues);
-      setLoading(false);
-    });
-  }, [session, params?.id, form]);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+        toast.error("Failed to load invoice");
+        router.replace("/dashboard");
+      });
+  }, [session, params?.id, form, router]);
 
   const handleSave = form.handleSubmit(async (values) => {
     try {
