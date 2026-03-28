@@ -716,7 +716,7 @@ phases:
     command:
       program: bash
       args: ["scripts/verify-pr.sh"]
-      cwd_mode: task_root
+      cwd_mode: project_root
       timeout_secs: 120
 
   rebase-on-main:
