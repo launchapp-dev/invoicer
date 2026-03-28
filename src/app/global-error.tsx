@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function GlobalError({
   error,
@@ -17,13 +18,17 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body className="flex min-h-screen items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-lg border p-6 shadow-sm">
-          <h2 className="mb-2 text-lg font-semibold">Something went wrong</h2>
-          <p className="mb-4 text-sm text-gray-500">
-            A critical error occurred. Please try again.
-          </p>
-          <Button onClick={reset}>Try again</Button>
-        </div>
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Something went wrong</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <p className="text-sm text-muted-foreground">
+              A critical error occurred. Please try again.
+            </p>
+            <Button onClick={reset}>Try again</Button>
+          </CardContent>
+        </Card>
       </body>
     </html>
   );
