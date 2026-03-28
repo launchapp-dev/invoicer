@@ -23,7 +23,7 @@ Users sign up, create invoices via a form (sender, recipient, line items, tax, n
 - **Framework**: Next.js 15 (App Router)
 - **UI**: @launchapp/design-system shadcn registry — install components via `npx shadcn@latest add --registry https://launchapp-dev.github.io/design-system/registry.json <component>`
 - **Styling**: Tailwind CSS v4
-- **Auth**: Better Auth (or NextAuth) for authentication
+- **Auth**: Better Auth for authentication
 - **Database**: SQLite via Drizzle ORM (simple, no external infra needed for dev)
 - **PDF**: @react-pdf/renderer for client-side PDF generation
 - **State**: React Hook Form + Zod for form validation

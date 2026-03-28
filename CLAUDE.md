@@ -11,7 +11,7 @@ A SaaS invoice generator. Users sign up, create invoices, see a live preview, an
 - **Next.js 15** — App Router, TypeScript, `src/` directory
 - **@launchapp/design-system** — shadcn registry with Radix UI primitives and `--la-*` CSS tokens
 - **Tailwind CSS v4** — Styling
-- **Auth**: Better Auth (or NextAuth) — email/password signup/login, session management
+- **Auth**: Better Auth — email/password signup/login, session management
 - **Database**: SQLite + Drizzle ORM — invoices stored per-user
 - **React Hook Form + Zod** — Form state and validation
 - **@react-pdf/renderer** — Client-side PDF generation

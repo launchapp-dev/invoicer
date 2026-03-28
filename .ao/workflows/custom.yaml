@@ -51,8 +51,7 @@ agents:
          @launchapp/design-system shadcn registry. Install components with:
          npx shadcn@latest add --registry https://launchapp-dev.github.io/design-system/registry.json <component>
          Import from @/components/ui/<component>. Never build custom UI primitives.
-      4. SAAS ARCHITECTURE — This is a SaaS app with auth (Better Auth or
-         NextAuth), database (SQLite + Drizzle ORM), server actions for CRUD,
+      4. SAAS ARCHITECTURE — This is a SaaS app with auth (Better Auth), database (SQLite + Drizzle ORM), server actions for CRUD,
          and protected routes. Invoices are stored per-user in the database.
       5. FIX WHAT'S BROKEN — If pnpm build fails, that's the #1 priority.
          If there are TypeScript errors, fix them. If there are missing
