@@ -15,6 +15,7 @@ export function LineItems() {
 
   const lineItems = watch("lineItems");
   const taxRate = watch("taxRate");
+  const discount = watch("discount");
 
   const handleLineChange = (index: number, field: "quantity" | "rate", value: string) => {
     const num = parseFloat(value) || 0;
@@ -32,7 +33,7 @@ export function LineItems() {
     const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
     setValue("subtotal", subtotal);
     setValue("taxAmount", taxAmount);
-    setValue("total", calcTotal(subtotal, taxAmount));
+    setValue("total", calcTotal(subtotal, taxAmount, discount || 0));
   };
 
   return (
@@ -86,7 +87,7 @@ export function LineItems() {
                   const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
                   setValue("subtotal", subtotal);
                   setValue("taxAmount", taxAmount);
-                  setValue("total", calcTotal(subtotal, taxAmount));
+                  setValue("total", calcTotal(subtotal, taxAmount, discount || 0));
                 }}
                 aria-label={`Remove line item ${index + 1}`}
                 disabled={fields.length === 1}
