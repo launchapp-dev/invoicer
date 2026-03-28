@@ -199,6 +199,16 @@ export function InvoiceForm() {
         </CardHeader>
         <CardContent className="grid gap-4">
           <LineItems />
+          {errors.lineItems?.root?.message && (
+            <p role="alert" className="text-xs text-destructive">
+              {errors.lineItems.root.message}
+            </p>
+          )}
+          {errors.lineItems?.message && (
+            <p role="alert" className="text-xs text-destructive">
+              {errors.lineItems.message}
+            </p>
+          )}
         </CardContent>
       </Card>
 
