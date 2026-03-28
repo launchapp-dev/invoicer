@@ -13,7 +13,7 @@ import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { InvoiceHistory } from "@/components/invoice-history";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
-import { saveInvoice } from "@/lib/storage";
+import { saveInvoice, duplicateInvoice } from "@/lib/storage";
 import { toast } from "@/components/ui/sonner";
 import { authClient } from "@/lib/auth-client";
 import type { Invoice } from "@/types/invoice";
@@ -103,13 +103,16 @@ export default function Home() {
     form.reset(inv as InvoiceFormValues);
   };
 
-  const handleDuplicate = (inv: Invoice) => {
-    form.reset({
-      ...(inv as InvoiceFormValues),
-      id: crypto.randomUUID(),
-      invoiceNumber: `INV-${Date.now()}`,
-      status: "draft",
-    });
+  const handleDuplicate = async (inv: Invoice) => {
+    try {
+      const copy = await duplicateInvoice(inv.id);
+      if (copy) {
+        form.reset(copy as InvoiceFormValues);
+        toast.success("Invoice duplicated");
+      }
+    } catch {
+      toast.error("Failed to duplicate invoice");
+    }
   };
 
   if (isPending || !session) {

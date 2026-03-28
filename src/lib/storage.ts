@@ -104,3 +104,38 @@ export async function deleteInvoice(id: string): Promise<void> {
     .delete(invoices)
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
 }
+
+export async function duplicateInvoice(id: string): Promise<Invoice | null> {
+  const userId = await getCurrentUserId();
+  const [row] = await db
+    .select()
+    .from(invoices)
+    .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
+  if (!row) return null;
+  const now = new Date().toISOString();
+  const newId = crypto.randomUUID();
+  await db.insert(invoices).values({
+    id: newId,
+    userId,
+    invoiceNumber: `${row.invoiceNumber}-copy`,
+    status: "draft",
+    issueDate: row.issueDate,
+    dueDate: row.dueDate,
+    fromJson: row.fromJson,
+    toJson: row.toJson,
+    lineItemsJson: row.lineItemsJson,
+    subtotal: row.subtotal,
+    taxRate: row.taxRate,
+    taxAmount: row.taxAmount,
+    discount: row.discount,
+    total: row.total,
+    notes: row.notes,
+    currency: row.currency,
+    updatedAt: now,
+  });
+  const [newRow] = await db
+    .select()
+    .from(invoices)
+    .where(eq(invoices.id, newId));
+  return newRow ? rowToInvoice(newRow) : null;
+}
