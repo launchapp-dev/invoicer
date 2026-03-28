@@ -106,7 +106,8 @@ export default function EditInvoicePage() {
       toast.success("Invoice saved");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to save invoice");
+      const msg = error instanceof Error ? error.message : "Failed to save invoice";
+      toast.error(msg);
     }
   });
 
