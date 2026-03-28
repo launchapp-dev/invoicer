@@ -13,6 +13,16 @@ async function getCurrentUserId(): Promise<string> {
   return session.user.id;
 }
 
+function safeJsonParse<T>(json: string, fallback: T): T {
+  try {
+    return JSON.parse(json) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+const emptyParty = { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" };
+
 function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
   return {
     id: row.id,
@@ -20,9 +30,9 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
     status: row.status,
     issueDate: row.issueDate,
     dueDate: row.dueDate,
-    from: JSON.parse(row.fromJson),
-    to: JSON.parse(row.toJson),
-    lineItems: JSON.parse(row.lineItemsJson),
+    from: safeJsonParse(row.fromJson, emptyParty),
+    to: safeJsonParse(row.toJson, emptyParty),
+    lineItems: safeJsonParse(row.lineItemsJson, []),
     subtotal: row.subtotal,
     taxRate: row.taxRate,
     taxAmount: row.taxAmount,
