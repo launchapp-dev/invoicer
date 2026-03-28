@@ -84,6 +84,25 @@ export const recurringInvoices = sqliteTable("recurring_invoices", {
   updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
 });
 
+export const clients = sqliteTable("clients", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  email: text("email").notNull().default(""),
+  phone: text("phone").notNull().default(""),
+  company: text("company").notNull().default(""),
+  address: text("address").notNull().default(""),
+  city: text("city").notNull().default(""),
+  state: text("state").notNull().default(""),
+  zip: text("zip").notNull().default(""),
+  country: text("country").notNull().default(""),
+  notes: text("notes").notNull().default(""),
+  createdAt: text("created_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
+}, (table) => [
+  index("clients_user_id_idx").on(table.userId),
+]);
+
 export const invoices = sqliteTable("invoices", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull(),

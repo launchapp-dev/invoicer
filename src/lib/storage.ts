@@ -3,9 +3,10 @@
 import { and, count, desc, eq, inArray, like, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
-import { invoices, userSettings } from "@/db/schema";
+import { clients, invoices, userSettings } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import type { Invoice, InvoiceStatus } from "@/types/invoice";
+import type { Client } from "@/types/client";
 
 async function getCurrentUserId(): Promise<string> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -365,4 +366,65 @@ export async function duplicateInvoice(id: string): Promise<Invoice | null> {
     .from(invoices)
     .where(eq(invoices.id, newId));
   return newRow ? rowToInvoice(newRow) : null;
+}
+
+function rowToClient(row: typeof clients.$inferSelect): Client {
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    company: row.company,
+    address: row.address,
+    city: row.city,
+    state: row.state,
+    zip: row.zip,
+    country: row.country,
+    notes: row.notes,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
+
+export async function listClients(): Promise<Client[]> {
+  const userId = await getCurrentUserId();
+  const rows = await db
+    .select()
+    .from(clients)
+    .where(eq(clients.userId, userId))
+    .orderBy(desc(clients.updatedAt));
+  return rows.map(rowToClient);
+}
+
+export async function getClient(id: string): Promise<Client | null> {
+  const userId = await getCurrentUserId();
+  const [row] = await db
+    .select()
+    .from(clients)
+    .where(and(eq(clients.id, id), eq(clients.userId, userId)));
+  return row ? rowToClient(row) : null;
+}
+
+export async function createClient(data: Omit<Client, "id" | "createdAt" | "updatedAt">): Promise<Client> {
+  const userId = await getCurrentUserId();
+  const id = crypto.randomUUID();
+  const now = new Date().toISOString();
+  await db.insert(clients).values({ ...data, id, userId, createdAt: now, updatedAt: now });
+  const [row] = await db.select().from(clients).where(eq(clients.id, id));
+  return rowToClient(row);
+}
+
+export async function updateClient(id: string, data: Partial<Omit<Client, "id" | "createdAt" | "updatedAt">>): Promise<void> {
+  const userId = await getCurrentUserId();
+  await db
+    .update(clients)
+    .set({ ...data, updatedAt: new Date().toISOString() })
+    .where(and(eq(clients.id, id), eq(clients.userId, userId)));
+}
+
+export async function deleteClient(id: string): Promise<void> {
+  const userId = await getCurrentUserId();
+  await db
+    .delete(clients)
+    .where(and(eq(clients.id, id), eq(clients.userId, userId)));
 }
