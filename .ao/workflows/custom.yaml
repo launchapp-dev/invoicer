@@ -22,7 +22,7 @@ mcp_servers:
     args: ["-y", "mcp-package-version"]
   playwright:
     command: npx
-    args: ["-y", "@anthropic-ai/mcp-server-playwright"]
+    args: ["-y", "@playwright/mcp@latest"]
 
 agents:
   default:
