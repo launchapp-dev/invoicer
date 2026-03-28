@@ -55,7 +55,15 @@ function ContactSection({ prefix, title }: { prefix: "from" | "to"; title: strin
         </div>
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.email`}>Email</Label>
-          <Input id={`${prefix}.email`} type="email" {...register(`${prefix}.email`)} />
+          <Input
+            id={`${prefix}.email`}
+            type="email"
+            {...register(`${prefix}.email`)}
+            error={!!e?.email}
+            aria-invalid={!!e?.email}
+            aria-describedby={e?.email ? `${prefix}-email-error` : undefined}
+          />
+          {e?.email && <p id={`${prefix}-email-error`} role="alert" className="text-xs text-destructive">{e.email.message}</p>}
         </div>
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.address`}>Address</Label>
