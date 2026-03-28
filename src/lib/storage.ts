@@ -3,7 +3,7 @@
 import { and, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
-import { invoices } from "@/db/schema";
+import { invoices, userSettings } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import type { Invoice, InvoiceStatus } from "@/types/invoice";
 
@@ -174,6 +174,25 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus): Pr
     .update(invoices)
     .set({ status, updatedAt: new Date().toISOString() })
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
+}
+
+export async function getUserSettings(userId: string): Promise<typeof userSettings.$inferSelect | null> {
+  const [row] = await db.select().from(userSettings).where(eq(userSettings.userId, userId));
+  return row ?? null;
+}
+
+export async function upsertUserSettings(
+  userId: string,
+  data: Partial<Omit<typeof userSettings.$inferInsert, "userId" | "updatedAt">>
+): Promise<void> {
+  const now = new Date().toISOString();
+  await db
+    .insert(userSettings)
+    .values({ userId, ...data, updatedAt: now })
+    .onConflictDoUpdate({
+      target: userSettings.userId,
+      set: { ...data, updatedAt: now },
+    });
 }
 
 export async function duplicateInvoice(id: string): Promise<Invoice | null> {
