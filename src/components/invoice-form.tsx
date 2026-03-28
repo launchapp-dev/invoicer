@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import { useFormContext, useFieldArray, type Control, type UseFormRegister } from "react-hook-form";
+import { useFormContext, type Control, type UseFormRegister } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectRoot, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { InvoiceTotals } from "@/components/invoice-totals";
-import { calcLineAmount, calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
+import { calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
+import { LineItems } from "@/components/line-items";
 import type { InvoiceFormValues } from "@/lib/invoice-schema";
 import type { InvoiceFormValues as TotalsFormValues } from "@/types/invoice";
 
@@ -75,10 +75,6 @@ function ContactSection({ prefix, title }: { prefix: "from" | "to"; title: strin
 
 export function InvoiceForm() {
   const { register, control, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
-  const { fields, append, remove } = useFieldArray<InvoiceFormValues, "lineItems">({
-    control,
-    name: "lineItems",
-  });
 
   const lineItems = watch("lineItems");
   const taxRate = watch("taxRate");
@@ -92,14 +88,6 @@ export function InvoiceForm() {
     setValue("taxAmount", taxAmount);
     setValue("total", calcTotal(subtotal, taxAmount, discount || 0));
   }, [lineItems, taxRate, discount, setValue]);
-
-  const handleLineChange = (index: number, field: "quantity" | "rate", value: string) => {
-    const num = parseFloat(value) || 0;
-    setValue(`lineItems.${index}.${field}`, num);
-    const q = field === "quantity" ? num : (parseFloat(String(lineItems[index]?.quantity)) || 0);
-    const r = field === "rate" ? num : (parseFloat(String(lineItems[index]?.rate)) || 0);
-    setValue(`lineItems.${index}.amount`, calcLineAmount(q, r));
-  };
 
   return (
     <div className="grid gap-6">
@@ -153,62 +141,7 @@ export function InvoiceForm() {
           <CardTitle>Line Items</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
-          {fields.map((field, index) => (
-            <div key={field.id} className="grid grid-cols-[1fr_100px_100px_100px_auto] gap-2 items-end">
-              <div className="grid gap-1">
-                {index === 0 && <Label>Description</Label>}
-                <Input {...register(`lineItems.${index}.description`)} placeholder="Item description" />
-              </div>
-              <div className="grid gap-1">
-                {index === 0 && <Label>Qty</Label>}
-                <Input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  defaultValue={field.quantity}
-                  onChange={(e) => handleLineChange(index, "quantity", e.target.value)}
-                />
-              </div>
-              <div className="grid gap-1">
-                {index === 0 && <Label>Rate</Label>}
-                <Input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  defaultValue={field.rate}
-                  onChange={(e) => handleLineChange(index, "rate", e.target.value)}
-                />
-              </div>
-              <div className="grid gap-1">
-                {index === 0 && <Label>Amount</Label>}
-                <Input
-                  readOnly
-                  tabIndex={-1}
-                  value={(lineItems[index]?.amount ?? 0).toFixed(2)}
-                  className="bg-muted"
-                />
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className={index === 0 ? "mt-6" : ""}
-                disabled={fields.length === 1}
-                onClick={() => remove(index)}
-                aria-label="Remove line item"
-              >
-                ×
-              </Button>
-            </div>
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => append({ id: crypto.randomUUID(), description: "", quantity: 1, rate: 0, amount: 0 })}
-          >
-            + Add Line Item
-          </Button>
+          <LineItems />
         </CardContent>
       </Card>
 

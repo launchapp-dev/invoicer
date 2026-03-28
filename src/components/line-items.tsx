@@ -1,110 +1,106 @@
 "use client";
 
-import { useFieldArray, useWatch, Control, UseFormRegister } from "react-hook-form";
-import { Trash2 } from "lucide-react";
+import { useFormContext, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { InvoiceFormValues } from "@/lib/invoice-schema";
+import { Label } from "@/components/ui/label";
+import { calcLineAmount, calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
+import type { InvoiceFormValues } from "@/lib/invoice-schema";
 
-const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
-
-function LineItemSubtotal({
-  control,
-  index,
-}: {
-  control: Control<InvoiceFormValues>;
-  index: number;
-}) {
-  const quantity = useWatch({ control, name: `lineItems.${index}.quantity` });
-  const rate = useWatch({ control, name: `lineItems.${index}.rate` });
-  const subtotal = (Number(quantity) || 0) * (Number(rate) || 0);
-  return <span className="text-sm">{formatCurrency(subtotal)}</span>;
-}
-
-interface LineItemsProps {
-  control: Control<InvoiceFormValues>;
-  register: UseFormRegister<InvoiceFormValues>;
-}
-
-export function LineItems({ control, register }: LineItemsProps) {
-  const { fields, append, remove } = useFieldArray({
-    control,
+export function LineItems() {
+  const { register, watch, setValue } = useFormContext<InvoiceFormValues>();
+  const { fields, append, remove } = useFieldArray<InvoiceFormValues, "lineItems">({
     name: "lineItems",
   });
 
+  const lineItems = watch("lineItems");
+  const taxRate = watch("taxRate");
+
+  const handleLineChange = (index: number, field: "quantity" | "rate", value: string) => {
+    const num = parseFloat(value) || 0;
+    setValue(`lineItems.${index}.${field}`, num);
+    const q = field === "quantity" ? num : (parseFloat(String(lineItems[index]?.quantity)) || 0);
+    const r = field === "rate" ? num : (parseFloat(String(lineItems[index]?.rate)) || 0);
+    const amount = calcLineAmount(q, r);
+    setValue(`lineItems.${index}.amount`, amount);
+
+    const updatedItems = lineItems.map((item, i) => {
+      if (i === index) return { ...item, [field]: num, amount };
+      return item;
+    });
+    const subtotal = calcSubtotal(updatedItems);
+    const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
+    setValue("subtotal", subtotal);
+    setValue("taxAmount", taxAmount);
+    setValue("total", calcTotal(subtotal, taxAmount));
+  };
+
   return (
-    <div className="space-y-3">
-      <Table aria-label="Invoice line items">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Description</TableHead>
-            <TableHead className="w-28">Quantity</TableHead>
-            <TableHead className="w-36">Rate</TableHead>
-            <TableHead className="w-32">Subtotal</TableHead>
-            <TableHead className="w-12" />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+    <div className="grid gap-4">
+      <div className="overflow-x-auto">
+        <div className="min-w-[520px]">
           {fields.map((field, index) => (
-            <TableRow key={field.id}>
-              <TableCell className="py-2">
+            <div key={field.id} className="grid grid-cols-[1fr_100px_100px_100px_44px] gap-2 items-end mb-2">
+              <div className="grid gap-1">
+                {index === 0 && <Label>Description</Label>}
+                <Input {...register(`lineItems.${index}.description`)} placeholder="Item description" />
+              </div>
+              <div className="grid gap-1">
+                {index === 0 && <Label>Qty</Label>}
                 <Input
-                  {...register(`lineItems.${index}.description`)}
-                  placeholder="Description"
-                  aria-label={`Line item ${index + 1} description`}
-                />
-              </TableCell>
-              <TableCell className="py-2">
-                <Input
-                  {...register(`lineItems.${index}.quantity`, { valueAsNumber: true })}
-                  type="number"
-                  min="0"
-                  step="1"
-                  placeholder="1"
-                  aria-label={`Line item ${index + 1} quantity`}
-                />
-              </TableCell>
-              <TableCell className="py-2">
-                <Input
-                  {...register(`lineItems.${index}.rate`, { valueAsNumber: true })}
                   type="number"
                   min="0"
                   step="0.01"
-                  placeholder="0.00"
-                  aria-label={`Line item ${index + 1} rate`}
+                  defaultValue={field.quantity}
+                  onChange={(e) => handleLineChange(index, "quantity", e.target.value)}
                 />
-              </TableCell>
-              <TableCell className="py-2">
-                <LineItemSubtotal control={control} index={index} />
-              </TableCell>
-              <TableCell className="py-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => remove(index)}
-                  disabled={fields.length === 1}
-                  aria-label={`Remove line item ${index + 1}`}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
+              </div>
+              <div className="grid gap-1">
+                {index === 0 && <Label>Rate</Label>}
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  defaultValue={field.rate}
+                  onChange={(e) => handleLineChange(index, "rate", e.target.value)}
+                />
+              </div>
+              <div className="grid gap-1">
+                {index === 0 && <Label>Amount</Label>}
+                <Input
+                  readOnly
+                  tabIndex={-1}
+                  value={(lineItems[index]?.amount ?? 0).toFixed(2)}
+                  className="bg-muted"
+                />
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className={index === 0 ? "mt-6" : ""}
+                onClick={() => {
+                  remove(index);
+                  const updated = lineItems.filter((_, i) => i !== index);
+                  const subtotal = calcSubtotal(updated);
+                  const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
+                  setValue("subtotal", subtotal);
+                  setValue("taxAmount", taxAmount);
+                  setValue("total", calcTotal(subtotal, taxAmount));
+                }}
+                aria-label={`Remove line item ${index + 1}`}
+                disabled={fields.length === 1}
+              >
+                ×
+              </Button>
+            </div>
           ))}
-        </TableBody>
-      </Table>
+        </div>
+      </div>
       <Button
         type="button"
         variant="outline"
+        size="sm"
         onClick={() => append({ id: crypto.randomUUID(), description: "", quantity: 1, rate: 0, amount: 0 })}
       >
         Add Line Item
