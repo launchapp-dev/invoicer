@@ -505,7 +505,7 @@ agents:
       Check ao.task.list first — do NOT create duplicate bug tasks.
     model: claude-sonnet-4-6
     tool: claude
-    mcp_servers: ["ao", "playwright"]
+    mcp_servers: ["ao", "playwright", "context7"]
 
   pr-sweep:
     system_prompt: |
