@@ -86,6 +86,7 @@ export function LineItems() {
                 type="button"
                 variant="ghost"
                 size="icon"
+                disabled={fields.length <= 1}
                 className={index === 0 ? "mt-6" : ""}
                 onClick={() => {
                   remove(index);
