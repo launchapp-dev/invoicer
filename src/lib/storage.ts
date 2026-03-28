@@ -13,6 +13,10 @@ async function getCurrentUserId(): Promise<string> {
   return session.user.id;
 }
 
+function escapeLike(s: string): string {
+  return s.replace(/\\/g, "\\\\").replace(/%/g, "\\%").replace(/_/g, "\\_");
+}
+
 function safeJsonParse<T>(json: string, fallback: T): T {
   try {
     return JSON.parse(json) as T;
@@ -113,9 +117,9 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
         eq(invoices.userId, userId),
         filters?.search
           ? or(
-              like(invoices.invoiceNumber, `%${filters.search}%`),
-              like(sql`json_extract(${invoices.toJson}, '$.name')`, `%${filters.search}%`),
-              like(sql`json_extract(${invoices.toJson}, '$.email')`, `%${filters.search}%`)
+              sql`${invoices.invoiceNumber} LIKE ${"%" + escapeLike(filters.search) + "%"} ESCAPE '\\'`,
+              sql`json_extract(${invoices.toJson}, '$.name') LIKE ${"%" + escapeLike(filters.search) + "%"} ESCAPE '\\'`,
+              sql`json_extract(${invoices.toJson}, '$.email') LIKE ${"%" + escapeLike(filters.search) + "%"} ESCAPE '\\'`
             )
           : undefined,
         filters?.status ? eq(invoices.status, filters.status) : undefined,
@@ -137,9 +141,9 @@ export async function countInvoices(filters?: InvoiceFilters): Promise<number> {
         eq(invoices.userId, userId),
         filters?.search
           ? or(
-              like(invoices.invoiceNumber, `%${filters.search}%`),
-              like(sql`json_extract(${invoices.toJson}, '$.name')`, `%${filters.search}%`),
-              like(sql`json_extract(${invoices.toJson}, '$.email')`, `%${filters.search}%`)
+              sql`${invoices.invoiceNumber} LIKE ${"%" + escapeLike(filters.search) + "%"} ESCAPE '\\'`,
+              sql`json_extract(${invoices.toJson}, '$.name') LIKE ${"%" + escapeLike(filters.search) + "%"} ESCAPE '\\'`,
+              sql`json_extract(${invoices.toJson}, '$.email') LIKE ${"%" + escapeLike(filters.search) + "%"} ESCAPE '\\'`
             )
           : undefined,
         filters?.status ? eq(invoices.status, filters.status) : undefined,
