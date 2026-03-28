@@ -52,7 +52,7 @@ export function LineItems() {
                   type="number"
                   min="0"
                   step="0.01"
-                  defaultValue={field.quantity}
+                  value={lineItems[index]?.quantity ?? field.quantity}
                   onChange={(e) => handleLineChange(index, "quantity", e.target.value)}
                 />
               </div>
@@ -62,7 +62,7 @@ export function LineItems() {
                   type="number"
                   min="0"
                   step="0.01"
-                  defaultValue={field.rate}
+                  value={lineItems[index]?.rate ?? field.rate}
                   onChange={(e) => handleLineChange(index, "rate", e.target.value)}
                 />
               </div>
