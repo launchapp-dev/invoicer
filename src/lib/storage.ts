@@ -1,6 +1,6 @@
 "use server";
 
-import { and, count, desc, eq, like } from "drizzle-orm";
+import { and, desc, eq, like } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { invoices } from "@/db/schema";
@@ -45,12 +45,16 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
 
 export async function getNextInvoiceNumber(): Promise<string> {
   const userId = await getCurrentUserId();
-  const [result] = await db
-    .select({ count: count() })
+  const rows = await db
+    .select({ invoiceNumber: invoices.invoiceNumber })
     .from(invoices)
     .where(eq(invoices.userId, userId));
-  const n = (result?.count ?? 0) + 1;
-  return `INV-${String(n).padStart(3, "0")}`;
+  let max = 0;
+  for (const { invoiceNumber } of rows) {
+    const match = invoiceNumber.match(/^INV-(\d+)$/);
+    if (match) max = Math.max(max, parseInt(match[1], 10));
+  }
+  return `INV-${String(max + 1).padStart(3, "0")}`;
 }
 
 export async function saveInvoice(invoice: Invoice): Promise<void> {
