@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
@@ -70,10 +71,10 @@ export function InvoiceActions({ invoiceId }: InvoiceActionsProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem asChild>
-            <a href={`/invoices/${invoiceId}`}>Edit</a>
+            <Link href={`/invoices/${invoiceId}`}>Edit</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <a href={`/invoices/${invoiceId}/preview`}>Preview</a>
+            <Link href={`/invoices/${invoiceId}/preview`}>Preview</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={handleDuplicate}>
