@@ -39,6 +39,10 @@ function Input({ className, size, error, ref, ...props }: InputProps & { ref?: R
     />
   );
 }
+
+
 Input.displayName = "Input";
+
+export type InputVariants = VariantProps<typeof inputVariants>;
 
 export { Input };
