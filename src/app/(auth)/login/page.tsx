@@ -59,10 +59,12 @@ export default function LoginPage() {
                 type="email"
                 autoComplete="email"
                 error={!!errors.email}
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? "login-email-error" : undefined}
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
+                <p id="login-email-error" role="alert" className="text-sm text-destructive">{errors.email.message}</p>
               )}
             </div>
             <div className="space-y-1">
@@ -72,14 +74,16 @@ export default function LoginPage() {
                 type="password"
                 autoComplete="current-password"
                 error={!!errors.password}
+                aria-invalid={!!errors.password}
+                aria-describedby={errors.password ? "login-password-error" : undefined}
                 {...register("password")}
               />
               {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message}</p>
+                <p id="login-password-error" role="alert" className="text-sm text-destructive">{errors.password.message}</p>
               )}
             </div>
             {authError && (
-              <p className="text-sm text-destructive">{authError}</p>
+              <p role="alert" className="text-sm text-destructive">{authError}</p>
             )}
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Signing in…" : "Sign in"}

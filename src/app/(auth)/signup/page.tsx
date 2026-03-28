@@ -67,10 +67,12 @@ export default function SignupPage() {
                 type="text"
                 autoComplete="name"
                 error={!!errors.name}
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? "signup-name-error" : undefined}
                 {...register("name")}
               />
               {errors.name && (
-                <p className="text-sm text-destructive">{errors.name.message}</p>
+                <p id="signup-name-error" role="alert" className="text-sm text-destructive">{errors.name.message}</p>
               )}
             </div>
             <div className="space-y-1">
@@ -80,10 +82,12 @@ export default function SignupPage() {
                 type="email"
                 autoComplete="email"
                 error={!!errors.email}
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? "signup-email-error" : undefined}
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
+                <p id="signup-email-error" role="alert" className="text-sm text-destructive">{errors.email.message}</p>
               )}
             </div>
             <div className="space-y-1">
@@ -93,10 +97,12 @@ export default function SignupPage() {
                 type="password"
                 autoComplete="new-password"
                 error={!!errors.password}
+                aria-invalid={!!errors.password}
+                aria-describedby={errors.password ? "signup-password-error" : undefined}
                 {...register("password")}
               />
               {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message}</p>
+                <p id="signup-password-error" role="alert" className="text-sm text-destructive">{errors.password.message}</p>
               )}
             </div>
             <div className="space-y-1">
@@ -106,14 +112,16 @@ export default function SignupPage() {
                 type="password"
                 autoComplete="new-password"
                 error={!!errors.confirmPassword}
+                aria-invalid={!!errors.confirmPassword}
+                aria-describedby={errors.confirmPassword ? "signup-confirm-password-error" : undefined}
                 {...register("confirmPassword")}
               />
               {errors.confirmPassword && (
-                <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+                <p id="signup-confirm-password-error" role="alert" className="text-sm text-destructive">{errors.confirmPassword.message}</p>
               )}
             </div>
             {authError && (
-              <p className="text-sm text-destructive">{authError}</p>
+              <p role="alert" className="text-sm text-destructive">{authError}</p>
             )}
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Creating account…" : "Create account"}
