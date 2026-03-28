@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, Trash2, CheckCheck } from "lucide-react";
+import { Download, Loader2, Trash2, CheckCheck } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -95,6 +95,44 @@ export function DashboardTable({ invoices }: DashboardTableProps) {
     }
   }
 
+  function handleExportCSV(invoicesToExport: Invoice[]) {
+    const header = [
+      "Invoice Number",
+      "Client Name",
+      "Issue Date",
+      "Due Date",
+      "Status",
+      "Subtotal",
+      "Tax",
+      "Discount",
+      "Total",
+      "Currency",
+    ].join(",");
+
+    const rows = invoicesToExport.map((inv) => [
+      inv.invoiceNumber,
+      `"${(inv.to.name || "").replace(/"/g, '""')}"`,
+      inv.issueDate ? inv.issueDate.slice(0, 10) : "",
+      inv.dueDate ? inv.dueDate.slice(0, 10) : "",
+      inv.status,
+      inv.subtotal,
+      inv.taxAmount,
+      inv.discount,
+      inv.total,
+      inv.currency,
+    ].join(","));
+
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const today = new Date().toISOString().slice(0, 10);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `invoices-export-${today}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   async function handleMarkAsSent() {
     const draftIds = Array.from(selected).filter(
       (id) => invoices.find((inv) => inv.id === id)?.status === "draft"
@@ -125,12 +163,23 @@ export function DashboardTable({ invoices }: DashboardTableProps) {
 
   return (
     <>
-      {selected.size > 0 && (
+      {selected.size > 0 ? (
         <div className="flex items-center gap-3 mb-3 px-3 py-2 rounded-md bg-muted border border-border">
           <span className="text-sm font-medium text-foreground">
             {selected.size} selected
           </span>
           <div className="flex items-center gap-2 ml-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={pending}
+              onClick={() =>
+                handleExportCSV(invoices.filter((inv) => selected.has(inv.id)))
+              }
+            >
+              <Download className="h-4 w-4 mr-1.5" />
+              Export CSV
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -150,6 +199,17 @@ export function DashboardTable({ invoices }: DashboardTableProps) {
               Delete selected
             </Button>
           </div>
+        </div>
+      ) : (
+        <div className="flex justify-end mb-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleExportCSV(invoices)}
+          >
+            <Download className="h-4 w-4 mr-1.5" />
+            Export CSV
+          </Button>
         </div>
       )}
 
