@@ -201,6 +201,7 @@ export function InvoiceForm() {
                 variant="ghost"
                 size="icon"
                 className={index === 0 ? "mt-6" : ""}
+                disabled={fields.length === 1}
                 onClick={() => {
                   remove(index);
                   const updated = lineItems.filter((_, i) => i !== index);
