@@ -15,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { listInvoices, deleteInvoice } from "@/lib/storage";
 import { formatCurrency } from "@/lib/calculations";
 import type { Invoice } from "@/types/invoice";
@@ -34,10 +35,11 @@ interface InvoiceHistoryProps {
 
 function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryProps & { onClose: () => void }) {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [loading, setLoading] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; invoiceNumber: string } | null>(null);
 
   const refresh = useCallback(() => {
-    listInvoices().then(setInvoices).catch(console.error);
+    listInvoices().then(setInvoices).catch(console.error).finally(() => setLoading(false));
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
@@ -58,6 +60,34 @@ function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryPro
     onDuplicate(invoice);
     onClose();
   };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="rounded-lg border border-border p-4 grid gap-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="grid gap-1 flex-1">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-12" />
+                </div>
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-20" />
+              </div>
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <Skeleton className="h-px w-full" />
+            <div className="flex gap-2">
+              <Skeleton className="h-8 w-14" />
+              <Skeleton className="h-8 w-20" />
+              <Skeleton className="h-8 w-16 ml-auto" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   if (invoices.length === 0) {
     return (
