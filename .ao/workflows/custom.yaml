@@ -90,13 +90,22 @@ agents:
         a) Call ao.requirements.list to review existing requirements.
         b) For each requirement, evaluate: is it still relevant? Is it met by
            current code? Does it need refinement?
-        c) If you identify a NEW requirement:
+        c) DUPLICATE CHECK (CRITICAL — never skip):
+           - Before creating ANY new requirement, search the existing list
+             for overlap. Check titles AND descriptions for partial matches.
+           - "Invoice form validation" and "Add Zod validation to form" are
+             the same requirement — do NOT create both.
+           - If an existing requirement covers the same area, use
+             ao.requirements.refine to update it instead of creating a new one.
+           - Only create a new requirement if NOTHING in the existing list
+             covers the same scope, even partially.
+        d) If you identify a genuinely NEW requirement (no overlap found):
            - Call ao.requirements.create with a clear, testable description.
            - Requirements must be specific and verifiable, not vague wishes.
            - Example GOOD: "Invoice form must have an 'Add Line Item' button
              that appends a new row with description, quantity, and rate fields"
            - Example BAD: "App should look nice"
-        d) If an existing requirement needs updating:
+        e) If an existing requirement needs updating:
            - Call ao.requirements.refine with the updated description.
 
       STEP 5 — EVALUATE FEATURE GAPS:
@@ -108,15 +117,22 @@ agents:
         Make a ranked list of gaps, most impactful first.
 
       STEP 6 — CREATE TASKS:
-        For each identified gap (up to 3 per run):
+        HARD LIMIT: Create at most 2 tasks per run. If you already created 2,
+        STOP. The remaining gaps can wait for the next cycle.
+
+        For each identified gap:
         a) DUPLICATE CHECK (CRITICAL — never skip):
-           - Call ao.task.list and search for any task that covers the same
-             scope. Check titles AND descriptions carefully.
+           - Call ao.task.list to get ALL tasks (no status filter).
+           - Search titles AND descriptions for any task covering the same
+             scope, even partially. Be aggressive about matching:
+             * "Add auth" and "Set up Better Auth" = SAME
+             * "Invoice form" and "Build form with sender/recipient" = SAME
+             * "Fix build" and "Resolve TypeScript compilation errors" = SAME
            - If a matching task exists in ANY status other than "cancelled",
              SKIP creating a new one. This includes: backlog, ready,
              in_progress, blocked, on_hold, done.
-           - Be thorough — check for partial matches too. "Add line item
-             button" and "Implement line items in invoice form" are the same.
+           - When in doubt, do NOT create. It's better to skip a task than
+             to create a duplicate.
         b) Call ao.task.create with:
            - A clear, action-oriented title (e.g., "Add line item management
              to invoice form")
