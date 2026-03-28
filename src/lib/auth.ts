@@ -4,6 +4,8 @@ import Database from "better-sqlite3";
 export const auth = betterAuth({
   database: new Database("./invoicer.db"),
   emailAndPassword: { enabled: true },
+  secret: process.env.BETTER_AUTH_SECRET,
+  baseURL: process.env.BETTER_AUTH_URL,
 });
 
 export type Session = typeof auth.$Infer.Session;
