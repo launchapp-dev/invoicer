@@ -31,6 +31,14 @@ const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" 
   cancelled: "outline",
 };
 
+function formatDate(iso: string): string {
+  if (!iso) return "—";
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+    year: "numeric", month: "short", day: "numeric",
+  });
+}
+
 const LIMIT = 25;
 
 export default async function DashboardPage({
@@ -136,8 +144,8 @@ export default async function DashboardPage({
                         </Link>
                       </TableCell>
                       <TableCell>{invoice.to.name || "—"}</TableCell>
-                      <TableCell className="hidden sm:table-cell">{invoice.issueDate}</TableCell>
-                      <TableCell className="hidden sm:table-cell">{invoice.dueDate}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{formatDate(invoice.issueDate)}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{formatDate(invoice.dueDate)}</TableCell>
                       <TableCell>{formatCurrency(invoice.total, invoice.currency)}</TableCell>
                       <TableCell>
                         <Badge variant={STATUS_VARIANT[invoice.status] ?? "secondary"}>
