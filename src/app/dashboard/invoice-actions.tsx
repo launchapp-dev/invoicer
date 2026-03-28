@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, Loader2, Check } from "lucide-react";
+import { MoreHorizontal, Loader2, Check, Link2 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,12 +42,13 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { deleteInvoice, duplicateInvoice, updateInvoiceStatus, recordPayment } from "@/lib/storage";
+import { deleteInvoice, duplicateInvoice, updateInvoiceStatus, recordPayment, generateShareLink } from "@/lib/storage";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const STATUSES: { value: InvoiceStatus; label: string }[] = [
   { value: "draft", label: "Draft" },
   { value: "sent", label: "Sent" },
+  { value: "viewed", label: "Viewed" },
   { value: "paid", label: "Paid" },
   { value: "overdue", label: "Overdue" },
   { value: "cancelled", label: "Cancelled" },
@@ -140,6 +141,26 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
     }
   }
 
+  async function handleCopyShareLink() {
+    setPending(true);
+    try {
+      const path = await generateShareLink(invoiceId);
+      const url = `${window.location.origin}${path}`;
+      await navigator.clipboard.writeText(url);
+      toast.success("Share link copied to clipboard");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg === "Unauthorized") {
+        toast.error("Your session has expired. Please sign in again.");
+        router.push("/login");
+      } else {
+        toast.error("Failed to generate share link");
+      }
+    } finally {
+      setPending(false);
+    }
+  }
+
   async function handleStatusChange(newStatus: InvoiceStatus) {
     setPending(true);
     try {
@@ -198,6 +219,10 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={handleDuplicate}>
             Duplicate
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={handleCopyShareLink} className="flex items-center gap-2">
+            <Link2 className="h-4 w-4" />
+            Copy Share Link
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => setDeleteOpen(true)}

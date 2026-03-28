@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
-const STATUSES = ["draft", "sent", "paid", "overdue", "cancelled"] as const;
+const STATUSES = ["draft", "sent", "viewed", "paid", "overdue", "cancelled"] as const;
 
 const SORT_OPTIONS = [
   { value: "date_desc", label: "Date: Newest first" },
