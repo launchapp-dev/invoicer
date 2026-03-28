@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableHeader,
@@ -30,6 +32,24 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
   const taxAmount = calcTaxAmount(subtotal, invoice.taxRate);
   const total = calcTotal(subtotal, taxAmount);
+  const [downloading, setDownloading] = useState(false);
+
+  async function handleDownload() {
+    setDownloading(true);
+    try {
+      const { pdf } = await import("@react-pdf/renderer");
+      const { InvoicePDF } = await import("@/components/invoice-pdf");
+      const blob = await pdf(<InvoicePDF invoice={invoice} />).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${invoice.invoiceNumber || "invoice"}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setDownloading(false);
+    }
+  }
 
   return (
     <Card className="shadow-xl border-border bg-white min-h-[700px]">
@@ -53,6 +73,12 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
               <p>Due: {invoice.dueDate || "—"}</p>
             </div>
           </div>
+        </div>
+
+        <div className="flex justify-end">
+          <Button onClick={handleDownload} disabled={downloading} size="sm">
+            {downloading ? "Generating…" : "Download PDF"}
+          </Button>
         </div>
 
         <Separator />
