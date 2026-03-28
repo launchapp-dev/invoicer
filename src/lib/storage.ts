@@ -504,6 +504,7 @@ export async function saveMyInvoiceDefaults(data: {
   defaultTaxRate?: number;
   defaultNotes?: string;
   invoiceNumberPrefix?: string;
+  defaultPaymentTerms?: string;
 }): Promise<void> {
   const userId = await getCurrentUserId();
   await upsertUserSettings(userId, data);

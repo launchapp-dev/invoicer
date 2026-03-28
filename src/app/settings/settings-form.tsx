@@ -38,6 +38,7 @@ const invoiceDefaultsSchema = z.object({
   defaultTaxRate: z.number().min(0).max(100),
   defaultNotes: z.string(),
   invoiceNumberPrefix: z.string(),
+  defaultPaymentTerms: z.string(),
 });
 
 type BusinessProfileValues = z.infer<typeof businessProfileSchema>;
@@ -83,6 +84,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
       defaultTaxRate: settings?.defaultTaxRate ?? 0,
       defaultNotes: settings?.defaultNotes ?? "",
       invoiceNumberPrefix: settings?.invoiceNumberPrefix ?? "INV-",
+      defaultPaymentTerms: settings?.defaultPaymentTerms ?? "",
     },
   });
 
@@ -422,6 +424,26 @@ export function SettingsForm({ settings }: SettingsFormProps) {
                 placeholder="INV-"
                 {...defaultsForm.register("invoiceNumberPrefix")}
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="defaultPaymentTerms">Default Payment Terms</Label>
+              <SelectRoot
+                value={defaultsForm.watch("defaultPaymentTerms") || "none"}
+                onValueChange={(value) =>
+                  defaultsForm.setValue("defaultPaymentTerms", value === "none" ? "" : value)
+                }
+              >
+                <SelectTrigger id="defaultPaymentTerms">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Not set</SelectItem>
+                  <SelectItem value="net15">Net 15</SelectItem>
+                  <SelectItem value="net30">Net 30</SelectItem>
+                  <SelectItem value="net60">Net 60</SelectItem>
+                  <SelectItem value="due_on_receipt">Due on Receipt</SelectItem>
+                </SelectContent>
+              </SelectRoot>
             </div>
             <div className="space-y-2">
               <Label htmlFor="defaultNotes">Default Notes</Label>
