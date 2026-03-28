@@ -118,7 +118,7 @@ export const invoices = sqliteTable("invoices", {
   clientId: text("client_id").references(() => clients.id, { onDelete: "set null" }),
   invoiceNumber: text("invoice_number").notNull(),
   status: text("status", {
-    enum: ["draft", "sent", "viewed", "paid", "overdue", "cancelled", "partial"],
+    enum: ["draft", "sent", "viewed", "paid", "overdue", "cancelled", "partial", "archived"],
   })
     .notNull()
     .default("draft"),

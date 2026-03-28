@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { parseSearchQuery } from "@/lib/ai";
 
-const STATUSES = ["draft", "sent", "viewed", "paid", "overdue", "cancelled"] as const;
+const STATUSES = ["draft", "sent", "viewed", "paid", "overdue", "cancelled", "archived"] as const;
 
 const CURRENCIES = [
   { code: "USD", label: "USD — US Dollar" },

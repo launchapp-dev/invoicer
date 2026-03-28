@@ -56,6 +56,7 @@ const STATUSES: { value: InvoiceStatus; label: string }[] = [
   { value: "paid", label: "Paid" },
   { value: "overdue", label: "Overdue" },
   { value: "cancelled", label: "Cancelled" },
+  { value: "archived", label: "Archive" },
 ];
 
 interface InvoiceActionsProps {
