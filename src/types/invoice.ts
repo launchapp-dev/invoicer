@@ -56,5 +56,6 @@ export interface Invoice {
   paidReference?: string;
   payments?: Payment[];
   shareToken?: string;
+  paymentTerms?: "net15" | "net30" | "net60" | "due_on_receipt" | "custom";
 }
 
