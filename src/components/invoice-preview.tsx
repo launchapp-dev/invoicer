@@ -11,7 +11,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { formatCurrency } from "@/lib/calculations";
+import { calcSubtotal, calcTaxAmount, calcTotal, formatCurrency } from "@/lib/calculations";
 import type { Invoice } from "@/types/invoice";
 
 const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destructive" | "outline"> = {
@@ -27,6 +27,10 @@ interface InvoicePreviewProps {
 }
 
 export function InvoicePreview({ invoice }: InvoicePreviewProps) {
+  const subtotal = calcSubtotal(invoice.lineItems);
+  const taxAmount = calcTaxAmount(subtotal, invoice.taxRate);
+  const total = calcTotal(subtotal, taxAmount);
+
   return (
     <Card className="shadow-xl border-border bg-white min-h-[700px]">
       <CardContent className="p-8 space-y-6">
@@ -120,18 +124,18 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
         <div className="flex flex-col items-end space-y-2 text-sm">
           <div className="flex justify-between w-56">
             <span className="text-muted-foreground">Subtotal</span>
-            <span>{formatCurrency(invoice.subtotal, invoice.currency)}</span>
+            <span>{formatCurrency(subtotal, invoice.currency)}</span>
           </div>
           {invoice.taxRate > 0 && (
             <div className="flex justify-between w-56">
               <span className="text-muted-foreground">Tax ({invoice.taxRate}%)</span>
-              <span>{formatCurrency(invoice.taxAmount, invoice.currency)}</span>
+              <span>{formatCurrency(taxAmount, invoice.currency)}</span>
             </div>
           )}
           <Separator className="w-56" />
           <div className="flex justify-between w-56 font-semibold text-base">
             <span>Total</span>
-            <span>{formatCurrency(invoice.total, invoice.currency)}</span>
+            <span>{formatCurrency(total, invoice.currency)}</span>
           </div>
         </div>
 
