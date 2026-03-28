@@ -45,15 +45,14 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
 
 export async function getNextInvoiceNumber(): Promise<string> {
   const userId = await getCurrentUserId();
-  const rows = await db
+  const [row] = await db
     .select({ invoiceNumber: invoices.invoiceNumber })
     .from(invoices)
-    .where(eq(invoices.userId, userId));
-  let max = 0;
-  for (const { invoiceNumber } of rows) {
-    const match = invoiceNumber.match(/^INV-(\d+)$/);
-    if (match) max = Math.max(max, parseInt(match[1], 10));
-  }
+    .where(and(eq(invoices.userId, userId), like(invoices.invoiceNumber, "INV-%")))
+    .orderBy(desc(sql`length(${invoices.invoiceNumber})`), desc(invoices.invoiceNumber))
+    .limit(1);
+  const match = row?.invoiceNumber.match(/^INV-(\d+)$/);
+  const max = match ? parseInt(match[1], 10) : 0;
   return `INV-${String(max + 1).padStart(3, "0")}`;
 }
 
