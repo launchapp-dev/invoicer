@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { getClient, getClientInvoices } from "@/lib/storage";
+import { getClientExpenses } from "@/lib/expense-storage";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,6 +15,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { InvoiceStatus } from "@/types/invoice";
+import type { ExpenseCategory } from "@/lib/expense-storage";
+
+const CATEGORY_COLORS: Record<ExpenseCategory, "default" | "secondary" | "outline" | "destructive"> = {
+  software: "default",
+  hardware: "secondary",
+  travel: "outline",
+  meals: "secondary",
+  contractor: "default",
+  marketing: "outline",
+  other: "secondary",
+};
 
 const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" | "destructive"> = {
   draft: "secondary",
@@ -40,7 +52,10 @@ export default async function ClientDetailPage({
   const { id } = await params;
   const client = await getClient(id);
   if (!client) notFound();
-  const clientInvoices = await getClientInvoices(client.name);
+  const [clientInvoices, clientExpenses] = await Promise.all([
+    getClientInvoices(client.name),
+    getClientExpenses(id),
+  ]);
 
   const currency = clientInvoices[0]?.currency ?? "USD";
   const totalBilled = clientInvoices.reduce((sum, inv) => sum + inv.total, 0);
@@ -50,6 +65,9 @@ export default async function ClientDetailPage({
   const overdue = clientInvoices
     .filter((inv) => inv.status === "overdue")
     .reduce((sum, inv) => sum + inv.total, 0);
+  const totalExpensesCents = clientExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const totalExpenses = totalExpensesCents / 100;
+  const profit = totalBilled - totalExpenses;
 
   return (
     <div className="min-h-screen bg-background">
@@ -156,6 +174,65 @@ export default async function ClientDetailPage({
                   </TableCell>
                   <TableCell className="text-right text-sm">
                     {formatCurrency(inv.total, inv.currency)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+
+        <Separator className="my-8" />
+
+        <h2 className="text-base font-semibold mb-4">Expenses & P&L</h2>
+
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Total Invoiced</p>
+            <p className="text-lg font-semibold">{formatCurrency(totalBilled, currency)}</p>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Total Expenses</p>
+            <p className="text-lg font-semibold">{formatCurrency(totalExpenses, currency)}</p>
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Profit</p>
+            <p className={`text-lg font-semibold ${profit < 0 ? "text-destructive" : ""}`}>
+              {formatCurrency(profit, currency)}
+            </p>
+          </div>
+        </div>
+
+        {clientExpenses.length === 0 ? (
+          <p className="text-sm text-muted-foreground py-8 text-center">
+            No expenses linked to this client yet.{" "}
+            <Link href="/expenses" className="underline hover:no-underline">
+              Add expenses
+            </Link>
+          </p>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Vendor</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {clientExpenses.map((expense) => (
+                <TableRow key={expense.id}>
+                  <TableCell className="text-sm">{expense.date}</TableCell>
+                  <TableCell className="text-sm font-medium">{expense.vendor}</TableCell>
+                  <TableCell>
+                    <Badge variant={CATEGORY_COLORS[expense.category] ?? "secondary"}>
+                      {expense.category}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{expense.description || "—"}</TableCell>
+                  <TableCell className="text-right text-sm">
+                    {formatCurrency(expense.amount / 100, expense.currency)}
                   </TableCell>
                 </TableRow>
               ))}
