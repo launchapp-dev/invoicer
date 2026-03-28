@@ -31,7 +31,7 @@ interface InvoicePreviewProps {
 export function InvoicePreview({ invoice }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
   const taxAmount = calcTaxAmount(subtotal, invoice.taxRate);
-  const total = calcTotal(subtotal, taxAmount);
+  const total = calcTotal(subtotal, taxAmount, invoice.discount);
   const [downloading, setDownloading] = useState(false);
 
   async function handleDownload() {
