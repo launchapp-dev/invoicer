@@ -1,6 +1,6 @@
 "use server";
 
-import { and, count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, like } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { invoices } from "@/db/schema";
@@ -120,12 +120,23 @@ export async function duplicateInvoice(id: string): Promise<Invoice | null> {
     .from(invoices)
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
   if (!row) return null;
+  const baseNumber = row.invoiceNumber.replace(/ \(\d+\)$/, "");
+  const existing = await db
+    .select({ invoiceNumber: invoices.invoiceNumber })
+    .from(invoices)
+    .where(and(eq(invoices.userId, userId), like(invoices.invoiceNumber, `${baseNumber}%`)));
+  let maxSuffix = 1;
+  for (const { invoiceNumber } of existing) {
+    const match = invoiceNumber.match(/ \((\d+)\)$/);
+    if (match) maxSuffix = Math.max(maxSuffix, parseInt(match[1], 10));
+  }
+  const newInvoiceNumber = `${baseNumber} (${maxSuffix + 1})`;
   const now = new Date().toISOString();
   const newId = crypto.randomUUID();
   await db.insert(invoices).values({
     id: newId,
     userId,
-    invoiceNumber: `${row.invoiceNumber}-copy`,
+    invoiceNumber: newInvoiceNumber,
     status: "draft",
     issueDate: row.issueDate,
     dueDate: row.dueDate,
