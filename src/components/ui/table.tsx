@@ -26,11 +26,19 @@ function TableHeader({ className, ref, ...props }: React.HTMLAttributes<HTMLTabl
 }
 TableHeader.displayName = "TableHeader";
 
-function TableBody({ className, ref, ...props }: React.HTMLAttributes<HTMLTableSectionElement> & { ref?: React.Ref<HTMLTableSectionElement> }) {
+interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  striped?: boolean;
+}
+
+function TableBody({ className, striped, ref, ...props }: TableBodyProps & { ref?: React.Ref<HTMLTableSectionElement> }) {
   return (
     <tbody
       ref={ref}
-      className={cn("[&_tr:last-child]:border-0", className)}
+      className={cn(
+        "[&_tr:last-child]:border-0",
+        striped && "[&_tr:nth-child(even)]:bg-muted/30",
+        className
+      )}
       {...props}
     />
   );

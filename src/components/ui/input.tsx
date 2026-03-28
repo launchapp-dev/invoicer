@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -39,7 +41,6 @@ function Input({ className, size, error, ref, ...props }: InputProps & { ref?: R
     />
   );
 }
-
 
 Input.displayName = "Input";
 
