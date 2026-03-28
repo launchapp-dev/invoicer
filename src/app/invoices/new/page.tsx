@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { InvoiceForm } from "@/components/invoice-form";
@@ -92,7 +93,16 @@ export default function NewInvoicePage() {
             <Button variant="outline" asChild>
               <Link href="/dashboard">Dashboard</Link>
             </Button>
-            <Button onClick={handleSave} disabled={form.formState.isSubmitting}>Save Invoice</Button>
+            <Button onClick={handleSave} disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving…
+                </>
+              ) : (
+                "Save Invoice"
+              )}
+            </Button>
           </div>
         </div>
       </header>
