@@ -2,6 +2,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
+import type { CashFlowData } from "@/lib/storage";
 
 const LineItemSchema = z.object({
   description: z.string(),
@@ -18,6 +19,52 @@ const ParsedInvoiceSchema = z.object({
 });
 
 export type ParsedInvoice = z.infer<typeof ParsedInvoiceSchema>;
+
+function fmtAmount(amount: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
+  } catch {
+    return `$${amount.toFixed(2)}`;
+  }
+}
+
+export async function getCashFlowInsight(data: CashFlowData): Promise<string> {
+  const fallback = [
+    data.expectedThisMonthCount > 0
+      ? `You have ${data.expectedThisMonthCount} ${data.expectedThisMonthCount === 1 ? "invoice" : "invoices"} totaling ${fmtAmount(data.expectedThisMonth, data.currency)} due this month.`
+      : null,
+    data.atRiskCount > 0
+      ? `${data.atRiskCount} ${data.atRiskCount === 1 ? "invoice" : "invoices"} totaling ${fmtAmount(data.atRisk, data.currency)} ${data.atRiskCount === 1 ? "is" : "are"} overdue.`
+      : null,
+  ].filter(Boolean).join(" ") || "No outstanding invoices at this time.";
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return fallback;
+
+  try {
+    const client = new Anthropic({ apiKey });
+    const summary = [
+      `Expected this month: ${data.expectedThisMonthCount} invoices totaling ${fmtAmount(data.expectedThisMonth, data.currency)}`,
+      `Overdue/at risk: ${data.atRiskCount} invoices totaling ${fmtAmount(data.atRisk, data.currency)}`,
+      data.upcomingByWeek.length > 0
+        ? `Upcoming: ${data.upcomingByWeek.map((w) => `${w.weekLabel}: ${w.count} invoices, ${fmtAmount(w.amount, data.currency)}`).join("; ")}`
+        : "No upcoming invoices in next 8 weeks",
+    ].join("\n");
+
+    const response = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 120,
+      system:
+        "You are a financial assistant. Write a single concise sentence (max 30 words) summarizing the user's cash flow outlook based on the data provided. Be specific with numbers.",
+      messages: [{ role: "user", content: summary }],
+    });
+
+    const block = response.content.find((b) => b.type === "text");
+    return block?.type === "text" ? block.text : fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 export async function parseInvoiceIntent(prompt: string): Promise<ParsedInvoice> {
   const apiKey = process.env.ANTHROPIC_API_KEY;

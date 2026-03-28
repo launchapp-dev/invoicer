@@ -595,6 +595,106 @@ export async function generateShareLink(invoiceId: string): Promise<string> {
   return `/i/${token}`;
 }
 
+export interface CashFlowWeek {
+  weekStart: string;
+  weekLabel: string;
+  amount: number;
+  count: number;
+}
+
+export interface CashFlowData {
+  expectedThisMonth: number;
+  expectedThisMonthCount: number;
+  atRisk: number;
+  atRiskCount: number;
+  upcomingByWeek: CashFlowWeek[];
+  currency: string;
+}
+
+export async function getCashFlowData(): Promise<CashFlowData> {
+  const userId = await getCurrentUserId();
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0];
+
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const monthStart = `${year}-${String(month).padStart(2, "0")}-01`;
+  const lastDay = new Date(year, month, 0).getDate();
+  const monthEnd = `${year}-${String(month).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
+
+  const [activeRows, currencyRow] = await Promise.all([
+    db
+      .select({
+        total: invoices.total,
+        dueDate: invoices.dueDate,
+        status: invoices.status,
+      })
+      .from(invoices)
+      .where(
+        and(
+          eq(invoices.userId, userId),
+          inArray(invoices.status, ["sent", "viewed", "partial", "overdue"]),
+        )
+      ),
+    db
+      .select({ currency: invoices.currency, cnt: count() })
+      .from(invoices)
+      .where(eq(invoices.userId, userId))
+      .groupBy(invoices.currency)
+      .orderBy(desc(count()))
+      .limit(1)
+      .then((rows) => rows[0]),
+  ]);
+
+  const currency = currencyRow?.currency ?? "USD";
+  let expectedThisMonth = 0;
+  let expectedThisMonthCount = 0;
+  let atRisk = 0;
+  let atRiskCount = 0;
+
+  const weekMap = new Map<string, { label: string; amount: number; count: number }>();
+
+  for (const row of activeRows) {
+    const isOverdue = row.status === "overdue" || row.dueDate < todayStr;
+
+    if (isOverdue) {
+      atRisk += row.total;
+      atRiskCount++;
+    } else {
+      if (row.dueDate >= monthStart && row.dueDate <= monthEnd) {
+        expectedThisMonth += row.total;
+        expectedThisMonthCount++;
+      }
+
+      const dueDate = new Date(row.dueDate + "T00:00:00");
+      const daysDiff = Math.floor((dueDate.getTime() - today.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
+      if (daysDiff >= 0 && daysDiff <= 56) {
+        const weekNum = Math.floor(daysDiff / 7);
+        const weekStartDate = new Date(today);
+        weekStartDate.setDate(new Date(today).getDate() - new Date(today).getDay() + weekNum * 7);
+        const weekStartStr = weekStartDate.toISOString().split("T")[0];
+
+        if (!weekMap.has(weekStartStr)) {
+          const weekLabel =
+            weekNum === 0 ? "This week" :
+            weekNum === 1 ? "Next week" :
+            `Week of ${weekStartDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+          weekMap.set(weekStartStr, { label: weekLabel, amount: 0, count: 0 });
+        }
+        const week = weekMap.get(weekStartStr)!;
+        week.amount += row.total;
+        week.count++;
+      }
+    }
+  }
+
+  const upcomingByWeek: CashFlowWeek[] = Array.from(weekMap.entries())
+    .map(([weekStart, { label, amount, count }]) => ({ weekStart, weekLabel: label, amount, count }))
+    .sort((a, b) => a.weekStart.localeCompare(b.weekStart));
+
+  return { expectedThisMonth, expectedThisMonthCount, atRisk, atRiskCount, upcomingByWeek, currency };
+}
+
 export async function getInvoiceByShareToken(token: string): Promise<Invoice | null> {
   const [row] = await db
     .select()
