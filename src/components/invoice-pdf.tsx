@@ -1,9 +1,9 @@
 import { Document, Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
 
-Font.register({ family: "Inter", src: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff" });
-Font.register({ family: "Roboto", src: "https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Me5Q.ttf" });
-Font.register({ family: "Playfair Display", src: "https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKd3vXDXbtM.ttf" });
-Font.register({ family: "Merriweather", src: "https://fonts.gstatic.com/s/merriweather/v30/u-440qyriQwlOrhSvowK_l5-fCZM.ttf" });
+Font.register({ family: "Inter", src: "/fonts/Inter-Regular.woff" });
+Font.register({ family: "Roboto", src: "/fonts/Roboto-Regular.woff" });
+Font.register({ family: "Playfair Display", src: "/fonts/PlayfairDisplay-Regular.woff" });
+Font.register({ family: "Merriweather", src: "/fonts/Merriweather-Regular.woff" });
 
 const FONT_FAMILY_MAP: Record<string, string> = {
   inter: "Inter",
