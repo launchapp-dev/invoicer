@@ -1,8 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --la-background: #ffffff;
+  --la-foreground: #171717;
+  --la-card: #ffffff;
+  --la-card-foreground: #171717;
+  --la-primary: #18181b;
+  --la-primary-foreground: #fafafa;
+  --la-secondary: #f4f4f5;
+  --la-secondary-foreground: #18181b;
+  --la-muted: #f4f4f5;
+  --la-muted-foreground: #71717a;
+  --la-accent: #f4f4f5;
+  --la-accent-foreground: #18181b;
+  --la-destructive: #ef4444;
+  --la-destructive-foreground: #fafafa;
+  --la-border: #e4e4e7;
+  --la-input: #e4e4e7;
+  --la-ring: #18181b;
+  --la-radius: 0.5rem;
+
+  --background: var(--la-background);
+  --foreground: var(--la-foreground);
 }
 
 @theme inline {
@@ -14,13 +33,28 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --la-background: #0a0a0a;
+    --la-foreground: #ededed;
+    --la-card: #18181b;
+    --la-card-foreground: #fafafa;
+    --la-primary: #fafafa;
+    --la-primary-foreground: #18181b;
+    --la-secondary: #27272a;
+    --la-secondary-foreground: #fafafa;
+    --la-muted: #27272a;
+    --la-muted-foreground: #a1a1aa;
+    --la-accent: #27272a;
+    --la-accent-foreground: #fafafa;
+    --la-destructive: #7f1d1d;
+    --la-destructive-foreground: #fafafa;
+    --la-border: #27272a;
+    --la-input: #27272a;
+    --la-ring: #d4d4d8;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--la-background);
+  color: var(--la-foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
