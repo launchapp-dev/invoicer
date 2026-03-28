@@ -46,47 +46,35 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
 export async function saveInvoice(invoice: Invoice): Promise<void> {
   const userId = await getCurrentUserId();
   const now = new Date().toISOString();
-  await db
-    .insert(invoices)
-    .values({
-      id: invoice.id,
-      userId,
-      invoiceNumber: invoice.invoiceNumber,
-      status: invoice.status,
-      issueDate: invoice.issueDate,
-      dueDate: invoice.dueDate,
-      fromJson: JSON.stringify(invoice.from),
-      toJson: JSON.stringify(invoice.to),
-      lineItemsJson: JSON.stringify(invoice.lineItems),
-      subtotal: invoice.subtotal,
-      taxRate: invoice.taxRate,
-      taxAmount: invoice.taxAmount,
-      discount: invoice.discount,
-      total: invoice.total,
-      notes: invoice.notes,
-      currency: invoice.currency,
-      updatedAt: now,
-    })
-    .onConflictDoUpdate({
-      target: invoices.id,
-      set: {
-        invoiceNumber: invoice.invoiceNumber,
-        status: invoice.status,
-        issueDate: invoice.issueDate,
-        dueDate: invoice.dueDate,
-        fromJson: JSON.stringify(invoice.from),
-        toJson: JSON.stringify(invoice.to),
-        lineItemsJson: JSON.stringify(invoice.lineItems),
-        subtotal: invoice.subtotal,
-        taxRate: invoice.taxRate,
-        taxAmount: invoice.taxAmount,
-        discount: invoice.discount,
-        total: invoice.total,
-        notes: invoice.notes,
-        currency: invoice.currency,
-        updatedAt: now,
-      },
-    });
+  const fields = {
+    invoiceNumber: invoice.invoiceNumber,
+    status: invoice.status,
+    issueDate: invoice.issueDate,
+    dueDate: invoice.dueDate,
+    fromJson: JSON.stringify(invoice.from),
+    toJson: JSON.stringify(invoice.to),
+    lineItemsJson: JSON.stringify(invoice.lineItems),
+    subtotal: invoice.subtotal,
+    taxRate: invoice.taxRate,
+    taxAmount: invoice.taxAmount,
+    discount: invoice.discount,
+    total: invoice.total,
+    notes: invoice.notes,
+    currency: invoice.currency,
+  };
+  const existing = await db
+    .select({ id: invoices.id })
+    .from(invoices)
+    .where(and(eq(invoices.id, invoice.id), eq(invoices.userId, userId)))
+    .limit(1);
+  if (existing.length > 0) {
+    await db
+      .update(invoices)
+      .set({ ...fields, updatedAt: now })
+      .where(and(eq(invoices.id, invoice.id), eq(invoices.userId, userId)));
+  } else {
+    await db.insert(invoices).values({ ...fields, id: invoice.id, userId, updatedAt: now });
+  }
 }
 
 export async function listInvoices(): Promise<Invoice[]> {
