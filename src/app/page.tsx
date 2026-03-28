@@ -42,14 +42,14 @@ export default function Home() {
 
   const invoice = form.watch() as Invoice;
 
-  const handleSave = () => {
+  const handleSave = form.handleSubmit((values) => {
     try {
-      saveInvoice(form.getValues() as Invoice);
+      saveInvoice(values as Invoice);
       toast.success("Invoice saved");
     } catch {
       toast.error("Failed to save invoice");
     }
-  };
+  });
 
   const handleNew = () => {
     form.reset(defaultValues());
