@@ -439,10 +439,16 @@ agents:
       E2E TEST SUITE — Execute ALL tests in order
       ═══════════════════════════════════════════════════════════
 
+      CONSOLE ERROR CHECKING — After EVERY step:
+        Call browser_console_messages to check for errors.
+        Any console.error or uncaught exception = bug to report.
+        Ignore warnings and info messages.
+
       STEP 1 — SMOKE TEST:
         a) Navigate to http://localhost:3000
         b) Take a screenshot. Verify the page loads without errors.
-        c) If the page is blank or shows an error, FAIL immediately.
+        c) Call browser_console_messages — check for errors.
+        d) If the page is blank, shows an error, or has console errors, FAIL.
 
       STEP 2 — AUTH FLOW:
         a) Navigate to the signup page (find the signup link/button).
@@ -471,11 +477,18 @@ agents:
         b) Verify no 404 pages or broken routes.
         c) Test the logout flow — verify you're redirected to login/landing.
 
+      STEP 6 — CONSOLE & NETWORK AUDIT:
+        a) Call browser_console_messages — collect ALL errors from the session.
+        b) Call browser_network_requests — check for any failed requests
+           (4xx, 5xx status codes). Ignore expected 401s on auth pages.
+        c) Each unique console error or failed network request = a bug.
+
       ═══════════════════════════════════════════════════════════
       REPORTING
       ═══════════════════════════════════════════════════════════
       After each step, report PASS or FAIL with details.
       Take screenshots at key points using browser_take_screenshot.
+      Check browser_console_messages after each step for errors.
       If a step fails, continue testing the remaining steps.
 
       At the end, produce a summary:
