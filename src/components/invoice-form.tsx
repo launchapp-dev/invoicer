@@ -36,8 +36,14 @@ function ContactSection({ prefix, title }: { prefix: "from" | "to"; title: strin
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.name`}>Name</Label>
-          <Input id={`${prefix}.name`} {...register(`${prefix}.name`)} error={!!e?.name} />
-          {e?.name && <p className="text-xs text-destructive">{e.name.message}</p>}
+          <Input
+            id={`${prefix}.name`}
+            {...register(`${prefix}.name`)}
+            error={!!e?.name}
+            aria-invalid={!!e?.name}
+            aria-describedby={e?.name ? `${prefix}-name-error` : undefined}
+          />
+          {e?.name && <p id={`${prefix}-name-error`} role="alert" className="text-xs text-destructive">{e.name.message}</p>}
         </div>
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.email`}>Email</Label>
@@ -101,9 +107,11 @@ export function InvoiceForm() {
               id="invoiceNumber"
               {...register("invoiceNumber")}
               error={!!errors.invoiceNumber}
+              aria-invalid={!!errors.invoiceNumber}
+              aria-describedby={errors.invoiceNumber ? "invoice-number-error" : undefined}
             />
             {errors.invoiceNumber && (
-              <p className="text-xs text-destructive">{errors.invoiceNumber.message}</p>
+              <p id="invoice-number-error" role="alert" className="text-xs text-destructive">{errors.invoiceNumber.message}</p>
             )}
           </div>
           <div className="grid gap-2">
