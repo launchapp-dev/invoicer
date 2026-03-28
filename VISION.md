@@ -142,9 +142,31 @@ A modern SaaS invoicing platform where AI handles the tedious parts — data ent
 - **Grows with you** — free tier handles basics, paid tier unlocks AI, recurring, multi-currency
 - **Offline-resilient** — core invoice creation works without network, syncs when online
 
+## Landing Page (/)
+
+The landing page is the first thing visitors see. It must be beautiful, modern, and immediately communicate what Invoicer does. Use the design system's premium components — this is the showcase.
+
+### Structure
+1. **Hero** — Big headline, subheadline, and CTA ("Get Started Free"). Show a mock invoice preview or animated demo. Use gradient backgrounds, subtle animations (FadeUp, BlurIn from design system). No stock photos.
+2. **Social proof** — "Trusted by X businesses" or "Y invoices created" counter (can be placeholder numbers for v1).
+3. **Feature grid** — 3-4 key features with icons and short descriptions: AI-powered creation, instant PDF, multi-currency, client management. Use the design system's FeatureGrid or BentoGrid component.
+4. **How it works** — 3-step visual: Create → Preview → Send. Clean, minimal icons.
+5. **Invoice preview** — Interactive or animated preview of what an invoice looks like. This is the money shot — make it look professional and polished.
+6. **Pricing** — Simple pricing table: Free tier vs Pro tier. Use the design system's PricingTable component. Free: 5 invoices/month, 1 currency. Pro: unlimited everything + AI features.
+7. **CTA section** — Final call to action with signup form or button. Gradient background, compelling copy.
+8. **Footer** — Links, copyright, "Built with AO" badge.
+
+### Design guidelines
+- Use design system animation components: FadeUp, BlurIn, CountUp, Parallax, GradientMesh
+- Dark/light mode toggle in the nav
+- Mobile-first — hero stacks vertically, feature grid becomes single column
+- No generic SaaS template look — this should feel distinctive and premium
+- Page should load fast — no heavy images, use CSS gradients and SVG illustrations
+- Smooth scroll between sections
+
 ## Pages
 
-1. **/** — Marketing landing page (unauthenticated)
+1. **/** — Marketing landing page (see above)
 2. **/login** — Login
 3. **/signup** — Sign up
 4. **/dashboard** — Invoice dashboard with stats, recent invoices, quick actions
