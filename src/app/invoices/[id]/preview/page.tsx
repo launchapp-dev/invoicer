@@ -60,6 +60,12 @@ export default function PreviewInvoicePage() {
       })
       .catch((err) => {
         console.error(err);
+        const msg = err instanceof Error ? err.message : "Failed to load invoice";
+        if (msg === "Unauthorized") {
+          toast.error("Your session has expired. Please sign in again.");
+          router.replace("/login");
+          return;
+        }
         toast.error("Failed to load invoice");
         router.replace("/dashboard");
       });
