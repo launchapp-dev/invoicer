@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useFieldArray } from "react-hook-form";
 import { Sparkles, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -179,6 +179,26 @@ function ContactSection({ prefix, title, clients, onClientSelect, onCurrencyChan
   );
 }
 
+const COUNTRY_TAX_MAP: Record<string, { name: string; rate: number; countryDisplay: string }> = {
+  "united kingdom": { name: "VAT", rate: 20, countryDisplay: "the UK" },
+  "uk": { name: "VAT", rate: 20, countryDisplay: "the UK" },
+  "gb": { name: "VAT", rate: 20, countryDisplay: "the UK" },
+  "germany": { name: "VAT", rate: 19, countryDisplay: "Germany" },
+  "de": { name: "VAT", rate: 19, countryDisplay: "Germany" },
+  "france": { name: "VAT", rate: 20, countryDisplay: "France" },
+  "fr": { name: "VAT", rate: 20, countryDisplay: "France" },
+  "australia": { name: "GST", rate: 10, countryDisplay: "Australia" },
+  "au": { name: "GST", rate: 10, countryDisplay: "Australia" },
+  "canada": { name: "GST", rate: 5, countryDisplay: "Canada" },
+  "ca": { name: "GST", rate: 5, countryDisplay: "Canada" },
+  "new zealand": { name: "GST", rate: 15, countryDisplay: "New Zealand" },
+  "nz": { name: "GST", rate: 15, countryDisplay: "New Zealand" },
+  "india": { name: "GST", rate: 18, countryDisplay: "India" },
+  "in": { name: "GST", rate: 18, countryDisplay: "India" },
+  "singapore": { name: "GST", rate: 9, countryDisplay: "Singapore" },
+  "sg": { name: "GST", rate: 9, countryDisplay: "Singapore" },
+};
+
 const FREQUENCY_LABELS: Record<string, string> = {
   weekly: "Weekly",
   biweekly: "Bi-weekly",
@@ -210,11 +230,24 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<SuggestedLineItem[] | null>(null);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [taxSuggestion, setTaxSuggestion] = useState<{ name: string; rate: number; countryDisplay: string } | null>(null);
+  const [taxSuggestionDismissed, setTaxSuggestionDismissed] = useState(false);
+
+  const { fields: taxLineFields, append: appendTaxLine, remove: removeTaxLine, update: updateTaxLine } = useFieldArray({ control, name: "taxLines" });
 
   useEffect(() => {
     setSuggestions(null);
     setLoadingSuggestions(false);
-  }, [selectedClientId]);
+    setTaxSuggestionDismissed(false);
+
+    if (!selectedClientId) {
+      setTaxSuggestion(null);
+      return;
+    }
+    const client = (clients ?? []).find((c) => c.id === selectedClientId);
+    const match = client?.country ? COUNTRY_TAX_MAP[client.country.toLowerCase().trim()] : undefined;
+    setTaxSuggestion(match ?? null);
+  }, [selectedClientId, clients]);
 
   async function handleSuggestLineItems() {
     if (!selectedClientId) return;
@@ -454,7 +487,40 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
       <InvoiceTotals
         control={control}
         register={register}
+        taxLineFields={taxLineFields}
+        appendTaxLine={appendTaxLine}
+        removeTaxLine={removeTaxLine}
+        updateTaxLine={updateTaxLine}
       />
+
+      {taxSuggestion && !taxSuggestionDismissed && !taxLines?.some((l) => l.rate > 0) && (
+        <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm">
+          <span>
+            Client is in {taxSuggestion.countryDisplay} — Apply {taxSuggestion.rate}% {taxSuggestion.name}?
+          </span>
+          <div className="flex items-center gap-2 shrink-0 ml-4">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                appendTaxLine({ id: crypto.randomUUID(), name: taxSuggestion.name, rate: taxSuggestion.rate, amount: 0 });
+                setTaxSuggestionDismissed(true);
+              }}
+            >
+              Apply
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setTaxSuggestionDismissed(true)}
+            >
+              Dismiss
+            </Button>
+          </div>
+        </div>
+      )}
 
       <Card>
         <CardContent className="pt-6 grid gap-2">
