@@ -129,7 +129,16 @@ export function InvoiceForm() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="dueDate">Due Date</Label>
-            <Input id="dueDate" type="date" {...register("dueDate")} />
+            <Input
+              id="dueDate"
+              type="date"
+              {...register("dueDate")}
+              aria-invalid={!!errors.dueDate}
+              aria-describedby={errors.dueDate ? "due-date-error" : undefined}
+            />
+            {errors.dueDate && (
+              <p id="due-date-error" role="alert" className="text-xs text-destructive">{errors.dueDate.message}</p>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="currency">Currency</Label>
