@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import { LogoutButton } from "./logout-button";
 import { InvoiceActions } from "./invoice-actions";
+import { PaginationControls } from "./pagination-controls";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" | "destructive"> = {
@@ -124,17 +125,7 @@ export default async function DashboardPage({
             </div>
 
             {totalCount > LIMIT && (
-              <div className="flex items-center justify-center gap-4 mt-4">
-                <Button variant="outline" asChild disabled={page <= 1}>
-                  <Link href={`?page=${page - 1}`}>Previous</Link>
-                </Button>
-                <span className="text-sm text-muted-foreground">
-                  Page {page} of {totalPages}
-                </span>
-                <Button variant="outline" asChild disabled={page >= totalPages}>
-                  <Link href={`?page=${page + 1}`}>Next</Link>
-                </Button>
-              </div>
+              <PaginationControls page={page} totalPages={totalPages} />
             )}
           </>
         )}
