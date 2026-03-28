@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { invoices } from "@/db/schema";
@@ -41,6 +41,16 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
     notes: row.notes,
     currency: row.currency,
   };
+}
+
+export async function getNextInvoiceNumber(): Promise<string> {
+  const userId = await getCurrentUserId();
+  const [result] = await db
+    .select({ count: count() })
+    .from(invoices)
+    .where(eq(invoices.userId, userId));
+  const n = (result?.count ?? 0) + 1;
+  return `INV-${String(n).padStart(3, "0")}`;
 }
 
 export async function saveInvoice(invoice: Invoice): Promise<void> {

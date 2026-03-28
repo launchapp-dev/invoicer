@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
-import { saveInvoice } from "@/lib/storage";
+import { saveInvoice, getNextInvoiceNumber } from "@/lib/storage";
 import { toast } from "@/components/ui/sonner";
 import { authClient } from "@/lib/auth-client";
 import type { Invoice } from "@/types/invoice";
@@ -21,7 +21,7 @@ function defaultValues(): InvoiceFormValues {
   const due = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
   return {
     id: crypto.randomUUID(),
-    invoiceNumber: `INV-${Date.now()}`,
+    invoiceNumber: "",
     status: "draft",
     issueDate: today,
     dueDate: due,
@@ -53,6 +53,13 @@ export default function NewInvoicePage() {
     resolver: zodResolver(invoiceSchema),
     defaultValues: defaultValues(),
   });
+
+  const { setValue } = form;
+  useEffect(() => {
+    getNextInvoiceNumber().then((num) => {
+      setValue("invoiceNumber", num, { shouldDirty: false });
+    }).catch(() => {});
+  }, [setValue]);
 
   const invoice = form.watch() as Invoice;
 
