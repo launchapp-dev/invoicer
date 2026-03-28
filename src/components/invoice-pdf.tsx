@@ -268,6 +268,14 @@ export function InvoicePDF({ invoice }: InvoicePDFProps) {
               </Text>
             </View>
           )}
+          {(invoice.discount ?? 0) > 0 && (
+            <View style={styles.totalsRow}>
+              <Text style={styles.totalsLabel}>Discount</Text>
+              <Text style={[styles.totalsValue, styles.destructiveText]}>
+                -{formatCurrency(invoice.discount, invoice.currency)}
+              </Text>
+            </View>
+          )}
           <View style={styles.totalsSeparator} />
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Total</Text>
