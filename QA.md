@@ -146,8 +146,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 ## Environment Notes
 
-<!-- QA agent: document any environment-specific findings here (e.g., "database must be seeded before auth works", "dev server must be running on port 3000") -->
-- App URL: http://localhost:3000
+<!-- QA agent: document any environment-specific findings here (e.g., "database must be seeded before auth works", "dev server must be running on port 3002") -->
+- App URL: http://localhost:3002
+- Dev server: `pnpm dev` runs on port **3002** (dedicated — avoids conflict with CondoHub on 3000, PostPilot on 3001). Start with `pnpm dev` before running any E2E tests.
 - Database: SQLite via Drizzle ORM — run `pnpm db:push` before testing
 - Auth: Better Auth — requires BETTER_AUTH_SECRET and BETTER_AUTH_URL in .env
 - Test credentials: qa-test@invoicer.dev / TestPass123!
