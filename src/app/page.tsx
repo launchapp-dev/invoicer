@@ -139,7 +139,7 @@ export default function Home() {
             </Button>
             <Button variant="outline" onClick={handleNew}>New</Button>
             <InvoiceHistory onLoad={handleLoad} onDuplicate={handleDuplicate} />
-            <Button onClick={handleSave}>Save Invoice</Button>
+            <Button onClick={handleSave} disabled={form.formState.isSubmitting}>Save Invoice</Button>
             <Button variant="outline" size="sm" onClick={handleLogout}>Sign out</Button>
           </div>
         </div>
