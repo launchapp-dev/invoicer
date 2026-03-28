@@ -21,6 +21,7 @@ import { InvoiceActions } from "./invoice-actions";
 import { PaginationControls } from "./pagination-controls";
 import { DashboardFilters } from "./dashboard-filters";
 import { DashboardStats } from "./dashboard-stats";
+import { AiInvoiceCommand } from "./ai-invoice-command";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const VALID_STATUSES: InvoiceStatus[] = ["draft", "sent", "paid", "overdue", "cancelled"];
@@ -99,9 +100,12 @@ export default async function DashboardPage({
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-semibold">Invoices</h1>
-          <Button asChild>
-            <Link href="/invoices/new">New Invoice</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <AiInvoiceCommand />
+            <Button asChild>
+              <Link href="/invoices/new">New Invoice</Link>
+            </Button>
+          </div>
         </div>
 
         <Suspense fallback={

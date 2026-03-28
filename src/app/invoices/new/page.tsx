@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import type { ParsedInvoice } from "@/lib/ai";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
@@ -49,8 +50,30 @@ function defaultValues(): InvoiceFormValues {
   };
 }
 
-export default function NewInvoicePage() {
+function parseDueDateFromTerms(terms: string): string {
+  const lower = terms.toLowerCase().trim();
+  const netMatch = lower.match(/^net\s+(\d+)$/);
+  if (netMatch) {
+    const days = parseInt(netMatch[1], 10);
+    return new Date(Date.now() + days * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
+  }
+  if (
+    lower.includes("receipt") ||
+    lower.includes("immediate") ||
+    lower === "due now"
+  ) {
+    return new Date().toISOString().split("T")[0];
+  }
+  return new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+}
+
+function NewInvoicePageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: session, isPending } = authClient.useSession();
   const [savedId, setSavedId] = useState<string | null>(null);
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
@@ -91,9 +114,45 @@ export default function NewInvoicePage() {
         setValue("taxRate", s.defaultTaxRate, { shouldDirty: false });
         if (s.defaultNotes) setValue("notes", s.defaultNotes, { shouldDirty: false });
       }
+
+      const prefillParam = searchParams.get("prefill");
+      if (prefillParam) {
+        try {
+          const prefill = JSON.parse(atob(prefillParam)) as ParsedInvoice;
+          if (prefill.recipientName) {
+            setValue("to.name", prefill.recipientName, { shouldDirty: true });
+          }
+          if (prefill.recipientEmail) {
+            setValue("to.email", prefill.recipientEmail, { shouldDirty: true });
+          }
+          if (prefill.lineItems && prefill.lineItems.length > 0) {
+            setValue(
+              "lineItems",
+              prefill.lineItems.map((item) => ({
+                id: crypto.randomUUID(),
+                description: item.description,
+                quantity: item.quantity,
+                rate: item.unitPrice,
+                amount: item.quantity * item.unitPrice,
+              })),
+              { shouldDirty: true }
+            );
+          }
+          if (prefill.paymentTerms) {
+            setValue("dueDate", parseDueDateFromTerms(prefill.paymentTerms), {
+              shouldDirty: true,
+            });
+          }
+          if (prefill.notes) {
+            setValue("notes", prefill.notes, { shouldDirty: true });
+          }
+        } catch {
+          // ignore malformed prefill
+        }
+      }
     };
     init();
-  }, [setValue]);
+  }, [setValue, searchParams]);
 
   const invoice = form.watch() as Invoice;
 
@@ -231,5 +290,13 @@ export default function NewInvoicePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function NewInvoicePage() {
+  return (
+    <Suspense>
+      <NewInvoicePageContent />
+    </Suspense>
   );
 }
