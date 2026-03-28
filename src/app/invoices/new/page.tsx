@@ -124,6 +124,7 @@ function NewInvoicePageContent() {
           setValue("taxLines", [{ id: crypto.randomUUID(), name: "Tax", rate: s.defaultTaxRate, amount: 0 }], { shouldDirty: false });
         }
         if (s.defaultNotes) setValue("notes", s.defaultNotes, { shouldDirty: false });
+        if (s.defaultPaymentTerms) setValue("paymentTerms", s.defaultPaymentTerms as InvoiceFormValues["paymentTerms"], { shouldDirty: false });
         if (s.logoUrl) setLogoUrl(s.logoUrl);
         if (s.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
         if (s.brandColor) setBrandColor(s.brandColor);
