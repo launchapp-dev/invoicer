@@ -90,6 +90,9 @@ export default function PreviewInvoicePage() {
         <div className="flex items-center justify-between px-6 py-3">
           <h1 className="text-lg font-semibold">Invoice Preview</h1>
           <div className="flex items-center gap-2">
+            <Button variant="ghost" asChild>
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
             <Button variant="outline" asChild>
               <Link href={`/invoices/${params?.id}`}>Back to Edit</Link>
             </Button>
