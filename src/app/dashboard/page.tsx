@@ -50,7 +50,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-semibold">Invoices</h1>
           <Button asChild>
-            <Link href="/invoices/new">New Invoice</Link>
+            <Link href="/">New Invoice</Link>
           </Button>
         </div>
 
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
             <p className="text-muted-foreground">No invoices yet.</p>
             <Button asChild>
-              <Link href="/invoices/new">Create Invoice</Link>
+              <Link href="/">Create Invoice</Link>
             </Button>
           </div>
         ) : (
@@ -77,9 +77,7 @@ export default async function DashboardPage() {
               {invoices.map((invoice) => (
                 <TableRow key={invoice.id}>
                   <TableCell className="font-medium">
-                    <Link href={`/invoices/${invoice.id}`} className="hover:underline">
-                      {invoice.invoiceNumber}
-                    </Link>
+                    {invoice.invoiceNumber}
                   </TableCell>
                   <TableCell>{invoice.to.name || "—"}</TableCell>
                   <TableCell>{invoice.issueDate}</TableCell>
