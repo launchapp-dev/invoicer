@@ -53,7 +53,8 @@ export default function Home() {
   }, [isPending, session, router]);
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme");
+    let stored: string | null = null;
+    try { stored = localStorage.getItem("theme"); } catch {}
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const dark = stored === "dark" || (!stored && prefersDark);
     document.documentElement.classList.toggle("dark", dark);
@@ -63,7 +64,7 @@ export default function Home() {
   const toggleTheme = () => {
     const next = !isDark;
     document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("theme", next ? "dark" : "light");
+    try { localStorage.setItem("theme", next ? "dark" : "light"); } catch {}
     setIsDark(next);
   };
 
