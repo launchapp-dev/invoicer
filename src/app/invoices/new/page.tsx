@@ -67,6 +67,13 @@ export default function NewInvoicePage() {
   });
 
   useEffect(() => {
+    if (!form.formState.isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [form.formState.isDirty]);
+
+  useEffect(() => {
     if (savedId) {
       router.push(`/invoices/${savedId}`);
     }
