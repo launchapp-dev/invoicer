@@ -5,6 +5,7 @@ tools_allowlist:
   - pnpm
   - git
   - gh
+  - bash
 
 mcp_servers:
   context7:
