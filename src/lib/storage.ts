@@ -182,7 +182,15 @@ export async function duplicateInvoice(id: string): Promise<Invoice | null> {
   const existing = await db
     .select({ invoiceNumber: invoices.invoiceNumber })
     .from(invoices)
-    .where(and(eq(invoices.userId, userId), like(invoices.invoiceNumber, `${baseNumber}%`)));
+    .where(
+      and(
+        eq(invoices.userId, userId),
+        or(
+          eq(invoices.invoiceNumber, baseNumber),
+          like(invoices.invoiceNumber, `${baseNumber} (%)`)
+        )
+      )
+    );
   let maxSuffix = 1;
   for (const { invoiceNumber } of existing) {
     const match = invoiceNumber.match(/ \((\d+)\)$/);
