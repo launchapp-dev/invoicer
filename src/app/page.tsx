@@ -61,9 +61,17 @@ export default function Home() {
 
   const invoice = form.watch() as Invoice;
 
+  useEffect(() => {
+    if (!form.formState.isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [form.formState.isDirty]);
+
   const handleSave = form.handleSubmit((values) => {
     try {
       saveInvoice(values as Invoice);
+      form.reset(values);
       toast.success("Invoice saved");
     } catch {
       toast.error("Failed to save invoice");
@@ -71,6 +79,9 @@ export default function Home() {
   });
 
   const handleNew = () => {
+    if (form.formState.isDirty) {
+      if (!confirm("Discard unsaved changes?")) return;
+    }
     form.reset(defaultValues());
   };
 
