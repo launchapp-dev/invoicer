@@ -4,16 +4,17 @@
 
 ## What Is This?
 
-A modern invoice generator web app. Users fill out a form, see a live preview, and download a PDF invoice. Built as an open-source showcase of what AO (Agent Orchestrator) can autonomously build.
+A SaaS invoice generator. Users sign up, create invoices, see a live preview, and download PDFs. Built as an open-source showcase of what AO (Agent Orchestrator) can autonomously build.
 
 ## Tech Stack
 
 - **Next.js 15** — App Router, TypeScript, `src/` directory
 - **@launchapp/design-system** — shadcn registry with Radix UI primitives and `--la-*` CSS tokens
 - **Tailwind CSS v4** — Styling
+- **Auth**: Better Auth (or NextAuth) — email/password signup/login, session management
+- **Database**: SQLite + Drizzle ORM — invoices stored per-user
 - **React Hook Form + Zod** — Form state and validation
 - **@react-pdf/renderer** — Client-side PDF generation
-- **localStorage** — Invoice persistence (no backend)
 
 ## Design System — shadcn Registry
 
@@ -41,20 +42,33 @@ All design tokens use the `--la-` prefix (e.g., `--la-primary`, `--la-background
 ```
 src/
   app/
-    layout.tsx        — Root layout
-    page.tsx          — Main invoice page
-    globals.css       — Global styles + --la-* design tokens
+    layout.tsx              — Root layout
+    page.tsx                — Landing page (unauthenticated)
+    globals.css             — Global styles + --la-* design tokens
+    (auth)/
+      login/page.tsx        — Login page
+      signup/page.tsx       — Signup page
+    dashboard/
+      page.tsx              — Invoice dashboard (authenticated)
+    invoices/
+      new/page.tsx          — Create invoice
+      [id]/page.tsx         — Edit invoice
+      [id]/preview/page.tsx — Preview/download
   components/
-    ui/               — shadcn registry components (installed via CLI)
-    invoice-form.tsx  — Invoice form component
-    line-items.tsx    — Line item management
+    ui/                     — shadcn registry components (installed via CLI)
+    invoice-form.tsx        — Invoice form component
+    line-items.tsx          — Line item management
     ...
   lib/
-    utils.ts          — cn() utility (installed by shadcn)
-    calculations.ts   — Invoice math
-    storage.ts        — localStorage helpers
+    utils.ts                — cn() utility (installed by shadcn)
+    auth.ts                 — Auth configuration
+    db.ts                   — Drizzle DB client
+    calculations.ts         — Invoice math
+  db/
+    schema.ts               — Drizzle schema (users, invoices, line_items)
+    migrations/             — SQL migrations
   types/
-    invoice.ts        — TypeScript types (Invoice, LineItem, etc.)
+    invoice.ts              — TypeScript types (Invoice, LineItem, etc.)
 ```
 
 ## Build & Test
@@ -64,6 +78,8 @@ pnpm install
 pnpm dev          # Development server on :3000
 pnpm build        # Production build
 pnpm lint         # ESLint
+pnpm db:push      # Push schema to database
+pnpm db:migrate   # Run migrations
 ```
 
 ## Working Rules
@@ -73,7 +89,8 @@ pnpm lint         # ESLint
 - To add a new design system component, run: `npx shadcn@latest add --registry https://launchapp-dev.github.io/design-system/registry.json <component-name>`
 - All form state goes through React Hook Form with Zod schemas
 - Currency formatting via Intl.NumberFormat
-- Keep everything client-side — no API routes, no server actions, no database
+- Auth-protected routes use middleware or server-side session checks
+- All invoice CRUD goes through server actions or API routes backed by Drizzle
 - File naming: kebab-case for files, PascalCase for components
 - Imports use `@/*` alias (maps to `src/`)
 - Do not add yourself as author or co-author in commits
