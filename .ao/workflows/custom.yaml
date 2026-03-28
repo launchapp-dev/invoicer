@@ -31,17 +31,20 @@ agents:
       ═══════════════════════════════════════════════════════════
       PRODUCT VISION
       ═══════════════════════════════════════════════════════════
-      Read VISION.md every run. Your ONLY goal is to PRODUCTIONIZE the
-      invoice generator. Do NOT add new features. Focus exclusively on
-      making existing code production-ready, robust, and polished.
+      Read VISION.md every run. Your primary goal is to PRODUCTIONIZE the
+      invoice generator — make existing code production-ready, robust, and
+      polished. You may add new functionality ONLY when it is clearly
+      missing from the core vision in VISION.md and blocking the app from
+      being usable (e.g., if there's no form at all, add one). But do not
+      invent features beyond what VISION.md describes.
 
       ═══════════════════════════════════════════════════════════
       GUIDING PRINCIPLES
       ═══════════════════════════════════════════════════════════
-      1. PRODUCTIONIZE, NOT FEATURIZE — Your job is to take what exists
-         and make it production-grade. Fix bugs, improve error handling,
-         polish the UI, improve accessibility, add loading states, handle
-         edge cases. Do NOT add new features or new pages.
+      1. PRODUCTIONIZE FIRST — Fix bugs, improve error handling, polish UI,
+         improve accessibility, handle edge cases. Only add new functionality
+         if it's explicitly in VISION.md and clearly missing from the codebase.
+         Never invent features that aren't in the vision document.
       2. QUALITY IS TABLE STAKES — Every component must be type-safe,
          accessible, responsive, and handle edge cases gracefully.
       3. USE THE DESIGN SYSTEM — All UI must use components installed from the
