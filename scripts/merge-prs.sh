@@ -2,39 +2,33 @@
 set -euo pipefail
 
 REPO="launchapp-dev/invoicer"
-MERGED=0
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+QUEUED=0
 SKIPPED=0
-FAILED=0
 
-prs=$(gh pr list --repo "$REPO" --state open --json number,title,mergeable --jq '.[] | select(.mergeable == "MERGEABLE") | .number')
+prs=$(gh pr list --repo "$REPO" --state open --json number,title --jq '.[].title')
 
 if [ -z "$prs" ]; then
-  echo "No mergeable PRs found."
+  echo "No open PRs found."
   exit 0
 fi
 
-for pr in $prs; do
-  title=$(gh pr view "$pr" --repo "$REPO" --json title --jq '.title')
-  task_id=$(echo "$title" | grep -oE '[0-9]+' | head -1)
+while IFS= read -r title; do
+  task_num=$(echo "$title" | grep -oE '[0-9]+' | head -1)
+  [ -z "$task_num" ] && continue
+  task_id=$(printf 'TASK-%03d' "$task_num")
 
-  echo "--- PR #$pr: $title (TASK-$(printf '%03d' "$task_id")) ---"
-
-  if gh pr merge "$pr" --repo "$REPO" --squash --delete-branch 2>&1; then
-    echo "  MERGED"
-    MERGED=$((MERGED + 1))
-
-    if [ -n "$task_id" ]; then
-      task_padded=$(printf 'TASK-%03d' "$task_id")
-      ao --project-root "$(git rev-parse --show-toplevel)" task status --id "$task_padded" --status done 2>/dev/null || true
-      echo "  $task_padded -> done"
-    fi
-  else
-    echo "  FAILED to merge"
-    FAILED=$((FAILED + 1))
+  already_queued=$(ao --project-root "$PROJECT_ROOT" queue list --json 2>/dev/null | grep -c "$task_id" || true)
+  if [ "$already_queued" -gt 0 ]; then
+    echo "SKIP $task_id — already in queue"
+    SKIPPED=$((SKIPPED + 1))
+    continue
   fi
 
-  sleep 2
-done
+  echo "QUEUE $task_id for review"
+  ao --project-root "$PROJECT_ROOT" queue enqueue --task-id "$task_id" --workflow-ref pr-reviewer 2>/dev/null || true
+  QUEUED=$((QUEUED + 1))
+done <<< "$prs"
 
 echo ""
-echo "Summary: merged=$MERGED skipped=$SKIPPED failed=$FAILED"
+echo "Summary: queued=$QUEUED skipped=$SKIPPED"

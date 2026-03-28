@@ -396,7 +396,7 @@ agents:
       - NEVER mark a task as "done" without FIRST running gh pr merge.
       - NEVER skip the merge step. The task is NOT done until the PR is merged.
       - ALWAYS verify merge succeeded before setting task status.
-    model: claude-haiku-4-5
+    model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "github"]
 
@@ -662,14 +662,14 @@ phases:
       Execute all reconciliation steps: UNBLOCK blocked tasks, PROMOTE
       backlog, RE-ROUTE failed tasks, CLEAN stale queue, MARK DONE.
 
-  merge-open-prs:
+  scan-open-prs:
     mode: command
-    directive: Scan all open mergeable PRs and merge them via gh CLI
+    directive: Scan open PRs and enqueue review work for each
     command:
       program: bash
       args: ["scripts/merge-prs.sh"]
       cwd_mode: project_root
-      timeout_secs: 300
+      timeout_secs: 120
 
 workflows:
   - id: standard
@@ -748,10 +748,16 @@ workflows:
       - reconciliation
 
   - id: pr-reviewer
-    name: PR Merge Sweep
-    description: Merge all open mergeable PRs and mark tasks done
+    name: PR Review and Merge
+    description: Review a PR, merge if clean, request changes if not
     phases:
-      - merge-open-prs
+      - pr-review
+
+  - id: pr-scan
+    name: PR Scan
+    description: Scan open PRs and enqueue review work
+    phases:
+      - scan-open-prs
 
 schedules:
   - id: work-planner
@@ -764,9 +770,9 @@ schedules:
     workflow_ref: task-reconciler
     enabled: true
 
-  - id: pr-reviewer
+  - id: pr-scan
     cron: "*/3 * * * *"
-    workflow_ref: pr-reviewer
+    workflow_ref: pr-scan
     enabled: true
 
   - id: product-review
