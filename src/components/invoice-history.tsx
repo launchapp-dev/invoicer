@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 import { listInvoices, deleteInvoice } from "@/lib/storage";
 import { formatCurrency } from "@/lib/calculations";
 import type { Invoice } from "@/types/invoice";
@@ -36,18 +37,27 @@ interface InvoiceHistoryProps {
 function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryProps & { onClose: () => void }) {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; invoiceNumber: string } | null>(null);
 
   const refresh = useCallback(() => {
-    listInvoices().then(setInvoices).catch(console.error).finally(() => setLoading(false));
+    setError(null);
+    listInvoices()
+      .then(setInvoices)
+      .catch(() => setError("Failed to load invoices. Please try again."))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
 
   const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
-    await deleteInvoice(deleteTarget.id);
-    refresh();
+    try {
+      await deleteInvoice(deleteTarget.id);
+      refresh();
+    } catch {
+      toast.error("Failed to delete invoice. Please try again.");
+    }
     setDeleteTarget(null);
   };
 
@@ -85,6 +95,14 @@ function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryPro
             </div>
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <p role="alert" className="text-destructive text-sm">{error}</p>
       </div>
     );
   }
