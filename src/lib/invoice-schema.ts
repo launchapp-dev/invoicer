@@ -30,6 +30,7 @@ export const invoiceSchema = z.object({
   subtotal: z.number(),
   taxRate: z.number().min(0).max(100),
   taxAmount: z.number(),
+  discount: z.number().min(0),
   total: z.number(),
   notes: z.string(),
   currency: z.string().min(1),
