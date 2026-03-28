@@ -1,6 +1,6 @@
 "use server";
 
-import { and, count, desc, eq, gte, inArray, like, lte, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray, like, lte, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { clients, invoices, userSettings } from "@/db/schema";
@@ -117,11 +117,14 @@ export async function saveInvoice(invoice: Invoice): Promise<void> {
   }
 }
 
+export type InvoiceSort = "date_desc" | "date_asc" | "amount_desc" | "amount_asc" | "status" | "client";
+
 interface InvoiceFilters {
   search?: string;
   status?: InvoiceStatus;
   dateFrom?: string;
   dateTo?: string;
+  sort?: InvoiceSort;
 }
 
 export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilters): Promise<Invoice[]> {
@@ -144,7 +147,14 @@ export async function listInvoices(limit = 25, offset = 0, filters?: InvoiceFilt
         filters?.dateTo ? lte(invoices.issueDate, filters.dateTo) : undefined,
       )
     )
-    .orderBy(desc(invoices.updatedAt))
+    .orderBy(
+      filters?.sort === "date_asc" ? asc(invoices.createdAt) :
+      filters?.sort === "amount_desc" ? desc(invoices.total) :
+      filters?.sort === "amount_asc" ? asc(invoices.total) :
+      filters?.sort === "status" ? asc(invoices.status) :
+      filters?.sort === "client" ? asc(sql`json_extract(${invoices.toJson}, '$.name')`) :
+      desc(invoices.createdAt)
+    )
     .limit(limit)
     .offset(offset);
   return rows.map(rowToInvoice);

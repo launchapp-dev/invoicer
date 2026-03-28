@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { listInvoices, countInvoices } from "@/lib/storage";
+import { listInvoices, countInvoices, type InvoiceSort } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LogoutButton } from "./logout-button";
@@ -15,6 +15,7 @@ import { DashboardTable } from "./dashboard-table";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const VALID_STATUSES: InvoiceStatus[] = ["draft", "sent", "paid", "overdue", "cancelled"];
+const VALID_SORTS: InvoiceSort[] = ["date_desc", "date_asc", "amount_desc", "amount_asc", "status", "client"];
 
 const LIMIT = 25;
 
@@ -37,11 +38,14 @@ export default async function DashboardPage({
   const status = VALID_STATUSES.includes(statusParam as InvoiceStatus) ? (statusParam as InvoiceStatus) : undefined;
   const dateFrom = (params.dateFrom as string) ?? "";
   const dateTo = (params.dateTo as string) ?? "";
+  const sortParam = (params.sort as string) ?? "";
+  const sort = VALID_SORTS.includes(sortParam as InvoiceSort) ? (sortParam as InvoiceSort) : "date_desc";
   const filters = {
     ...(search ? { search } : {}),
     ...(status ? { status } : {}),
     ...(dateFrom ? { dateFrom } : {}),
     ...(dateTo ? { dateTo } : {}),
+    sort,
   };
   const hasFilters = !!(search || statusParam || dateFrom || dateTo);
 
@@ -58,6 +62,7 @@ export default async function DashboardPage({
     if (statusParam) redirectParams.set("status", statusParam);
     if (dateFrom) redirectParams.set("dateFrom", dateFrom);
     if (dateTo) redirectParams.set("dateTo", dateTo);
+    if (sortParam && sortParam !== "date_desc") redirectParams.set("sort", sortParam);
     redirect(`/dashboard${redirectParams.size ? `?${redirectParams}` : ""}`);
   }
 
