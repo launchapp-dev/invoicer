@@ -482,6 +482,17 @@ agents:
       STEP 5 — MARK DONE:
         Find tasks with merged PRs and set to "done".
 
+      STEP 6 — IDLE PIPELINE CHECK:
+        After completing all steps above, check if the pipeline is idle:
+        a) Call ao.task.list — count tasks with status "ready" or "in_progress".
+        b) Call ao.queue.list — count pending + assigned entries.
+        c) Run: gh pr list --state open --json number --repo launchapp-dev/invoicer
+        d) If ALL of these are zero (no ready tasks, no queued work, no open PRs):
+           - The pipeline is idle. Trigger the product owner to find new work.
+           - Call ao.queue.enqueue with workflow_ref="product-review"
+             and title="Idle pipeline — PO scan for work".
+           - Log: "Pipeline idle. Dispatched product-review to find work."
+
       RULES:
       - NEVER cancel tasks for staleness — decompose instead.
       - NEVER cancel decomposed parent tasks.
