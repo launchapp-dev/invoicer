@@ -60,7 +60,7 @@ export function InvoiceTotals({ control, register }: InvoiceTotalsProps) {
           </div>
           {isDiscountExcessive && (
             <p role="alert" className="text-xs text-destructive">
-              Discount exceeds invoice total — total is clamped to $0.00
+              Discount exceeds invoice total — total is clamped to {formatCurrency(0, currency)}
             </p>
           )}
         </div>
