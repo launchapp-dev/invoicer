@@ -291,7 +291,7 @@ function NewInvoicePageContent() {
       <div className="hidden lg:flex h-[calc(100vh-57px)]">
         <div className="w-1/2 overflow-y-auto border-r border-border bg-background p-6">
           <FormProvider {...form}>
-            <InvoiceForm />
+            <InvoiceForm clients={clients} />
           </FormProvider>
         </div>
         <div className="w-1/2 overflow-y-auto bg-muted/30 p-8">

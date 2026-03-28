@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -41,12 +42,27 @@ function ContactSection({ prefix, title, clients }: { prefix: "from" | "to"; tit
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const e = errors[prefix];
 
-  const clientOptions = (clients ?? []).map((c) => ({
-    value: c.id,
-    label: c.name + (c.email ? ` (${c.email})` : ""),
-  }));
+  const hasClients = (clients ?? []).length > 0;
+  const clientOptions = [
+    ...(hasClients ? [{ value: "__clear__", label: "— Fill manually —" }] : []),
+    ...(clients ?? []).map((c) => ({
+      value: c.id,
+      label: c.name + (c.email ? ` (${c.email})` : ""),
+    })),
+  ];
 
   function handleClientSelect(clientId: string) {
+    if (!clientId || clientId === "__clear__") {
+      setSelectedClientId("");
+      setValue(`${prefix}.name`, "", { shouldDirty: true });
+      setValue(`${prefix}.email`, "", { shouldDirty: true });
+      setValue(`${prefix}.address`, "", { shouldDirty: true });
+      setValue(`${prefix}.city`, "", { shouldDirty: true });
+      setValue(`${prefix}.state`, "", { shouldDirty: true });
+      setValue(`${prefix}.zip`, "", { shouldDirty: true });
+      setValue(`${prefix}.country`, "", { shouldDirty: true });
+      return;
+    }
     setSelectedClientId(clientId);
     const client = (clients ?? []).find((c) => c.id === clientId);
     if (client) {
@@ -69,14 +85,24 @@ function ContactSection({ prefix, title, clients }: { prefix: "from" | "to"; tit
         {prefix === "to" && (
           <div className="grid gap-2">
             <Label>Select client (optional)</Label>
-            <Combobox
-              options={clientOptions}
-              value={selectedClientId}
-              onValueChange={handleClientSelect}
-              placeholder="Select a saved client…"
-              searchPlaceholder="Search by name or email…"
-              emptyText="No clients saved yet"
-            />
+            {clients !== undefined && !hasClients ? (
+              <p className="text-sm text-muted-foreground">
+                No clients saved yet.{" "}
+                <Link href="/clients" className="underline underline-offset-2 text-foreground">
+                  Add a client
+                </Link>{" "}
+                to autofill this section.
+              </p>
+            ) : (
+              <Combobox
+                options={clientOptions}
+                value={selectedClientId}
+                onValueChange={handleClientSelect}
+                placeholder="Select a saved client…"
+                searchPlaceholder="Search by name or email…"
+                emptyText="No clients found"
+              />
+            )}
           </div>
         )}
         <div className="grid gap-2">
