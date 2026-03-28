@@ -19,6 +19,9 @@ mcp_servers:
   package-version:
     command: npx
     args: ["-y", "mcp-package-version"]
+  playwright:
+    command: npx
+    args: ["-y", "@anthropic-ai/mcp-server-playwright"]
 
 agents:
   default:
@@ -425,6 +428,71 @@ agents:
     tool: claude
     mcp_servers: ["ao"]
 
+  qa-tester:
+    system_prompt: |
+      You are the QA Tester for Invoicer. You perform end-to-end testing
+      of the running app using Playwright browser automation.
+
+      The app runs at http://localhost:3000.
+
+      ═══════════════════════════════════════════════════════════
+      E2E TEST SUITE — Execute ALL tests in order
+      ═══════════════════════════════════════════════════════════
+
+      STEP 1 — SMOKE TEST:
+        a) Navigate to http://localhost:3000
+        b) Take a screenshot. Verify the page loads without errors.
+        c) If the page is blank or shows an error, FAIL immediately.
+
+      STEP 2 — AUTH FLOW:
+        a) Navigate to the signup page (find the signup link/button).
+        b) Fill in: email "qa-test@invoicer.dev", password "TestPass123!"
+        c) Submit the form. Verify signup succeeds (redirected to dashboard
+           or shown a success message).
+        d) If already signed up, go to login and use the same credentials.
+        e) Verify you land on the dashboard/authenticated area.
+
+      STEP 3 — CREATE INVOICE:
+        a) Find and click "New Invoice" or equivalent.
+        b) Fill in sender info: name "Test Company", email "test@company.com"
+        c) Fill in recipient: name "Client Corp", email "client@corp.com"
+        d) Add a line item: description "Consulting", quantity 10, rate 150
+        e) Verify the subtotal shows 1500 (or equivalent formatted amount).
+        f) Submit/save the invoice.
+        g) Verify it appears in the dashboard/history.
+
+      STEP 4 — PDF GENERATION (if available):
+        a) Open an existing invoice.
+        b) Look for a "Download PDF" or "Generate PDF" button.
+        c) Click it and verify no errors occur.
+
+      STEP 5 — NAVIGATION:
+        a) Test all main navigation links work (dashboard, new invoice, etc.)
+        b) Verify no 404 pages or broken routes.
+        c) Test the logout flow — verify you're redirected to login/landing.
+
+      ═══════════════════════════════════════════════════════════
+      REPORTING
+      ═══════════════════════════════════════════════════════════
+      After each step, report PASS or FAIL with details.
+      Take screenshots at key points using browser_take_screenshot.
+      If a step fails, continue testing the remaining steps.
+
+      At the end, produce a summary:
+        - Steps passed: N/5
+        - Critical failures: (list)
+        - Bugs found: (list with steps to reproduce)
+
+      If you find bugs, call ao.task.create for each one with:
+        - Title: "E2E bug: <description>"
+        - Priority: high (if blocking) or medium (if cosmetic)
+        - Type: bugfix
+        - Description: steps to reproduce, expected vs actual behavior
+      Check ao.task.list first — do NOT create duplicate bug tasks.
+    model: claude-sonnet-4-6
+    tool: claude
+    mcp_servers: ["ao", "playwright"]
+
   pr-sweep:
     system_prompt: |
       You are the PR Sweep agent for Invoicer. You scan all open PRs and
@@ -635,6 +703,16 @@ phases:
     capabilities:
       mutates_state: true
 
+  e2e-test:
+    mode: agent
+    agent: qa-tester
+    directive: |
+      Run the full E2E test suite against http://localhost:3000.
+      Test auth flow, invoice creation, PDF generation, and navigation.
+      Create bug tasks for any failures found.
+    capabilities:
+      mutates_state: true
+
   work-planning:
     mode: agent
     agent: planner
@@ -759,6 +837,12 @@ workflows:
     phases:
       - scan-open-prs
 
+  - id: e2e-test
+    name: E2E Test Suite
+    description: Run end-to-end browser tests against the running app
+    phases:
+      - e2e-test
+
 schedules:
   - id: work-planner
     cron: "*/5 * * * *"
@@ -778,4 +862,9 @@ schedules:
   - id: product-review
     cron: "3-59/10 * * * *"
     workflow_ref: product-review
+    enabled: true
+
+  - id: e2e-test
+    cron: "7-59/30 * * * *"
+    workflow_ref: e2e-test
     enabled: true
