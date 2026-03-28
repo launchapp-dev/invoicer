@@ -30,7 +30,14 @@ export interface Invoice {
   subtotal: number;
   taxRate: number;
   taxAmount: number;
+  discount: number;
   total: number;
   notes: string;
   currency: string;
 }
+
+export type InvoiceFormValues = {
+  lineItems: LineItem[];
+  taxRate: number;
+  discount: number;
+};

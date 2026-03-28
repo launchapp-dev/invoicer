@@ -1,15 +1,17 @@
 "use client";
 
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useEffect } from "react";
+import { useFormContext, useFieldArray, type Control, type UseFormRegister } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectRoot, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { InvoiceTotals } from "@/components/invoice-totals";
 import { calcLineAmount, calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
 import type { InvoiceFormValues } from "@/lib/invoice-schema";
+import type { InvoiceFormValues as TotalsFormValues } from "@/types/invoice";
 
 const CURRENCIES = [
   { code: "USD", label: "USD — US Dollar" },
@@ -72,41 +74,31 @@ function ContactSection({ prefix, title }: { prefix: "from" | "to"; title: strin
 }
 
 export function InvoiceForm() {
-  const { register, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
+  const { register, control, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
   const { fields, append, remove } = useFieldArray<InvoiceFormValues, "lineItems">({
+    control,
     name: "lineItems",
   });
 
   const lineItems = watch("lineItems");
   const taxRate = watch("taxRate");
   const currency = watch("currency");
+  const discount = watch("discount");
+
+  useEffect(() => {
+    const subtotal = calcSubtotal(lineItems || []);
+    const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
+    setValue("subtotal", subtotal);
+    setValue("taxAmount", taxAmount);
+    setValue("total", calcTotal(subtotal, taxAmount, discount || 0));
+  }, [lineItems, taxRate, discount, setValue]);
 
   const handleLineChange = (index: number, field: "quantity" | "rate", value: string) => {
     const num = parseFloat(value) || 0;
     setValue(`lineItems.${index}.${field}`, num);
     const q = field === "quantity" ? num : (parseFloat(String(lineItems[index]?.quantity)) || 0);
     const r = field === "rate" ? num : (parseFloat(String(lineItems[index]?.rate)) || 0);
-    const amount = calcLineAmount(q, r);
-    setValue(`lineItems.${index}.amount`, amount);
-
-    const updatedItems = lineItems.map((item, i) => {
-      if (i === index) return { ...item, [field]: num, amount };
-      return item;
-    });
-    const subtotal = calcSubtotal(updatedItems);
-    const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
-    setValue("subtotal", subtotal);
-    setValue("taxAmount", taxAmount);
-    setValue("total", calcTotal(subtotal, taxAmount));
-  };
-
-  const handleTaxRateChange = (value: string) => {
-    const rate = parseFloat(value) || 0;
-    setValue("taxRate", rate);
-    const subtotal = calcSubtotal(lineItems);
-    const taxAmount = calcTaxAmount(subtotal, rate);
-    setValue("taxAmount", taxAmount);
-    setValue("total", calcTotal(subtotal, taxAmount));
+    setValue(`lineItems.${index}.amount`, calcLineAmount(q, r));
   };
 
   return (
@@ -202,15 +194,7 @@ export function InvoiceForm() {
                 size="icon"
                 className={index === 0 ? "mt-6" : ""}
                 disabled={fields.length === 1}
-                onClick={() => {
-                  remove(index);
-                  const updated = lineItems.filter((_, i) => i !== index);
-                  const subtotal = calcSubtotal(updated);
-                  const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
-                  setValue("subtotal", subtotal);
-                  setValue("taxAmount", taxAmount);
-                  setValue("total", calcTotal(subtotal, taxAmount));
-                }}
+                onClick={() => remove(index)}
                 aria-label="Remove line item"
               >
                 ×
@@ -223,40 +207,15 @@ export function InvoiceForm() {
             size="sm"
             onClick={() => append({ id: crypto.randomUUID(), description: "", quantity: 1, rate: 0, amount: 0 })}
           >
-            Add Line Item
+            + Add Line Item
           </Button>
-
-          <Separator />
-
-          <div className="flex flex-col items-end gap-2 text-sm">
-            <div className="flex items-center gap-4">
-              <span className="text-muted-foreground">Subtotal</span>
-              <span className="w-24 text-right">{(watch("subtotal") ?? 0).toFixed(2)}</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Label htmlFor="taxRate" className="text-muted-foreground">Tax Rate (%)</Label>
-              <Input
-                id="taxRate"
-                type="number"
-                min="0"
-                max="100"
-                step="0.1"
-                className="w-24"
-                defaultValue={watch("taxRate")}
-                onChange={(e) => handleTaxRateChange(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-muted-foreground">Tax</span>
-              <span className="w-24 text-right">{(watch("taxAmount") ?? 0).toFixed(2)}</span>
-            </div>
-            <div className="flex items-center gap-4 font-semibold">
-              <span>Total</span>
-              <span className="w-24 text-right">{(watch("total") ?? 0).toFixed(2)}</span>
-            </div>
-          </div>
         </CardContent>
       </Card>
+
+      <InvoiceTotals
+        control={control as unknown as Control<TotalsFormValues>}
+        register={register as unknown as UseFormRegister<TotalsFormValues>}
+      />
 
       <Card>
         <CardContent className="pt-6 grid gap-2">

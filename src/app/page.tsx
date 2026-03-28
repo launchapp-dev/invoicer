@@ -26,6 +26,7 @@ function defaultValues(): InvoiceFormValues {
     subtotal: 0,
     taxRate: 0,
     taxAmount: 0,
+    discount: 0,
     total: 0,
     notes: "",
     currency: "USD",
