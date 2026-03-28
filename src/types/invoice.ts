@@ -1,33 +1,36 @@
+export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue" | "cancelled";
+
+export interface ContactInfo {
+  name: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+
 export interface LineItem {
   id: string;
   description: string;
   quantity: number;
-  unitPrice: number;
+  rate: number;
+  amount: number;
 }
 
 export interface Invoice {
+  id: string;
   invoiceNumber: string;
+  status: InvoiceStatus;
   issueDate: string;
   dueDate: string;
-  status: "draft" | "sent" | "paid" | "overdue";
-
-  senderName: string;
-  senderEmail: string;
-  senderAddress: string;
-
-  recipientName: string;
-  recipientEmail: string;
-  recipientAddress: string;
-
+  from: ContactInfo;
+  to: ContactInfo;
   lineItems: LineItem[];
-  taxRate: number;
-  discountRate: number;
-  notes: string;
-}
-
-export interface InvoiceTotals {
   subtotal: number;
+  taxRate: number;
   taxAmount: number;
-  discountAmount: number;
   total: number;
+  notes: string;
+  currency: string;
 }
