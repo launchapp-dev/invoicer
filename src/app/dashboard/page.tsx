@@ -50,7 +50,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-semibold">Invoices</h1>
           <Button asChild>
-            <Link href="/">New Invoice</Link>
+            <Link href="/invoices/new">New Invoice</Link>
           </Button>
         </div>
 
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
             <p className="text-muted-foreground">No invoices yet.</p>
             <Button asChild>
-              <Link href="/">Create Invoice</Link>
+              <Link href="/invoices/new">Create Invoice</Link>
             </Button>
           </div>
         ) : (
@@ -71,11 +71,14 @@ export default async function DashboardPage() {
                 <TableHead>Due Date</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="w-16">
+                  <span className="sr-only">Actions</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {invoices.map((invoice) => (
-                <TableRow key={invoice.id}>
+                <TableRow key={invoice.id} className="relative cursor-pointer hover:bg-muted/50">
                   <TableCell className="font-medium">
                     {invoice.invoiceNumber}
                   </TableCell>
@@ -87,6 +90,19 @@ export default async function DashboardPage() {
                     <Badge variant={STATUS_VARIANT[invoice.status] ?? "secondary"}>
                       {invoice.status}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="relative z-10">
+                    <Link
+                      href={`/invoices/${invoice.id}`}
+                      className="absolute inset-0"
+                      aria-label={`Edit invoice ${invoice.invoiceNumber}`}
+                    />
+                    <Link
+                      href={`/invoices/${invoice.id}`}
+                      className="relative text-sm font-medium text-primary hover:underline"
+                    >
+                      Edit
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
