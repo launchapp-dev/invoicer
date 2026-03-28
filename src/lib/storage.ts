@@ -448,6 +448,11 @@ export async function saveMyTheme(theme: "light" | "dark" | "system"): Promise<v
   await upsertUserSettings(userId, { theme });
 }
 
+export async function saveMyTemplate(invoiceTemplate: "classic" | "modern" | "minimal"): Promise<void> {
+  const userId = await getCurrentUserId();
+  await upsertUserSettings(userId, { invoiceTemplate });
+}
+
 export async function duplicateInvoice(id: string): Promise<Invoice | null> {
   const userId = await getCurrentUserId();
   const [row] = await db

@@ -80,6 +80,7 @@ function NewInvoicePageContent() {
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [logoUrl, setLogoUrl] = useState<string>("");
+  const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -120,6 +121,7 @@ function NewInvoicePageContent() {
         }
         if (s.defaultNotes) setValue("notes", s.defaultNotes, { shouldDirty: false });
         if (s.logoUrl) setLogoUrl(s.logoUrl);
+        if (s.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
       }
 
       if (clientsResult.status === "fulfilled") {
@@ -285,7 +287,7 @@ function NewInvoicePageContent() {
             </FormProvider>
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
-            <InvoicePreview invoice={invoice} logoUrl={logoUrl} />
+            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} />
           </TabsContent>
         </Tabs>
       </div>
@@ -297,7 +299,7 @@ function NewInvoicePageContent() {
           </FormProvider>
         </div>
         <div className="w-1/2 overflow-y-auto bg-muted/30 p-8">
-          <InvoicePreview invoice={invoice} />
+          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} />
         </div>
       </div>
     </div>
