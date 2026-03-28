@@ -81,13 +81,21 @@ export async function saveInvoice(invoice: Invoice): Promise<void> {
     .from(invoices)
     .where(and(eq(invoices.id, invoice.id), eq(invoices.userId, userId)))
     .limit(1);
-  if (existing.length > 0) {
-    await db
-      .update(invoices)
-      .set({ ...fields, updatedAt: now })
-      .where(and(eq(invoices.id, invoice.id), eq(invoices.userId, userId)));
-  } else {
-    await db.insert(invoices).values({ ...fields, id: invoice.id, userId, updatedAt: now });
+  try {
+    if (existing.length > 0) {
+      await db
+        .update(invoices)
+        .set({ ...fields, updatedAt: now })
+        .where(and(eq(invoices.id, invoice.id), eq(invoices.userId, userId)));
+    } else {
+      await db.insert(invoices).values({ ...fields, id: invoice.id, userId, updatedAt: now });
+    }
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.includes("UNIQUE constraint failed") && msg.includes("invoice_number")) {
+      throw new Error(`Invoice number "${invoice.invoiceNumber}" is already in use. Please choose a different number.`);
+    }
+    throw err;
   }
 }
 
