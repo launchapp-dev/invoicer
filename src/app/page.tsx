@@ -232,6 +232,94 @@ export default async function Page() {
         </div>
       </section>
 
+      {/* Pricing */}
+      <section className="px-6 py-20 bg-muted/30">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl font-bold">Simple, transparent pricing</h2>
+            <p className="text-muted-foreground">
+              Start free. Upgrade when you need more.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-6 items-start">
+            {/* Free tier */}
+            <Card className="border border-border">
+              <CardContent className="p-8 space-y-6">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                    Free
+                  </p>
+                  <div className="flex items-end gap-1">
+                    <span className="text-4xl font-bold">$0</span>
+                    <span className="text-muted-foreground mb-1">/month</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Perfect for getting started.
+                  </p>
+                </div>
+                <ul className="space-y-3">
+                  {[
+                    "5 invoices / month",
+                    "1 currency",
+                    "PDF download",
+                    "Client management",
+                  ].map((feature) => (
+                    <li key={feature} className="flex items-center gap-2 text-sm">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/signup">Get started free</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Pro tier */}
+            <Card className="border-2 border-primary relative">
+              <CardContent className="p-8 space-y-6">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <Badge>Most popular</Badge>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                    Pro
+                  </p>
+                  <div className="flex items-end gap-1">
+                    <span className="text-4xl font-bold">$19</span>
+                    <span className="text-muted-foreground mb-1">/month</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    For freelancers who mean business.
+                  </p>
+                </div>
+                <ul className="space-y-3">
+                  {[
+                    "Unlimited invoices",
+                    "All currencies",
+                    "AI invoice creation",
+                    "AI autofill",
+                    "Cash flow forecasting",
+                    "Smart payment reminders",
+                    "Recurring invoices",
+                    "Expense tracking",
+                  ].map((feature) => (
+                    <li key={feature} className="flex items-center gap-2 text-sm">
+                      <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button className="w-full" asChild>
+                  <Link href="/signup">Start free trial</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="px-6 py-20 bg-primary/5 border-y border-border">
         <div className="max-w-2xl mx-auto text-center space-y-6">
