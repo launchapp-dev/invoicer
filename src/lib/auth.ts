@@ -1,8 +1,9 @@
 import { betterAuth } from "better-auth";
-import Database from "better-sqlite3";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "@/db";
 
 export const auth = betterAuth({
-  database: new Database("./invoicer.db"),
+  database: drizzleAdapter(db, { provider: "sqlite" }),
   emailAndPassword: { enabled: true },
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
