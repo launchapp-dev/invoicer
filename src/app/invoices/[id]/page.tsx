@@ -153,6 +153,9 @@ export default function EditInvoicePage() {
             <Button variant="outline" asChild>
               <Link href="/dashboard">Dashboard</Link>
             </Button>
+            <Button variant="outline" asChild>
+              <Link href={`/invoices/${params.id}/preview`}>Preview</Link>
+            </Button>
             <Button onClick={handleSave} disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (
                 <>
