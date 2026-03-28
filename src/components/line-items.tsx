@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { InvoiceFormData } from "@/lib/invoice-schema";
+import { InvoiceFormValues } from "@/lib/invoice-schema";
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
@@ -21,24 +21,24 @@ function LineItemSubtotal({
   control,
   index,
 }: {
-  control: Control<InvoiceFormData>;
+  control: Control<InvoiceFormValues>;
   index: number;
 }) {
-  const quantity = useWatch({ control, name: `line_items.${index}.quantity` });
-  const unitPrice = useWatch({ control, name: `line_items.${index}.unit_price` });
-  const subtotal = (Number(quantity) || 0) * (Number(unitPrice) || 0);
+  const quantity = useWatch({ control, name: `lineItems.${index}.quantity` });
+  const rate = useWatch({ control, name: `lineItems.${index}.rate` });
+  const subtotal = (Number(quantity) || 0) * (Number(rate) || 0);
   return <span className="text-sm">{formatCurrency(subtotal)}</span>;
 }
 
 interface LineItemsProps {
-  control: Control<InvoiceFormData>;
-  register: UseFormRegister<InvoiceFormData>;
+  control: Control<InvoiceFormValues>;
+  register: UseFormRegister<InvoiceFormValues>;
 }
 
 export function LineItems({ control, register }: LineItemsProps) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "line_items",
+    name: "lineItems",
   });
 
   return (
@@ -48,7 +48,7 @@ export function LineItems({ control, register }: LineItemsProps) {
           <TableRow>
             <TableHead>Description</TableHead>
             <TableHead className="w-28">Quantity</TableHead>
-            <TableHead className="w-36">Unit Price</TableHead>
+            <TableHead className="w-36">Rate</TableHead>
             <TableHead className="w-32">Subtotal</TableHead>
             <TableHead className="w-12" />
           </TableRow>
@@ -58,14 +58,14 @@ export function LineItems({ control, register }: LineItemsProps) {
             <TableRow key={field.id}>
               <TableCell className="py-2">
                 <Input
-                  {...register(`line_items.${index}.description`)}
+                  {...register(`lineItems.${index}.description`)}
                   placeholder="Description"
                   aria-label={`Line item ${index + 1} description`}
                 />
               </TableCell>
               <TableCell className="py-2">
                 <Input
-                  {...register(`line_items.${index}.quantity`, { valueAsNumber: true })}
+                  {...register(`lineItems.${index}.quantity`, { valueAsNumber: true })}
                   type="number"
                   min="0"
                   step="1"
@@ -75,12 +75,12 @@ export function LineItems({ control, register }: LineItemsProps) {
               </TableCell>
               <TableCell className="py-2">
                 <Input
-                  {...register(`line_items.${index}.unit_price`, { valueAsNumber: true })}
+                  {...register(`lineItems.${index}.rate`, { valueAsNumber: true })}
                   type="number"
                   min="0"
                   step="0.01"
                   placeholder="0.00"
-                  aria-label={`Line item ${index + 1} unit price`}
+                  aria-label={`Line item ${index + 1} rate`}
                 />
               </TableCell>
               <TableCell className="py-2">
@@ -105,7 +105,7 @@ export function LineItems({ control, register }: LineItemsProps) {
       <Button
         type="button"
         variant="outline"
-        onClick={() => append({ description: "", quantity: 1, unit_price: 0 })}
+        onClick={() => append({ id: crypto.randomUUID(), description: "", quantity: 1, rate: 0, amount: 0 })}
       >
         Add Line Item
       </Button>
