@@ -97,7 +97,7 @@ export function LineItems() {
                   setValue("total", calcTotal(subtotal, taxAmount, discount || 0));
                 }}
                 aria-label={`Remove line item ${index + 1}`}
-                disabled={fields.length === 1}
+
               >
                 ×
               </Button>
