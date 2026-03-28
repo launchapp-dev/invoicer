@@ -53,8 +53,14 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
       await duplicateInvoice(invoiceId);
       router.refresh();
       toast.success("Invoice duplicated");
-    } catch {
-      toast.error("Failed to duplicate invoice");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg === "Unauthorized") {
+        toast.error("Your session has expired. Please sign in again.");
+        router.push("/login");
+      } else {
+        toast.error("Failed to duplicate invoice");
+      }
     } finally {
       setPending(false);
     }
@@ -66,8 +72,14 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
       await deleteInvoice(invoiceId);
       router.refresh();
       toast.success("Invoice deleted");
-    } catch {
-      toast.error("Failed to delete invoice");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg === "Unauthorized") {
+        toast.error("Your session has expired. Please sign in again.");
+        router.push("/login");
+      } else {
+        toast.error("Failed to delete invoice");
+      }
     } finally {
       setPending(false);
       setDeleteOpen(false);
@@ -80,8 +92,14 @@ export function InvoiceActions({ invoiceId, status }: InvoiceActionsProps) {
       await updateInvoiceStatus(invoiceId, newStatus);
       router.refresh();
       toast.success("Status updated");
-    } catch {
-      toast.error("Failed to update status");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg === "Unauthorized") {
+        toast.error("Your session has expired. Please sign in again.");
+        router.push("/login");
+      } else {
+        toast.error("Failed to update status");
+      }
     } finally {
       setPending(false);
     }
