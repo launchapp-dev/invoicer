@@ -18,6 +18,13 @@ export interface LineItem {
   amount: number;
 }
 
+export interface TaxLine {
+  id: string;
+  name: string;
+  rate: number;
+  amount: number;
+}
+
 export interface Invoice {
   id: string;
   invoiceNumber: string;
@@ -28,7 +35,8 @@ export interface Invoice {
   to: ContactInfo;
   lineItems: LineItem[];
   subtotal: number;
-  taxRate: number;
+  taxLines: TaxLine[];
+  taxRate?: number;
   taxAmount: number;
   discount: number;
   total: number;

@@ -4,7 +4,7 @@ import { useFormContext, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { calcLineAmount, calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
+import { calcLineAmount, calcSubtotal, calcTaxAmountFromLines, calcTaxLines, calcTotal } from "@/lib/calculations";
 import type { InvoiceFormValues } from "@/lib/invoice-schema";
 
 export function LineItems() {
@@ -14,7 +14,7 @@ export function LineItems() {
   });
 
   const lineItems = watch("lineItems");
-  const taxRate = watch("taxRate");
+  const taxLines = watch("taxLines");
   const discount = watch("discount");
 
   const handleLineChange = (index: number, field: "quantity" | "rate", value: string) => {
@@ -30,7 +30,8 @@ export function LineItems() {
       return item;
     });
     const subtotal = calcSubtotal(updatedItems);
-    const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
+    const computedTaxLines = calcTaxLines(subtotal, taxLines || []);
+    const taxAmount = calcTaxAmountFromLines(computedTaxLines);
     setValue("subtotal", subtotal);
     setValue("taxAmount", taxAmount);
     setValue("total", calcTotal(subtotal, taxAmount, discount || 0));
@@ -92,7 +93,8 @@ export function LineItems() {
                   remove(index);
                   const updated = lineItems.filter((_, i) => i !== index);
                   const subtotal = calcSubtotal(updated);
-                  const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
+                  const computedTaxLines = calcTaxLines(subtotal, taxLines || []);
+                  const taxAmount = calcTaxAmountFromLines(computedTaxLines);
                   setValue("subtotal", subtotal);
                   setValue("taxAmount", taxAmount);
                   setValue("total", calcTotal(subtotal, taxAmount, discount || 0));

@@ -57,7 +57,7 @@ export default function EditInvoicePage() {
       to: { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" },
       lineItems: [],
       subtotal: 0,
-      taxRate: 0,
+      taxLines: [{ id: crypto.randomUUID(), name: "Tax", rate: 0, amount: 0 }],
       taxAmount: 0,
       discount: 0,
       total: 0,

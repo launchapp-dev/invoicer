@@ -264,15 +264,17 @@ export function InvoicePDF({ invoice, logoUrl }: InvoicePDFProps) {
               {formatCurrency(invoice.subtotal, invoice.currency)}
             </Text>
           </View>
-          {invoice.taxRate > 0 && (
-            <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>
-                Tax ({invoice.taxRate}%)
-              </Text>
-              <Text style={styles.totalsValue}>
-                {formatCurrency(invoice.taxAmount, invoice.currency)}
-              </Text>
-            </View>
+          {(invoice.taxLines ?? []).map((line) =>
+            line.rate > 0 ? (
+              <View key={line.id} style={styles.totalsRow}>
+                <Text style={styles.totalsLabel}>
+                  {line.name || "Tax"} ({line.rate}%)
+                </Text>
+                <Text style={styles.totalsValue}>
+                  {formatCurrency(line.amount, invoice.currency)}
+                </Text>
+              </View>
+            ) : null
           )}
           {(invoice.discount ?? 0) > 0 && (
             <View style={styles.totalsRow}>

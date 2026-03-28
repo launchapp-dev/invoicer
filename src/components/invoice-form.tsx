@@ -11,7 +11,7 @@ import { SelectRoot, SelectTrigger, SelectValue, SelectContent, SelectItem } fro
 import { Switch } from "@/components/ui/switch";
 import { Combobox } from "@/components/ui/combobox";
 import { InvoiceTotals } from "@/components/invoice-totals";
-import { calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
+import { calcSubtotal, calcTaxLines, calcTaxAmountFromLines, calcTotal } from "@/lib/calculations";
 import { LineItems } from "@/components/line-items";
 import { RECURRING_FREQUENCIES, type InvoiceFormValues } from "@/lib/invoice-schema";
 import type { Client } from "@/types/client";
@@ -169,7 +169,7 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
   const { register, control, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
 
   const lineItems = watch("lineItems");
-  const taxRate = watch("taxRate");
+  const taxLines = watch("taxLines");
   const currency = watch("currency");
   const discount = watch("discount");
   const status = watch("status");
@@ -178,13 +178,16 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
 
   useEffect(() => {
     const subtotal = calcSubtotal(lineItems || []);
-    const safeTaxRate = Number.isNaN(taxRate) ? 0 : (taxRate ?? 0);
     const safeDiscount = Number.isNaN(discount) ? 0 : (discount ?? 0);
-    const taxAmount = calcTaxAmount(subtotal, safeTaxRate);
+    const computedTaxLines = calcTaxLines(subtotal, taxLines || []);
+    const taxAmount = calcTaxAmountFromLines(computedTaxLines);
     setValue("subtotal", subtotal);
+    computedTaxLines.forEach((line, i) => {
+      setValue(`taxLines.${i}.amount`, line.amount);
+    });
     setValue("taxAmount", taxAmount);
     setValue("total", calcTotal(subtotal, taxAmount, safeDiscount));
-  }, [lineItems, taxRate, discount, setValue]);
+  }, [lineItems, taxLines, discount, setValue]);
 
   return (
     <div className="grid gap-6">

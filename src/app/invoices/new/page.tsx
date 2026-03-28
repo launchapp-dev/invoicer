@@ -42,7 +42,7 @@ function defaultValues(): InvoiceFormValues {
     to: { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" },
     lineItems: [{ id: crypto.randomUUID(), description: "", quantity: 1, rate: 0, amount: 0 }],
     subtotal: 0,
-    taxRate: 0,
+    taxLines: [{ id: crypto.randomUUID(), name: "Tax", rate: 0, amount: 0 }],
     taxAmount: 0,
     discount: 0,
     total: 0,
@@ -115,7 +115,9 @@ function NewInvoicePageContent() {
         if (s.businessZip) setValue("from.zip", s.businessZip, { shouldDirty: false });
         if (s.businessCountry) setValue("from.country", s.businessCountry, { shouldDirty: false });
         setValue("currency", s.defaultCurrency, { shouldDirty: false });
-        setValue("taxRate", s.defaultTaxRate, { shouldDirty: false });
+        if (s.defaultTaxRate) {
+          setValue("taxLines", [{ id: crypto.randomUUID(), name: "Tax", rate: s.defaultTaxRate, amount: 0 }], { shouldDirty: false });
+        }
         if (s.defaultNotes) setValue("notes", s.defaultNotes, { shouldDirty: false });
         if (s.logoUrl) setLogoUrl(s.logoUrl);
       }
