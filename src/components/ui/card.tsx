@@ -70,7 +70,6 @@ function CardFooter({ className, ref, ...props }: React.HTMLAttributes<HTMLDivEl
 }
 CardFooter.displayName = "CardFooter";
 
-
 export type CardProps = React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> };
 export type CardHeaderProps = React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> };
 export type CardTitleProps = React.HTMLAttributes<HTMLHeadingElement> & { ref?: React.Ref<HTMLHeadingElement> };
