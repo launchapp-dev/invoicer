@@ -37,6 +37,7 @@ export interface TaxLine {
 
 export interface Invoice {
   id: string;
+  clientId?: string;
   invoiceNumber: string;
   status: InvoiceStatus;
   issueDate: string;

@@ -366,7 +366,7 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
 
       <div className="grid gap-6 sm:grid-cols-2">
         <ContactSection prefix="from" title="From" />
-        <ContactSection prefix="to" title="Bill To" clients={clients} onClientSelect={setSelectedClientId} />
+        <ContactSection prefix="to" title="Bill To" clients={clients} onClientSelect={(id) => { setSelectedClientId(id); setValue("clientId", id ?? undefined, { shouldDirty: true }); }} />
       </div>
 
       <Card>

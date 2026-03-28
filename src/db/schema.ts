@@ -113,6 +113,7 @@ export const clients = sqliteTable("clients", {
 export const invoices = sqliteTable("invoices", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull(),
+  clientId: text("client_id").references(() => clients.id, { onDelete: "set null" }),
   invoiceNumber: text("invoice_number").notNull(),
   status: text("status", {
     enum: ["draft", "sent", "viewed", "paid", "overdue", "cancelled", "partial"],
@@ -146,6 +147,7 @@ export const invoices = sqliteTable("invoices", {
 }, (table) => [
   index("invoices_user_id_idx").on(table.userId),
   index("invoices_updated_at_idx").on(table.updatedAt),
+  index("invoices_client_id_idx").on(table.clientId),
   uniqueIndex("invoices_user_invoice_number_uniq").on(table.userId, table.invoiceNumber),
 ]);
 

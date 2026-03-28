@@ -31,6 +31,7 @@ export type RecurringFrequency = typeof RECURRING_FREQUENCIES[number];
 
 export const invoiceSchema = z.object({
   id: z.string(),
+  clientId: z.string().optional(),
   invoiceNumber: z.string().min(1, "Invoice number is required"),
   status: z.enum(["draft", "sent", "paid", "overdue", "cancelled"]),
   issueDate: z.string().min(1, "Issue date is required"),
