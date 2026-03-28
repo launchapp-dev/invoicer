@@ -11,7 +11,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { calculateTotals, formatCurrency } from "@/lib/calculations";
+import { formatCurrency } from "@/lib/calculations";
 import type { Invoice } from "@/types/invoice";
 
 const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destructive" | "outline"> = {
@@ -19,6 +19,7 @@ const STATUS_VARIANT: Record<Invoice["status"], "default" | "secondary" | "destr
   sent: "outline",
   paid: "default",
   overdue: "destructive",
+  cancelled: "outline",
 };
 
 interface InvoicePreviewProps {
@@ -26,8 +27,6 @@ interface InvoicePreviewProps {
 }
 
 export function InvoicePreview({ invoice }: InvoicePreviewProps) {
-  const totals = calculateTotals(invoice.lineItems, invoice.taxRate, invoice.discountRate);
-
   return (
     <Card className="shadow-xl border-border bg-white min-h-[700px]">
       <CardContent className="p-8 space-y-6">
@@ -57,15 +56,27 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">From</p>
-            <p className="font-semibold text-sm">{invoice.senderName || "Your Name"}</p>
-            <p className="text-sm text-muted-foreground">{invoice.senderEmail}</p>
-            <p className="text-sm text-muted-foreground whitespace-pre-line">{invoice.senderAddress}</p>
+            <p className="font-semibold text-sm">{invoice.from.name || "Your Name"}</p>
+            <p className="text-sm text-muted-foreground">{invoice.from.email}</p>
+            <p className="text-sm text-muted-foreground">{invoice.from.address}</p>
+            {invoice.from.city && (
+              <p className="text-sm text-muted-foreground">
+                {[invoice.from.city, invoice.from.state, invoice.from.zip].filter(Boolean).join(", ")}
+              </p>
+            )}
+            <p className="text-sm text-muted-foreground">{invoice.from.country}</p>
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Bill To</p>
-            <p className="font-semibold text-sm">{invoice.recipientName || "Client Name"}</p>
-            <p className="text-sm text-muted-foreground">{invoice.recipientEmail}</p>
-            <p className="text-sm text-muted-foreground whitespace-pre-line">{invoice.recipientAddress}</p>
+            <p className="font-semibold text-sm">{invoice.to.name || "Client Name"}</p>
+            <p className="text-sm text-muted-foreground">{invoice.to.email}</p>
+            <p className="text-sm text-muted-foreground">{invoice.to.address}</p>
+            {invoice.to.city && (
+              <p className="text-sm text-muted-foreground">
+                {[invoice.to.city, invoice.to.state, invoice.to.zip].filter(Boolean).join(", ")}
+              </p>
+            )}
+            <p className="text-sm text-muted-foreground">{invoice.to.country}</p>
           </div>
         </div>
 
@@ -76,7 +87,7 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
             <TableRow>
               <TableHead className="pl-0">Description</TableHead>
               <TableHead className="text-right w-16">Qty</TableHead>
-              <TableHead className="text-right w-28">Unit Price</TableHead>
+              <TableHead className="text-right w-28">Rate</TableHead>
               <TableHead className="text-right pr-0 w-28">Amount</TableHead>
             </TableRow>
           </TableHeader>
@@ -88,9 +99,9 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
                     {item.description || <span className="text-muted-foreground italic">No description</span>}
                   </TableCell>
                   <TableCell className="text-right text-sm">{item.quantity}</TableCell>
-                  <TableCell className="text-right text-sm">{formatCurrency(item.unitPrice)}</TableCell>
+                  <TableCell className="text-right text-sm">{formatCurrency(item.rate, invoice.currency)}</TableCell>
                   <TableCell className="text-right pr-0 text-sm font-medium">
-                    {formatCurrency(item.quantity * item.unitPrice)}
+                    {formatCurrency(item.amount, invoice.currency)}
                   </TableCell>
                 </TableRow>
               ))
@@ -109,24 +120,18 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
         <div className="flex flex-col items-end space-y-2 text-sm">
           <div className="flex justify-between w-56">
             <span className="text-muted-foreground">Subtotal</span>
-            <span>{formatCurrency(totals.subtotal)}</span>
+            <span>{formatCurrency(invoice.subtotal, invoice.currency)}</span>
           </div>
-          {invoice.discountRate > 0 && (
-            <div className="flex justify-between w-56 text-destructive">
-              <span>Discount ({invoice.discountRate}%)</span>
-              <span>−{formatCurrency(totals.discountAmount)}</span>
-            </div>
-          )}
           {invoice.taxRate > 0 && (
             <div className="flex justify-between w-56">
               <span className="text-muted-foreground">Tax ({invoice.taxRate}%)</span>
-              <span>{formatCurrency(totals.taxAmount)}</span>
+              <span>{formatCurrency(invoice.taxAmount, invoice.currency)}</span>
             </div>
           )}
           <Separator className="w-56" />
           <div className="flex justify-between w-56 font-semibold text-base">
             <span>Total</span>
-            <span>{formatCurrency(totals.total)}</span>
+            <span>{formatCurrency(invoice.total, invoice.currency)}</span>
           </div>
         </div>
 

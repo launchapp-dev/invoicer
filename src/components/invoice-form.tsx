@@ -1,211 +1,240 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useFormContext, useFieldArray } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { Invoice } from "@/types/invoice";
+import { Textarea } from "@/components/ui/textarea";
+import { calcLineAmount, calcSubtotal, calcTaxAmount, calcTotal } from "@/lib/calculations";
+import type { InvoiceFormValues } from "@/lib/invoice-schema";
 
-type InvoiceFormValues = Omit<Invoice, "lineItems"> & {
-  lineItems: { id: string; description: string; quantity: number; unitPrice: number }[];
-};
-
-const defaultValues: InvoiceFormValues = {
-  invoiceNumber: "INV-001",
-  issueDate: new Date().toISOString().split("T")[0],
-  dueDate: new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
-  status: "draft",
-  senderName: "",
-  senderEmail: "",
-  senderAddress: "",
-  recipientName: "",
-  recipientEmail: "",
-  recipientAddress: "",
-  lineItems: [{ id: "1", description: "", quantity: 1, unitPrice: 0 }],
-  taxRate: 0,
-  discountRate: 0,
-  notes: "",
-};
-
-interface InvoiceFormProps {
-  onValueChange: (values: Invoice) => void;
+function ContactSection({ prefix, title }: { prefix: "from" | "to"; title: string }) {
+  const { register, formState: { errors } } = useFormContext<InvoiceFormValues>();
+  const e = errors[prefix];
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        <div className="grid gap-2">
+          <Label htmlFor={`${prefix}.name`}>Name</Label>
+          <Input id={`${prefix}.name`} {...register(`${prefix}.name`)} error={!!e?.name} />
+          {e?.name && <p className="text-xs text-destructive">{e.name.message}</p>}
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor={`${prefix}.email`}>Email</Label>
+          <Input id={`${prefix}.email`} type="email" {...register(`${prefix}.email`)} />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor={`${prefix}.address`}>Address</Label>
+          <Input id={`${prefix}.address`} {...register(`${prefix}.address`)} />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor={`${prefix}.city`}>City</Label>
+            <Input id={`${prefix}.city`} {...register(`${prefix}.city`)} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor={`${prefix}.state`}>State</Label>
+            <Input id={`${prefix}.state`} {...register(`${prefix}.state`)} />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor={`${prefix}.zip`}>ZIP</Label>
+            <Input id={`${prefix}.zip`} {...register(`${prefix}.zip`)} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor={`${prefix}.country`}>Country</Label>
+            <Input id={`${prefix}.country`} {...register(`${prefix}.country`)} />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
-export function InvoiceForm({ onValueChange }: InvoiceFormProps) {
-  const { register, control, watch } = useForm<InvoiceFormValues>({
-    defaultValues,
-    mode: "onChange",
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control,
+export function InvoiceForm() {
+  const { register, watch, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
+  const { fields, append, remove } = useFieldArray<InvoiceFormValues, "lineItems">({
     name: "lineItems",
   });
 
-  const values = watch();
+  const lineItems = watch("lineItems");
+  const taxRate = watch("taxRate");
 
-  useEffect(() => {
-    onValueChange(values as Invoice);
-  }, [values, onValueChange]);
+  const handleLineChange = (index: number, field: "quantity" | "rate", value: string) => {
+    const num = parseFloat(value) || 0;
+    setValue(`lineItems.${index}.${field}`, num);
+    const q = field === "quantity" ? num : (parseFloat(String(lineItems[index]?.quantity)) || 0);
+    const r = field === "rate" ? num : (parseFloat(String(lineItems[index]?.rate)) || 0);
+    const amount = calcLineAmount(q, r);
+    setValue(`lineItems.${index}.amount`, amount);
+
+    const updatedItems = lineItems.map((item, i) => {
+      if (i === index) return { ...item, [field]: num, amount };
+      return item;
+    });
+    const subtotal = calcSubtotal(updatedItems);
+    const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
+    setValue("subtotal", subtotal);
+    setValue("taxAmount", taxAmount);
+    setValue("total", calcTotal(subtotal, taxAmount));
+  };
+
+  const handleTaxRateChange = (value: string) => {
+    const rate = parseFloat(value) || 0;
+    setValue("taxRate", rate);
+    const subtotal = calcSubtotal(lineItems);
+    const taxAmount = calcTaxAmount(subtotal, rate);
+    setValue("taxAmount", taxAmount);
+    setValue("total", calcTotal(subtotal, taxAmount));
+  };
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="space-y-4">
-        <h2 className="text-base font-semibold">Invoice Details</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
+    <div className="grid gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Invoice Details</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-2">
             <Label htmlFor="invoiceNumber">Invoice Number</Label>
-            <Input id="invoiceNumber" {...register("invoiceNumber")} />
+            <Input
+              id="invoiceNumber"
+              {...register("invoiceNumber")}
+              error={!!errors.invoiceNumber}
+            />
+            {errors.invoiceNumber && (
+              <p className="text-xs text-destructive">{errors.invoiceNumber.message}</p>
+            )}
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="status">Status</Label>
-            <select
-              id="status"
-              {...register("status")}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <option value="draft">Draft</option>
-              <option value="sent">Sent</option>
-              <option value="paid">Paid</option>
-              <option value="overdue">Overdue</option>
-            </select>
-          </div>
-          <div className="space-y-1.5">
+          <div className="grid gap-2">
             <Label htmlFor="issueDate">Issue Date</Label>
             <Input id="issueDate" type="date" {...register("issueDate")} />
           </div>
-          <div className="space-y-1.5">
+          <div className="grid gap-2">
             <Label htmlFor="dueDate">Due Date</Label>
             <Input id="dueDate" type="date" {...register("dueDate")} />
           </div>
-        </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <ContactSection prefix="from" title="From" />
+        <ContactSection prefix="to" title="Bill To" />
       </div>
 
-      <Separator />
-
-      <div className="space-y-4">
-        <h2 className="text-base font-semibold">From</h2>
-        <div className="space-y-3">
-          <div className="space-y-1.5">
-            <Label htmlFor="senderName">Name</Label>
-            <Input id="senderName" placeholder="Your name or company" {...register("senderName")} />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="senderEmail">Email</Label>
-            <Input id="senderEmail" type="email" placeholder="your@email.com" {...register("senderEmail")} />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="senderAddress">Address</Label>
-            <Input id="senderAddress" placeholder="123 Main St, City, Country" {...register("senderAddress")} />
-          </div>
-        </div>
-      </div>
-
-      <Separator />
-
-      <div className="space-y-4">
-        <h2 className="text-base font-semibold">Bill To</h2>
-        <div className="space-y-3">
-          <div className="space-y-1.5">
-            <Label htmlFor="recipientName">Name</Label>
-            <Input id="recipientName" placeholder="Client name or company" {...register("recipientName")} />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="recipientEmail">Email</Label>
-            <Input id="recipientEmail" type="email" placeholder="client@email.com" {...register("recipientEmail")} />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="recipientAddress">Address</Label>
-            <Input id="recipientAddress" placeholder="456 Client Ave, City, Country" {...register("recipientAddress")} />
-          </div>
-        </div>
-      </div>
-
-      <Separator />
-
-      <div className="space-y-4">
-        <h2 className="text-base font-semibold">Line Items</h2>
-        <div className="space-y-3">
+      <Card>
+        <CardHeader>
+          <CardTitle>Line Items</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4">
           {fields.map((field, index) => (
-            <div key={field.id} className="grid grid-cols-[1fr_80px_100px_32px] gap-2 items-end">
-              <div className="space-y-1.5">
+            <div key={field.id} className="grid grid-cols-[1fr_100px_100px_100px_auto] gap-2 items-end">
+              <div className="grid gap-1">
                 {index === 0 && <Label>Description</Label>}
-                <Input
-                  placeholder="Service or product"
-                  {...register(`lineItems.${index}.description`)}
-                />
+                <Input {...register(`lineItems.${index}.description`)} placeholder="Item description" />
               </div>
-              <div className="space-y-1.5">
+              <div className="grid gap-1">
                 {index === 0 && <Label>Qty</Label>}
                 <Input
                   type="number"
                   min="0"
-                  step="1"
-                  {...register(`lineItems.${index}.quantity`)}
+                  step="0.01"
+                  defaultValue={field.quantity}
+                  onChange={(e) => handleLineChange(index, "quantity", e.target.value)}
                 />
               </div>
-              <div className="space-y-1.5">
-                {index === 0 && <Label>Unit Price</Label>}
+              <div className="grid gap-1">
+                {index === 0 && <Label>Rate</Label>}
                 <Input
                   type="number"
                   min="0"
                   step="0.01"
-                  placeholder="0.00"
-                  {...register(`lineItems.${index}.unitPrice`)}
+                  defaultValue={field.rate}
+                  onChange={(e) => handleLineChange(index, "rate", e.target.value)}
                 />
               </div>
-              <button
+              <div className="grid gap-1">
+                {index === 0 && <Label>Amount</Label>}
+                <Input
+                  readOnly
+                  tabIndex={-1}
+                  value={(lineItems[index]?.amount ?? 0).toFixed(2)}
+                  className="bg-muted"
+                />
+              </div>
+              <Button
                 type="button"
-                onClick={() => remove(index)}
-                className="flex h-10 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-destructive transition-colors"
+                variant="ghost"
+                size="icon"
+                className={index === 0 ? "mt-6" : ""}
+                onClick={() => {
+                  remove(index);
+                  const updated = lineItems.filter((_, i) => i !== index);
+                  const subtotal = calcSubtotal(updated);
+                  const taxAmount = calcTaxAmount(subtotal, taxRate || 0);
+                  setValue("subtotal", subtotal);
+                  setValue("taxAmount", taxAmount);
+                  setValue("total", calcTotal(subtotal, taxAmount));
+                }}
                 aria-label="Remove line item"
               >
                 ×
-              </button>
+              </Button>
             </div>
           ))}
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            append({ id: crypto.randomUUID(), description: "", quantity: 1, unitPrice: 0 })
-          }
-        >
-          + Add Line Item
-        </Button>
-      </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => append({ id: crypto.randomUUID(), description: "", quantity: 1, rate: 0, amount: 0 })}
+          >
+            Add Line Item
+          </Button>
 
-      <Separator />
+          <Separator />
 
-      <div className="space-y-4">
-        <h2 className="text-base font-semibold">Totals</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="taxRate">Tax Rate (%)</Label>
-            <Input id="taxRate" type="number" min="0" max="100" step="0.1" {...register("taxRate")} />
+          <div className="flex flex-col items-end gap-2 text-sm">
+            <div className="flex items-center gap-4">
+              <span className="text-muted-foreground">Subtotal</span>
+              <span className="w-24 text-right">{(watch("subtotal") ?? 0).toFixed(2)}</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <Label htmlFor="taxRate" className="text-muted-foreground">Tax Rate (%)</Label>
+              <Input
+                id="taxRate"
+                type="number"
+                min="0"
+                max="100"
+                step="0.1"
+                className="w-24"
+                defaultValue={watch("taxRate")}
+                onChange={(e) => handleTaxRateChange(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-muted-foreground">Tax</span>
+              <span className="w-24 text-right">{(watch("taxAmount") ?? 0).toFixed(2)}</span>
+            </div>
+            <div className="flex items-center gap-4 font-semibold">
+              <span>Total</span>
+              <span className="w-24 text-right">{(watch("total") ?? 0).toFixed(2)}</span>
+            </div>
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="discountRate">Discount (%)</Label>
-            <Input id="discountRate" type="number" min="0" max="100" step="0.1" {...register("discountRate")} />
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <Separator />
-
-      <div className="space-y-1.5">
-        <Label htmlFor="notes">Notes</Label>
-        <textarea
-          id="notes"
-          {...register("notes")}
-          placeholder="Payment terms, thank you notes, etc."
-          className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
-        />
-      </div>
+      <Card>
+        <CardContent className="pt-6 grid gap-2">
+          <Label htmlFor="notes">Notes / Terms</Label>
+          <Textarea id="notes" rows={3} {...register("notes")} placeholder="Payment terms, thank you note, etc." />
+        </CardContent>
+      </Card>
     </div>
   );
 }

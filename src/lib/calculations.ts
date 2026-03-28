@@ -1,25 +1,21 @@
-import type { LineItem, InvoiceTotals } from "@/types/invoice";
+import type { LineItem } from "@/types/invoice";
 
-export function calculateTotals(
-  lineItems: LineItem[],
-  taxRate: number,
-  discountRate: number
-): InvoiceTotals {
-  const subtotal = lineItems.reduce(
-    (sum, item) => sum + item.quantity * item.unitPrice,
-    0
-  );
-  const discountAmount = subtotal * (discountRate / 100);
-  const taxableAmount = subtotal - discountAmount;
-  const taxAmount = taxableAmount * (taxRate / 100);
-  const total = taxableAmount + taxAmount;
-
-  return { subtotal, taxAmount, discountAmount, total };
+export function calcLineAmount(quantity: number, rate: number): number {
+  return Math.round(quantity * rate * 100) / 100;
 }
 
-export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(amount);
+export function calcSubtotal(lineItems: LineItem[]): number {
+  return Math.round(lineItems.reduce((sum, item) => sum + item.amount, 0) * 100) / 100;
+}
+
+export function calcTaxAmount(subtotal: number, taxRate: number): number {
+  return Math.round(subtotal * (taxRate / 100) * 100) / 100;
+}
+
+export function calcTotal(subtotal: number, taxAmount: number): number {
+  return Math.round((subtotal + taxAmount) * 100) / 100;
+}
+
+export function formatCurrency(amount: number, currency = "USD"): string {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
 }
