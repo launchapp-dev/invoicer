@@ -1,40 +1,106 @@
+"use server";
+
+import { and, desc, eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { db } from "@/db";
+import { invoices } from "@/db/schema";
+import { auth } from "@/lib/auth";
 import type { Invoice } from "@/types/invoice";
 
-const STORAGE_KEY = "invoicer:invoices";
-
-type StoredInvoice = Invoice & { _updatedAt: string };
-
-function getAll(): Record<string, StoredInvoice> {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}");
-  } catch {
-    return {};
-  }
+async function getCurrentUserId(): Promise<string> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) throw new Error("Unauthorized");
+  return session.user.id;
 }
 
-export function saveInvoice(invoice: Invoice): void {
-  const all = getAll();
-  all[invoice.id] = { ...invoice, _updatedAt: new Date().toISOString() };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
+  return {
+    id: row.id,
+    invoiceNumber: row.invoiceNumber,
+    status: row.status,
+    issueDate: row.issueDate,
+    dueDate: row.dueDate,
+    from: JSON.parse(row.fromJson),
+    to: JSON.parse(row.toJson),
+    lineItems: JSON.parse(row.lineItemsJson),
+    subtotal: row.subtotal,
+    taxRate: row.taxRate,
+    taxAmount: row.taxAmount,
+    discount: row.discount,
+    total: row.total,
+    notes: row.notes,
+    currency: row.currency,
+  };
 }
 
-export function listInvoices(): Invoice[] {
-  const all = getAll();
-  return Object.values(all)
-    .sort((a, b) => b._updatedAt.localeCompare(a._updatedAt))
-    .map(({ _updatedAt: _, ...invoice }) => invoice as Invoice);
+export async function saveInvoice(invoice: Invoice): Promise<void> {
+  const userId = await getCurrentUserId();
+  const now = new Date().toISOString();
+  await db
+    .insert(invoices)
+    .values({
+      id: invoice.id,
+      userId,
+      invoiceNumber: invoice.invoiceNumber,
+      status: invoice.status,
+      issueDate: invoice.issueDate,
+      dueDate: invoice.dueDate,
+      fromJson: JSON.stringify(invoice.from),
+      toJson: JSON.stringify(invoice.to),
+      lineItemsJson: JSON.stringify(invoice.lineItems),
+      subtotal: invoice.subtotal,
+      taxRate: invoice.taxRate,
+      taxAmount: invoice.taxAmount,
+      discount: invoice.discount,
+      total: invoice.total,
+      notes: invoice.notes,
+      currency: invoice.currency,
+      updatedAt: now,
+    })
+    .onConflictDoUpdate({
+      target: invoices.id,
+      set: {
+        invoiceNumber: invoice.invoiceNumber,
+        status: invoice.status,
+        issueDate: invoice.issueDate,
+        dueDate: invoice.dueDate,
+        fromJson: JSON.stringify(invoice.from),
+        toJson: JSON.stringify(invoice.to),
+        lineItemsJson: JSON.stringify(invoice.lineItems),
+        subtotal: invoice.subtotal,
+        taxRate: invoice.taxRate,
+        taxAmount: invoice.taxAmount,
+        discount: invoice.discount,
+        total: invoice.total,
+        notes: invoice.notes,
+        currency: invoice.currency,
+        updatedAt: now,
+      },
+    });
 }
 
-export function loadInvoice(id: string): Invoice | null {
-  const stored = getAll()[id];
-  if (!stored) return null;
-  const { _updatedAt: _, ...invoice } = stored;
-  return invoice as Invoice;
+export async function listInvoices(): Promise<Invoice[]> {
+  const userId = await getCurrentUserId();
+  const rows = await db
+    .select()
+    .from(invoices)
+    .where(eq(invoices.userId, userId))
+    .orderBy(desc(invoices.updatedAt));
+  return rows.map(rowToInvoice);
 }
 
-export function deleteInvoice(id: string): void {
-  const all = getAll();
-  delete all[id];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+export async function loadInvoice(id: string): Promise<Invoice | null> {
+  const userId = await getCurrentUserId();
+  const [row] = await db
+    .select()
+    .from(invoices)
+    .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
+  return row ? rowToInvoice(row) : null;
+}
+
+export async function deleteInvoice(id: string): Promise<void> {
+  const userId = await getCurrentUserId();
+  await db
+    .delete(invoices)
+    .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
 }

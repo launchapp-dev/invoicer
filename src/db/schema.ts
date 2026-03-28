@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
@@ -25,8 +25,11 @@ export const invoices = sqliteTable("invoices", {
   fromJson: text("from_json").notNull(),
   toJson: text("to_json").notNull(),
   lineItemsJson: text("line_items_json").notNull(),
-  taxRate: integer("tax_rate").notNull().default(0),
-  discount: integer("discount").notNull().default(0),
+  subtotal: real("subtotal").notNull().default(0),
+  taxRate: real("tax_rate").notNull().default(0),
+  taxAmount: real("tax_amount").notNull().default(0),
+  discount: real("discount").notNull().default(0),
+  total: real("total").notNull().default(0),
   notes: text("notes").notNull().default(""),
   currency: text("currency").notNull().default("USD"),
   createdAt: text("created_at")
