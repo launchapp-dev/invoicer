@@ -2,12 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
@@ -42,6 +51,7 @@ export default function NewInvoicePage() {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const [savedId, setSavedId] = useState<string | null>(null);
+  const [showLeaveDialog, setShowLeaveDialog] = useState(false);
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -88,18 +98,43 @@ export default function NewInvoicePage() {
     }
   }, [savedId, router]);
 
+  function handleDashboardClick() {
+    if (form.formState.isDirty) {
+      setShowLeaveDialog(true);
+    } else {
+      router.push("/dashboard");
+    }
+  }
+
   if (isPending || !session) {
     return <div className="min-h-screen bg-background" />;
   }
 
   return (
     <div className="min-h-screen bg-background">
+      <AlertDialog open={showLeaveDialog} onOpenChange={setShowLeaveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Leave anyway?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continue Editing</AlertDialogCancel>
+            <AlertDialogAction onClick={() => router.push("/dashboard")}>
+              Discard
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
         <div className="flex items-center justify-between px-6 py-3">
           <h1 className="text-lg font-semibold">New Invoice</h1>
           <div className="flex items-center gap-2">
-            <Button variant="outline" asChild>
-              <Link href="/dashboard">Dashboard</Link>
+            <Button variant="outline" onClick={handleDashboardClick}>
+              Dashboard
             </Button>
             <Button onClick={handleSave} disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (
