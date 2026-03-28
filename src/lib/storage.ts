@@ -29,6 +29,14 @@ function safeJsonParse<T>(json: string, fallback: T): T {
 const emptyParty = { name: "", email: "", address: "", city: "", state: "", zip: "", country: "" };
 
 function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
+  const taxLines = row.taxLinesJson
+    ? safeJsonParse(row.taxLinesJson, null)
+    : null;
+  const resolvedTaxLines = taxLines ?? (
+    row.taxRate > 0
+      ? [{ id: crypto.randomUUID(), name: "Tax", rate: row.taxRate, amount: row.taxAmount }]
+      : [{ id: crypto.randomUUID(), name: "Tax", rate: 0, amount: 0 }]
+  );
   return {
     id: row.id,
     invoiceNumber: row.invoiceNumber,
@@ -39,6 +47,7 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
     to: safeJsonParse(row.toJson, emptyParty),
     lineItems: safeJsonParse(row.lineItemsJson, []),
     subtotal: row.subtotal,
+    taxLines: resolvedTaxLines,
     taxRate: row.taxRate,
     taxAmount: row.taxAmount,
     discount: row.discount,
@@ -75,6 +84,9 @@ export async function getMySettings(): Promise<typeof userSettings.$inferSelect 
 export async function saveInvoice(invoice: Invoice): Promise<void> {
   const userId = await getCurrentUserId();
   const now = new Date().toISOString();
+  const taxRate = invoice.taxLines
+    ? invoice.taxLines.reduce((sum, l) => sum + (l.rate || 0), 0)
+    : (invoice.taxRate ?? 0);
   const fields = {
     invoiceNumber: invoice.invoiceNumber,
     status: invoice.status,
@@ -83,8 +95,9 @@ export async function saveInvoice(invoice: Invoice): Promise<void> {
     fromJson: JSON.stringify(invoice.from),
     toJson: JSON.stringify(invoice.to),
     lineItemsJson: JSON.stringify(invoice.lineItems),
+    taxLinesJson: JSON.stringify(invoice.taxLines ?? []),
     subtotal: invoice.subtotal,
-    taxRate: invoice.taxRate,
+    taxRate,
     taxAmount: invoice.taxAmount,
     discount: invoice.discount,
     total: invoice.total,
@@ -373,6 +386,7 @@ export async function duplicateInvoice(id: string): Promise<Invoice | null> {
     fromJson: row.fromJson,
     toJson: row.toJson,
     lineItemsJson: row.lineItemsJson,
+    taxLinesJson: row.taxLinesJson,
     subtotal: row.subtotal,
     taxRate: row.taxRate,
     taxAmount: row.taxAmount,

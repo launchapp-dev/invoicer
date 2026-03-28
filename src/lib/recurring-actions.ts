@@ -123,8 +123,11 @@ export async function generateDueInvoices(): Promise<void> {
       fromJson: JSON.stringify(template.from),
       toJson: JSON.stringify(template.to),
       lineItemsJson: JSON.stringify(template.lineItems),
+      taxLinesJson: JSON.stringify(template.taxLines ?? []),
       subtotal: template.subtotal,
-      taxRate: template.taxRate,
+      taxRate: template.taxLines
+        ? template.taxLines.reduce((sum: number, l: { rate: number }) => sum + (l.rate || 0), 0)
+        : 0,
       taxAmount: template.taxAmount,
       discount: template.discount,
       total: template.total,

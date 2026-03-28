@@ -18,6 +18,13 @@ const lineItemSchema = z.object({
   amount: z.number().min(0),
 });
 
+const taxLineSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  rate: z.number().min(0).max(100),
+  amount: z.number(),
+});
+
 export const RECURRING_FREQUENCIES = ["weekly", "biweekly", "monthly", "quarterly", "annually"] as const;
 export type RecurringFrequency = typeof RECURRING_FREQUENCIES[number];
 
@@ -31,7 +38,7 @@ export const invoiceSchema = z.object({
   to: contactInfoSchema,
   lineItems: z.array(lineItemSchema).min(1, "At least one line item is required"),
   subtotal: z.number(),
-  taxRate: z.number().min(0).max(100),
+  taxLines: z.array(taxLineSchema),
   taxAmount: z.number(),
   discount: z.number().min(0),
   total: z.number(),

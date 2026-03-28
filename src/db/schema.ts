@@ -118,6 +118,7 @@ export const invoices = sqliteTable("invoices", {
   fromJson: text("from_json").notNull(),
   toJson: text("to_json").notNull(),
   lineItemsJson: text("line_items_json").notNull(),
+  taxLinesJson: text("tax_lines_json"),
   subtotal: real("subtotal").notNull().default(0),
   taxRate: real("tax_rate").notNull().default(0),
   taxAmount: real("tax_amount").notNull().default(0),

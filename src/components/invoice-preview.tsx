@@ -14,7 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Building2 } from "lucide-react";
-import { calcSubtotal, calcTaxAmount, calcTotal, formatCurrency, formatDate } from "@/lib/calculations";
+import { calcSubtotal, calcTotal, formatCurrency, formatDate } from "@/lib/calculations";
 import { toast } from "@/components/ui/sonner";
 import type { Invoice } from "@/types/invoice";
 
@@ -34,7 +34,7 @@ interface InvoicePreviewProps {
 
 export function InvoicePreview({ invoice, hideDownload = false, logoUrl }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
-  const taxAmount = calcTaxAmount(subtotal, invoice.taxRate);
+  const taxAmount = invoice.taxAmount;
   const total = calcTotal(subtotal, taxAmount, invoice.discount);
   const [downloading, setDownloading] = useState(false);
 
@@ -171,11 +171,15 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl }: Invoi
             <span className="text-muted-foreground">Subtotal</span>
             <span>{formatCurrency(subtotal, invoice.currency)}</span>
           </div>
-          {invoice.taxRate > 0 && (
-            <div className="flex justify-between w-56">
-              <span className="text-muted-foreground">Tax ({invoice.taxRate}%)</span>
-              <span>{formatCurrency(taxAmount, invoice.currency)}</span>
-            </div>
+          {(invoice.taxLines ?? []).map((line) =>
+            line.rate > 0 ? (
+              <div key={line.id} className="flex justify-between w-56">
+                <span className="text-muted-foreground">
+                  {line.name || "Tax"} ({line.rate}%)
+                </span>
+                <span>{formatCurrency(line.amount, invoice.currency)}</span>
+              </div>
+            ) : null
           )}
           {(invoice.discount ?? 0) > 0 && (
             <div className="flex justify-between w-56">
