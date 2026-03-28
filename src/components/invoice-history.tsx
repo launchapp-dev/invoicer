@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,14 +33,18 @@ interface InvoiceHistoryProps {
 }
 
 function InvoiceHistoryPanel({ onLoad, onDuplicate, onClose }: InvoiceHistoryProps & { onClose: () => void }) {
-  const [invoices, setInvoices] = useState<Invoice[]>(() => listInvoices());
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; invoiceNumber: string } | null>(null);
 
-  const refresh = useCallback(() => setInvoices(listInvoices()), []);
+  const refresh = useCallback(() => {
+    listInvoices().then(setInvoices).catch(console.error);
+  }, []);
 
-  const handleDeleteConfirm = () => {
+  useEffect(() => { refresh(); }, [refresh]);
+
+  const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
-    deleteInvoice(deleteTarget.id);
+    await deleteInvoice(deleteTarget.id);
     refresh();
     setDeleteTarget(null);
   };

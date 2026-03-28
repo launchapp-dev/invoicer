@@ -70,9 +70,9 @@ export default function Home() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [form.formState.isDirty]);
 
-  const handleSave = form.handleSubmit((values) => {
+  const handleSave = form.handleSubmit(async (values) => {
     try {
-      saveInvoice(values as Invoice);
+      await saveInvoice(values as Invoice);
       form.reset(values);
       toast.success("Invoice saved");
     } catch {
