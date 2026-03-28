@@ -44,6 +44,9 @@ function rowToInvoice(row: typeof invoices.$inferSelect): Invoice {
     total: row.total,
     notes: row.notes,
     currency: row.currency,
+    ...(row.paidAt ? { paidAt: row.paidAt } : {}),
+    ...(row.paidMethod ? { paidMethod: row.paidMethod as Invoice["paidMethod"] } : {}),
+    ...(row.paidReference ? { paidReference: row.paidReference } : {}),
   };
 }
 
@@ -78,6 +81,9 @@ export async function saveInvoice(invoice: Invoice): Promise<void> {
     total: invoice.total,
     notes: invoice.notes,
     currency: invoice.currency,
+    paidAt: invoice.paidAt ?? null,
+    paidMethod: invoice.paidMethod ?? null,
+    paidReference: invoice.paidReference ?? null,
   };
   const existing = await db
     .select({ id: invoices.id })
@@ -220,6 +226,23 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus): Pr
   await db
     .update(invoices)
     .set({ status, updatedAt: new Date().toISOString() })
+    .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
+}
+
+export async function recordPayment(
+  id: string,
+  payment: { paidAt: string; paidMethod: string; paidReference?: string }
+): Promise<void> {
+  const userId = await getCurrentUserId();
+  await db
+    .update(invoices)
+    .set({
+      status: "paid",
+      paidAt: payment.paidAt,
+      paidMethod: payment.paidMethod,
+      paidReference: payment.paidReference ?? null,
+      updatedAt: new Date().toISOString(),
+    })
     .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
 }
 

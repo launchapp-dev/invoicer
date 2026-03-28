@@ -92,6 +92,9 @@ export const invoices = sqliteTable("invoices", {
   total: real("total").notNull().default(0),
   notes: text("notes").notNull().default(""),
   currency: text("currency").notNull().default("USD"),
+  paidAt: text("paid_at"),
+  paidMethod: text("paid_method"),
+  paidReference: text("paid_reference"),
   createdAt: text("created_at")
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),

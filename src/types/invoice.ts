@@ -34,5 +34,8 @@ export interface Invoice {
   total: number;
   notes: string;
   currency: string;
+  paidAt?: string;
+  paidMethod?: "bank_transfer" | "cash" | "check" | "card" | "other";
+  paidReference?: string;
 }
 
