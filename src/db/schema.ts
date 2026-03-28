@@ -1,19 +1,9 @@
 import { sql } from "drizzle-orm";
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const users = sqliteTable("users", {
-  id: text("id").primaryKey(),
-  email: text("email").notNull().unique(),
-  createdAt: text("created_at")
-    .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
-});
-
 export const invoices = sqliteTable("invoices", {
   id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+  userId: text("user_id").notNull(),
   invoiceNumber: text("invoice_number").notNull(),
   status: text("status", {
     enum: ["draft", "sent", "paid", "overdue", "cancelled"],
