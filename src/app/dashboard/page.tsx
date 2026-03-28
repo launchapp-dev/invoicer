@@ -4,35 +4,17 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { listInvoices, countInvoices } from "@/lib/storage";
-import { formatCurrency, formatDate } from "@/lib/calculations";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { LogoutButton } from "./logout-button";
-import { InvoiceActions } from "./invoice-actions";
 import { PaginationControls } from "./pagination-controls";
 import { DashboardFilters } from "./dashboard-filters";
 import { DashboardStats } from "./dashboard-stats";
 import { AiInvoiceCommand } from "./ai-invoice-command";
+import { DashboardTable } from "./dashboard-table";
 import type { InvoiceStatus } from "@/types/invoice";
 
 const VALID_STATUSES: InvoiceStatus[] = ["draft", "sent", "paid", "overdue", "cancelled"];
-
-const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" | "destructive"> = {
-  draft: "secondary",
-  sent: "outline",
-  paid: "default",
-  overdue: "destructive",
-  cancelled: "outline",
-};
 
 const LIMIT = 25;
 
@@ -142,49 +124,7 @@ export default async function DashboardPage({
           )
         ) : (
           <>
-            <div className="overflow-x-auto rounded-md border border-border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Invoice #</TableHead>
-                    <TableHead>Recipient</TableHead>
-                    <TableHead className="hidden sm:table-cell">Issue Date</TableHead>
-                    <TableHead className="hidden sm:table-cell">Due Date</TableHead>
-                    <TableHead>Total</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="w-16">
-                      <span className="sr-only">Actions</span>
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoices.map((invoice) => (
-                    <TableRow key={invoice.id} className="hover:bg-muted/50">
-                      <TableCell className="font-medium">
-                        <Link
-                          href={`/invoices/${invoice.id}`}
-                          className="text-primary hover:underline"
-                        >
-                          {invoice.invoiceNumber}
-                        </Link>
-                      </TableCell>
-                      <TableCell>{invoice.to.name || "—"}</TableCell>
-                      <TableCell className="hidden sm:table-cell">{formatDate(invoice.issueDate)}</TableCell>
-                      <TableCell className="hidden sm:table-cell">{formatDate(invoice.dueDate)}</TableCell>
-                      <TableCell>{formatCurrency(invoice.total, invoice.currency)}</TableCell>
-                      <TableCell>
-                        <Badge variant={STATUS_VARIANT[invoice.status] ?? "secondary"}>
-                          {invoice.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <InvoiceActions invoiceId={invoice.id} status={invoice.status} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <DashboardTable invoices={invoices} />
 
             {totalCount > LIMIT && (
               <Suspense fallback={<Skeleton className="h-9 w-64 mt-4" />}>

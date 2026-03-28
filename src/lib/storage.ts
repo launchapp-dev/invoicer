@@ -1,6 +1,6 @@
 "use server";
 
-import { and, count, desc, eq, like, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, inArray, like, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { invoices, userSettings } from "@/db/schema";
@@ -227,6 +227,23 @@ export async function getInvoiceStats(): Promise<{
     overdueCount: statsRow?.overdueCount ?? 0,
     currency: currencyRow?.currency ?? "USD",
   };
+}
+
+export async function bulkDeleteInvoices(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  const userId = await getCurrentUserId();
+  await db
+    .delete(invoices)
+    .where(and(eq(invoices.userId, userId), inArray(invoices.id, ids)));
+}
+
+export async function bulkUpdateInvoiceStatus(ids: string[], status: InvoiceStatus): Promise<void> {
+  if (ids.length === 0) return;
+  const userId = await getCurrentUserId();
+  await db
+    .update(invoices)
+    .set({ status, updatedAt: new Date().toISOString() })
+    .where(and(eq(invoices.userId, userId), inArray(invoices.id, ids)));
 }
 
 export async function updateInvoiceStatus(id: string, status: InvoiceStatus): Promise<void> {
