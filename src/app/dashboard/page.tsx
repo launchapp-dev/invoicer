@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -17,7 +18,10 @@ import {
 import { LogoutButton } from "./logout-button";
 import { InvoiceActions } from "./invoice-actions";
 import { PaginationControls } from "./pagination-controls";
+import { DashboardFilters } from "./dashboard-filters";
 import type { InvoiceStatus } from "@/types/invoice";
+
+const VALID_STATUSES: InvoiceStatus[] = ["draft", "sent", "paid", "overdue", "cancelled"];
 
 const STATUS_VARIANT: Record<InvoiceStatus, "secondary" | "outline" | "default" | "destructive"> = {
   draft: "secondary",
@@ -43,10 +47,18 @@ export default async function DashboardPage({
   const params = await searchParams;
   const page = Math.max(1, parseInt((params.page as string) ?? "1", 10) || 1);
   const offset = (page - 1) * LIMIT;
+  const search = (params.search as string) ?? "";
+  const statusParam = (params.status as string) ?? "";
+  const status = VALID_STATUSES.includes(statusParam as InvoiceStatus) ? (statusParam as InvoiceStatus) : undefined;
+  const filters = {
+    ...(search ? { search } : {}),
+    ...(status ? { status } : {}),
+  };
+  const hasFilters = !!(search || statusParam);
 
   const [invoices, totalCount] = await Promise.all([
-    listInvoices(LIMIT, offset),
-    countInvoices(),
+    listInvoices(LIMIT, offset, filters),
+    countInvoices(filters),
   ]);
 
   const totalPages = Math.ceil(totalCount / LIMIT);
@@ -71,13 +83,23 @@ export default async function DashboardPage({
           </Button>
         </div>
 
+        <Suspense>
+          <DashboardFilters />
+        </Suspense>
+
         {invoices.length === 0 && page === 1 ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-            <p className="text-muted-foreground">No invoices yet.</p>
-            <Button asChild>
-              <Link href="/invoices/new">Create Invoice</Link>
-            </Button>
-          </div>
+          hasFilters ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+              <p className="text-muted-foreground">No invoices match your filters.</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+              <p className="text-muted-foreground">No invoices yet.</p>
+              <Button asChild>
+                <Link href="/invoices/new">Create Invoice</Link>
+              </Button>
+            </div>
+          )
         ) : (
           <>
             <div className="overflow-x-auto rounded-md border border-border">
@@ -125,7 +147,9 @@ export default async function DashboardPage({
             </div>
 
             {totalCount > LIMIT && (
-              <PaginationControls page={page} totalPages={totalPages} />
+              <Suspense>
+                <PaginationControls page={page} totalPages={totalPages} />
+              </Suspense>
             )}
           </>
         )}

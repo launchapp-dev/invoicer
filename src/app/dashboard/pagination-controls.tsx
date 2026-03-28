@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 interface PaginationControlsProps {
@@ -10,13 +10,20 @@ interface PaginationControlsProps {
 
 export function PaginationControls({ page, totalPages }: PaginationControlsProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  function buildPageUrl(newPage: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(newPage));
+    return `?${params.toString()}`;
+  }
 
   return (
     <div className="flex items-center justify-center gap-4 mt-4">
       <Button
         variant="outline"
         disabled={page <= 1}
-        onClick={() => router.push(`?page=${page - 1}`)}
+        onClick={() => router.push(buildPageUrl(page - 1))}
       >
         Previous
       </Button>
@@ -26,7 +33,7 @@ export function PaginationControls({ page, totalPages }: PaginationControlsProps
       <Button
         variant="outline"
         disabled={page >= totalPages}
-        onClick={() => router.push(`?page=${page + 1}`)}
+        onClick={() => router.push(buildPageUrl(page + 1))}
       >
         Next
       </Button>
