@@ -26,7 +26,7 @@ export const invoiceSchema = z.object({
   dueDate: z.string().min(1, "Due date is required"),
   from: contactInfoSchema,
   to: contactInfoSchema,
-  lineItems: z.array(lineItemSchema),
+  lineItems: z.array(lineItemSchema).min(1, "At least one line item is required"),
   subtotal: z.number(),
   taxRate: z.number().min(0).max(100),
   taxAmount: z.number(),
