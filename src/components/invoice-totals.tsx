@@ -45,6 +45,8 @@ const TAX_PRESETS: { group: string; presets: TaxPreset[] }[] = [
   {
     group: "EU VAT",
     presets: [
+      { label: "Standard (20%)", name: "EU VAT", rate: 20 },
+      { label: "Reduced (10%)", name: "EU VAT", rate: 10 },
       { label: "Austria (20%)", name: "VAT", rate: 20 },
       { label: "Belgium (21%)", name: "VAT", rate: 21 },
       { label: "Bulgaria (20%)", name: "VAT", rate: 20 },
@@ -129,6 +131,12 @@ const TAX_PRESETS: { group: string; presets: TaxPreset[] }[] = [
       { label: "West Virginia (6%)", name: "Sales Tax", rate: 6 },
       { label: "Wisconsin (5%)", name: "Sales Tax", rate: 5 },
       { label: "Wyoming (4%)", name: "Sales Tax", rate: 4 },
+    ],
+  },
+  {
+    group: "Other",
+    presets: [
+      { label: "Singapore GST (9%)", name: "GST", rate: 9 },
     ],
   },
 ];
