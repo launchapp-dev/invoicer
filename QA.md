@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-28 (run 9) |
-| Result | PARTIAL PASS — landing/auth/invoice form/navigation mostly OK; dashboard+settings still crash |
-| Steps Passed | 5 (smoke, auth, invoice form, PDF, navigation minus settings) |
-| Steps Failed | 2 (dashboard, settings/templates) |
-| Console Errors | SqliteError client_id on dashboard; SqliteError payment_instructions on settings |
-| Network Errors | 500s on /invoices/new background duplicate detection queries |
+| Date | 2026-03-28 (run 10) |
+| Result | STRONG PASS — dashboard + settings both FIXED; all 6 steps pass; only 2 known unmerged-branch failures remain |
+| Steps Passed | 6/6 (smoke, auth, invoice creation, PDF, navigation, console+network) |
+| Steps Failed | 0 (step-level) |
+| Console Errors | 0 |
+| Network Errors | 0 (no 4xx/5xx) |
 
 ## Test Results History
 
@@ -26,12 +26,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | 3 | 2 | 1 | TASK-290 (PDF) FIXED ✓. TASK-291 (Archived status) FIXED ✓. TASK-293 (Tax Presets) verified working. client_id SqliteError PERSISTS (TASK-289 marked done but db:push still not run — new task TASK-296 created). 500 errors on /invoices/new from duplicate detection background queries (same root cause). |
 | 2026-03-29 | 4 | 2 | 1 | Save invoice FIXED ✓ (first session pre-HMR). Partial payments (TASK-297) PASS ✓. Expense search/filter (TASK-299) present ✓. Dashboard still FAIL (client_id — TASK-296 blocked). Settings NEWLY FAIL (payment_instructions — TASK-301 merged but db:push not run — TASK-302 created). |
 | 2026-03-28 | 5 | 2 | 3 | Signup ✓. Invoice form ✓ (12 inputs, line items, totals, payment terms, PDF btn, tax presets, currency). /clients ✓. /expenses ✓. /dashboard/recurring ✓. Dashboard FAIL SqliteError client_id (TASK-311 created). Settings FAIL SqliteError payment_instructions (TASK-311). AO badge missing (TASK-309). Onboarding banner not merged (TASK-310). 500s on /invoices/new persist. |
+| 2026-03-28 | 6 | 0 | 0 | MAJOR: Dashboard ✓ FIXED (TASK-311/db:push run). Settings ✓ FIXED. Payment Instructions ✓. Save invoice ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 11 routes load. 0 console errors. 0 network errors. 2 unresolved: AO badge (TASK-309) + onboarding banner (TASK-310) — both on unmerged branches. |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
-- **[2026-03-28] CRITICAL: SqliteError client_id + payment_instructions columns missing (TASK-311)** — `pnpm db:push` never run. Dashboard crashes (`invoices.client_id`) and settings crashes (`user_settings.payment_instructions`). TASK-296 and TASK-302 marked done but fix wasn't applied. Fix: run `pnpm db:push` in `/Users/samishukri/brain/repos/invoicer`.
-- **[2026-03-28] 500 errors on /invoices/new from background duplicate detection queries** — Background RSC requests hit broken invoices table (client_id missing). Auto-fixes once db:push runs.
 - **[2026-03-28] "Built with AO" badge missing from landing footer (TASK-309)** — TASK-288 commit exists on `ao/task-288` branch but PR was never submitted or merged to main.
 - **[2026-03-28] New-user onboarding banner not present in main (TASK-310)** — TASK-304/306 code on `ao/task-304` branch but PR was never submitted or merged to main.
 
@@ -51,6 +50,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | Settings page loads | PASS | FAIL | TASK-301 added payment_instructions to schema but db:push not run (TASK-302) |
 | 2026-03-28 | "Built with AO" badge on landing | PASS | FAIL | ao/task-288 branch was never merged to main (TASK-309) |
 | 2026-03-28 | New-user onboarding banner on dashboard | N/A | FAIL | ao/task-304 branch was never merged to main (TASK-310) |
+| 2026-03-28 | Dashboard loads | FAIL | PASS | run 10: db:push finally run — client_id column exists, dashboard loads cleanly |
+| 2026-03-28 | Settings page loads | FAIL | PASS | run 10: db:push fixed payment_instructions column too — settings loads cleanly |
+| 2026-03-28 | Save invoice succeeds | PASS (with caveats) | PASS | run 10: confirmed — save redirects to /invoices/:id and invoice appears in dashboard |
 
 ## Test Coverage
 
@@ -77,25 +79,25 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Custom payment terms field appears when "Custom" selected
 
 ### Invoice Dashboard
-- [ ] Dashboard loads with invoice list — **FAIL: SqliteError client_id column missing after HMR (TASK-296)**
-- [x] Search box present (plain English placeholder visible) — **VERIFIED run 8**
-- [x] Status filter dropdown present — **VERIFIED run 8 (pre-HMR)**
-- [x] Date range filter present — **VERIFIED run 8 (pre-HMR)**
-- [x] Sort controls present — **VERIFIED run 8 (pre-HMR)**
-- [x] Quick stats show total outstanding, paid this month, overdue amount — **VERIFIED run 8 (pre-HMR)**
+- [x] Dashboard loads with invoice list — **FIXED run 10 (db:push run — client_id exists)**
+- [x] Search box present (plain English placeholder visible) — **VERIFIED run 10**
+- [x] Status filter dropdown present — **VERIFIED run 10**
+- [x] Date range filter present — **VERIFIED run 10**
+- [x] Sort controls present — **VERIFIED run 10**
+- [x] Quick stats show total outstanding, paid this month, overdue amount — **VERIFIED run 10**
 - [x] Bulk select checkboxes appear — **VERIFIED run 8 (pre-HMR)**
-- [x] Export CSV button present — **VERIFIED run 8 (pre-HMR)**
-- [ ] Search works — **BLOCKED: dashboard crashes after HMR**
-- [ ] Status filter works (including "viewed" and "archived" statuses — TASK-294 fix) — **BLOCKED**
-- [ ] Date range filter works — **BLOCKED**
-- [ ] Sort controls work (date, amount, status, client) — **BLOCKED**
-- [ ] Edit invoice navigates correctly — **BLOCKED**
-- [ ] Delete invoice with confirmation works — **BLOCKED**
-- [ ] Duplicate invoice works — **BLOCKED**
-- [ ] Bulk delete works — **BLOCKED**
-- [ ] Bulk mark-as-sent works — **BLOCKED**
-- [ ] Client filter dropdown works — **BLOCKED**
-- [ ] Currency filter dropdown works — **BLOCKED**
+- [x] Export CSV button present — **VERIFIED run 10 (with invoice data)**
+- [ ] Search works — NOT TESTED (requires functional invoice data)
+- [ ] Status filter works (including "viewed" and "archived" statuses — TASK-294 fix) — NOT TESTED
+- [ ] Date range filter works — NOT TESTED
+- [ ] Sort controls work (date, amount, status, client) — NOT TESTED
+- [ ] Edit invoice navigates correctly — NOT TESTED
+- [ ] Delete invoice with confirmation works — NOT TESTED
+- [ ] Duplicate invoice works — NOT TESTED
+- [ ] Bulk delete works — NOT TESTED
+- [ ] Bulk mark-as-sent works — NOT TESTED
+- [ ] Client filter dropdown works — NOT TESTED
+- [ ] Currency filter dropdown works — NOT TESTED
 
 ### PDF Generation
 - [x] Generate PDF button exists
@@ -109,13 +111,13 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 ### Invoice Lifecycle & Status
 - [x] Archived status option available in invoice Status dropdown — **FIXED (TASK-291)**
-- [ ] Invoice can be archived from dashboard actions menu — **BLOCKED: dashboard broken**
-- [ ] Archived invoices shown with "Archived" badge — **BLOCKED**
-- [ ] Auto-overdue: sent/viewed invoices past due date flagged overdue (TASK-277) — **BLOCKED: dashboard broken**
+- [ ] Invoice can be archived from dashboard actions menu — NOT TESTED
+- [ ] Archived invoices shown with "Archived" badge — NOT TESTED
+- [ ] Auto-overdue: sent/viewed invoices past due date flagged overdue (TASK-277) — NOT TESTED
 
 ### Settings
-- [ ] Settings page loads at /settings — **FAIL: SqliteError payment_instructions column missing (TASK-302)**
-- [ ] Business profile fields (name, address, logo, tax ID) render — **BLOCKED**
+- [x] Settings page loads at /settings — **FIXED run 10 (db:push run — payment_instructions exists)**
+- [x] Business profile fields (name, address, logo, tax ID) render — **VERIFIED run 10**
 - [x] Invoice defaults section renders (payment terms, tax rate, notes)
 - [ ] Settings pre-fill new invoice form with saved defaults
 - [ ] Business logo upload works and persists
@@ -126,7 +128,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Brand color customization field present in settings
 - [x] Font customization field present in settings
 - [ ] Brand color applies to invoice PDF output (TASK-278)
-- [x] Default Payment Terms field in Invoice Defaults section (TASK-276)
+- [x] Default Payment Terms field in Invoice Defaults section (TASK-276) — **VERIFIED run 10**
 - [ ] Default payment terms saved in settings pre-fill new invoice form
 
 ### Client Management
@@ -159,8 +161,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Can set up a recurring invoice (weekly/monthly/etc.)
 
 ### AI Smart Invoice Creation
-- [ ] Command bar or natural language input exists on dashboard — **BLOCKED: dashboard broken**
-- [ ] AI dialog opens without errors and accepts natural language input — **BLOCKED**
+- [ ] Command bar or natural language input exists on dashboard — NOT TESTED
+- [ ] AI dialog opens without errors and accepts natural language input — NOT TESTED
 
 ### Landing Page
 - [x] Landing page loads (no 404, no console errors)
@@ -175,15 +177,15 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Landing page loads (no 404)
 - [x] /login loads
 - [x] /signup loads
-- [ ] /dashboard loads — **FAIL: client_id SqliteError (TASK-311)**
-- [x] /invoices/new loads — **VERIFIED run 9**
-- [x] /clients loads — **VERIFIED run 9**
-- [x] /clients/new loads — **VERIFIED run 9**
-- [ ] /settings loads — **FAIL: SqliteError payment_instructions (TASK-311)**
-- [ ] /settings/templates loads — **FAIL: same SqliteError (TASK-311)**
-- [x] /dashboard/recurring loads — **VERIFIED run 9**
-- [x] /expenses loads — **VERIFIED run 9**
-- [x] Logout redirects to /login
+- [x] /dashboard loads — **FIXED run 10**
+- [x] /invoices/new loads — **VERIFIED run 10**
+- [x] /clients loads — **VERIFIED run 10**
+- [x] /clients/new loads — **VERIFIED run 10**
+- [x] /settings loads — **FIXED run 10**
+- [x] /settings/templates loads — **FIXED run 10**
+- [x] /dashboard/recurring loads — **VERIFIED run 10**
+- [x] /expenses loads — **VERIFIED run 10**
+- [x] Logout redirects to /login — **VERIFIED run 10**
 - [ ] Mobile navigation works
 - [ ] Back/forward browser buttons work
 - [x] Settings nav link present in authenticated layout
@@ -191,9 +193,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Clients nav link present in authenticated layout
 
 ### Console & Network
-- [ ] No console.error messages — **FAIL: client_id SqliteError on dashboard + payment_instructions on settings + 500s on /invoices/new**
-- [ ] No uncaught exceptions — **FAIL: dashboard and settings throw**
-- [ ] No failed network requests (4xx/5xx) — **FAIL: 500s on /invoices/new from duplicate detection queries**
+- [x] No console.error messages — **CLEAN run 10 (0 errors)**
+- [x] No uncaught exceptions — **CLEAN run 10**
+- [x] No failed network requests (4xx/5xx) — **CLEAN run 10 (0 errors)**
 - [x] No CORS errors
 
 ### Multi-Currency
@@ -229,14 +231,14 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Client P&L shows revenue minus expenses
 
 ### Payment Instructions (TASK-301)
-- [ ] Payment Instructions textarea visible in Settings — **FAIL: settings page crashes (TASK-311 — db:push not run)**
-- [ ] Payment instructions saves correctly — **BLOCKED**
-- [ ] Invoice preview shows payment instructions when set — **BLOCKED**
-- [ ] Generated PDF includes payment instructions when set — **BLOCKED**
-- [ ] Empty field renders no extra section — **BLOCKED**
+- [x] Payment Instructions textarea visible in Settings — **VERIFIED run 10 (settings loads cleanly)**
+- [ ] Payment instructions saves correctly — NOT TESTED
+- [ ] Invoice preview shows payment instructions when set — NOT TESTED
+- [ ] Generated PDF includes payment instructions when set — NOT TESTED
+- [ ] Empty field renders no extra section — NOT TESTED
 
 ### AI Cash Flow Forecasting
-- [ ] Cash flow forecasting widget appears on dashboard — **BLOCKED: dashboard broken**
+- [ ] Cash flow forecasting widget appears on dashboard — NOT TESTED
 - [ ] Widget shows "Expected this month" vs "At risk" breakdown
 
 ### AI Payment Reminders
@@ -244,18 +246,18 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] AI draft reminder message generated for overdue invoice
 
 ### Natural Language AI Search
-- [ ] Natural language search input present on dashboard — **BLOCKED: dashboard broken**
+- [ ] Natural language search input present on dashboard — NOT TESTED
 - [ ] Searching "unpaid invoices" returns filtered results
 
 ### Invoice Activity Log
-- [ ] Activity log section visible on invoice detail/edit page — **NOT TESTED (TASK-284)**
-- [ ] Status change events appear in activity log — **NOT TESTED**
-- [ ] Payment events appear in activity log — **NOT TESTED**
-- [ ] Edit events appear in activity log — **NOT TESTED**
+- [ ] Activity log section visible on invoice detail/edit page — NOT TESTED (TASK-284)
+- [ ] Status change events appear in activity log — NOT TESTED
+- [ ] Payment events appear in activity log — NOT TESTED
+- [ ] Edit events appear in activity log — NOT TESTED
 
 ### AI Tax Rate Auto-Suggest
-- [ ] AI tax rate suggestion appears based on client jurisdiction (TASK-285) — **NOT TESTED (dashboard broken)**
-- [ ] Suggestion auto-fills correct tax rate for client's location — **BLOCKED**
+- [ ] AI tax rate suggestion appears based on client jurisdiction (TASK-285) — NOT TESTED
+- [ ] Suggestion auto-fills correct tax rate for client's location — NOT TESTED
 
 ### Invoice Templates
 - [x] /settings/templates page loads
@@ -276,7 +278,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 <!-- QA agent: document any environment-specific findings here (e.g., "database must be seeded before auth works", "dev server must be running on port 3002") -->
 - App URL: http://localhost:3002
 - Dev server: `pnpm dev` runs on port **3002** (dedicated — avoids conflict with CondoHub on 3000, PostPilot on 3001). Start with `pnpm dev` before running any E2E tests.
-- Database: SQLite via Drizzle ORM — **MUST run `pnpm db:push` before testing and after any schema changes**. TWO columns currently missing: `client_id` (invoices table, from TASK-280) and `payment_instructions` (user_settings, from TASK-301). Both fixed by running `pnpm db:push`. See TASK-302.
+- Database: SQLite via Drizzle ORM — **MUST run `pnpm db:push` before testing and after any schema changes**. As of run 10, `pnpm db:push` has been run and the schema is in sync — `client_id` (invoices) and `payment_instructions` (user_settings) both present. If schema changes are merged, run `pnpm db:push` again.
 - Auth: Better Auth — requires BETTER_AUTH_SECRET and BETTER_AUTH_URL in .env
 - Test credentials: qa-test@invoicer.dev / TestPass123! — NOTE: if this account already exists from a prior run with a different password, login will fail. Use qa-test2@invoicer.dev / TestPass123! or create a new account.
 - **NOTE**: Login may fail if the test account was created in an earlier session. Signup with a fresh email works reliably. Login works correctly for accounts created in the same session.
