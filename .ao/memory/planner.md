@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 03:40 |
+| Date | 2026-03-29 03:50 |
 | Open PRs | 1 (mergeable, clean) |
-| Queue Depth | 1 (product-review running) |
+| Queue Depth | 2 (product-review, TASK-025 pr-reviewer assigned) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
 | Skipped (deps) | 0 |
 | Skipped (queued) | 0 |
-| Pipeline Idle | No (product-review workflow active) |
+| Pipeline Idle | No (2 workflows active) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
