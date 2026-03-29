@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 7) |
-| Result | 3 PASS / 2 FAIL (steps) |
-| Steps Passed | 1 (smoke), 4 (PDF — FIXED), 5 (navigation/logout/login all OK) |
-| Steps Failed | 3 (save invoice — client_id regression persists), dashboard crash |
-| Console Errors | 3 (client_id SqliteError on dashboard/invoice save) + multiple 500s on /invoices/new |
-| Network Errors | 0 (PDF font 404 FIXED) |
+| Date | 2026-03-29 (run 8) |
+| Result | 4 PASS / 2 FAIL (steps) |
+| Steps Passed | 1 (smoke), 2 (auth — signup+login), 3 (invoice create+save+partial payment), 4 (PDF) |
+| Steps Failed | 5 (dashboard FAIL client_id, settings FAIL payment_instructions), 6 (console errors) |
+| Console Errors | client_id SqliteError on dashboard (TASK-296 persists) + payment_instructions SqliteError on /settings (NEW — TASK-302) + background 500s on /invoices/new |
+| Network Errors | 0 |
 
 ## Test Results History
 
@@ -24,12 +24,14 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | 6 | 1 | 1 | TASK-249 FIXED (app no longer crashes); PDF generation fails — Inter font 404 from Google CDN; .env BETTER_AUTH_URL was :3000 not :3002 (fixed in env); all new features (expenses, templates, brand style, CSV export, share link) present |
 | 2026-03-28 | 3 | 3 | 3 | CRITICAL regression: TASK-280 clientId FK added to schema but db:push not run — dashboard and invoice save crash (TASK-289). PDF font 404 persists (TASK-281 regression, TASK-290). Archived status missing from dropdown (TASK-275 regression, TASK-291). New features verified: TASK-279 tax ID/currency on client form, TASK-276 default payment terms in settings. |
 | 2026-03-29 | 3 | 2 | 1 | TASK-290 (PDF) FIXED ✓. TASK-291 (Archived status) FIXED ✓. TASK-293 (Tax Presets) verified working. client_id SqliteError PERSISTS (TASK-289 marked done but db:push still not run — new task TASK-296 created). 500 errors on /invoices/new from duplicate detection background queries (same root cause). |
+| 2026-03-29 | 4 | 2 | 1 | Save invoice FIXED ✓ (first session pre-HMR). Partial payments (TASK-297) PASS ✓. Expense search/filter (TASK-299) present ✓. Dashboard still FAIL (client_id — TASK-296 blocked). Settings NEWLY FAIL (payment_instructions — TASK-301 merged but db:push not run — TASK-302 created). |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
-- **[2026-03-29] CRITICAL: SqliteError client_id column missing — dashboard + invoice save broken (TASK-296)** — TASK-289 was marked done but `pnpm db:push` was never run. Every route querying invoices crashes. Dashboard shows "Something went wrong", Save Invoice shows toast "table invoices has no column named client_id". Fix: run `pnpm db:push` in `/Users/samishukri/brain/repos/invoicer`.
-- **[2026-03-29] 500 errors on /invoices/new from background duplicate detection queries** — When form data changes, duplicate detection fires background RSC POST requests that hit the broken invoices table and return 500. Same root cause as TASK-296 (client_id missing). Will auto-fix once db:push is run.
+- **[2026-03-29] CRITICAL: SqliteError client_id column missing — dashboard broken (TASK-296 blocked)** — `pnpm db:push` was never run. Dashboard crashes with SqliteError after HMR loads current code. TASK-296 is blocked (workflow runner failed). Fix: run `pnpm db:push` in `/Users/samishukri/brain/repos/invoicer`.
+- **[2026-03-29] CRITICAL: SqliteError payment_instructions column missing — settings page broken (TASK-302)** — TASK-301 added `paymentInstructions` to `userSettings` schema but `pnpm db:push` not run. Settings page crashes with SqliteError. Same fix: run `pnpm db:push`.
+- **[2026-03-29] 500 errors on /invoices/new from background duplicate detection queries** — Background RSC POST requests hit the broken invoices table (client_id missing). Will auto-fix once db:push is run.
 
 ## Regression Tracker
 
@@ -43,6 +45,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | PDF downloads without errors | PASS | FAIL | TASK-281 marked done but Inter font .woff 404 persists (TASK-290) |
 | 2026-03-29 | PDF downloads without errors | FAIL | PASS | TASK-290 fixed — PDF now downloads successfully with no font 404 |
 | 2026-03-29 | Archived status in invoice dropdown | FAIL | PASS | TASK-291 fixed — Archived now appears in Status dropdown |
+| 2026-03-29 | Save invoice succeeds | FAIL | PASS | Working in run 8 first session (pre-HMR); client_id only affects SELECT queries on dashboard |
+| 2026-03-29 | Settings page loads | PASS | FAIL | TASK-301 added payment_instructions to schema but db:push not run (TASK-302) |
 
 ## Test Coverage
 
@@ -63,22 +67,27 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Add line item works
 - [ ] Remove line item works
 - [x] Auto-calculations update in real-time
-- [ ] Save invoice succeeds — **FAIL: SqliteError client_id column missing (TASK-296)**
-- [ ] Saved invoice appears in dashboard — **BLOCKED by save failure**
+- [x] Save invoice succeeds — **FIXED (run 8 first session)**
+- [x] Saved invoice appears in dashboard — **FIXED (run 8 first session)**
 - [x] Payment terms presets available (Net 15, Net 30, Net 60, Due on Receipt, Custom)
 - [ ] Custom payment terms field appears when "Custom" selected
 
 ### Invoice Dashboard
-- [ ] Dashboard loads with invoice list — **FAIL: SqliteError client_id column missing (TASK-289)**
-- [ ] Search works — **BLOCKED**
+- [ ] Dashboard loads with invoice list — **FAIL: SqliteError client_id column missing after HMR (TASK-296)**
+- [x] Search box present (plain English placeholder visible) — **VERIFIED run 8**
+- [x] Status filter dropdown present — **VERIFIED run 8 (pre-HMR)**
+- [x] Date range filter present — **VERIFIED run 8 (pre-HMR)**
+- [x] Sort controls present — **VERIFIED run 8 (pre-HMR)**
+- [x] Quick stats show total outstanding, paid this month, overdue amount — **VERIFIED run 8 (pre-HMR)**
+- [x] Bulk select checkboxes appear — **VERIFIED run 8 (pre-HMR)**
+- [x] Export CSV button present — **VERIFIED run 8 (pre-HMR)**
+- [ ] Search works — **BLOCKED: dashboard crashes after HMR**
 - [ ] Status filter works (including "viewed" and "archived" statuses — TASK-294 fix) — **BLOCKED**
 - [ ] Date range filter works — **BLOCKED**
 - [ ] Sort controls work (date, amount, status, client) — **BLOCKED**
 - [ ] Edit invoice navigates correctly — **BLOCKED**
 - [ ] Delete invoice with confirmation works — **BLOCKED**
 - [ ] Duplicate invoice works — **BLOCKED**
-- [ ] Quick stats show total outstanding, paid this month, overdue amount — **BLOCKED**
-- [ ] Bulk select checkboxes appear — **BLOCKED**
 - [ ] Bulk delete works — **BLOCKED**
 - [ ] Bulk mark-as-sent works — **BLOCKED**
 - [ ] Client filter dropdown works — **BLOCKED**
@@ -101,8 +110,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Auto-overdue: sent/viewed invoices past due date flagged overdue (TASK-277) — **BLOCKED: dashboard broken**
 
 ### Settings
-- [x] Settings page loads at /settings
-- [x] Business profile fields (name, address, logo, tax ID) render
+- [ ] Settings page loads at /settings — **FAIL: SqliteError payment_instructions column missing (TASK-302)**
+- [ ] Business profile fields (name, address, logo, tax ID) render — **BLOCKED**
 - [x] Invoice defaults section renders (payment terms, tax rate, notes)
 - [ ] Settings pre-fill new invoice form with saved defaults
 - [ ] Business logo upload works and persists
@@ -132,9 +141,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Paid status is reflected in dashboard
 
 ### Partial Payments
-- [ ] Multiple payments can be recorded against one invoice
-- [ ] Payment total tracks cumulative amount paid
-- [ ] Remaining balance shown correctly after partial payment
+- [x] Multiple payments can be recorded against one invoice — **VERIFIED run 8 (TASK-297)**
+- [x] Payment total tracks cumulative amount paid — **VERIFIED run 8**
+- [x] Remaining balance shown correctly after partial payment — **VERIFIED run 8**
 
 ### Public Invoice Share Link
 - [ ] Share link is generated and accessible for an invoice
@@ -166,8 +175,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] /invoices/new loads
 - [x] /clients loads
 - [x] /clients/new loads
-- [x] /settings loads
-- [x] /settings/templates loads
+- [ ] /settings loads — **FAIL: SqliteError payment_instructions (TASK-302)**
+- [ ] /settings/templates loads — **BLOCKED by settings crash**
 - [x] /dashboard/recurring loads
 - [x] /expenses loads
 - [x] Logout redirects to /login
@@ -178,8 +187,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Clients nav link present in authenticated layout
 
 ### Console & Network
-- [ ] No console.error messages — **FAIL: client_id SqliteError (x3) on dashboard/save + 500s on /invoices/new**
-- [ ] No uncaught exceptions — **FAIL: dashboard and invoice save throw**
+- [ ] No console.error messages — **FAIL: client_id SqliteError on dashboard + payment_instructions on settings + 500s on /invoices/new**
+- [ ] No uncaught exceptions — **FAIL: dashboard and settings throw**
 - [ ] No failed network requests (4xx/5xx) — **FAIL: 500s on /invoices/new from duplicate detection queries**
 - [x] No CORS errors
 
@@ -200,16 +209,27 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Attached file persists after saving invoice
 
 ### Bulk CSV Export
-- [ ] Bulk CSV export button exists on dashboard — **BLOCKED: dashboard broken**
+- [x] Bulk CSV export button exists on dashboard — **VERIFIED run 8 (pre-HMR)**
 - [ ] Exporting invoices downloads a CSV file
 - [ ] CSV contains correct invoice data
 
 ### Expense Tracking
 - [x] /expenses page loads with Add Expense button
+- [x] Search bar present on expenses page (TASK-299)
+- [x] Category filter dropdown present on expenses page (TASK-299)
+- [x] Sort dropdown present on expenses page (TASK-299)
+- [x] Date range filter present on expenses page (TASK-299)
 - [ ] Can upload/add an expense
 - [ ] AI receipt extraction works (extracts vendor, amount, date from uploaded receipt)
 - [ ] Expenses linked to clients show in P&L view
 - [ ] Client P&L shows revenue minus expenses
+
+### Payment Instructions (TASK-301)
+- [ ] Payment Instructions textarea visible in Settings — **FAIL: settings page crashes (TASK-302)**
+- [ ] Payment instructions saves correctly
+- [ ] Invoice preview shows payment instructions when set
+- [ ] Generated PDF includes payment instructions when set
+- [ ] Empty field renders no extra section
 
 ### AI Cash Flow Forecasting
 - [ ] Cash flow forecasting widget appears on dashboard — **BLOCKED: dashboard broken**
@@ -243,7 +263,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 <!-- QA agent: document any environment-specific findings here (e.g., "database must be seeded before auth works", "dev server must be running on port 3002") -->
 - App URL: http://localhost:3002
 - Dev server: `pnpm dev` runs on port **3002** (dedicated — avoids conflict with CondoHub on 3000, PostPilot on 3001). Start with `pnpm dev` before running any E2E tests.
-- Database: SQLite via Drizzle ORM — **MUST run `pnpm db:push` before testing and after any schema changes**. TASK-280 added client_id column but migration was not applied, causing TASK-289.
+- Database: SQLite via Drizzle ORM — **MUST run `pnpm db:push` before testing and after any schema changes**. TWO columns currently missing: `client_id` (invoices table, from TASK-280) and `payment_instructions` (user_settings, from TASK-301). Both fixed by running `pnpm db:push`. See TASK-302.
 - Auth: Better Auth — requires BETTER_AUTH_SECRET and BETTER_AUTH_URL in .env
-- Test credentials: qa-test@invoicer.dev / TestPass123!
-- **NOTE**: Database is reset between environments — if login fails with "Invalid email or password", use signup flow with qa-test@invoicer.dev / TestPass123!
+- Test credentials: qa-test@invoicer.dev / TestPass123! — NOTE: if this account already exists from a prior run with a different password, login will fail. Use qa-test2@invoicer.dev / TestPass123! or create a new account.
+- **NOTE**: Login may fail if the test account was created in an earlier session. Signup with a fresh email works reliably. Login works correctly for accounts created in the same session.
