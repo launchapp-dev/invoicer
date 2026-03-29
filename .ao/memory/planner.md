@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 03:18 |
-| Open PRs | 1 (clean, no changes requested) |
-| Queue Depth | 0 → 2 |
+| Date | 2026-03-29 03:35 |
+| Open PRs | 1 (mergeable, clean) |
+| Queue Depth | 1 (stable) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 2 |
+| New Work Enqueued | 0 |
 | Skipped (deps) | 0 |
 | Skipped (queued) | 0 |
-| Pipeline Idle | No |
+| Pipeline Idle | No (TASK-025 in progress) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
