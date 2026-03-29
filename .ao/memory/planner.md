@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 14:15 |
+| Date | 2026-03-30 18:42 |
 | Open PRs | 0 |
-| Queue Depth | 2/8 |
+| Queue Depth | 0/8 |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 2 (TASK-323, TASK-322) |
-| Skipped (deps) | 2 (TASK-318, TASK-319) |
+| New Work Enqueued | 0 |
+| Skipped (deps) | 2 (TASK-319, TASK-318) |
 | Skipped (queued) | 0 |
-| Pipeline Status | Active (2 new tasks enqueued, 2 still blocked by unmerged deps) |
+| Pipeline Status | Blocked (2 ready tasks blocked by 5 unmerged dependency PRs) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -29,10 +29,11 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-30 12:30 | - | - | no enqueue (2 ready tasks STILL blocked by 5 unmerged deps: all marked done but no merged PRs) |
 | 2026-03-30 14:15 | TASK-323 | triage | Add AI natural language search to expenses page (no dependencies) |
 | 2026-03-30 14:15 | TASK-322 | triage | E2E bug: Currency list still 10 currencies (no dependencies, TASK-321 marked done without merge) |
+| 2026-03-30 18:42 | - | - | no enqueue (TASK-323 completed, TASK-322 cancelled; queue empty; 2 ready tasks blocked by 5 unmerged deps) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-318 | TASK-284 (no merged PR), TASK-305 (no merged PR) | 2026-03-30 00:05 |
-| TASK-319 | TASK-298 (no merged PR), TASK-312 (no merged PR), TASK-288 (no merged PR) | 2026-03-30 00:05 |
+| TASK-318 | TASK-284 (no merged PR), TASK-305 (no merged PR) | 2026-03-30 18:42 |
+| TASK-319 | TASK-298 (no merged PR), TASK-312 (no merged PR), TASK-288 (no merged PR) | 2026-03-30 18:42 |
