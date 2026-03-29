@@ -6,7 +6,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 17:45 |
+| Date | 2026-03-29 18:00 |
 | Open PRs | 0 |
 | Queue Depth | 0/8 (queue empty) |
 | Rework Enqueued | 0 |
@@ -42,6 +42,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 16:05 | - | - | no enqueue (same 6 ready tasks blocked by same 9 deps with 0 merged PRs; new blocker: TASK-329 critical Node v25 MODULE_VERSION mismatch in backlog) |
 | 2026-03-29 16:07 | - | - | no enqueue (same 6 ready tasks all blocked by unmerged deps: TASK-328→TASK-325, TASK-327→TASK-323, TASK-316→TASK-313, TASK-317→TASK-307, TASK-319→TASK-298/312/288, TASK-318→TASK-284/305; all deps marked done with 0 merged PRs) |
 | 2026-03-29 17:45 | - | - | no enqueue (6 ready tasks ALL blocked: verified all 9 blocking deps marked done with 0 merged PRs each; CRITICAL blocker unresolved) |
+| 2026-03-29 18:00 | - | - | no enqueue (same 6 ready tasks still blocked by same 9 unmerged deps; TASK-329 critical blocker is cancelled; no change) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
