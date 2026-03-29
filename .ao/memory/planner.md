@@ -6,16 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 18:00 |
+| Date | 2026-03-29 13:02 |
 | Open PRs | 0 |
 | Queue Depth | 0/8 (queue empty) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Product Review Enqueued | 0 (not idle: 6 ready tasks exist, all blocked by unmerged deps) |
+| Product Review Enqueued | 0 (idle check condition false: 6 ready tasks exist; no trigger) |
 | Skipped (deps) | 6 (all E2E bugs blocked by 9 unmerged dependencies) |
 | Skipped (queued) | 0 |
-| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 9 deps marked done with 0 merged PRs; blocker CRITICAL) |
+| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 9 deps marked done with 0 merged PRs; blocker CRITICAL — unresolved for 5+ prior runs) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -43,6 +43,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 16:07 | - | - | no enqueue (same 6 ready tasks all blocked by unmerged deps: TASK-328→TASK-325, TASK-327→TASK-323, TASK-316→TASK-313, TASK-317→TASK-307, TASK-319→TASK-298/312/288, TASK-318→TASK-284/305; all deps marked done with 0 merged PRs) |
 | 2026-03-29 17:45 | - | - | no enqueue (6 ready tasks ALL blocked: verified all 9 blocking deps marked done with 0 merged PRs each; CRITICAL blocker unresolved) |
 | 2026-03-29 18:00 | - | - | no enqueue (same 6 ready tasks still blocked by same 9 unmerged deps; TASK-329 critical blocker is cancelled; no change) |
+| 2026-03-29 13:02 | - | - | no enqueue (all 6 ready E2E bugs blocked by same 9 deps: TASK-325,323,313,307,298,312,288,284,305 all marked done with 0 merged PRs each; idle condition false; blocker unresolved) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
