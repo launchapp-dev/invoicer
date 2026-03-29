@@ -6,16 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 14:45 |
+| Date | 2026-03-29 15:30 |
 | Open PRs | 0 |
-| Queue Depth | 0/8 (queue empty; was 3/8 last run, all entries resolved) |
+| Queue Depth | 0/8 (queue empty) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Product Review Enqueued | 0 (product-review from prior runs still hasn't cleared blocker) |
-| Skipped (deps) | 6 (all E2E bugs blocked by 9 unmerged dependencies: TASK-325, 323, 313, 307, 298, 312, 288, 284, 305 — all marked done with 0 merged PRs each) |
+| Product Review Enqueued | 0 (idle condition not met: 6 ready tasks block PO dispatch) |
+| Skipped (deps) | 6 (all E2E bugs blocked by 9 unmerged dependencies) |
 | Skipped (queued) | 0 |
-| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 9 deps marked done with 0 merged PRs each; queue emptied but no progress on unblocking deps) |
+| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 9 deps marked done with 0 merged PRs; no progress since last cycle) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -38,6 +38,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-31 06:00 | (ad-hoc) | product-review | Idle pipeline — 6 ready E2E bugs blocked by 6 deps (TASK-325, 323, 313, 307, 284, 305 all marked done, 0 merged PRs each) |
 | 2026-03-31 12:00 | - | - | no enqueue (6 ready tasks all blocked by 9 deps marked done but with 0 merged PRs each; product-review from 2026-03-29 still in queue but has not cleared blocker) |
 | 2026-03-29 14:45 | - | - | no enqueue (queue empty; all 6 ready E2E bugs remain blocked by same 9 unmerged deps; blocker unresolved) |
+| 2026-03-29 15:30 | - | - | no enqueue (6 ready tasks STILL blocked: TASK-325,323,313,307 marked done with 0 merged PRs; TASK-284,305,298,312,288 all same) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
