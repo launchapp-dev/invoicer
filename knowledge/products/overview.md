@@ -1,11 +1,11 @@
 # LaunchApp Product Overview
 
-> Last updated: 2026-03-20. Maintained by the brain's AI workforce.
+> Last updated: 2026-03-29. Maintained by the brain's AI workforce.
 
 ## Organization
 
 **GitHub org:** `launchapp-dev` (previously also `AudioGenius-ai`)
-**Total repos:** 113 (as of 2026-03-19 conductor cycle)
+**Total repos:** 113+ (as of 2026-03-29 conductor cycle)
 - Active / recently updated: ~60
 - Experimental / legacy / abandoned: ~52
 
@@ -14,11 +14,11 @@
 | # | Product Line | Repos | Status |
 |---|---|---|---|
 | 1 | LaunchPad BaaS | 30+ (core platform + SDKs + servers) | Active development |
-| 2 | AO Agent Orchestrator | 5 (ao, ao-cli, agent-orchestrator, ao-skills, ao-bundled-packs) | Active development |
-| 3 | LaunchApp Templates | 7 (launchapp-lite, launchapp-lite-v2, launchpad-saas-template, saas-template-launch-app-test, launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit) | Active development |
+| 2 | AO Agent Orchestrator | 6 (ao, ao-cli, agent-orchestrator, ao-skills, ao-bundled-packs, ao-projects) | Active development |
+| 3 | LaunchApp Templates | 8 (launchapp-lite, launchapp-lite-v2, launchpad-saas-template, saas-template-launch-app-test, launchapp-react-router, launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit) | Active development |
 | 4 | Developer Tools | 6 (better-auth, launchapp-studio, worktree-manager, openapi-gen, pr-review-responder, renovate-config) | Mixed (stable to maintenance) |
-| 5 | Claude Code Plugin Packs | 15 packs + marketplace | Active development |
-| 6 | Websites / Product Apps | 6 (launchapp.dev, mymoku.net, codeby.ai, lostcause.com, launchapp.dev-landing, launchapp-landing-v2) | Mixed |
+| 5 | Claude Code Plugin Packs | 15+ packs + marketplace | Active development |
+| 6 | Websites / Product Apps | 7 (launchapp.dev, mymoku.net, codeby.ai, lostcause.com, launchapp.dev-landing, launchapp-landing-v2) | Mixed |
 | 7 | Design System | 1 (design-system) | Active development |
 | 8 | Legacy / Experiments | ~40 repos (aethris-*, demos, job tools, content experiments) | Abandoned / Maintenance |
 
@@ -33,6 +33,17 @@ LaunchApp (launchapp-dev) is a full-stack developer platform organization buildi
 
 The primary technology stack is TypeScript (Node.js/Bun), with Rust used for the AO CLI core. Most products target v0.1.0 (pre-1.0) and are under active development as of early 2026.
 
+## AO-Built Showcase Applications
+
+Built autonomously by the AO Agent Orchestrator (demonstrating end-to-end autonomous development):
+
+| App | Description | Stack | Visibility | Last Push |
+|---|---|---|---|---|
+| `invoicer` | AI-built invoice generator showcase | Next.js + @launchapp/design-system | Public | 2026-03-29 |
+| `postpilot` | AI-native social media automation platform | Next.js 15 + SQLite + Drizzle | Public | 2026-03-29 |
+| `condohub` | Modern condominium management platform | Next.js + @launchapp/design-system | Public | 2026-03-29 |
+| `launchapp-crm` | Production CRM SaaS (single-conductor AO) | TypeScript | Private | 2026-03-29 |
+
 ## Key Technical Themes
 
 - **TypeScript-first**: All SDKs, servers, and templates are TypeScript
@@ -45,8 +56,8 @@ The primary technology stack is TypeScript (Node.js/Bun), with Rust used for the
 
 ## Visibility
 
-- **Public repos** (15): ao, ao-skills, aethris-client-plugins, better-auth, create-launchapp, create-launchpad, figma-tailwind-plugin, launchapp-studio, launchpad-db-engine, openapi-gen, pr-review-responder, react-router-presets, supabase-railway-template, supabase-to-hooks, worktree-manager
-- **Private repos** (98): ao-cli implementation, most of the BaaS platform, templates, websites, plugin packs, legacy experiments
+- **Public repos** (18): ao, ao-cli, ao-projects, ao-skills, aethris-client-plugins, better-auth, create-launchapp, create-launchpad, figma-tailwind-plugin, launchapp-studio, launchpad-db-engine, openapi-gen, pr-review-responder, react-router-presets, supabase-railway-template, supabase-to-hooks, worktree-manager, invoicer, postpilot, condohub
+- **Private repos** (95+): most of the BaaS platform, templates, websites, plugin packs, legacy experiments, launchapp-crm
 - **Archived repos** (1): agent-orchestrator
 
 ## Notable Legacy Context

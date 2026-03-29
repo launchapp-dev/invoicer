@@ -1,6 +1,6 @@
 # LaunchApp Templates
 
-> SaaS starter templates — launchapp-lite, launchapp-lite-v2, saas-template-launch-app-test (flagship), launchpad-saas-template, plus framework-specific variants: launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit
+> SaaS starter templates — launchapp-lite, launchapp-lite-v2, saas-template-launch-app-test (flagship), launchpad-saas-template, launchapp-react-router, plus framework-specific variants: launchapp-nextjs, launchapp-nuxt, launchapp-sveltekit
 
 ## Purpose
 
@@ -86,6 +86,16 @@ packages/
 - `@launchpad/db` (workspace)
 - `@launchpad/payments-sdk` (workspace)
 - Radix UI components
+
+---
+
+## `launchapp-react-router` (private)
+
+- **Description**: React Router 7 lightweight starter template
+- **Stack**: React Router v7, TypeScript, Tailwind CSS
+- **Type**: Full-stack template
+- **Last updated**: 2026-03-29
+- **Status**: Active — recently updated, likely converging with launchapp-lite structure
 
 ---
 

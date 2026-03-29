@@ -4,15 +4,15 @@
 
 ## `design-system` (private)
 
-- **Package**: `@audiogenius/design-system` v0.1.0
-- **Description**: Radix UI based design system for AudioGenius
+- **Package**: `@launchapp/design-system` v0.1.0
+- **Description**: Radix UI based design system for LaunchApp
 - **Language**: TypeScript
-- **Last updated**: 2026-03-20T00:37:35Z (very recent — active)
+- **Last updated**: 2026-03-29 (very recent — active)
 - **Maturity**: Active development with AO-managed dependency automation
 
 ## Purpose
 
-A shared design system based on Radix UI primitives, providing consistent UI components across LaunchApp and AudioGenius products. The `@audiogenius/` namespace suggests this may be the internal brand name for the org's design system.
+A shared design system based on Radix UI primitives, providing consistent UI components across LaunchApp products. Published as `@launchapp/design-system` and compatible with the shadcn registry.
 
 ## Tech Stack
 
@@ -29,6 +29,7 @@ Design system components are used across:
 - `launchpad-saas-template` (uses multiple `@radix-ui/*` packages)
 - `launchapp-lite` (uses Shadcn UI, which is built on Radix UI)
 - `launchapp-studio` (desktop IDE)
+- `invoicer`, `postpilot`, `condohub` (AO-built showcase apps)
 
 ## Block Modules
 
@@ -113,8 +114,8 @@ The repo is now an AO-managed maintenance target combining feature delivery with
 
 ## Notes
 
-- No README available in the repo
-- Very recent activity (updated 2026-03-20) suggests active development
-- The `@audiogenius/` namespace vs `@launchpad/` suggests this may serve both the AI product line and the BaaS platform
-- Shadcn UI (used in templates) is built on top of Radix UI — this design system likely provides the configured, branded layer on top of Shadcn/Radix primitives
+- README confirms package is `@launchapp/design-system`
+- Very recent activity (updated 2026-03-29) suggests active development
+- Phase 3/4 components in progress
+- Shadcn UI (used in templates) is built on top of Radix UI — this design system provides the configured, branded layer on top of Shadcn/Radix primitives
 - The repo now mixes feature delivery (components/blocks/docs) with automated dependency maintenance through AO

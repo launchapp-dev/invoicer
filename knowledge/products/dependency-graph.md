@@ -46,6 +46,14 @@
 │       │                                                              │
 │  ao-skills (Claude Code plugin) ──► launchapp-dev/brain             │
 │  ao-bundled-packs (AO workflow packs)                                │
+│  ao-projects (task/requirements CLI + MCP)                           │
+└──────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────┐
+│                    AO-BUILT SHOWCASE APPS                            │
+│                                                                      │
+│  invoicer ◄── postpilot ◄── condohub ◄── launchapp-crm              │
+│  (all built autonomously by AO; depend on design-system + better-auth)│
 └──────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -102,6 +110,7 @@
 | `agent-orchestrator` | `ao-cli` (sidecar), React 19, Tauri v2, TanStack Query |
 | `ao-skills` | Claude Code plugin SDK, `ao-cli` (referenced commands) |
 | `ao-bundled-packs` | `ao-cli`, Tavily API, Playwright |
+| `ao-projects` | Rust ecosystem, MCP SDK |
 
 ### Developer Tools → External
 
@@ -132,14 +141,21 @@
 - `@launchpad/db` SDK
 - Possibly `launchpad-db-sdk`
 
-### `@audiogenius/design-system` is used by:
+### `@launchapp/design-system` is used by:
 - `agent-orchestrator` (desktop app)
+- `invoicer`, `postpilot`, `condohub` (AO-built showcases)
 - Potentially other UI products
 
 ### `ao-cli` is used by:
 - `agent-orchestrator` (desktop sidecar)
 - `brain` repo (AO manages this project)
 - Any project with AO configured
+
+### `@launchapp/design-system` is used by:
+- `agent-orchestrator` (desktop app)
+- `invoicer`, `postpilot`, `condohub` (AO-built showcases)
+- `launchapp-lite` and templates
+- `launchapp-studio` (desktop IDE)
 
 ---
 
@@ -155,11 +171,12 @@
 
 | Tier | Maturity | Notes |
 |------|---------|-------|
-| Rust core (ao-cli) | Very active | Multiple commits/day |
+| Rust core (ao-cli, ao-projects) | Very active | Multiple commits/day |
+| AO-built showcase apps | Very active | Built autonomously, daily commits |
 | BaaS Backend servers | Stable v0.1.0 | Minor updates |
 | BaaS SDKs | Stable v0.1.0 | Mostly stable |
 | Templates | Active | Iteration happening |
 | Developer tools | Mixed | better-auth active, others stable/maintenance |
-| Websites | Mixed | launchapp.dev active, others stagnant |
+| Websites | Active | All three main sites updated March 2026 |
 | Design system | Active | Recent updates |
 | Plugin packs | Active | Recent batch release |
