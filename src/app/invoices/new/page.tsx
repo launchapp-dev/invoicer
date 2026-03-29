@@ -2,10 +2,11 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { ParsedInvoice } from "@/lib/ai";
+import type { ParsedInvoice, SmartDefaults } from "@/lib/ai";
+import { getSmartDefaults } from "@/lib/ai";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import {
@@ -85,6 +86,7 @@ function NewInvoicePageContent() {
   const [attachmentCount, setAttachmentCount] = useState(0);
   const [brandColor, setBrandColor] = useState<string>("#2563eb");
   const [paymentInstructions, setPaymentInstructions] = useState<string>("");
+  const [aiDefaults, setAiDefaults] = useState<SmartDefaults | null>(null);
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -100,10 +102,11 @@ function NewInvoicePageContent() {
   const { setValue } = form;
   useEffect(() => {
     const init = async () => {
-      const [numResult, settingsResult, clientsResult] = await Promise.allSettled([
+      const [numResult, settingsResult, clientsResult, smartDefaultsResult] = await Promise.allSettled([
         getNextInvoiceNumber(),
         getMySettings(),
         listClients(),
+        getSmartDefaults(),
       ]);
       if (numResult.status === "fulfilled") {
         setValue("invoiceNumber", numResult.value, { shouldDirty: false });
@@ -134,6 +137,27 @@ function NewInvoicePageContent() {
 
       if (clientsResult.status === "fulfilled") {
         setClients(clientsResult.value);
+      }
+
+      const settings = settingsResult.status === "fulfilled" ? settingsResult.value : null;
+      if (smartDefaultsResult.status === "fulfilled" && smartDefaultsResult.value) {
+        const sd = smartDefaultsResult.value;
+        const applied: SmartDefaults = {};
+        if (sd.paymentTerms && !settings?.defaultPaymentTerms) {
+          setValue("paymentTerms", sd.paymentTerms, { shouldDirty: false });
+          applied.paymentTerms = sd.paymentTerms;
+        }
+        if (sd.currency && sd.currency !== "USD") {
+          setValue("currency", sd.currency, { shouldDirty: false });
+          applied.currency = sd.currency;
+        }
+        if (sd.notes && !settings?.defaultNotes) {
+          setValue("notes", sd.notes, { shouldDirty: false });
+          applied.notes = sd.notes;
+        }
+        if (Object.keys(applied).length > 0) {
+          setAiDefaults(applied);
+        }
       }
 
       const prefillParam = searchParams.get("prefill");
@@ -290,6 +314,12 @@ function NewInvoicePageContent() {
             </TabsList>
           </div>
           <TabsContent value="form" className="mt-0 p-4 space-y-6">
+            {aiDefaults && (
+              <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2 text-sm text-muted-foreground">
+                <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                <span>Some fields pre-filled from your past invoices</span>
+              </div>
+            )}
             <FormProvider {...form}>
               <InvoiceForm clients={clients} />
             </FormProvider>
@@ -303,6 +333,12 @@ function NewInvoicePageContent() {
 
       <div className="hidden lg:flex h-[calc(100vh-57px)]">
         <div className="w-1/2 overflow-y-auto border-r border-border bg-background p-6 space-y-6">
+          {aiDefaults && (
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2 text-sm text-muted-foreground">
+              <Sparkles className="h-3.5 w-3.5 shrink-0" />
+              <span>Some fields pre-filled from your past invoices</span>
+            </div>
+          )}
           <FormProvider {...form}>
             <InvoiceForm clients={clients} />
           </FormProvider>
