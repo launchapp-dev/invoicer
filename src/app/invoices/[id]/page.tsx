@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useForm, FormProvider } from "react-hook-form";
@@ -8,6 +8,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  SelectRoot,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,10 +40,20 @@ import { InvoiceForm } from "@/components/invoice-form";
 import { InvoicePreview } from "@/components/invoice-preview";
 import { InvoiceAttachments } from "@/components/invoice-attachments";
 import { invoiceSchema, type InvoiceFormValues } from "@/lib/invoice-schema";
-import { saveInvoice, loadInvoice, listClients, getMySettings } from "@/lib/storage";
+import { saveInvoice, loadInvoice, listClients, getMySettings, addPayment } from "@/lib/storage";
+import { formatCurrency, formatDate } from "@/lib/calculations";
 import type { Client } from "@/types/client";
+import type { Payment } from "@/types/invoice";
 import { toast } from "@/components/ui/sonner";
 import { authClient } from "@/lib/auth-client";
+
+const PAYMENT_METHODS = [
+  { value: "bank_transfer", label: "Bank Transfer" },
+  { value: "cash", label: "Cash" },
+  { value: "check", label: "Check" },
+  { value: "card", label: "Card" },
+  { value: "other", label: "Other" },
+];
 
 export default function EditInvoicePage() {
   const router = useRouter();
@@ -42,6 +68,13 @@ export default function EditInvoicePage() {
   const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
   const [brandColor, setBrandColor] = useState<string>("#2563eb");
   const [attachmentCount, setAttachmentCount] = useState(0);
+  const [invoicePayments, setInvoicePayments] = useState<Payment[]>([]);
+  const [paymentFormOpen, setPaymentFormOpen] = useState(false);
+  const [paymentPending, setPaymentPending] = useState(false);
+  const [pmtDate, setPmtDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [pmtMethod, setPmtMethod] = useState("");
+  const [pmtReference, setPmtReference] = useState("");
+  const [pmtAmount, setPmtAmount] = useState(0);
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -88,6 +121,8 @@ export default function EditInvoicePage() {
           return;
         }
         form.reset(data as InvoiceFormValues);
+        setInvoicePayments(data.payments ?? []);
+        setPmtAmount(data.total);
         setLoading(false);
       })
       .catch((err) => {
@@ -145,6 +180,34 @@ export default function EditInvoicePage() {
       toast.error(msg);
     }
   });
+
+  async function handleAddPayment(e: FormEvent) {
+    e.preventDefault();
+    if (!pmtDate || !pmtMethod || !pmtAmount) return;
+    setPaymentPending(true);
+    try {
+      const newPayment = await addPayment(params.id, {
+        amount: pmtAmount,
+        paidAt: pmtDate,
+        method: pmtMethod,
+        reference: pmtReference || undefined,
+      });
+      setInvoicePayments((prev) => [...prev, newPayment]);
+      setPaymentFormOpen(false);
+      setPmtReference("");
+      toast.success("Payment recorded");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg === "Unauthorized") {
+        toast.error("Your session has expired. Please sign in again.");
+        router.push("/login");
+      } else {
+        toast.error("Failed to record payment");
+      }
+    } finally {
+      setPaymentPending(false);
+    }
+  }
 
   if (isPending || !session || loading) {
     return (
@@ -251,6 +314,18 @@ export default function EditInvoicePage() {
               <InvoiceForm clients={clients} />
             </FormProvider>
             <InvoiceAttachments invoiceId={params.id} onCountChange={setAttachmentCount} />
+            <PaymentsSection
+              payments={invoicePayments}
+              total={invoice.total}
+              currency={invoice.currency}
+              onRecord={() => {
+                setPmtAmount(Math.max(0, invoice.total - invoicePayments.reduce((s, p) => s + p.amount, 0)));
+                setPmtDate(new Date().toISOString().split("T")[0]);
+                setPmtMethod("");
+                setPmtReference("");
+                setPaymentFormOpen(true);
+              }}
+            />
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
             <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} />
@@ -264,11 +339,143 @@ export default function EditInvoicePage() {
             <InvoiceForm clients={clients} />
           </FormProvider>
           <InvoiceAttachments invoiceId={params.id} onCountChange={setAttachmentCount} />
+          <PaymentsSection
+            payments={invoicePayments}
+            total={invoice.total}
+            currency={invoice.currency}
+            onRecord={() => {
+              setPmtAmount(Math.max(0, invoice.total - invoicePayments.reduce((s, p) => s + p.amount, 0)));
+              setPmtDate(new Date().toISOString().split("T")[0]);
+              setPmtMethod("");
+              setPmtReference("");
+              setPaymentFormOpen(true);
+            }}
+          />
         </div>
         <div className="w-1/2 overflow-y-auto bg-muted/30 p-8">
           <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} />
         </div>
       </div>
+
+      <Sheet open={paymentFormOpen} onOpenChange={setPaymentFormOpen}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Record Payment</SheetTitle>
+          </SheetHeader>
+          <form onSubmit={handleAddPayment} className="flex flex-col gap-4 mt-4">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="pmt-amount">Amount</Label>
+              <Input
+                id="pmt-amount"
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={pmtAmount}
+                onChange={(e) => setPmtAmount(parseFloat(e.target.value) || 0)}
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="pmt-date">Payment Date</Label>
+              <Input
+                id="pmt-date"
+                type="date"
+                value={pmtDate}
+                onChange={(e) => setPmtDate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="pmt-method">Payment Method</Label>
+              <SelectRoot value={pmtMethod} onValueChange={setPmtMethod} required>
+                <SelectTrigger id="pmt-method">
+                  <SelectValue placeholder="Select method" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PAYMENT_METHODS.map(({ value, label }) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </SelectRoot>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="pmt-reference">Reference <span className="text-muted-foreground">(optional)</span></Label>
+              <Input
+                id="pmt-reference"
+                type="text"
+                value={pmtReference}
+                onChange={(e) => setPmtReference(e.target.value)}
+                placeholder="e.g. TXN-12345"
+              />
+            </div>
+            <SheetFooter className="mt-2">
+              <Button type="submit" disabled={paymentPending || !pmtDate || !pmtMethod || !pmtAmount}>
+                {paymentPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving…
+                  </>
+                ) : (
+                  "Record Payment"
+                )}
+              </Button>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}
+
+interface PaymentsSectionProps {
+  payments: Payment[];
+  total: number;
+  currency: string;
+  onRecord: () => void;
+}
+
+function PaymentsSection({ payments, total, currency, onRecord }: PaymentsSectionProps) {
+  const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+  const remaining = Math.max(0, total - totalPaid);
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold">Payments</h2>
+        <Button size="sm" variant="outline" onClick={onRecord} type="button">
+          Record Payment
+        </Button>
+      </div>
+      {payments.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No payments recorded.</p>
+      ) : (
+        <div className="divide-y divide-border border border-border rounded-md">
+          {payments.map((p) => (
+            <div key={p.id} className="flex items-center justify-between px-3 py-2 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{formatCurrency(p.amount, currency)}</span>
+                <span className="text-muted-foreground capitalize">{p.method.replace("_", " ")}</span>
+                {p.reference && <span className="text-muted-foreground">#{p.reference}</span>}
+              </div>
+              <span className="text-muted-foreground">{formatDate(p.paidAt)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {totalPaid > 0 && (
+        <div className="text-sm space-y-1 pt-1">
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Total paid</span>
+            <span className="font-medium">{formatCurrency(totalPaid, currency)}</span>
+          </div>
+          {remaining > 0 && (
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Remaining</span>
+              <span className="font-medium">{formatCurrency(remaining, currency)}</span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -398,19 +398,22 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus): Pr
 
 export async function recordPayment(
   id: string,
-  payment: { paidAt: string; paidMethod: string; paidReference?: string }
+  payment: { paidAt: string; paidMethod: string; paidReference?: string; amount: number }
 ): Promise<void> {
   const userId = await getCurrentUserId();
-  await db
-    .update(invoices)
-    .set({
-      status: "paid",
-      paidAt: payment.paidAt,
-      paidMethod: payment.paidMethod,
-      paidReference: payment.paidReference ?? null,
-      updatedAt: new Date().toISOString(),
-    })
-    .where(and(eq(invoices.id, id), eq(invoices.userId, userId)));
+  const paymentId = crypto.randomUUID();
+  const now = new Date().toISOString();
+  await db.insert(payments).values({
+    id: paymentId,
+    invoiceId: id,
+    userId,
+    amount: payment.amount,
+    paidAt: payment.paidAt,
+    method: payment.paidMethod,
+    reference: payment.paidReference ?? null,
+    createdAt: now,
+  });
+  await recalculateInvoiceStatus(id, userId);
 }
 
 async function recalculateInvoiceStatus(invoiceId: string, userId: string): Promise<void> {
@@ -917,7 +920,13 @@ export async function getInvoiceByShareToken(token: string): Promise<Invoice | n
     .select()
     .from(invoices)
     .where(eq(invoices.shareToken, token));
-  return row ? rowToInvoice(row) : null;
+  if (!row) return null;
+  const paymentRows = await db
+    .select()
+    .from(payments)
+    .where(eq(payments.invoiceId, row.id))
+    .orderBy(asc(payments.paidAt));
+  return rowToInvoice(row, paymentRows);
 }
 
 export async function markInvoiceViewed(token: string): Promise<void> {
