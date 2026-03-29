@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { FadeInOnScroll } from "@/components/ui/scroll-animate";
+import { BlurIn } from "@/components/ui/text-animate";
 import {
   FileText,
   Eye,
@@ -17,6 +19,7 @@ import {
   CreditCard,
   ArrowRight,
   CheckCircle,
+  Download,
 } from "lucide-react";
 
 export default async function Page() {
@@ -131,12 +134,12 @@ export default async function Page() {
       {/* Features */}
       <section className="px-6 py-20 bg-muted/30">
         <div className="max-w-6xl mx-auto space-y-12">
-          <div className="text-center space-y-3">
+          <FadeInOnScroll className="text-center space-y-3">
             <h2 className="text-3xl font-bold">Everything you need to get paid</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
               Invoicer handles the business side so you can focus on your work.
             </p>
-          </div>
+          </FadeInOnScroll>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
@@ -169,16 +172,18 @@ export default async function Page() {
                 title: "Partial payments",
                 desc: "Track deposits and installments against each invoice with a clear balance view.",
               },
-            ].map((feature) => (
-              <Card key={feature.title} className="border border-border">
-                <CardContent className="p-6 space-y-3">
-                  <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
-                    {feature.icon}
-                  </div>
-                  <h3 className="font-semibold">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                </CardContent>
-              </Card>
+            ].map((feature, i) => (
+              <FadeInOnScroll key={feature.title} delay={i * 80}>
+                <Card className="border border-border h-full">
+                  <CardContent className="p-6 space-y-3">
+                    <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
+                      {feature.icon}
+                    </div>
+                    <h3 className="font-semibold">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                  </CardContent>
+                </Card>
+              </FadeInOnScroll>
             ))}
           </div>
         </div>
@@ -187,10 +192,10 @@ export default async function Page() {
       {/* How it works */}
       <section className="px-6 py-20">
         <div className="max-w-4xl mx-auto space-y-12">
-          <div className="text-center space-y-3">
+          <FadeInOnScroll className="text-center space-y-3">
             <h2 className="text-3xl font-bold">Up and running in minutes</h2>
             <p className="text-muted-foreground">Three steps from signup to paid.</p>
-          </div>
+          </FadeInOnScroll>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
@@ -216,7 +221,7 @@ export default async function Page() {
                 {i < 2 && (
                   <div className="hidden md:block absolute top-5 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-px bg-border" />
                 )}
-                <div className="flex flex-col items-center text-center space-y-3">
+                <FadeInOnScroll delay={i * 120} className="flex flex-col items-center text-center space-y-3">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full border-2 border-primary/30 bg-primary/10 relative">
                     {s.icon}
                     <span className="absolute -top-2 -right-2 text-xs font-bold text-primary bg-background border border-border rounded-full h-5 w-5 flex items-center justify-center">
@@ -225,22 +230,148 @@ export default async function Page() {
                   </div>
                   <h3 className="font-semibold text-lg">{s.title}</h3>
                   <p className="text-sm text-muted-foreground">{s.desc}</p>
-                </div>
+                </FadeInOnScroll>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Invoice Preview Showcase */}
+      <section className="px-6 py-20 bg-gradient-to-b from-muted/40 to-muted/10">
+        <div className="max-w-5xl mx-auto space-y-12">
+          <FadeInOnScroll className="text-center space-y-3">
+            <h2 className="text-3xl font-bold">
+              Invoices your clients will{" "}
+              <BlurIn className="text-primary">actually open</BlurIn>
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Every invoice looks polished and professional — from the first line item to the final total.
+            </p>
+          </FadeInOnScroll>
+
+          <FadeInOnScroll delay={150} className="relative">
+            {/* Document shadow layers */}
+            <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-2xl bg-muted-foreground/10 -z-10" />
+            <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 rounded-2xl bg-muted-foreground/5 -z-10" />
+
+            <Card className="border border-border shadow-2xl rounded-2xl overflow-hidden">
+              {/* Invoice header bar */}
+              <div className="bg-primary px-8 py-6 text-primary-foreground">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                  <div>
+                    <div className="text-2xl font-bold tracking-tight">INVOICE</div>
+                    <div className="text-primary-foreground/70 text-sm mt-1 font-mono">#INV-2024-0089</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-lg">Studio Co.</div>
+                    <div className="text-primary-foreground/70 text-sm">hello@studio.co</div>
+                    <div className="text-primary-foreground/70 text-sm">New York, NY 10001</div>
+                  </div>
+                </div>
+              </div>
+
+              <CardContent className="p-8 space-y-8">
+                {/* Bill to / dates row */}
+                <div className="grid sm:grid-cols-2 gap-8">
+                  <div className="space-y-1">
+                    <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Bill To</div>
+                    <div className="font-semibold text-foreground">TechStart Inc.</div>
+                    <div className="text-sm text-muted-foreground">Alex Rivera, Head of Product</div>
+                    <div className="text-sm text-muted-foreground">450 Market St, Suite 800</div>
+                    <div className="text-sm text-muted-foreground">San Francisco, CA 94105</div>
+                  </div>
+                  <div className="space-y-3 sm:text-right">
+                    <div>
+                      <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Issue Date</div>
+                      <div className="text-sm font-medium">March 1, 2024</div>
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Due Date</div>
+                      <div className="text-sm font-medium">March 31, 2024</div>
+                    </div>
+                    <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-100 sm:ml-auto">
+                      Paid
+                    </Badge>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Line items */}
+                <div className="space-y-1">
+                  <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider pb-2">
+                    <div className="col-span-6">Description</div>
+                    <div className="col-span-2 text-center hidden sm:block">Qty</div>
+                    <div className="col-span-2 text-right hidden sm:block">Rate</div>
+                    <div className="col-span-4 sm:col-span-2 text-right">Amount</div>
+                  </div>
+                  <Separator />
+                  <div className="space-y-3 pt-2">
+                    {[
+                      { desc: "Brand Identity & Logo Design", detail: "Logomark, wordmark, brand guidelines", qty: 1, rate: "$4,500", amount: "$4,500" },
+                      { desc: "Website UI/UX Design", detail: "12 screens, component library, Figma handoff", qty: 1, rate: "$8,000", amount: "$8,000" },
+                      { desc: "Frontend Development", detail: "Next.js implementation, responsive", qty: 40, rate: "$150/h", amount: "$6,000" },
+                      { desc: "Monthly Design Retainer", detail: "April–June 2024, ongoing support", qty: 3, rate: "$900/mo", amount: "$2,700" },
+                    ].map((item) => (
+                      <div key={item.desc} className="grid grid-cols-12 gap-2 items-start py-2 border-b border-border/50 last:border-0">
+                        <div className="col-span-8 sm:col-span-6">
+                          <div className="text-sm font-medium text-foreground">{item.desc}</div>
+                          <div className="text-xs text-muted-foreground mt-0.5">{item.detail}</div>
+                        </div>
+                        <div className="hidden sm:block col-span-2 text-center text-sm text-muted-foreground">{item.qty}</div>
+                        <div className="hidden sm:block col-span-2 text-right text-sm text-muted-foreground font-mono">{item.rate}</div>
+                        <div className="col-span-4 sm:col-span-2 text-right text-sm font-semibold font-mono">{item.amount}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Totals */}
+                <div className="flex justify-end">
+                  <div className="w-full sm:w-72 space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Subtotal</span>
+                      <span className="font-mono">$21,200.00</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Tax (10%)</span>
+                      <span className="font-mono">$2,120.00</span>
+                    </div>
+                    <Separator />
+                    <div className="flex justify-between font-bold text-lg pt-1">
+                      <span>Total</span>
+                      <span className="text-primary font-mono">$23,320.00</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer note + action */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2 border-t border-border">
+                  <div className="text-xs text-muted-foreground max-w-xs">
+                    Payment terms: Net 30. Late payments subject to 1.5% monthly fee.
+                    Thank you for your business!
+                  </div>
+                  <Button variant="outline" size="sm" className="shrink-0">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </FadeInOnScroll>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section className="px-6 py-20 bg-muted/30">
         <div className="max-w-4xl mx-auto space-y-12">
-          <div className="text-center space-y-3">
+          <FadeInOnScroll className="text-center space-y-3">
             <h2 className="text-3xl font-bold">Simple, transparent pricing</h2>
             <p className="text-muted-foreground">
               Start free. Upgrade when you need more.
             </p>
-          </div>
+          </FadeInOnScroll>
           <div className="grid sm:grid-cols-2 gap-6 items-start">
             {/* Free tier */}
             <Card className="border border-border">
@@ -322,7 +453,7 @@ export default async function Page() {
 
       {/* CTA */}
       <section className="px-6 py-20 bg-primary/5 border-y border-border">
-        <div className="max-w-2xl mx-auto text-center space-y-6">
+        <FadeInOnScroll className="max-w-2xl mx-auto text-center space-y-6">
           <CheckCircle className="h-12 w-12 text-primary mx-auto" />
           <h2 className="text-3xl font-bold">Start invoicing for free</h2>
           <p className="text-muted-foreground">
@@ -334,7 +465,7 @@ export default async function Page() {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-        </div>
+        </FadeInOnScroll>
       </section>
 
       {/* Footer */}
