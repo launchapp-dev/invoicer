@@ -6,11 +6,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 11) |
-| Result | STRONG PASS — all 6 steps pass; AI Cash Flow Forecast widget + AI Create Invoice dialog now verified working; 2 known unmerged-branch failures remain |
+| Date | 2026-03-29 (run 12) |
+| Result | PASS — all 6 steps pass; 1 new minor bug: transient React hydration mismatch on post-signup initial render (caret-color style mismatch in Input components); 2 known unmerged-branch failures remain |
 | Steps Passed | 6/6 (smoke, auth, invoice creation, PDF, navigation, console+network) |
 | Steps Failed | 0 (step-level) |
-| Console Errors | 0 |
+| Console Errors | 1 (transient hydration mismatch on signup redirect only; 0 on subsequent navigation) |
 | Network Errors | 0 (no 4xx/5xx) |
 
 ## Test Results History
@@ -28,12 +28,14 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | 5 | 2 | 3 | Signup ✓. Invoice form ✓ (12 inputs, line items, totals, payment terms, PDF btn, tax presets, currency). /clients ✓. /expenses ✓. /dashboard/recurring ✓. Dashboard FAIL SqliteError client_id (TASK-311 created). Settings FAIL SqliteError payment_instructions (TASK-311). AO badge missing (TASK-309). Onboarding banner not merged (TASK-310). 500s on /invoices/new persist. |
 | 2026-03-28 | 6 | 0 | 0 | MAJOR: Dashboard ✓ FIXED (TASK-311/db:push run). Settings ✓ FIXED. Payment Instructions ✓. Save invoice ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 11 routes load. 0 console errors. 0 network errors. 2 unresolved: AO badge (TASK-309) + onboarding banner (TASK-310) — both on unmerged branches. |
 | 2026-03-29 | 6 | 0 | 0 | PASS: Signup ✓. Dashboard ✓ (Cash Flow Forecast widget present). Invoice form ✓ (subtotal 1500 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All routes load (200). Logout ✓. AI "Create with AI" dialog ✓ opens correctly. 0 console errors. 0 network errors. 2 unresolved: AO badge (TASK-309) + onboarding banner (TASK-310). |
+| 2026-03-29 | 6 | 0 | 1 | PASS: Signup ✓ (qa-test12). Dashboard ✓. Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 1 new bug: transient React hydration mismatch console.error on post-signup render (caret-color style, TASK-672). 0 network errors. 2 unresolved: TASK-309 + TASK-310. |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
 - **[2026-03-28] "Built with AO" badge missing from landing footer (TASK-309)** — TASK-288 commit exists on `ao/task-288` branch but PR was never submitted or merged to main.
 - **[2026-03-28] New-user onboarding banner not present in main (TASK-310)** — TASK-304/306 code on `ao/task-304` branch but PR was never submitted or merged to main.
+- **[2026-03-29] React hydration mismatch on post-signup initial render (TASK-672)** — `caret-color: transparent` style present server-side but missing client-side in Input components. Appears once on signup redirect; clean on subsequent navigation. Non-breaking.
 
 ## Regression Tracker
 
@@ -194,9 +196,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Clients nav link present in authenticated layout
 
 ### Console & Network
-- [x] No console.error messages — **CLEAN run 11 (0 errors)**
-- [x] No uncaught exceptions — **CLEAN run 11**
-- [x] No failed network requests (4xx/5xx) — **CLEAN run 11 (0 errors)**
+- [~] No console.error messages — **run 12: 1 transient hydration mismatch on post-signup render; 0 on direct navigation**
+- [x] No uncaught exceptions — **CLEAN run 12**
+- [x] No failed network requests (4xx/5xx) — **CLEAN run 12 (0 errors)**
 - [x] No CORS errors
 
 ### Multi-Currency
