@@ -6,11 +6,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 27) |
-| Result | PASS — Signup ✓ (qa-test27). Dashboard ✓ ($0.00 new user, Cash Flow Forecast widget present). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF download ✓ (all assets 200, no font errors). All 8 routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. |
-| Steps Passed | 6/6 |
-| Steps Failed | 0/6 |
-| Console Errors | 0 |
+| Date | 2026-03-29 (run 28) |
+| Result | PASS WITH NOTES — Signup ✓ (qa-test@invoicer.dev, new account). Dashboard ✓ ($0.00 new user, Cash Flow Forecast widget, all stats). Invoice form ✓ (subtotal $1,500.00 correct: 10 × $150). Invoice save ✓ (redirects to /invoices/:id, appears in dashboard). PDF preview ✓ (preview page loads, Download PDF clicked, no app errors). Step 5 (nav/logout) BLOCKED — dev server went down mid-session due to AO product-owner workflow triggering `pnpm build`. 0 app console errors. 0 app network errors (ERR_CONNECTION_REFUSED on PDF step were from dev server restart, not app code). No new bugs. |
+| Steps Passed | 4/5 tested |
+| Steps Failed | 0/5 tested |
+| Console Errors | 0 (app errors; ERR_CONNECTION_REFUSED from dev server restart are infra, not app) |
 | Network Errors | 0 |
 
 ## Test Results History
@@ -19,6 +19,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | Date | Passed | Failed | Bugs Created | Notes |
 |------|--------|--------|-------------|-------|
 | 2026-03-29 | 6 | 0 | 0 | PASS: Signup ✓ (qa-test27). Dashboard ✓ (new user, Cash Flow Forecast widget). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF download ✓ (all assets 200, no errors). All 8 routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
+| 2026-03-29 | 4 | 0 | 0 | PASS WITH NOTES (run 28): Signup ✓ (qa-test@invoicer.dev, new account). Dashboard ✓ ($0.00 new user, Cash Flow Forecast, all stats). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (INV-001 in dashboard, $1,500.00). PDF preview ✓ (page loads, Download PDF clicked, no app errors). Step 5 (nav/logout) BLOCKED — dev server went down due to AO product-owner workflow running pnpm build mid-session. 0 app console errors. 0 app network errors. No new bugs. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
 | 2026-03-28 | 5 | 2 | 2 | /clients 404; AI command bar missing from dashboard |
 | 2026-03-28 | 4 | 3 | 2 | /clients 404 persists (TASK-235 regression); auth login failure + duplicate signup bug (TASK-240); AI command bar now fixed |
 | 2026-03-28 | 4 | 2 | 1 | TASK-239 (/clients 404) FIXED; TASK-240 (auth) FIXED; new CRITICAL: missing @radix-ui/react-popover + cmdk packages crash entire app (TASK-249) |
