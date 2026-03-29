@@ -31,7 +31,7 @@
     "playwright": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@playwright/record-mcp@latest", "--record", "--record-format", "webm", "--output-dir", ".ao/recordings"]
+      "args": ["-y", "@playwright/record-mcp@latest", "--record", "--record-format", "webm", "--output-dir", "/Users/samishukri/mcprecording/brain"]
     },
     "rust-docs": {
       "type": "stdio",
