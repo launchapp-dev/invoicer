@@ -67,7 +67,14 @@ agents:
       EXACT PROCESS — Execute these steps in order, every run
       ═══════════════════════════════════════════════════════════
 
-      STEP 1 — HEALTH CHECK (mandatory, always first):
+      STEP 0 — READ MEMORY (mandatory, always first):
+        Read .ao/memory/product-owner.md — this is your run memory.
+        Check what you did last run, what decisions you made, what
+        features you already assessed, and what tasks you already created.
+        Do NOT re-create tasks or requirements that are already logged here.
+        Do NOT re-assess features that haven't changed since last check.
+
+      STEP 1 — HEALTH CHECK:
         a) Run: pnpm install
            - If it fails -> create a CRITICAL task: "Fix broken dependency
              installation" with full error output in the description.
@@ -166,15 +173,16 @@ agents:
              will pick these up on its next cycle.
 
       ═══════════════════════════════════════════════════════════
-      OUTPUT FORMAT
+      FINAL STEP — UPDATE MEMORY (mandatory, always last)
       ═══════════════════════════════════════════════════════════
-      At the end of your run, produce a brief summary:
-        - Health check: PASS / FAIL (with details if fail)
-        - Tasks reviewed: N
-        - Tasks created: N (list IDs and titles)
-        - Tasks enqueued: N (list IDs)
-        - Pipeline status: SATURATED / HEALTHY / EMPTY
-        - Top concern: (one sentence)
+      Update .ao/memory/product-owner.md with:
+        - Last Run table (date, health check, tasks/reqs created, pipeline status)
+        - Append to Decisions Log
+        - Append to Requirements Created / Tasks Created tables
+        - Update Features Assessed with current status for any features you checked
+        - Write Current Assessment
+      Commit: git add .ao/memory/product-owner.md && git commit -m "po: update run memory"
+      Push: git push origin main
     model: claude-sonnet-4-6
     tool: claude
     mcp_servers: ["ao", "sequential-thinking", "package-version"]
@@ -190,6 +198,11 @@ agents:
       workflow for each task.
 
       EXACT PROCESS — Execute these steps in order, every run:
+
+      STEP -1 — READ MEMORY:
+        Read .ao/memory/planner.md — check what you enqueued last run.
+        Don't re-enqueue tasks you just enqueued. Check "Recently Enqueued"
+        and "Skipped Tasks" tables to avoid redundant work.
 
       STEP 0 — OPEN PR CHECK (mandatory, always first):
         a) Run: gh pr list --state open --json number --repo launchapp-dev/invoicer
@@ -250,6 +263,14 @@ agents:
            - Call ao.queue.enqueue with workflow_ref="product-review"
              and title="Idle pipeline — PO scan for work".
            - Log: "Pipeline idle. Dispatched product-review."
+
+      STEP 6 — UPDATE MEMORY:
+        Update .ao/memory/planner.md with:
+        - Last Run table
+        - Append to Recently Enqueued
+        - Update Skipped Tasks (unmet deps)
+        Commit: git add .ao/memory/planner.md && git commit -m "planner: update run memory"
+        Push: git push origin main
 
       RULES:
       - NEVER enqueue a task already in the queue.
@@ -640,6 +661,11 @@ agents:
       CORE PRINCIPLE: Keep tasks FLOWING. Never cancel for staleness.
       Decompose stuck tasks. Always move forward.
 
+      STEP 0 — READ MEMORY:
+        Read .ao/memory/reconciler.md — check what you did last run.
+        Skip re-verifying tasks you already confirmed as done (listed in
+        "Tasks Verified as Done" table). Focus on NEW state changes.
+
       STEP 1 — UNBLOCK TASKS:
         a) ao.task.list with status "blocked".
         b) For decomposed parents ("Decomposed into: TASK-X, TASK-Y"):
@@ -672,6 +698,14 @@ agents:
            - Call ao.queue.enqueue with workflow_ref="product-review"
              and title="Idle pipeline — PO scan for work".
            - Log: "Pipeline idle. Dispatched product-review to find work."
+
+      STEP 7 — UPDATE MEMORY:
+        Update .ao/memory/reconciler.md with:
+        - Last Run table
+        - Append to Actions Log
+        - Update Tasks Verified as Done for any newly confirmed tasks
+        Commit: git add .ao/memory/reconciler.md && git commit -m "reconciler: update run memory"
+        Push: git push origin main
 
       RULES:
       - NEVER cancel tasks for staleness — decompose instead.
