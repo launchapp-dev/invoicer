@@ -12,7 +12,7 @@ The org maintains several websites/web properties. Most are built on similar sta
 
 - **Purpose**: Full-stack monorepo serving as the main LaunchApp product website AND canonical template for other org projects
 - **Stack**: TypeScript, Turborepo + pnpm, React Router v7, Expo React Native, Hono API, Better Auth, Drizzle ORM, Pulumi (ECS/RDS)
-- **Last updated**: 2026-03-20T01:18:04Z
+- **Last updated**: 2026-03-28
 - **Status**: Active development — serves as live marketing site + template baseline
 
 ### Key Capabilities
@@ -31,12 +31,12 @@ The org maintains several websites/web properties. Most are built on similar sta
 
 - **Purpose**: codeby.ai web product
 - **Stack**: TypeScript (same monorepo structure as launchapp.dev)
-- **Last updated**: 2025-06-11
-- **Status**: Maintenance (no updates in 9 months)
+- **Last updated**: 2026-03-23
+- **Status**: Active
 
 ### Notes
 
-The README shows the same "Project Starter Monorepo" structure as `launchapp.dev`, suggesting it was scaffolded from the same template. No unique product description available.
+The README shows the same "Project Starter Monorepo" structure as `launchapp.dev`, suggesting it was scaffolded from the same template. Recently active with regular pushes.
 
 ---
 
@@ -44,8 +44,8 @@ The README shows the same "Project Starter Monorepo" structure as `launchapp.dev
 
 - **Purpose**: Anime audition/submission platform — allows up to 3 file submissions per user per audition
 - **Stack**: TypeScript (same monorepo structure)
-- **Last updated**: 2025-08-12
-- **Status**: Low activity — some real feature work but sparse commits
+- **Last updated**: 2026-03-23
+- **Status**: Active
 
 ---
 
@@ -53,18 +53,13 @@ The README shows the same "Project Starter Monorepo" structure as `launchapp.dev
 
 - **Purpose**: Yelp-style local business discovery app ("My Moku"). Mobile-first with privacy policy/terms pages. Business chat handler with carousel/map/list view markdown directives.
 - **Stack**: TypeScript, React Router v7 (web), Expo React Native (mobile), Hono API, Better Auth, Drizzle ORM, NativeWind/Tailwind
-- **Last updated**: 2026-03-12
+- **Last updated**: 2026-03-20
 - **Status**: Active development — most recently updated product app in the org
 - **Notes**: `moku-demo` and `mymoku-demo` repos are earlier prototypes of this product
 
 ---
 
-## `codeby.ai` (private)
-
-- **Purpose**: Placeholder/very early start on an AI coding product. No description. README is generic template.
-- **Stack**: TypeScript (same monorepo structure)
-- **Last updated**: 2025-06-11
-- **Status**: Essentially empty — single initial commit, likely abandoned
+Same template structure as the other websites. Recently active with regular pushes.
 
 ---
 
@@ -77,6 +72,7 @@ The README shows the same "Project Starter Monorepo" structure as `launchapp.dev
 | `aethris-landing` | Landing for "Aethris" product | Abandoned (2025-03-06) |
 | `site-inspector-landing` | Site inspector pro landing | Abandoned (2025-03-17) |
 | `landing-siteinspector-pro` | Site inspector pro landing v2 | Abandoned (2025-03-12) |
+| `mymoku.net` | mymoku.net web app | Active (2026-03-20) |
 
 ---
 

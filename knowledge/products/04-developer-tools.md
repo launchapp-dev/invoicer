@@ -16,7 +16,7 @@ Standalone developer tools built by the org — some are open-source community t
 - **License**: MIT
 - **Stars**: Growing (community project)
 - **Maturity**: Stable / Active development
-- **Last updated**: 2025-04-18
+- **Last updated**: 2025-04-17
 
 ### Purpose
 
@@ -43,7 +43,7 @@ Used as the authentication backbone for:
 - **Description**: AI-powered desktop IDE — "The IDE of the future"
 - **Type**: Desktop application (Tauri v2)
 - **Maturity**: Early development (Phase 3 in progress)
-- **Last updated**: 2025-06-30
+- **Last updated**: 2025-06-23
 
 ### Purpose
 

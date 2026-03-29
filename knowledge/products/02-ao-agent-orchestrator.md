@@ -14,7 +14,7 @@ The system consists of:
 
 ## Maturity: Active Development (highly active)
 
-The `ao-cli` is under very heavy active development with multiple commits per day. On 2026-03-19 it merged `Release v0.0.11`, then immediately retuned default-branch routing so Codex GPT-5.4 carries more throughput work, Sonnet stays on feature delivery, and Gemini handles UI-heavy work. The desktop app repo exists but is now archived.
+The `ao-cli` is under very heavy active development with multiple commits per day. On 2026-03-19 it merged `Release v0.0.11`, then immediately retuned default-branch routing so Codex GPT-5.4 carries more throughput work, Sonnet stays on feature delivery, and Gemini handles UI-heavy work. Latest version is v0.2.35 (2026-03-29) with self-healing model pipeline routing. The desktop app is at v0.1.0. `ao-projects` is a newly extracted Rust crate (2026-03-24) also seeing daily commits.
 
 ## Visibility
 
@@ -43,9 +43,10 @@ This is the primary public distribution channel for AO, complementing the public
 ## `ao-cli` (private)
 
 - **Language**: Rust (100%)
-- **Version**: pre-release
+- **Version**: v0.2.35
 - **Binary**: `ao`
 - **Architecture**: 16-crate Rust workspace
+- **Last updated**: 2026-03-29
 
 ### Crates
 
@@ -159,9 +160,35 @@ As of 2026-03-19 this repo is historical rather than primary. AO's active contro
 
 ---
 
+## `ao-projects` (public)
+
+- **Language**: Rust (100%)
+- **Version**: 0.1.0
+- **Description**: Standalone task and requirements management for AI-driven development pipelines
+- **Type**: CLI + MCP server + sync client
+- **Last updated**: 2026-03-29
+
+Extracted from AO orchestrator — same data model, same wire format, zero dependencies on the AO daemon or workflow engine. Provides 15 typed MCP tools for tasks, requirements, priorities, dependencies, and bidirectional traceability.
+
+---
+
+## AO-Built Showcase Applications
+
+The AO system has autonomously built and ships to the following production-quality applications:
+
+| App | Description | Stack | Visibility | Last Push |
+|---|---|---|---|---|
+| `invoicer` | AI-built invoice generator showcase | Next.js + @launchapp/design-system | Public | 2026-03-29 |
+| `postpilot` | AI-native social media automation platform | Next.js 15 + SQLite + Drizzle | Public | 2026-03-29 |
+| `condohub` | Modern condominium management platform | Next.js + @launchapp/design-system | Public | 2026-03-29 |
+| `launchapp-crm` | Production CRM SaaS (single-conductor AO) | TypeScript | Private | 2026-03-29 |
+
+---
+
 ## Internal Dependencies
 
 - `agent-orchestrator` historically embeds `ao-cli` as a Tauri sidecar, but that repo is now archived
 - `ao-skills` references `ao-cli` commands and MCP tools
 - `ao-bundled-packs` extends `ao-cli` workflow capabilities
+- `ao-projects` is a standalone extraction but shares the AO wire protocol
 - AO itself manages the `brain` repo tasks and workflows

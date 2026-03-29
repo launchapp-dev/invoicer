@@ -20,7 +20,7 @@ All packs updated 2026-03-16 to 2026-03-17 in a coordinated release.
 - **Installation**: `claude plugin marketplace add AudioGenius-ai/claude-plugin-marketplace`
 - **Last updated**: 2026-03-17
 
-The marketplace meta-pack provides a discovery interface for all other packs.
+The marketplace meta-pack provides a discovery interface for all other packs. It categorizes packs into Productivity, Database, DevOps & Cloud, Development, and AI groups.
 
 ---
 
