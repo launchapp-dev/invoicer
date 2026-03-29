@@ -6,8 +6,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-28 (run 10) |
-| Result | STRONG PASS — dashboard + settings both FIXED; all 6 steps pass; only 2 known unmerged-branch failures remain |
+| Date | 2026-03-29 (run 11) |
+| Result | STRONG PASS — all 6 steps pass; AI Cash Flow Forecast widget + AI Create Invoice dialog now verified working; 2 known unmerged-branch failures remain |
 | Steps Passed | 6/6 (smoke, auth, invoice creation, PDF, navigation, console+network) |
 | Steps Failed | 0 (step-level) |
 | Console Errors | 0 |
@@ -27,6 +27,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | 4 | 2 | 1 | Save invoice FIXED ✓ (first session pre-HMR). Partial payments (TASK-297) PASS ✓. Expense search/filter (TASK-299) present ✓. Dashboard still FAIL (client_id — TASK-296 blocked). Settings NEWLY FAIL (payment_instructions — TASK-301 merged but db:push not run — TASK-302 created). |
 | 2026-03-28 | 5 | 2 | 3 | Signup ✓. Invoice form ✓ (12 inputs, line items, totals, payment terms, PDF btn, tax presets, currency). /clients ✓. /expenses ✓. /dashboard/recurring ✓. Dashboard FAIL SqliteError client_id (TASK-311 created). Settings FAIL SqliteError payment_instructions (TASK-311). AO badge missing (TASK-309). Onboarding banner not merged (TASK-310). 500s on /invoices/new persist. |
 | 2026-03-28 | 6 | 0 | 0 | MAJOR: Dashboard ✓ FIXED (TASK-311/db:push run). Settings ✓ FIXED. Payment Instructions ✓. Save invoice ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 11 routes load. 0 console errors. 0 network errors. 2 unresolved: AO badge (TASK-309) + onboarding banner (TASK-310) — both on unmerged branches. |
+| 2026-03-29 | 6 | 0 | 0 | PASS: Signup ✓. Dashboard ✓ (Cash Flow Forecast widget present). Invoice form ✓ (subtotal 1500 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All routes load (200). Logout ✓. AI "Create with AI" dialog ✓ opens correctly. 0 console errors. 0 network errors. 2 unresolved: AO badge (TASK-309) + onboarding banner (TASK-310). |
 
 ## Known Issues
 
@@ -161,8 +162,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Can set up a recurring invoice (weekly/monthly/etc.)
 
 ### AI Smart Invoice Creation
-- [ ] Command bar or natural language input exists on dashboard — NOT TESTED
-- [ ] AI dialog opens without errors and accepts natural language input — NOT TESTED
+- [x] Command bar or natural language input exists on dashboard — **VERIFIED run 11 ("Create with AI" button)**
+- [x] AI dialog opens without errors and accepts natural language input — **VERIFIED run 11 (modal opens, natural language input field present)**
 
 ### Landing Page
 - [x] Landing page loads (no 404, no console errors)
@@ -193,9 +194,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Clients nav link present in authenticated layout
 
 ### Console & Network
-- [x] No console.error messages — **CLEAN run 10 (0 errors)**
-- [x] No uncaught exceptions — **CLEAN run 10**
-- [x] No failed network requests (4xx/5xx) — **CLEAN run 10 (0 errors)**
+- [x] No console.error messages — **CLEAN run 11 (0 errors)**
+- [x] No uncaught exceptions — **CLEAN run 11**
+- [x] No failed network requests (4xx/5xx) — **CLEAN run 11 (0 errors)**
 - [x] No CORS errors
 
 ### Multi-Currency
@@ -238,8 +239,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Empty field renders no extra section — NOT TESTED
 
 ### AI Cash Flow Forecasting
-- [ ] Cash flow forecasting widget appears on dashboard — NOT TESTED
-- [ ] Widget shows "Expected this month" vs "At risk" breakdown
+- [x] Cash flow forecasting widget appears on dashboard — **VERIFIED run 11 (widget present, shows "No outstanding invoices at this time" for new user)**
+- [ ] Widget shows "Expected this month" vs "At risk" breakdown — NOT TESTED (requires invoice data with outstanding amounts)
 
 ### AI Payment Reminders
 - [ ] AI payment reminder feature accessible for overdue invoices
