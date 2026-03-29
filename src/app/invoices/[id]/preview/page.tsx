@@ -55,6 +55,7 @@ export default function PreviewInvoicePage() {
   const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
   const [brandColor, setBrandColor] = useState<string>("#2563eb");
   const [brandFont, setBrandFont] = useState<string>("inter");
+  const [paymentInstructions, setPaymentInstructions] = useState<string>("");
 
   const [formAmount, setFormAmount] = useState("");
   const [formDate, setFormDate] = useState(new Date().toISOString().slice(0, 10));
@@ -67,7 +68,7 @@ export default function PreviewInvoicePage() {
     try {
       const { pdf } = await import("@react-pdf/renderer");
       const { InvoicePDF } = await import("@/components/invoice-pdf");
-      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} brandColor={brandColor} brandFont={brandFont} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} brandColor={brandColor} brandFont={brandFont} paymentInstructions={paymentInstructions} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -142,6 +143,7 @@ export default function PreviewInvoicePage() {
       if (s?.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
       if (s?.brandColor) setBrandColor(s.brandColor);
       if (s?.brandFont) setBrandFont(s.brandFont);
+      if (s?.paymentInstructions) setPaymentInstructions(s.paymentInstructions);
     }).catch(() => {});
     loadInvoice(params.id)
       .then((data) => {
@@ -229,7 +231,7 @@ export default function PreviewInvoicePage() {
         </div>
       </header>
       <div className="p-6 max-w-3xl mx-auto space-y-4">
-        {invoice && <InvoicePreview invoice={invoice} hideDownload logoUrl={logoUrl} template={template} brandColor={brandColor} />}
+        {invoice && <InvoicePreview invoice={invoice} hideDownload logoUrl={logoUrl} template={template} brandColor={brandColor} paymentInstructions={paymentInstructions} />}
 
         {invoice && (
           <Card>
