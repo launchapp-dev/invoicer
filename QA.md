@@ -6,8 +6,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 24) |
-| Result | PASS — Signup ✓ (qa-test24). Dashboard ✓ ($0.00 new user, Cash Flow Forecast widget present). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). Preview ✓ (INV-001, correct line items, Download PDF no errors). All 8 routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. |
+| Date | 2026-03-29 (run 25) |
+| Result | PASS — Signup ✓ (qa-test25). Dashboard ✓ ($0.00 new user, Cash Flow Forecast widget present). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF download ✓ (no errors). All 8 routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. |
 | Steps Passed | 6/6 |
 | Steps Failed | 0/6 |
 | Console Errors | 0 |
@@ -40,6 +40,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | 6 | 0 | 0 | PASS: Server under Node v22.17.0 — TASK-329 resolved, disk 30% (28GB free). Signup ✓ (qa-test21). Dashboard ✓ ($1,500.00 outstanding). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). Preview ✓ (INV-001, correct line items). All 8 routes 200. Login ✓ (works after ~7s — slow sign-in response). Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
 | 2026-03-29 | 6 | 0 | 0 | PASS: Signup ✓ (qa-test23). Dashboard ✓ (new user, Cash Flow Forecast widget). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). Preview ✓ (INV-001, Download PDF no errors). All 8 routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
 | 2026-03-29 | 6 | 0 | 0 | PASS: Signup ✓ (qa-test24). Dashboard ✓ (new user, Cash Flow Forecast widget). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). Preview ✓ (INV-001, $1,500.00, Download PDF no errors). All 8 routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
+| 2026-03-29 | 6 | 0 | 0 | PASS: Signup ✓ (qa-test25). Dashboard ✓ (new user, Cash Flow Forecast widget). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF download ✓ (no errors). All 8 routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
 
 ## Known Issues
 
