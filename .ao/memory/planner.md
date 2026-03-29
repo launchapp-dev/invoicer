@@ -6,16 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-31 06:00 |
+| Date | 2026-03-31 12:00 |
 | Open PRs | 0 |
-| Queue Depth | 0/8 → 1/8 |
+| Queue Depth | 1/8 (no change) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Product Review Enqueued | 1 |
-| Skipped (deps) | 6 (all E2E bugs blocked by 6 unmerged dependencies: TASK-325, TASK-323, TASK-313, TASK-307, TASK-284, TASK-305) |
+| Product Review Enqueued | 0 (already queued from 2026-03-29) |
+| Skipped (deps) | 6 (all E2E bugs blocked by 9 unmerged dependencies: TASK-325, 323, 313, 307, 298, 312, 288, 284, 305 — all marked done with 0 merged PRs each) |
 | Skipped (queued) | 0 |
-| Pipeline Status | BLOCKED + IDLE (6 ready tasks all blocked by 6 deps marked done with 0 merged PRs each; dispatched product-review) |
+| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 9 deps marked done with 0 merged PRs each; product-review from 2026-03-29 still assigned but has not cleared blocker) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -36,6 +36,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-31 00:00 | - | - | no enqueue (same 2 tasks still blocked by same 5 unmerged deps; product-review from prior run did not resolve) |
 | 2026-03-31 05:00 | - | - | no enqueue (TASK-325 already queued from prior run; TASK-319/318 still blocked by 5 unmerged deps) |
 | 2026-03-31 06:00 | (ad-hoc) | product-review | Idle pipeline — 6 ready E2E bugs blocked by 6 deps (TASK-325, 323, 313, 307, 284, 305 all marked done, 0 merged PRs each) |
+| 2026-03-31 12:00 | - | - | no enqueue (6 ready tasks all blocked by 9 deps marked done but with 0 merged PRs each; product-review from 2026-03-29 still in queue but has not cleared blocker) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
