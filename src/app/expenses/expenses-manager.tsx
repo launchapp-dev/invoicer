@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod/v4";
@@ -71,6 +71,33 @@ interface Props {
   clients: Client[];
 }
 
+const SORT_OPTIONS = [
+  { value: "date-desc", label: "Date (newest first)" },
+  { value: "date-asc", label: "Date (oldest first)" },
+  { value: "amount-desc", label: "Amount (high to low)" },
+  { value: "amount-asc", label: "Amount (low to high)" },
+] as const;
+
+type SortOption = typeof SORT_OPTIONS[number]["value"];
+
+interface FilterState {
+  search: string;
+  category: string;
+  clientId: string;
+  dateFrom: string;
+  dateTo: string;
+  sort: SortOption;
+}
+
+const DEFAULT_FILTERS: FilterState = {
+  search: "",
+  category: "all",
+  clientId: "all",
+  dateFrom: "",
+  dateTo: "",
+  sort: "date-desc",
+};
+
 export function ExpensesManager({ initialExpenses, clients }: Props) {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -78,6 +105,7 @@ export function ExpensesManager({ initialExpenses, clients }: Props) {
   const [isPending, startTransition] = useTransition();
   const [isExtracting, setIsExtracting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
 
   const form = useForm<ExpenseFormValues>({
     resolver: zodResolver(expenseSchema),
@@ -220,6 +248,57 @@ export function ExpensesManager({ initialExpenses, clients }: Props) {
 
   const clientMap = Object.fromEntries(clients.map((c) => [c.id, c.name]));
 
+  const filteredExpenses = useMemo(() => {
+    let result = expenses;
+
+    if (filters.search.trim()) {
+      const q = filters.search.toLowerCase();
+      result = result.filter(
+        (e) =>
+          e.vendor.toLowerCase().includes(q) ||
+          e.description.toLowerCase().includes(q)
+      );
+    }
+
+    if (filters.category !== "all") {
+      result = result.filter((e) => e.category === filters.category);
+    }
+
+    if (filters.clientId !== "all") {
+      result = result.filter((e) => e.clientId === filters.clientId);
+    }
+
+    if (filters.dateFrom) {
+      result = result.filter((e) => e.date >= filters.dateFrom);
+    }
+
+    if (filters.dateTo) {
+      result = result.filter((e) => e.date <= filters.dateTo);
+    }
+
+    result = [...result].sort((a, b) => {
+      if (filters.sort === "date-desc") return b.date.localeCompare(a.date);
+      if (filters.sort === "date-asc") return a.date.localeCompare(b.date);
+      if (filters.sort === "amount-desc") return b.amount - a.amount;
+      if (filters.sort === "amount-asc") return a.amount - b.amount;
+      return 0;
+    });
+
+    return result;
+  }, [expenses, filters]);
+
+  const hasActiveFilters =
+    filters.search !== DEFAULT_FILTERS.search ||
+    filters.category !== DEFAULT_FILTERS.category ||
+    filters.clientId !== DEFAULT_FILTERS.clientId ||
+    filters.dateFrom !== DEFAULT_FILTERS.dateFrom ||
+    filters.dateTo !== DEFAULT_FILTERS.dateTo ||
+    filters.sort !== DEFAULT_FILTERS.sort;
+
+  function setFilter<K extends keyof FilterState>(key: K, value: FilterState[K]) {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }
+
   return (
     <>
       <div className="flex items-center justify-between mb-6">
@@ -227,9 +306,94 @@ export function ExpensesManager({ initialExpenses, clients }: Props) {
         <Button onClick={openAdd}>Add Expense</Button>
       </div>
 
+      <div className="mb-4 space-y-3">
+        <div className="flex flex-wrap gap-2">
+          <div className="flex-1 min-w-[200px]">
+            <Input
+              placeholder="Search vendor or description…"
+              value={filters.search}
+              onChange={(e) => setFilter("search", e.target.value)}
+            />
+          </div>
+          <Select value={filters.category} onValueChange={(v) => setFilter("category", v)}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="All categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All categories</SelectItem>
+              {CATEGORIES.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {clients.length > 0 && (
+            <Select value={filters.clientId} onValueChange={(v) => setFilter("clientId", v)}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="All clients" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All clients</SelectItem>
+                {clients.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          <Select value={filters.sort} onValueChange={(v) => setFilter("sort", v as SortOption)}>
+            <SelectTrigger className="w-[190px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SORT_OPTIONS.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-wrap gap-2 items-center">
+          <div className="flex items-center gap-1.5">
+            <Label className="text-xs text-muted-foreground whitespace-nowrap">From</Label>
+            <Input
+              type="date"
+              className="w-[150px] h-8 text-sm"
+              value={filters.dateFrom}
+              onChange={(e) => setFilter("dateFrom", e.target.value)}
+            />
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Label className="text-xs text-muted-foreground whitespace-nowrap">To</Label>
+            <Input
+              type="date"
+              className="w-[150px] h-8 text-sm"
+              value={filters.dateTo}
+              onChange={(e) => setFilter("dateTo", e.target.value)}
+            />
+          </div>
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setFilters(DEFAULT_FILTERS)}
+            >
+              Clear filters
+            </Button>
+          )}
+        </div>
+      </div>
+
       {expenses.length === 0 ? (
         <p className="text-sm text-muted-foreground py-12 text-center">
           No expenses yet. Add one to get started.
+        </p>
+      ) : filteredExpenses.length === 0 ? (
+        <p className="text-sm text-muted-foreground py-12 text-center">
+          No expenses match the current filters.
         </p>
       ) : (
         <Table>
@@ -244,7 +408,7 @@ export function ExpensesManager({ initialExpenses, clients }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {expenses.map((expense) => (
+            {filteredExpenses.map((expense) => (
               <TableRow key={expense.id}>
                 <TableCell className="text-sm">{expense.date}</TableCell>
                 <TableCell className="text-sm font-medium">{expense.vendor}</TableCell>
