@@ -6,26 +6,28 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 04:30 |
+| Date | 2026-03-29 04:35 |
 | Open PRs | 1 (PR #185, mergeable) |
-| Queue Depth | 1 (assigned) |
+| Queue Depth | 0 (empty) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Skipped (deps) | 0 |
-| Skipped (queued) | 1 (TASK-315 already assigned) |
-| Pipeline Idle | No (TASK-315 running) |
+| Skipped (deps) | 2 (TASK-318, TASK-319) |
+| Skipped (queued) | 0 |
+| Pipeline Idle | Yes (2 ready tasks blocked by unmerged deps) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-29 04:35 | - | product-review | idle pipeline: 2 ready tasks blocked by unmerged deps |
 | 2026-03-29 04:00 | - | product-review | idle pipeline, scan for work |
 | 2026-03-29 03:36 | - | product-review | idle pipeline, scan for work |
 | 2026-03-29 03:35 | TASK-314 | triage | medium priority bugfix, no deps |
-| 2026-03-29 03:35 | TASK-286 | triage | low priority feature, no deps |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
+| TASK-318 | TASK-284 (no merged PR), TASK-305 (no merged PR) | 2026-03-29 04:35 |
+| TASK-319 | TASK-298 (no merged PR), TASK-312 (no merged PR), TASK-288 (no merged PR) | 2026-03-29 04:35 |
