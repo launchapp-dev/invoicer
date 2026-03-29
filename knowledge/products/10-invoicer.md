@@ -1,14 +1,18 @@
 # Invoicer
 
-> AI-built invoice generator — a showcase of what AO (Agent Orchestrator) can autonomously build. Next.js + @launchapp/design-system.
+> AI-built invoice generator with expense tracking — a showcase of what AO (Agent Orchestrator) can autonomously build. Next.js + @launchapp/design-system.
 
 ## Purpose
 
-Invoicer is a SaaS invoice generator that allows users to sign up, create professional invoices, see live previews, and download PDFs. Built as an open-source showcase of what AO (Agent Orchestrator) can autonomously build.
+Invoicer is a SaaS invoice generator that allows users to sign up, create professional invoices, track expenses, see live previews, and download PDFs. Built as an open-source showcase of what AO (Agent Orchestrator) can autonomously build.
 
 Core functionality:
 - User authentication (email/password)
 - Create and edit invoices with line items
+- Partial payment tracking with payment history
+- Expense tracking with search, filter, and sort
+- Tax presets by jurisdiction (US state, EU VAT, etc.)
+- Payment instructions in settings and PDF output
 - Real-time preview of invoice appearance
 - PDF generation and download
 - Dashboard to manage all invoices
@@ -18,9 +22,9 @@ The platform demonstrates rapid full-stack development with AI agents, serving a
 
 ## Maturity: Active Development (v0.1.0)
 
-Created on 2026-03-28. Very active development with continuous agent orchestration. Multiple E2E bugs being tracked and fixed (auth redirect loop, NL search expenses, US state tax).
+Created on 2026-03-28. Very active development with continuous agent orchestration. Multiple features added including payment tracking, expense management, tax presets, and payment instructions. E2E QA testing infrastructure in place.
 
-**Recent milestone (2026-03-29)**: Core invoice creation functional, PDF generation working, dashboard accessible. QA identifying critical bugs in auth flow.
+**Recent milestone (2026-03-29)**: Core invoice creation functional, PDF generation working, expense tracking with search/filter/sort, payment history, tax presets, and payment instructions all implemented.
 
 ## Visibility: Public
 
@@ -86,8 +90,12 @@ Open source repository demonstrating AO capabilities and design system integrati
   - Quantity
   - Unit price
   - Amount (auto-calculated)
-- Tax calculation
+- Tax calculation with presets by jurisdiction:
+  - US state sales tax
+  - EU VAT rates
+  - Custom tax rates
 - Discount support
+- Payment instructions (configurable in settings)
 - Notes and terms
 
 ### 4. Live Preview
@@ -98,18 +106,43 @@ Open source repository demonstrating AO capabilities and design system integrati
 ### 5. PDF Generation
 - Client-side PDF rendering
 - Download as PDF
+- Payment instructions displayed on PDF
 - Consistent styling with preview
 - No server-side rendering required
 
-### 6. Dashboard
-- Overview of all invoices
-- Quick actions (create new, view, edit)
-- Invoice status indicators
+### 6. Payment Tracking
+- Record partial payments against invoices
+- Payment history with date and amount
+- Outstanding balance calculation
+- Payment method tracking
 
-### 7. Expense Tracking (Future)
+### 7. Expense Tracking
 - Track business expenses
 - Categorize expenses
 - Link expenses to invoices
+- Search, filter, and sort controls
+- Expense dashboard with summary statistics
+
+### 8. Tax Presets
+- Pre-configured tax rates by jurisdiction
+- US state sales tax rates
+- EU VAT rates by country
+- Custom tax rate creation
+- Auto-apply based on client location
+
+### 9. Settings
+- Company information (name, address, logo)
+- Default payment terms
+- Payment instructions for invoices
+- Tax settings and defaults
+- Currency preferences
+
+### 10. Dashboard
+- Overview of all invoices with status
+- Expense summary and recent activity
+- Quick actions (create new, view, edit)
+- Invoice status indicators (draft, sent, paid, overdue)
+- Outstanding balances
 
 ---
 
@@ -131,14 +164,17 @@ src/
       [id]/page.tsx         — Edit invoice
       [id]/preview/page.tsx — Preview/download
     expenses/
-      page.tsx              — Expense tracking (future)
+      page.tsx              — Expense tracking with search/filter/sort
     settings/
-      page.tsx              — User settings
+      page.tsx              — User settings with payment instructions
     api/                    — API routes
   components/
     ui/                     — shadcn registry components
     invoice-form.tsx        — Invoice form component
     line-items.tsx          — Line item management
+    payment-history.tsx     — Payment tracking component
+    expense-list.tsx        — Expense management with filtering
+    tax-presets.tsx         — Tax preset selector
     pdf-document.tsx        — PDF generation component
     ...
   lib/
@@ -211,12 +247,17 @@ src/
 - **users** — User accounts (via better-auth)
 - **invoices** — Invoice headers
 - **line_items** — Invoice line items
-- **expenses** — Business expenses (future)
+- **payments** — Payment records linked to invoices
+- **expenses** — Business expenses with categories
+- **tax_presets** — Jurisdiction-based tax rates
+- **settings** — User preferences and company info
 
 ### Key Relationships
 - User has many Invoices
 - Invoice has many LineItems
+- Invoice has many Payments (partial payment tracking)
 - User has many Expenses
+- User has Settings
 
 ---
 
@@ -229,26 +270,36 @@ Invoicer is fully managed by AO (Agent Orchestrator):
   config.json         # AO configuration
   memory/             # Run memory storage
   workflows/          # Workflow definitions
+qa/
+  tests/              # E2E test specifications
+  reports/            # QA test results
 ```
 
-**AO Status**: Active development with continuous agent orchestration. Multiple E2E bugs tracked.
+**AO Status**: Active development with continuous agent orchestration. QA testing infrastructure in place with automated E2E testing.
 
 ### Recent Development Activity
+
+#### Recently Shipped Features (2026-03-28/29)
+| Feature | Task | Description |
+|---------|------|-------------|
+| Partial Payment Tracking | TASK-297 | Record multiple payments per invoice with history |
+| Tax Presets | TASK-293 | Jurisdiction-based tax rates (US states, EU VAT) |
+| Expense Search/Filter | TASK-299 | Full-text search, category filter, date/amount sort |
+| Payment Instructions | TASK-301 | Configurable instructions in settings, shown on PDF |
+| QA Test Infrastructure | — | E2E test specs and automated QA workflow |
 
 #### Recent Commits (2026-03-29)
 | SHA | Message | Time |
 |-----|---------|------|
-| 6bce9cc | planner: update run memory (6 ready E2E bugs all blocked by 6 unmerged deps; dispatched product-review) | 15:28 |
-| 874fdc8 | po: update run memory (TASK-327 NL search expenses E2E bug, TASK-328 US state tax E2E bug) | 15:21 |
-| 99b7a82 | qa: test results 2026-03-29 run 17 — CRITICAL FAIL (auth redirect loop, TASK-326) | 15:18 |
-| eb29591 | reconciler: update run memory (promoted 3 backlog tasks to ready, TASK-325 marked done) | 15:06 |
-| c873bba | planner: update run memory (TASK-325 already queued; 2 tasks blocked by 5 unmerged deps for 7+ runs) | 15:04 |
+| — | planner: update run memory | ongoing |
+| — | qa: test results with various PASS/FAIL states | ongoing |
+| — | po: triage new features and bugs | ongoing |
 
-#### Active Issues
-- **TASK-326**: Auth redirect loop (CRITICAL)
-- **TASK-327**: NL search expenses E2E bug
-- **TASK-328**: US state tax E2E bug
-- **6 ready E2E bugs** blocked by 6 unmerged dependencies
+#### Active Development Areas
+- Payment tracking stability
+- Expense management polish
+- Tax preset expansion (more jurisdictions)
+- E2E bug fixes for auth and checkout flows
 
 ---
 
@@ -320,14 +371,14 @@ Key differentiators:
 
 ## Non-Goals (v1)
 
-- No payment processing (invoices tracked, not paid)
+- No payment processing (invoices tracked, not paid via platform)
 - No subscription billing
 - No multi-currency support (single currency per invoice)
 - No invoice templates/themes (single design)
 - No client portal (only sender view)
 - No automated email delivery
-- No tax calculation rules (manual tax entry)
-- No expense tracking (future feature)
+- No expense receipt upload (manual entry only)
+- No multi-company support
 
 ---
 

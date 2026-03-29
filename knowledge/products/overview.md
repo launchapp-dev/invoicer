@@ -5,9 +5,9 @@
 ## Organization
 
 **GitHub org:** `launchapp-dev` (previously also `AudioGenius-ai`)
-**Total repos:** 113+ (as of 2026-03-29 conductor cycle)
+**Total repos:** 87+ (as of 2026-03-29 conductor cycle)
 - Active / recently updated: ~60
-- Experimental / legacy / abandoned: ~52
+- Experimental / legacy / abandoned: ~27
 
 ## Product Lines
 
@@ -39,9 +39,9 @@ Built autonomously by the AO Agent Orchestrator (demonstrating end-to-end autono
 
 | App | Description | Stack | Visibility | Last Push |
 |---|---|---|---|---|
-| `invoicer` | AI-built invoice generator showcase | Next.js + @launchapp/design-system | Public | 2026-03-29 |
+| `invoicer` | AI-built invoice generator with expense tracking, payment history, tax presets | Next.js + @launchapp/design-system | Public | 2026-03-29 |
 | `postpilot` | AI-native social media automation platform | Next.js 15 + SQLite + Drizzle | Public | 2026-03-29 |
-| `condohub` | Modern condominium management platform | Next.js + @launchapp/design-system | Public | 2026-03-29 |
+| `condohub` | Modern condominium management platform with i18n | Next.js + @launchapp/design-system | Public | 2026-03-29 |
 | `launchapp-crm` | Production CRM SaaS (single-conductor AO) | TypeScript | Private | 2026-03-29 |
 
 ## Key Technical Themes
