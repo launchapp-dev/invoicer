@@ -1,6 +1,6 @@
 # SDK Consistency Matrix
 
-> Last updated: 2026-03-20 by knowledge-curator agent (8th pass, through 2026-03-20T13:53:13Z).
+> Last updated: 2026-03-29 by knowledge-curator agent (through 2026-03-29T21:30Z).
 > Source repo: `saas-template-launch-app-test` (flagship template).
 > Note: Private repo data was freshly verified via authenticated GitHub CLI on 2026-03-20. The current default branch includes 2026-03-20 updates through 13:53:13Z with post-13:17Z activity: Docker hardening enhancements (PRs #361-#367) and package export-map configuration improvements. Earlier updates through 13:02:54Z: billing endpoint expansion, CI/Docker hardening (Node.js pinning), package documentation guides, and @repo/core test coverage additions. Further back: @ai-sdk/mistral provider, Docker CI fixes, @types/node/core tsconfig alignment, 2FA/TOTP in Better-Auth, Email OTP passwordless login, full @repo/ui-kit and @repo/i18n integration, AWS SDK 3.1013.0, Polar.sh SDK 0.46.5, and ajv ReDoS vulnerability fix.
 
@@ -14,7 +14,7 @@
 | `better-auth` | ^1.2.7 | Auth |
 | `drizzle-orm` | ^0.45.0 | ORM |
 | `zod` | ^4.3.6 | Validation (shared across all packages) |
-| `typescript` | ^5.8.0 | Strict TypeScript |
+| `typescript` | ^6.0.0 | Upgraded from 5.9.3 in late March 2026 |
 | `tailwindcss` | ^4.2.2 | Styling |
 | `turbo` | ^2.8.19 | Monorepo build |
 | `@trigger.dev/sdk` | ^4.0.0 | Async job runtime in `@repo/jobs` |
@@ -54,11 +54,14 @@
 | | @react-email/components | ^1.0.0 | — |
 | `@repo/storage` | @aws-sdk/client-s3 | ^3.1013.0 | Current (upgraded 2026-03-20) |
 | | @aws-sdk/s3-request-presigner | ^3.1013.0 | Current (upgraded 2026-03-20) |
+| `@repo/flags` | — | workspace:* | New package added 2026-03-24 for feature flags |
+| `@repo/push` | web-push / firebase-admin | Latest | New package added 2026-03-24 for push notifications |
+| `@repo/appstores` | — | workspace:* | New package added 2026-03-24 for Apple/Google IAP receipt validation |
 | `@repo/i18n` | i18next | ^25 | Current (upgraded from v24, wired into apps/web 2026-03-20) |
 | | react-i18next | ^16 | Current (upgraded from v15, wired into apps/web 2026-03-20) |
 | `@repo/ui-kit` | radix-ui/* | Latest | Fully integrated into apps/web 2026-03-20 |
 
-## TypeScript Build Graph Status (`saas-template-launch-app-test`)
+## TypeScript Build Graph Status (`launchapp-react-router` / formerly `saas-template-launch-app-test`)
 
 | Area | Current State | Notes |
 |---|---|---|
@@ -111,12 +114,14 @@
 | | storybook | v10 | Upgraded from v8 |
 | | tsup | — | Build |
 
-## Recent Changes (last 7 days through 2026-03-20T06:22Z)
+## Recent Changes (last 7 days through 2026-03-29T21:30Z)
 
 | Change | Detail | Repo / Area |
 |---|---|---|
-| **COORDINATED ECOSYSTEM UPDATE** | **npm publishing enabled for 11 LaunchPad SDKs** | All `launchpad-*-sdk` repos updated 2026-03-20 06:22Z: `@launchpad/core` now publishes to npm on version tags; 10 dependent SDKs transitioned from GitHub to npm registry deps |
-| Added | `@ai-sdk/mistral` provider to AI SDK wrapper | `saas-template-launch-app-test` (`@repo/ai`) |
+| **Repo renamed** | `saas-template-launch-app-test` → `launchapp-react-router` | GitHub redirect active; flagship template |
+| **TypeScript upgrade** | `typescript` ^5.9.3 → ^6.0.0 | `launchapp-nextjs`, `launchapp-react-router` |
+| **New packages** | `@repo/flags` (feature flags), `@repo/push` (push notifications), `@repo/appstores` (IAP validation) | `launchapp-nextjs` / `launchapp-react-router` monorepos |
+| Added | `@ai-sdk/mistral` provider to AI SDK wrapper | `launchapp-react-router` (`@repo/ai`) |
 | Fixed | @types/node/core tsconfig alignment | `saas-template-launch-app-test` |
 | Fixed | Docker CI install process for better container testing | `saas-template-launch-app-test` |
 | Added | Vitest test framework infrastructure | `launchapp-sveltekit` |

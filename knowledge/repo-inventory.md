@@ -1,25 +1,31 @@
 # Repository Inventory
 
-> Last updated: 2026-03-24 by knowledge-curator agent (through 2026-03-24T08:10Z).
-> Snapshot: 30+ repos in `launchapp-dev`; quality audit burst completed for 4 framework templates. New `launchapp-react-router` repo added with first audit showing excellent health. Key changes: launchapp-nextjs build FAIL (TypeScript blocker), launchapp-sveltekit lint stable at 391 errors, launchapp-nuxt lint improved to 3 errors (57% reduction).
+> Last updated: 2026-03-29 by knowledge-curator agent (through 2026-03-29T21:30Z).
+> Snapshot: 40+ repos in `launchapp-dev`. **Critical update:** `saas-template-launch-app-test` renamed to `launchapp-react-router` (GitHub redirect active). **launchapp-nextjs QA burst (2026-03-29):** 124 Playwright tests, 13 passed, 111 failed. Critical ZodError regression (client-side env validation) and dashboard 404s identified. New AO ecosystem repos (`ao-dashboard`, `ao-fleet`, `ao-desktop`, `ao-starter`, `ao-docs`) and product repos (`invoicer`, `condohub`, `postpilot`, `launchapp-crm`, `storyforge`) created and active.
 
 ## Notable Changes
 
 | Change | Detail |
 |---|---|
-| New repos | 23 repos were created in the last 7 days, including `brain`, `design-system`, `saas-template-launch-app-test`, `launchapp-lite`, `launchapp-lite-v2`, `ao-skills`, `ao-bundled-packs`, `claude-plugin-marketplace`, and the 15 AO plugin-pack repos |
+| New repos | 23+ repos were created, including `brain`, `design-system`, `launchapp-react-router` (formerly `saas-template-launch-app-test`), `launchapp-lite`, `launchapp-lite-v2`, `ao-skills`, `ao-bundled-packs`, `claude-plugin-marketplace`, and the 15 AO plugin-pack repos. More recent additions: `ao-dashboard`, `ao-fleet`, `ao-projects`, `ao-desktop`, `ao-starter`, `ao-docs`, `invoicer`, `condohub`, `postpilot`, `launchapp-crm`, `storyforge` |
+| Repo renamed | `saas-template-launch-app-test` → `launchapp-react-router`. GitHub redirect is in place; all references should use the new name |
 | Archived repo | `agent-orchestrator` is now archived in GitHub metadata even though it saw a 2026-03-19 push; `ao-cli` remains the active AO runtime |
-| Significant refactors | `saas-template-launch-app-test` added project references + `tsc --build` hardening around `@repo/jobs`; `design-system` expanded AO workflows with lint/typecheck/CI gates, design-token generation, and monthly adoption metrics |
+| Significant refactors | `launchapp-react-router` added project references + `tsc --build` hardening around `@repo/jobs`; `design-system` expanded AO workflows with lint/typecheck/CI gates, design-token generation, and monthly adoption metrics; `launchapp-nextjs` added CLAUDE.md maintainer agent and QA.md test infrastructure |
 | Repo coverage | Purpose in the full ledger below comes from GitHub repo descriptions when present; deeper hand-written repo docs live under `knowledge/repos/` |
 
 ## Velocity Leaders
 
 | Repo | Recent merged PR count | Current note |
 |---|---|---|
-| `saas-template-launch-app-test` | 210+ merged PRs since 2026-03-12 | Flagship template trunk/canary; Docker hardening, package export-map improvements, comprehensive package documentation |
-| `design-system` | 82+ merged PRs since 2026-03-12 | Phase 4 complete with Timeline block & CLI scaffolding; accessibility hardening (WCAG 2.4.7, 4.1.3), Next.js 16 docs upgrade, component dependency sync |
-| `ao-cli` | 63+ merged PRs since 2026-03-12 | v0.0.11 release plus post-release stability (daemon tests, workflow YAML alignment, orphan tracker fixes); DeepSeek routing, cargo test gate, agent-runner leak fix |
+| `launchapp-react-router` | 210+ merged PRs since 2026-03-12 | **Repo renamed** from `saas-template-launch-app-test`. Flagship template trunk/canary; Docker hardening, package export-map improvements, TypeScript 6.0, `@repo/api` synced from launchapp-nextjs |
+| `design-system` | 100+ merged PRs since 2026-03-12 | AI Component Generator, CopilotPanel, Magic UI effects, VS Code extension, plugin system, community themes, CLAUDE.md maintainer |
+| `ao-cli` | 80+ merged PRs since 2026-03-12 | v0.2.30-0.2.35: SQLite-backed queries, unified work inbox, externalized packs, Docker support, RAM reduction |
 | `brain` | 58+ merged PRs since creation on 2026-03-19 | Structured data + MCP platform with PR review gating (brain-reviewer) and continuous sweep (brain-pr-sweep); knowledge-update workflows running continuously |
+| `invoicer` | 55+ merged PRs since 2026-03-12 | AI-built invoice generator showcase; Next.js + `@launchapp/design-system`; E2E tests stabilized |
+| `launchapp-crm` | 17+ merged PRs since 2026-03-24 | Production CRM SaaS built with single-conductor workflow |
+| `condohub` | 14+ merged PRs since 2026-03-24 | Condominium management platform; visitor management, i18n, onboarding wizard |
+| `postpilot` | 8+ merged PRs since 2026-03-24 | AI-native social media automation platform |
+| `launchapp-nuxt` | 7+ merged PRs since 2026-03-24 | TypeScript 6.0, Vite unification, privacy/GDPR compliance |
 | `launchapp-sveltekit` | 4 merged PRs since 2026-03-20 | Emerging SvelteKit template variant with multi-tier billing and org schema support |
 
 ## Full Inventory
@@ -30,11 +36,25 @@ Canonical source for repo purpose/status is GitHub metadata plus the per-repo do
 
 | Repo | Visibility | Language | Created | Last Push | Status | Purpose |
 |---|---|---|---|---|---|---|
-| `brain` | Private | JavaScript | 2026-03-19 | 2026-03-20 | High velocity | No GitHub description set |
-| `saas-template-launch-app-test` | Private | TypeScript | 2026-03-17 | 2026-03-19 | High velocity | LaunchApp Lite - Lightweight SaaS template built with React Router 7 |
-| `design-system` | Private | TypeScript | 2026-03-17 | 2026-03-19 | High velocity | Radix UI based design system for AudioGenius |
-| `ao-cli` | Private | Rust | 2026-02-24 | 2026-03-19 | High velocity | No GitHub description set |
-| `ao-skills` | Public | - | 2026-03-17 | 2026-03-19 | High velocity | AI skills for the AO agent orchestrator CLI |
+| `brain` | Private | JavaScript | 2026-03-19 | 2026-03-27 | High velocity | No GitHub description set |
+| `launchapp-react-router` | Private | TypeScript | 2026-03-17 | 2026-03-29 | High velocity | LaunchApp Lite - Lightweight SaaS template built with React Router 7 (formerly `saas-template-launch-app-test`) |
+| `design-system` | Private | TypeScript | 2026-03-17 | 2026-03-29 | High velocity | Radix UI based design system for AudioGenius |
+| `ao-cli` | Private | Rust | 2026-02-24 | 2026-03-29 | High velocity | No GitHub description set |
+| `invoicer` | Private | TypeScript | 2026-03-23 | 2026-03-29 | High velocity | AI-built invoice generator showcase — Next.js + @launchapp/design-system |
+| `condohub` | Private | TypeScript | 2026-03-24 | 2026-03-29 | High velocity | Modern condominium management platform — visitor management, i18n, Next.js |
+| `postpilot` | Private | TypeScript | 2026-03-24 | 2026-03-29 | High velocity | AI-native social media automation platform |
+| `launchapp-crm` | Private | TypeScript | 2026-03-24 | 2026-03-29 | High velocity | Production CRM SaaS — built and maintained by AO with single-conductor workflow |
+| `launchapp-nextjs` | Private | TypeScript | 2026-03-23 | 2026-03-29 | High velocity | Production SaaS starter for Next.js App Router — built and maintained by AO |
+| `launchapp-nuxt` | Private | TypeScript | 2026-03-23 | 2026-03-29 | High velocity | Production SaaS starter for Nuxt 4 — built and maintained by AO |
+| `launchapp-sveltekit` | Private | JavaScript | 2026-03-23 | 2026-03-29 | High velocity | Production SaaS starter for SvelteKit — built and maintained by AO |
+| `ao-dashboard` | Private | TypeScript | 2026-03-27 | 2026-03-29 | High velocity | Fleet control dashboard for AO daemons and cross-project workflows |
+| `ao-fleet` | Private | Rust | 2026-03-27 | 2026-03-29 | High velocity | Fleet control plane for AO daemons, schedules, MCP, and cross-project workflows |
+| `ao-projects` | Private | Rust | 2026-03-27 | 2026-03-29 | High velocity | Standalone task and requirements management for AI-driven development pipelines |
+| `ao-desktop` | Private | TypeScript | 2026-03-27 | 2026-03-29 | High velocity | Desktop wrapper for the AO CLI — Tauri build target |
+| `ao-starter` | Private | TypeScript | 2026-03-27 | 2026-03-29 | High velocity | create-ao CLI — scaffold AO workflows for any project |
+| `ao-docs` | Private | - | 2026-03-27 | 2026-03-29 | High velocity | Documentation site for AO Agent Orchestrator |
+| `storyforge` | Private | TypeScript | 2026-03-24 | 2026-03-26 | High velocity | AI media production pipeline — mass content generation for serialized stories |
+| `ao-skills` | Public | - | 2026-03-17 | 2026-03-26 | High velocity | AI skills for the AO agent orchestrator CLI |
 | `ao-bundled-packs` | Private | - | 2026-03-18 | 2026-03-18 | High velocity | Community and first-party extension packs for AO CLI |
 | `launchapp-lite-v2` | Private | TypeScript | 2026-03-17 | 2026-03-17 | High velocity | Lightweight SaaS starter - React Router 7, Hono, Better Auth, Drizzle, Supabase, Stripe |
 | `launchapp-lite` | Private | TypeScript | 2026-03-17 | 2026-03-17 | High velocity | Lightweight SaaS starter template - React Router 7, Hono, Better Auth, Drizzle, Supabase, Stripe, Tailwind CSS 4 |
