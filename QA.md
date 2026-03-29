@@ -6,11 +6,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 12) |
-| Result | PASS — all 6 steps pass; 1 new minor bug: transient React hydration mismatch on post-signup initial render (caret-color style mismatch in Input components); 2 known unmerged-branch failures remain |
+| Date | 2026-03-29 (run 13) |
+| Result | PASS — all 6 steps pass; 2 new bugs: social proof section missing (TASK-316) and client search/sort/pagination missing (TASK-317); 3 known unmerged-branch failures remain |
 | Steps Passed | 6/6 (smoke, auth, invoice creation, PDF, navigation, console+network) |
 | Steps Failed | 0 (step-level) |
-| Console Errors | 1 (transient hydration mismatch on signup redirect only; 0 on subsequent navigation) |
+| Console Errors | 0 (clean across all pages) |
 | Network Errors | 0 (no 4xx/5xx) |
 
 ## Test Results History
@@ -29,13 +29,16 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | 6 | 0 | 0 | MAJOR: Dashboard ✓ FIXED (TASK-311/db:push run). Settings ✓ FIXED. Payment Instructions ✓. Save invoice ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 11 routes load. 0 console errors. 0 network errors. 2 unresolved: AO badge (TASK-309) + onboarding banner (TASK-310) — both on unmerged branches. |
 | 2026-03-29 | 6 | 0 | 0 | PASS: Signup ✓. Dashboard ✓ (Cash Flow Forecast widget present). Invoice form ✓ (subtotal 1500 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All routes load (200). Logout ✓. AI "Create with AI" dialog ✓ opens correctly. 0 console errors. 0 network errors. 2 unresolved: AO badge (TASK-309) + onboarding banner (TASK-310). |
 | 2026-03-29 | 6 | 0 | 1 | PASS: Signup ✓ (qa-test12). Dashboard ✓. Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 1 new bug: transient React hydration mismatch console.error on post-signup render (caret-color style, TASK-672). 0 network errors. 2 unresolved: TASK-309 + TASK-310. |
+| 2026-03-29 | 6 | 0 | 2 | PASS: Login ✓ (qa-test13, existing account). Dashboard ✓. Invoice form ✓ (subtotal 1,500 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 0 console errors (clean). 0 network errors. 2 new bugs: social proof missing (TASK-316), client search/sort missing (TASK-317). 3 unresolved: TASK-309 + TASK-310 + TASK-672. |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
 - **[2026-03-28] "Built with AO" badge missing from landing footer (TASK-309)** — TASK-288 commit exists on `ao/task-288` branch but PR was never submitted or merged to main.
-- **[2026-03-28] New-user onboarding banner not present in main (TASK-310)** — TASK-304/306 code on `ao/task-304` branch but PR was never submitted or merged to main.
+- **[2026-03-28] New-user onboarding banner not present in main (TASK-310)** — TASK-304/306 code in git stash (not on any branch) — never merged to main.
 - **[2026-03-29] React hydration mismatch on post-signup initial render (TASK-672)** — `caret-color: transparent` style present server-side but missing client-side in Input components. Appears once on signup redirect; clean on subsequent navigation. Non-breaking.
+- **[2026-03-29] Social proof stats section missing from landing page (TASK-316)** — TASK-313 marked done but no code committed or merged. No ao/task-313 branch exists. Landing page has no "trusted by X" or stats counter section.
+- **[2026-03-29] Client search/sort/pagination missing from /clients page (TASK-317)** — TASK-307 marked done but no code committed or merged. /clients page shows no search input, sort controls, or pagination.
 
 ## Regression Tracker
 
@@ -144,6 +147,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Client CSV import works (import clients from CSV file)
 - [x] Tax ID / VAT / EIN field present on client form (TASK-279)
 - [x] Currency preference field present on client form (TASK-279)
+- [ ] Search input present on /clients page (TASK-307) — **FAIL: TASK-307 done but no code in main (TASK-317)**
+- [ ] Sort controls present on /clients page (TASK-307) — **FAIL: same**
+- [ ] Pagination present on /clients page when >10 clients (TASK-307) — **FAIL: same**
 
 ### Payment Recording
 - [ ] Mark invoice as paid with date, method, reference number
@@ -174,7 +180,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Pricing section present (Free $0/mo and Pro $19/mo tiers) (TASK-287)
 - [ ] "Built with AO" badge present in footer (TASK-288) — **FAIL: badge missing — ao/task-288 branch not merged (TASK-309)**
 - [ ] Scroll animations on landing page sections (TASK-292) — NOT TESTED
-- [ ] Dark mode toggle in nav switches theme (TASK-288) — NOT TESTED
+- [ ] Dark mode toggle in nav switches theme (TASK-288) — **FAIL: dark mode toggle not visible in landing nav — TASK-298 never merged (TASK-312)**
+- [ ] Social proof stats section present on landing page (TASK-313) — **FAIL: TASK-313 done but no code in main (TASK-316)**
 
 ### Navigation
 - [x] Landing page loads (no 404)
@@ -196,9 +203,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Clients nav link present in authenticated layout
 
 ### Console & Network
-- [~] No console.error messages — **run 12: 1 transient hydration mismatch on post-signup render; 0 on direct navigation**
-- [x] No uncaught exceptions — **CLEAN run 12**
-- [x] No failed network requests (4xx/5xx) — **CLEAN run 12 (0 errors)**
+- [x] No console.error messages — **CLEAN run 13: 0 errors across all pages (login, dashboard, invoice form, clients, settings, expenses, recurring, landing)**
+- [x] No uncaught exceptions — **CLEAN run 13**
+- [x] No failed network requests (4xx/5xx) — **CLEAN run 13 (0 errors)**
 - [x] No CORS errors
 
 ### Multi-Currency
