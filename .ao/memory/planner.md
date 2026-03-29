@@ -6,16 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 13:15 |
-| Open PRs | 0 |
+| Date | 2026-03-29 (current) |
+| Open PRs | 1 (PR #199 "ao/task 011" — DIRTY, needs rebase; not task-linked, skipped) |
 | Queue Depth | 0/8 (invoicer queue empty) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Product Review Enqueued | 0 (idle condition NOT met: 6 ready tasks exist; product-review already in brain queue from prior run) |
-| Skipped (deps) | 6 (all E2E bugs blocked by 9 unmerged dependencies verified 2026-03-29 13:15) |
+| Product Review Enqueued | 0 (idle condition NOT met: 6 ready tasks exist) |
+| Skipped (deps) | 6 (all E2E bugs blocked by 6 unmerged dependencies: TASK-325, TASK-323, TASK-313, TASK-307, TASK-284, TASK-305; all marked done, verified 0 merged PRs each) |
 | Skipped (queued) | 0 |
-| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 9 deps marked done with 0 merged PRs; blocker CRITICAL — unresolved for 6+ runs; re-verified 2026-03-29 13:15: all 9 deps have status=done, merged_prs=0) |
+| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 6 deps marked done with 0 merged PRs each; blocker CRITICAL — unresolved for 7+ consecutive runs; re-verified 2026-03-29 current: dependency merged_prs STILL zero) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -45,6 +45,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 18:00 | - | - | no enqueue (same 6 ready tasks still blocked by same 9 unmerged deps; TASK-329 critical blocker is cancelled; no change) |
 | 2026-03-29 13:02 | - | - | no enqueue (all 6 ready E2E bugs blocked by same 9 deps: TASK-325,323,313,307,298,312,288,284,305 all marked done with 0 merged PRs each; idle condition false; blocker unresolved) |
 | 2026-03-29 13:15 | - | - | no enqueue (re-verified: all 6 ready E2E bugs blocked by 9 deps marked done with 0 merged PRs each; blocker persists) |
+| 2026-03-29 (current) | - | - | no enqueue (6 ready E2E bugs blocked by 6 deps: TASK-325,323,313,307,284,305 all done, 0 merged PRs verified; blocker unresolved 7+ runs; idle condition false) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
