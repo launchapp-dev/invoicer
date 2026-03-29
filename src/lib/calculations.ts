@@ -61,3 +61,24 @@ export function formatCurrency(amount: number, currency = "USD"): string {
     currency: safeCurrency,
   }).format(amount);
 }
+
+function safe(n: number): number {
+  return Number.isFinite(n) ? n : 0;
+}
+
+export function lineItemTotal(item: Pick<LineItem, 'quantity' | 'rate'>): number {
+  return safe(item.quantity) * safe(item.rate);
+}
+
+export function calculateTotals(
+  lineItems: Pick<LineItem, 'quantity' | 'rate'>[],
+  taxRate: number,
+  discount: number
+) {
+  const subtotal = lineItems.reduce((sum, item) => sum + lineItemTotal(item), 0);
+  const discountAmount = subtotal * (safe(discount) / 100);
+  const taxableAmount = subtotal - discountAmount;
+  const taxAmount = taxableAmount * (safe(taxRate) / 100);
+  const total = taxableAmount + taxAmount;
+  return { subtotal, discountAmount, taxAmount, total };
+}

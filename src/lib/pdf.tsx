@@ -115,7 +115,7 @@ interface InvoicePDFProps {
 export function InvoicePDF({ invoice }: InvoicePDFProps) {
   const { subtotal, discountAmount, taxAmount, total } = calculateTotals(
     invoice.lineItems,
-    invoice.taxRate,
+    invoice.taxRate ?? 0,
     invoice.discount
   );
   const fmt = (n: number) => formatCurrency(n, invoice.currency);
@@ -129,18 +129,18 @@ export function InvoicePDF({ invoice }: InvoicePDFProps) {
             <Text style={styles.invoiceNum}>#{invoice.invoiceNumber}</Text>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-            <Text style={styles.bold}>{invoice.senderName}</Text>
-            {invoice.senderEmail ? <Text style={styles.muted}>{invoice.senderEmail}</Text> : null}
-            {invoice.senderAddress ? <Text style={styles.muted}>{invoice.senderAddress}</Text> : null}
+            <Text style={styles.bold}>{invoice.from.name}</Text>
+            {invoice.from.email ? <Text style={styles.muted}>{invoice.from.email}</Text> : null}
+            {invoice.from.address ? <Text style={styles.muted}>{invoice.from.address}</Text> : null}
           </View>
         </View>
 
         <View style={styles.addresses}>
           <View>
             <Text style={styles.label}>Bill To</Text>
-            <Text style={styles.bold}>{invoice.recipientName}</Text>
-            {invoice.recipientEmail ? <Text style={styles.muted}>{invoice.recipientEmail}</Text> : null}
-            {invoice.recipientAddress ? <Text style={styles.muted}>{invoice.recipientAddress}</Text> : null}
+            <Text style={styles.bold}>{invoice.to.name}</Text>
+            {invoice.to.email ? <Text style={styles.muted}>{invoice.to.email}</Text> : null}
+            {invoice.to.address ? <Text style={styles.muted}>{invoice.to.address}</Text> : null}
           </View>
           <View style={{ alignItems: 'flex-end' }}>
             <View style={{ marginBottom: 12 }}>
@@ -181,9 +181,9 @@ export function InvoicePDF({ invoice }: InvoicePDFProps) {
               <Text style={styles.totalsValue}>-{fmt(discountAmount)}</Text>
             </View>
           )}
-          {invoice.taxRate > 0 && (
+          {(invoice.taxRate ?? 0) > 0 && (
             <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>Tax ({invoice.taxRate}%)</Text>
+              <Text style={styles.totalsLabel}>Tax ({invoice.taxRate ?? 0}%)</Text>
               <Text style={styles.totalsValue}>{fmt(taxAmount)}</Text>
             </View>
           )}
