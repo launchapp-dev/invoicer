@@ -84,6 +84,7 @@ function NewInvoicePageContent() {
   const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
   const [attachmentCount, setAttachmentCount] = useState(0);
   const [brandColor, setBrandColor] = useState<string>("#2563eb");
+  const [paymentInstructions, setPaymentInstructions] = useState<string>("");
 
   useEffect(() => {
     if (!isPending && !session) {
@@ -128,6 +129,7 @@ function NewInvoicePageContent() {
         if (s.logoUrl) setLogoUrl(s.logoUrl);
         if (s.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
         if (s.brandColor) setBrandColor(s.brandColor);
+        if (s.paymentInstructions) setPaymentInstructions(s.paymentInstructions);
       }
 
       if (clientsResult.status === "fulfilled") {
@@ -294,7 +296,7 @@ function NewInvoicePageContent() {
             <InvoiceAttachments invoiceId={invoice.id} onCountChange={setAttachmentCount} />
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
-            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} />
+            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} paymentInstructions={paymentInstructions} />
           </TabsContent>
         </Tabs>
       </div>
@@ -307,7 +309,7 @@ function NewInvoicePageContent() {
           <InvoiceAttachments invoiceId={invoice.id} onCountChange={setAttachmentCount} />
         </div>
         <div className="w-1/2 overflow-y-auto bg-muted/30 p-8">
-          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} />
+          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} paymentInstructions={paymentInstructions} />
         </div>
       </div>
     </div>

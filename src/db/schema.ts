@@ -75,6 +75,7 @@ export const userSettings = sqliteTable("user_settings", {
   brandColor: text("brand_color").notNull().default("#2563eb"),
   brandFont: text("brand_font", { enum: ["inter", "roboto", "playfair", "merriweather"] }).notNull().default("inter"),
   defaultPaymentTerms: text("default_payment_terms").notNull().default(""),
+  paymentInstructions: text("payment_instructions").notNull().default(""),
   updatedAt: text("updated_at").notNull().default(sql`(CURRENT_TIMESTAMP)`),
 });
 

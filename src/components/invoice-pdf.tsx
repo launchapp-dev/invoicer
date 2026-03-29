@@ -475,9 +475,10 @@ interface InvoicePDFProps {
   template?: InvoiceTemplate;
   brandColor?: string;
   brandFont?: string;
+  paymentInstructions?: string;
 }
 
-function ClassicPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter" }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string }) {
+function ClassicPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter", paymentInstructions }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string; paymentInstructions?: string }) {
   const fontFamily = FONT_FAMILY_MAP[brandFont] ?? "Helvetica";
   const s = classicStyles;
   return (
@@ -593,12 +594,22 @@ function ClassicPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "int
             </View>
           </>
         ) : null}
+
+        {paymentInstructions ? (
+          <>
+            <View style={s.separator} />
+            <View style={s.notesSection}>
+              <Text style={s.sectionLabel}>Payment Instructions</Text>
+              <Text style={s.notesText}>{paymentInstructions}</Text>
+            </View>
+          </>
+        ) : null}
       </Page>
     </Document>
   );
 }
 
-function ModernPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter" }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string }) {
+function ModernPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter", paymentInstructions }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string; paymentInstructions?: string }) {
   const fontFamily = FONT_FAMILY_MAP[brandFont] ?? "Helvetica";
   const s = modernStyles;
   return (
@@ -714,13 +725,23 @@ function ModernPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inte
               </View>
             </>
           ) : null}
+
+          {paymentInstructions ? (
+            <>
+              <View style={s.separator} />
+              <View style={s.notesSection}>
+                <Text style={s.sectionLabel}>Payment Instructions</Text>
+                <Text style={s.notesText}>{paymentInstructions}</Text>
+              </View>
+            </>
+          ) : null}
         </View>
       </Page>
     </Document>
   );
 }
 
-function MinimalPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter" }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string }) {
+function MinimalPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "inter", paymentInstructions }: { invoice: Invoice; logoUrl?: string; brandColor?: string; brandFont?: string; paymentInstructions?: string }) {
   const fontFamily = FONT_FAMILY_MAP[brandFont] ?? "Helvetica";
   const s = minimalStyles;
   return (
@@ -836,13 +857,23 @@ function MinimalPDF({ invoice, logoUrl, brandColor = "#2563eb", brandFont = "int
             </View>
           </>
         ) : null}
+
+        {paymentInstructions ? (
+          <>
+            <View style={s.separator} />
+            <View style={s.notesSection}>
+              <Text style={s.sectionLabel}>Payment Instructions</Text>
+              <Text style={s.notesText}>{paymentInstructions}</Text>
+            </View>
+          </>
+        ) : null}
       </Page>
     </Document>
   );
 }
 
-export function InvoicePDF({ invoice, logoUrl, template = "classic", brandColor = "#2563eb", brandFont = "inter" }: InvoicePDFProps) {
-  if (template === "modern") return <ModernPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} />;
-  if (template === "minimal") return <MinimalPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} />;
-  return <ClassicPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} />;
+export function InvoicePDF({ invoice, logoUrl, template = "classic", brandColor = "#2563eb", brandFont = "inter", paymentInstructions }: InvoicePDFProps) {
+  if (template === "modern") return <ModernPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} paymentInstructions={paymentInstructions} />;
+  if (template === "minimal") return <MinimalPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} paymentInstructions={paymentInstructions} />;
+  return <ClassicPDF invoice={invoice} logoUrl={logoUrl} brandColor={brandColor} brandFont={brandFont} paymentInstructions={paymentInstructions} />;
 }

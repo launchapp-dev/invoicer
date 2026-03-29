@@ -67,6 +67,7 @@ export default function EditInvoicePage() {
   const [logoUrl, setLogoUrl] = useState<string>("");
   const [template, setTemplate] = useState<"classic" | "modern" | "minimal">("classic");
   const [brandColor, setBrandColor] = useState<string>("#2563eb");
+  const [paymentInstructions, setPaymentInstructions] = useState<string>("");
   const [attachmentCount, setAttachmentCount] = useState(0);
   const [invoicePayments, setInvoicePayments] = useState<Payment[]>([]);
   const [paymentFormOpen, setPaymentFormOpen] = useState(false);
@@ -112,6 +113,7 @@ export default function EditInvoicePage() {
       if (s?.logoUrl) setLogoUrl(s.logoUrl);
       if (s?.invoiceTemplate) setTemplate(s.invoiceTemplate as "classic" | "modern" | "minimal");
       if (s?.brandColor) setBrandColor(s.brandColor);
+      if (s?.paymentInstructions) setPaymentInstructions(s.paymentInstructions);
     }).catch(() => {});
     loadInvoice(params.id)
       .then((data) => {
@@ -328,7 +330,7 @@ export default function EditInvoicePage() {
             />
           </TabsContent>
           <TabsContent value="preview" className="mt-0 p-4">
-            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} />
+            <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} paymentInstructions={paymentInstructions} />
           </TabsContent>
         </Tabs>
       </div>
@@ -353,7 +355,7 @@ export default function EditInvoicePage() {
           />
         </div>
         <div className="w-1/2 overflow-y-auto bg-muted/30 p-8">
-          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} />
+          <InvoicePreview invoice={invoice} logoUrl={logoUrl} template={template} attachmentCount={attachmentCount} brandColor={brandColor} paymentInstructions={paymentInstructions} />
         </div>
       </div>
 

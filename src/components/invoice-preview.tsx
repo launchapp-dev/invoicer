@@ -45,9 +45,10 @@ interface InvoicePreviewProps {
   template?: InvoiceTemplate;
   attachmentCount?: number;
   brandColor?: string;
+  paymentInstructions?: string;
 }
 
-export function InvoicePreview({ invoice, hideDownload = false, logoUrl, template = "classic", attachmentCount = 0, brandColor = "#2563eb" }: InvoicePreviewProps) {
+export function InvoicePreview({ invoice, hideDownload = false, logoUrl, template = "classic", attachmentCount = 0, brandColor = "#2563eb", paymentInstructions }: InvoicePreviewProps) {
   const subtotal = calcSubtotal(invoice.lineItems);
   const taxAmount = invoice.taxAmount;
   const total = calcTotal(subtotal, taxAmount, invoice.discount);
@@ -58,7 +59,7 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl, templat
     try {
       const { pdf } = await import("@react-pdf/renderer");
       const { InvoicePDF } = await import("@/components/invoice-pdf");
-      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} brandColor={brandColor} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={invoice} logoUrl={logoUrl} template={template} brandColor={brandColor} paymentInstructions={paymentInstructions} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -255,6 +256,16 @@ export function InvoicePreview({ invoice, hideDownload = false, logoUrl, templat
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Notes</p>
               <p className="text-sm text-muted-foreground whitespace-pre-line">{invoice.notes}</p>
+            </div>
+          </>
+        )}
+
+        {paymentInstructions && (
+          <>
+            <Separator />
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Payment Instructions</p>
+              <p className="text-xs text-muted-foreground whitespace-pre-line">{paymentInstructions}</p>
             </div>
           </>
         )}

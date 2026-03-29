@@ -17,7 +17,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { saveMyBusinessProfile, saveMyInvoiceDefaults, saveMyLogoUrl, saveMyTheme, saveMyBrandSettings } from "@/lib/storage";
+import { saveMyBusinessProfile, saveMyInvoiceDefaults, saveMyLogoUrl, saveMyTheme, saveMyBrandSettings, saveMyPaymentInstructions } from "@/lib/storage";
 import type { userSettings } from "@/db/schema";
 
 type UserSettings = typeof userSettings.$inferSelect;
@@ -62,6 +62,8 @@ export function SettingsForm({ settings }: SettingsFormProps) {
     (settings?.brandFont as "inter" | "roboto" | "playfair" | "merriweather") ?? "inter"
   );
   const [savingBrand, setSavingBrand] = useState(false);
+  const [paymentInstructions, setPaymentInstructions] = useState<string>(settings?.paymentInstructions ?? "");
+  const [savingPayment, setSavingPayment] = useState(false);
 
   const businessForm = useForm<BusinessProfileValues>({
     resolver: zodResolver(businessProfileSchema),
@@ -174,6 +176,18 @@ export function SettingsForm({ settings }: SettingsFormProps) {
       toast.error("Failed to save brand settings");
     } finally {
       setSavingBrand(false);
+    }
+  }
+
+  async function handleSavePaymentInstructions() {
+    setSavingPayment(true);
+    try {
+      await saveMyPaymentInstructions(paymentInstructions);
+      toast.success("Payment instructions saved");
+    } catch {
+      toast.error("Failed to save payment instructions");
+    } finally {
+      setSavingPayment(false);
     }
   }
 
@@ -368,6 +382,29 @@ export function SettingsForm({ settings }: SettingsFormProps) {
             </div>
             <Button onClick={handleSaveBrandSettings} disabled={savingBrand}>
               {savingBrand ? "Saving…" : "Save Brand & Style"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Payment Instructions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="paymentInstructions">Payment Instructions</Label>
+              <Textarea
+                id="paymentInstructions"
+                rows={4}
+                placeholder={"Bank: Example Bank\nAccount: 1234567890\nRouting: 021000021\nOr: PayPal — billing@example.com"}
+                value={paymentInstructions}
+                onChange={(e) => setPaymentInstructions(e.target.value)}
+              />
+            </div>
+            <Button onClick={handleSavePaymentInstructions} disabled={savingPayment}>
+              {savingPayment ? "Saving…" : "Save Payment Instructions"}
             </Button>
           </div>
         </CardContent>

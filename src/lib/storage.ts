@@ -554,6 +554,11 @@ export async function saveMyBrandSettings(data: { brandColor?: string; brandFont
   await upsertUserSettings(userId, data);
 }
 
+export async function saveMyPaymentInstructions(paymentInstructions: string): Promise<void> {
+  const userId = await getCurrentUserId();
+  await upsertUserSettings(userId, { paymentInstructions });
+}
+
 export async function duplicateInvoice(id: string): Promise<Invoice | null> {
   const userId = await getCurrentUserId();
   const [row] = await db
