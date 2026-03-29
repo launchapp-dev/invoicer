@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 13) |
-| Result | PASS — all 6 steps pass; 2 new bugs: social proof section missing (TASK-316) and client search/sort/pagination missing (TASK-317); 3 known unmerged-branch failures remain |
+| Date | 2026-03-29 (run 14) |
+| Result | PASS — all 6 steps pass; no new bugs; 5 known unmerged-branch failures remain |
 | Steps Passed | 6/6 (smoke, auth, invoice creation, PDF, navigation, console+network) |
 | Steps Failed | 0 (step-level) |
 | Console Errors | 0 (clean across all pages) |
-| Network Errors | 0 (no 4xx/5xx) |
+| Network Errors | 0 (422 from signup-existing-account is expected behavior) |
 
 ## Test Results History
 
@@ -30,6 +30,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | 6 | 0 | 0 | PASS: Signup ✓. Dashboard ✓ (Cash Flow Forecast widget present). Invoice form ✓ (subtotal 1500 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All routes load (200). Logout ✓. AI "Create with AI" dialog ✓ opens correctly. 0 console errors. 0 network errors. 2 unresolved: AO badge (TASK-309) + onboarding banner (TASK-310). |
 | 2026-03-29 | 6 | 0 | 1 | PASS: Signup ✓ (qa-test12). Dashboard ✓. Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 1 new bug: transient React hydration mismatch console.error on post-signup render (caret-color style, TASK-672). 0 network errors. 2 unresolved: TASK-309 + TASK-310. |
 | 2026-03-29 | 6 | 0 | 2 | PASS: Login ✓ (qa-test13, existing account). Dashboard ✓. Invoice form ✓ (subtotal 1,500 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 0 console errors (clean). 0 network errors. 2 new bugs: social proof missing (TASK-316), client search/sort missing (TASK-317). 3 unresolved: TASK-309 + TASK-310 + TASK-672. |
+| 2026-03-29 | 6 | 0 | 0 | PASS: Login ✓ (qa-test14, existing account). Dashboard ✓. Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 0 console errors. 0 network errors. No new bugs. TASK-025, TASK-286, TASK-314 done but on unmerged branches. 5 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317. |
 
 ## Known Issues
 
