@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run ~21:00) |
+| Date | 2026-03-29 (run ~21:30) |
 | Open PRs | 0 |
-| Queue Depth | 0/8 |
+| Queue Depth | 1/8 |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 0 |
-| Product Review Enqueued | 1 (workflow ID: 036d68aa-1231-4dc4-85da-07bc3b871850) |
-| Ready Tasks | 0 (verified 6 E2E bugs are blocked/backlog/cancelled, NOT ready) |
-| Pipeline Status | IDLE (0 ready tasks, 0 queue entries; triggered PO fleet scan) |
+| New Work Enqueued | 1 (TASK-009) |
+| Product Review Enqueued | 0 |
+| Ready Tasks | 7 (TASK-009 has no deps, 6 E2E bugs blocked by 9 unmerged deps) |
+| Pipeline Status | ACTIVE (1 task dispatched to triage) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -50,14 +50,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 20:36 | - | - | no enqueue (blocker persists: all 6 ready E2E bugs blocked by 6 deps marked done with 0 merged PRs; TASK-009 already queued; PR#199 CONFLICTING but unrelated) |
 | 2026-03-29 (current) | - | - | no enqueue (PR#199 MERGED; TASK-009 duplicate in queue; 6 E2E bugs STILL blocked by same 6 unmerged deps; blocker unresolved 11+ runs) |
 | 2026-03-29 21:00 | (workflow) | product-review | Idle pipeline: 0 ready tasks, 0 queue entries; triggered PO fleet scan (workflow 036d68aa-1231-4dc4-85da-07bc3b871850) |
+| 2026-03-29 21:30 | TASK-009 | triage | Add multi-currency support (no dependencies; ready to dispatch) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-328 | TASK-325 (done, no merged PR) | 2026-03-29 20:30 |
-| TASK-327 | TASK-323 (done, no merged PR) | 2026-03-29 20:30 |
-| TASK-316 | TASK-313 (done, no merged PR) | 2026-03-29 20:30 |
-| TASK-317 | TASK-307 (done, no merged PR) | 2026-03-29 20:30 |
-| TASK-319 | TASK-298 (done, no merged PR), TASK-312 (done, no merged PR), TASK-288 (done, no merged PR) | 2026-03-29 20:30 |
-| TASK-318 | TASK-284 (done, no merged PR), TASK-305 (done, no merged PR) | 2026-03-29 20:30 |
+| TASK-328 | TASK-325 (done, no merged PR) | 2026-03-29 21:30 |
+| TASK-327 | TASK-323 (done, no merged PR) | 2026-03-29 21:30 |
+| TASK-316 | TASK-313 (done, no merged PR) | 2026-03-29 21:30 |
+| TASK-317 | TASK-307 (done, no merged PR) | 2026-03-29 21:30 |
+| TASK-319 | TASK-298 (done, no merged PR), TASK-312 (done, no merged PR), TASK-288 (done, no merged PR) | 2026-03-29 21:30 |
+| TASK-318 | TASK-284 (done, no merged PR), TASK-305 (done, no merged PR) | 2026-03-29 21:30 |
