@@ -26,15 +26,12 @@
     "github": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
-      }
+      "args": ["-y", "gh-cli-mcp"]
     },
     "playwright": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@playwright/mcp"]
+      "args": ["-y", "@playwright/record-mcp@latest", "--record", "--record-format", "webm", "--output-dir", ".ao/recordings"]
     },
     "rust-docs": {
       "type": "stdio",
