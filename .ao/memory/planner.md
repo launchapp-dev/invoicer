@@ -6,16 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (current run) |
-| Open PRs | 0 (PR #199 was MERGED; unblocked TASK-009) |
-| Queue Depth | 1/8 (TASK-009 assigned for rebase-and-retry workflow) |
+| Date | 2026-03-29 (run ~21:00) |
+| Open PRs | 0 |
+| Queue Depth | 0/8 |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Product Review Enqueued | 0 |
-| Skipped (deps) | 6 (E2E bugs TASK-328,327,316,317,319,318 blocked by deps TASK-325,323,313,307,284,305; all marked done, verified 0 merged PRs each) |
-| Skipped (queued) | 1 (TASK-009 already assigned in queue) |
-| Pipeline Status | BLOCKED (6 ready E2E bugs blocked by 6 unmerged deps; PR #199 merged but rebase workflow still running; blocker persists 11+ runs) |
+| Product Review Enqueued | 1 (workflow ID: 036d68aa-1231-4dc4-85da-07bc3b871850) |
+| Ready Tasks | 0 (verified 6 E2E bugs are blocked/backlog/cancelled, NOT ready) |
+| Pipeline Status | IDLE (0 ready tasks, 0 queue entries; triggered PO fleet scan) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -50,6 +49,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 20:30 | - | - | no enqueue (re-verified: 6 ready E2E bugs all blocked by same 6 unmerged deps—TASK-325,323,313,307,284,305; all marked done with 0 merged PRs each; UPSTREAM ISSUE: dependencies need PR link + merge before ready tasks can proceed) |
 | 2026-03-29 20:36 | - | - | no enqueue (blocker persists: all 6 ready E2E bugs blocked by 6 deps marked done with 0 merged PRs; TASK-009 already queued; PR#199 CONFLICTING but unrelated) |
 | 2026-03-29 (current) | - | - | no enqueue (PR#199 MERGED; TASK-009 duplicate in queue; 6 E2E bugs STILL blocked by same 6 unmerged deps; blocker unresolved 11+ runs) |
+| 2026-03-29 21:00 | (workflow) | product-review | Idle pipeline: 0 ready tasks, 0 queue entries; triggered PO fleet scan (workflow 036d68aa-1231-4dc4-85da-07bc3b871850) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
