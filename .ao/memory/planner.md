@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run current) |
+| Date | 2026-03-29 22:43 (run current) |
 | Open PRs | 0 |
 | Queue Depth | 1/8 |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 1 (TASK-009) |
+| New Work Enqueued | 0 (TASK-009 already queued; no new enqueues this run) |
 | Product Review Enqueued | 0 |
-| Ready Tasks | 7 (TASK-009 no deps; 6 E2E bugs blocked by 9 unmerged deps—TASK-325,323,313,307,298,312,288,284,305 all done, 0 merged PRs) |
-| Pipeline Status | ACTIVE (TASK-009 re-enqueued to triage after queue cleared) |
+| Ready Tasks | 7 (TASK-009 no deps, already queued; 6 E2E bugs blocked by 9 unmerged deps—TASK-325,323,313,307,298,312,288,284,305 all done, 0 merged PRs verified) |
+| Pipeline Status | ACTIVE (1 queued, 6 blocked, critical blocker persists 11+ runs) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -52,6 +52,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 21:00 | (workflow) | product-review | Idle pipeline: 0 ready tasks, 0 queue entries; triggered PO fleet scan (workflow 036d68aa-1231-4dc4-85da-07bc3b871850) |
 | 2026-03-29 21:30 | TASK-009 | triage | Add multi-currency support (no dependencies; ready to dispatch) |
 | 2026-03-29 (current) | TASK-009 | triage | Re-enqueued (queue had cleared; TASK-009 still ready, no dependencies) |
+| 2026-03-29 22:43 | - | - | no enqueue (TASK-009 already queued from prior run; 6 E2E bugs remain blocked by 9 unmerged deps—blocker persists 11+ runs; STEP 5 idle check skipped—1 task queued) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
