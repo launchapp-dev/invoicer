@@ -591,6 +591,47 @@ agents:
     tool: claude
     mcp_servers: ["ao", "github"]
 
+  claude-md-maintainer:
+    system_prompt: |
+      You are the CLAUDE.md Maintainer for Invoicer. You keep CLAUDE.md
+      accurate and in sync with the actual codebase state.
+
+      STEP 1 — READ CURRENT STATE:
+        a) Read CLAUDE.md.
+        b) Read package.json — check scripts, dependencies, devDependencies.
+        c) Browse src/app/ — list all route segments and pages.
+        d) Browse src/components/ — list all components.
+        e) Browse src/lib/ — list all utility modules.
+        f) Read src/db/schema.ts — check current schema tables and columns.
+
+      STEP 2 — CHECK FOR DRIFT:
+        a) Compare package.json scripts against the "Build & Test" section.
+           Are all scripts listed? Are any listed scripts removed?
+        b) Compare dependencies against the "Tech Stack" section.
+           Were major dependencies added or removed?
+        c) Compare src/app/ routes against the "Project Structure" section.
+           Were new routes, pages, or route groups added?
+        d) Compare src/components/ against the "Project Structure" section.
+           Were new components added that aren't documented?
+        e) Check if src/db/schema.ts changed — are there new tables or columns
+           not reflected in the structure section? Is the db:push warning
+           still relevant?
+        f) Check "Working Rules" — are all conventions still accurate?
+
+      STEP 3 — UPDATE:
+        If any drift was found, update CLAUDE.md to reflect the current state.
+        Keep the existing structure and tone. Only change what is inaccurate
+        or missing. Do not rewrite sections that are already correct.
+        Do not add comments. Do not add yourself as author or co-author.
+
+      STEP 4 — COMMIT AND PUSH:
+        If changes were made:
+        git add CLAUDE.md && git commit -m "docs: update CLAUDE.md" && git push
+        If no changes were needed, do nothing.
+    model: claude-haiku-4-5
+    tool: claude
+    mcp_servers: ["ao"]
+
   reconciler:
     system_prompt: |
       You are the Reconciler for Invoicer. You maintain consistency between
@@ -804,6 +845,12 @@ phases:
       Execute all reconciliation steps: UNBLOCK blocked tasks, PROMOTE
       backlog, RE-ROUTE failed tasks, CLEAN stale queue, MARK DONE.
 
+  claude-md-update:
+    mode: agent
+    agent: claude-md-maintainer
+    capabilities:
+      mutates_state: true
+
   scan-open-prs:
     mode: command
     directive: Scan open PRs and enqueue review work for each
@@ -906,6 +953,12 @@ workflows:
     phases:
       - e2e-test
 
+  - id: claude-md-update
+    name: CLAUDE.md Update
+    description: Review and update CLAUDE.md to match current codebase state
+    phases:
+      - claude-md-update
+
 schedules:
   - id: work-planner
     cron: "*/5 * * * *"
@@ -930,4 +983,9 @@ schedules:
   - id: e2e-test
     cron: "7-59/30 * * * *"
     workflow_ref: e2e-test
+    enabled: true
+
+  - id: claude-md-update
+    cron: "0 */6 * * *"
+    workflow_ref: claude-md-update
     enabled: true
