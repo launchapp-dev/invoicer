@@ -47,6 +47,16 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-memory"]
+    },
+    "agent-memories": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "--experimental-strip-types",
+        "/Users/samishukri/brain/repos/agent-memories/src/server.ts",
+        "--db",
+        "/Users/samishukri/brain/repos/agent-memories/data/agent-memories.db"
+      ]
     }
   }
 }
