@@ -1,7 +1,7 @@
 # Organization Architecture
 
-> Last updated: 2026-03-20 by knowledge-curator agent (through 2026-03-20T16:27:00Z).
-> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. This pass includes 2026-03-20 updates through 16:27:00Z with post-13:17Z activity: ao-cli PRs #117-#119 (DeepSeek routing, cargo test gate, agent-runner leak fix); saas-template-launch-app-test PRs #361-#367 (Docker hardening, package export-map); design-system PR #132 (component dependency sync). Earlier same-day updates: brain-reviewer and brain-pr-sweep agents for PR gating and continuous sweeping, ao-cli planner MCP crash fix + macOS codesign fix + bundled packs embedding, design-system Phase 4 completion + layout transitions + palettes page + landing/blog/error blocks + accessibility hardening, and launchapp-sveltekit Vitest test suite + pricing tiers & org schema migration.
+> Last updated: 2026-03-29 by knowledge-curator agent (through 2026-03-29T21:30Z).
+> Verified against authenticated GitHub CLI access, recent merged PRs, and default-branch commits across private and public repos. Key updates: `saas-template-launch-app-test` renamed to `launchapp-react-router`; launchapp-nextjs QA burst (124 tests, 13 passed, 111 failed) uncovered critical ZodError regression and dashboard 404s; design-system added AI Component Generator, CopilotPanel, Magic UI effects, and VS Code extension; ao-cli shipped v0.2.30-0.2.35 with SQLite-backed queries and unified work inbox; new AO ecosystem repos (`ao-dashboard`, `ao-fleet`, `ao-projects`, `ao-desktop`, `ao-starter`) and product repos (`invoicer`, `condohub`, `postpilot`, `launchapp-crm`) created and active.
 
 ## Overview
 
@@ -17,9 +17,9 @@ The `launchapp-dev` GitHub org builds and maintains:
 
 ## Primary Products
 
-### saas-template-launch-app-test (flagship SaaS template)
+### launchapp-react-router (flagship SaaS template)
 
-**Turborepo monorepo** — the org's primary launchapp-lite trunk/canary and the highest-volume AO-managed codebase.
+**Turborepo monorepo** — formerly `saas-template-launch-app-test`, renamed to `launchapp-react-router`. The org's primary launchapp-lite trunk/canary and the highest-volume AO-managed codebase.
 
 **Tech Stack:**
 - Runtime/Tooling: Node.js 20, pnpm, Turborepo
@@ -91,7 +91,8 @@ web  (ai, analytics, api, auth, config, database, email)
 - `/checkout/success`, `/checkout/cancel`
 - `/api/*` — Wildcard proxy to Hono API
 
-**Recent 2026-03-20 shifts (through 06:07Z):**
+**Recent 2026-03-20 through 2026-03-29 shifts:**
+- **Repo renamed** from `saas-template-launch-app-test` to `launchapp-react-router` (GitHub redirect in place).
 - @ai-sdk/mistral provider added to the AI SDK wrapper (new model support).
 - Docker CI install fix applied for better container-based testing.
 - @types/node/core tsconfig alignment corrected for type consistency.
@@ -104,6 +105,8 @@ web  (ai, analytics, api, auth, config, database, email)
 - Dashboard and API security improved: Better-Auth date field serialization fixes, API key typing corrections, and CORS allowHeaders expansion.
 - Cloudflare deployment documentation removed; deployment focus shifted to Railway and Vercel.
 - Two-factor setup, password reset, and logout flows all enhanced as part of the 2FA rollout.
+- TypeScript upgraded to 6.0, `@repo/flags`, `@repo/push`, and `@repo/appstores` packages added.
+- `@repo/api` synced with improvements from `launchapp-nextjs`.
 
 ---
 
@@ -147,6 +150,12 @@ This template represents the org's Svelte-first SaaS offering and differs from t
 
 SaaS template built with Next.js App Router.
 
+**Recent 2026-03-29 QA burst:**
+- **QA.md added** with Playwright test plan and 2026-03-29 results: **124 tests run, 13 passed, 111 failed**.
+- **CRITICAL regression**: Runtime `ZodError` on every page. Root cause: `packages/config/src/env.ts` validates server-only env vars via a Proxy that triggers on any property access, called from `"use client"` `providers.tsx`.
+- **Dashboard 404s**: `/dashboard/settings`, `/dashboard/api-keys`, and `/dashboard/notifications` return 404 due to missing pages/routing mismatches.
+- **CLAUDE.md maintainer agent** added with 6-hour schedule for continuous maintenance.
+
 **Recent 2026-03-24 quality audit:**
 - **Build**: **FAIL** — TypeScript type mismatch in `organizations.ts` blocks deployment
 - **15 PRs merged** in recent burst (#225-#208) introduced type regression
@@ -161,6 +170,24 @@ SaaS template built with Next.js App Router.
 
 SaaS template built with Nuxt 4.
 
+**Recent 2026-03-29 updates:**
+- **AI SDK 6.0** (TASK-717): Agents, tools, gateway, and MCP integration added
+- **Security** (TASK-299): Force node-forge >=1.4.0 — resolves 4 high-severity CVEs
+- **Vite unification** (TASK-307): Vite version unified across packages
+- **Outbound webhooks** (TASK-091): Webhook system implementation
+- **Health endpoints** (TASK-081): Comprehensive health check endpoints and status page
+- **Referral API** (TASK-710): Referral endpoints created
+- **Vercel deployment** (TASK-066): vercel.json configuration added
+- **FAQ page** (TASK-039): FAQ page with accordion and JSON-LD schema
+- **Billing** (TASK-382): Invoice history and PDF download
+- **Announcements** (TASK-080): In-app product announcement system
+- **Biome upgrade**: Upgraded from 2.4.8 to 2.4.9
+- **Package cleanup**: Removed unused @repo/ui-kit (React) packages
+- **Type fixes**: Grok2/grokBeta explicit type annotations (TASK-456)
+- **CI improvement**: Conditional --frozen-lockfile for PRs (TASK-446)
+
+**Critical bug (TASK-776):** `siteConfig.twitter` object causing 500 errors — requires immediate fix
+
 **Recent 2026-03-24 quality audit:**
 - **Lint**: **3 errors** — **57% reduction** from 7 errors (improvement trend)
 - **7 PRs merged** 2026-03-24
@@ -168,6 +195,8 @@ SaaS template built with Nuxt 4.
 **Recent 2026-03-20 updates:**
 - Cookie consent and GDPR compliance work integrated
 - Privacy-first approach for EU market
+
+**CLAUDE.md maintainer agent**: Added with 6-hour schedule for continuous maintenance
 
 ---
 
@@ -199,6 +228,19 @@ Standalone Radix UI-based React component library. MIT licensed, shadcn/ui regis
 - Phase 1–3 (complete): Foundation, core components, navigation, data display (buttons, inputs, dialogs, tables, combobox, calendar, etc.)
 - Phase 4 (active/near-complete): Advanced patterns, ecommerce blocks (Timeline, ProductCard, ShoppingCart, CheckoutForm, etc.)
 
+**Recent additions (2026-03-27 through 2026-03-29):**
+- **AI Component Generator** (TASK-443/TASK-458): Backend API with Storybook generation and full documentation.
+- **Smart Theming** (TASK-418): Claude vision API integration for intelligent theme generation.
+- **CopilotPanel** (TASK-483): Complete AI chat panel with input, chat history, and keyboard navigation.
+- **Magic UI effects** (TASK-476): MagicCard, HoverCard, AnimatedCard with advanced hover/gradient effects.
+- **Animated backgrounds** (TASK-475): GradientBackground, AnimatedGradient, ShimmerBackground components.
+- **Text animations** (TASK-474): AnimatedText and TextTransition with stagger animations.
+- **VS Code Extension** (TASK-461): Snippets, autocomplete, and token preview for design-system consumers.
+- **Plugin System** (TASK-424/TASK-465): Component extension plugin system with implementation docs.
+- **Community Themes** (TASK-450/TASK-464): Community themes gallery with 5+ featured themes.
+- **CLAUDE.md maintainer agent** added with 6-hour schedule.
+- **Quality gates** added to all workflows; CI switched from npm to pnpm.
+
 **Recent additions (2026-03-20, through 06:07Z):**
 - **Timeline block** (TASK-093): New data visualization block added to Phase 4 block library.
 - **Design system CLI scaffolding** (TASK-094): `create-design-system` CLI tool added for rapid component generation and project setup.
@@ -229,12 +271,21 @@ Rust-based AI agent orchestrator CLI. Powers the org's own AI workforce automati
 - Daemon with scheduled/on-demand workflows
 - MCP server integration
 
-**Current routing posture (2026-03-20):**
-- v0.0.11 released 2026-03-19, followed by post-release stability improvements on 2026-03-20.
-- Most low/medium/high tasks now route to Codex GPT-5.4 during the temporary doubled-rate-limit window through 2026-04-02.
-- Features stay on Claude Sonnet, bugfix/refactor work routes to Codex, UI work routes to Gemini, and analytical phases like PR review/reconciler/workflow-optimizer moved to Codex.
+**Current routing posture (2026-03-27 through 2026-03-29):**
+- Versions **v0.2.30 → v0.2.35** shipped in rapid succession (2026-03-26 to 2026-03-29).
+- Workflow execution now routes through a configurable `sparkcube` Claude profile and externalized built-in workflow packs.
+- Hardcoded model routing defaults removed; routing is fully config-driven.
 
-**Recent stability improvements (2026-03-20, through 04:27Z):**
+**Recent feature additions (2026-03-26 through 2026-03-29):**
+- **Unified work inbox and `now` surface** (REQ-040): New CLI commands and TUI for unified task inbox.
+- **Externalized built-in workflow packs**: AO core packs no longer embedded, enabling independent pack versioning and updates.
+- **SQLite-backed queries**: Workflow/task queries moved to SQLite for reduced RAM usage and better persistence.
+- **Tool result events pipeline**: Improved event streaming for agent tool results.
+- **Auto-marking removed**: Tasks are no longer automatically marked done on workflow completion (v0.2.35).
+- **Docker support** added with unified global config under `~/.ao`.
+- **Documentation refresh**: Quick-start guide, Elastic License 2.0 (ELv2) applied, branding matched to launchapp.dev.
+
+**Earlier stability improvements (2026-03-20, through 04:27Z):**
 - Fixed planner MCP crash that occurred during workflow state transitions (commit 04:11Z).
 - Fixed macOS codesign install process for Darwin binary distribution (commit 04:19Z).
 - Embedded bundled packs into AO binary for faster, offline pack access (commit 04:27Z).
@@ -267,6 +318,24 @@ Org-wide AI workforce command center. Runs on AO CLI. Operating at scale as of 2
 - **NEW (2026-03-20):** PR review gating layer (brain-reviewer) prevents premature task completion and ensures diff quality before merge. Continuous PR sweeper (brain-pr-sweep) handles conflicts, change requests, and stale PR reconciliation every 3 minutes.
 
 **Architecture diagrams:** 32 diagrams in `knowledge/architecture/`, last verified 2026-03-19
+
+---
+
+## New AO Ecosystem & Product Repos (2026-03-24 through 2026-03-29)
+
+A wave of new repositories was created to expand the AO platform and product surface:
+
+- **`ao-dashboard`** — Fleet control dashboard for AO daemons, schedules, and cross-project workflows (TypeScript).
+- **`ao-fleet`** — Rust-based fleet control plane for daemon orchestration and MCP management.
+- **`ao-projects`** — Standalone task and requirements management for AI-driven development pipelines (Rust).
+- **`ao-desktop`** — Tauri desktop wrapper for the AO CLI.
+- **`ao-starter`** — `create-ao` CLI to scaffold AO workflows for any project.
+- **`ao-docs`** — Documentation site for the AO Agent Orchestrator.
+- **`invoicer`** — AI-built invoice generator showcase (Next.js + `@launchapp/design-system`).
+- **`condohub`** — Modern condominium management platform (Next.js + `@launchapp/design-system`).
+- **`postpilot`** — AI-native social media automation platform.
+- **`launchapp-crm`** — Production CRM SaaS built with single-conductor workflow.
+- **`storyforge`** — AI media production pipeline for serialized content (comics, motion comics, animated episodes).
 
 ---
 
