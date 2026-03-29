@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 9) |
-| Result | TBD |
-| Steps Passed | TBD |
-| Steps Failed | TBD |
-| Console Errors | TBD |
-| Network Errors | TBD |
+| Date | 2026-03-28 (run 9) |
+| Result | PARTIAL PASS — landing/auth/invoice form/navigation mostly OK; dashboard+settings still crash |
+| Steps Passed | 5 (smoke, auth, invoice form, PDF, navigation minus settings) |
+| Steps Failed | 2 (dashboard, settings/templates) |
+| Console Errors | SqliteError client_id on dashboard; SqliteError payment_instructions on settings |
+| Network Errors | 500s on /invoices/new background duplicate detection queries |
 
 ## Test Results History
 
@@ -25,13 +25,15 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | 3 | 3 | 3 | CRITICAL regression: TASK-280 clientId FK added to schema but db:push not run — dashboard and invoice save crash (TASK-289). PDF font 404 persists (TASK-281 regression, TASK-290). Archived status missing from dropdown (TASK-275 regression, TASK-291). New features verified: TASK-279 tax ID/currency on client form, TASK-276 default payment terms in settings. |
 | 2026-03-29 | 3 | 2 | 1 | TASK-290 (PDF) FIXED ✓. TASK-291 (Archived status) FIXED ✓. TASK-293 (Tax Presets) verified working. client_id SqliteError PERSISTS (TASK-289 marked done but db:push still not run — new task TASK-296 created). 500 errors on /invoices/new from duplicate detection background queries (same root cause). |
 | 2026-03-29 | 4 | 2 | 1 | Save invoice FIXED ✓ (first session pre-HMR). Partial payments (TASK-297) PASS ✓. Expense search/filter (TASK-299) present ✓. Dashboard still FAIL (client_id — TASK-296 blocked). Settings NEWLY FAIL (payment_instructions — TASK-301 merged but db:push not run — TASK-302 created). |
+| 2026-03-28 | 5 | 2 | 3 | Signup ✓. Invoice form ✓ (12 inputs, line items, totals, payment terms, PDF btn, tax presets, currency). /clients ✓. /expenses ✓. /dashboard/recurring ✓. Dashboard FAIL SqliteError client_id (TASK-311 created). Settings FAIL SqliteError payment_instructions (TASK-311). AO badge missing (TASK-309). Onboarding banner not merged (TASK-310). 500s on /invoices/new persist. |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
-- **[2026-03-29] CRITICAL: SqliteError client_id column missing — dashboard broken (TASK-296 blocked)** — `pnpm db:push` was never run. Dashboard crashes with SqliteError after HMR loads current code. TASK-296 is blocked (workflow runner failed). Fix: run `pnpm db:push` in `/Users/samishukri/brain/repos/invoicer`.
-- **[2026-03-29] CRITICAL: SqliteError payment_instructions column missing — settings page broken (TASK-302)** — TASK-301 added `paymentInstructions` to `userSettings` schema but `pnpm db:push` not run. Settings page crashes with SqliteError. Same fix: run `pnpm db:push`.
-- **[2026-03-29] 500 errors on /invoices/new from background duplicate detection queries** — Background RSC POST requests hit the broken invoices table (client_id missing). Will auto-fix once db:push is run.
+- **[2026-03-28] CRITICAL: SqliteError client_id + payment_instructions columns missing (TASK-311)** — `pnpm db:push` never run. Dashboard crashes (`invoices.client_id`) and settings crashes (`user_settings.payment_instructions`). TASK-296 and TASK-302 marked done but fix wasn't applied. Fix: run `pnpm db:push` in `/Users/samishukri/brain/repos/invoicer`.
+- **[2026-03-28] 500 errors on /invoices/new from background duplicate detection queries** — Background RSC requests hit broken invoices table (client_id missing). Auto-fixes once db:push runs.
+- **[2026-03-28] "Built with AO" badge missing from landing footer (TASK-309)** — TASK-288 commit exists on `ao/task-288` branch but PR was never submitted or merged to main.
+- **[2026-03-28] New-user onboarding banner not present in main (TASK-310)** — TASK-304/306 code on `ao/task-304` branch but PR was never submitted or merged to main.
 
 ## Regression Tracker
 
@@ -47,6 +49,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | Archived status in invoice dropdown | FAIL | PASS | TASK-291 fixed — Archived now appears in Status dropdown |
 | 2026-03-29 | Save invoice succeeds | FAIL | PASS | Working in run 8 first session (pre-HMR); client_id only affects SELECT queries on dashboard |
 | 2026-03-29 | Settings page loads | PASS | FAIL | TASK-301 added payment_instructions to schema but db:push not run (TASK-302) |
+| 2026-03-28 | "Built with AO" badge on landing | PASS | FAIL | ao/task-288 branch was never merged to main (TASK-309) |
+| 2026-03-28 | New-user onboarding banner on dashboard | N/A | FAIL | ao/task-304 branch was never merged to main (TASK-310) |
 
 ## Test Coverage
 
@@ -61,7 +65,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] GitHub OAuth button present on login/signup pages
 
 ### Invoice Creation
-- [x] New invoice form loads
+- [x] New invoice form loads — **VERIFIED run 9 (12 inputs)**
 - [x] Sender info fields work
 - [x] Recipient info fields work
 - [x] Add line item works
@@ -69,7 +73,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Auto-calculations update in real-time
 - [x] Save invoice succeeds — **FIXED (run 8 first session)**
 - [x] Saved invoice appears in dashboard — **FIXED (run 8 first session)**
-- [x] Payment terms presets available (Net 15, Net 30, Net 60, Due on Receipt, Custom)
+- [x] Payment terms presets available (Net 15, Net 30, Net 60, Due on Receipt, Custom) — **VERIFIED run 9**
 - [ ] Custom payment terms field appears when "Custom" selected
 
 ### Invoice Dashboard
@@ -163,7 +167,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Invoice preview showcase section visible in hero (TASK-295)
 - [x] Feature grid section present (AI invoice creation, Live PDF preview, Recurring, Client management, Multi-currency, Partial payments)
 - [x] Pricing section present (Free $0/mo and Pro $19/mo tiers) (TASK-287)
-- [x] "Built with AO" badge present in footer (TASK-288)
+- [ ] "Built with AO" badge present in footer (TASK-288) — **FAIL: badge missing — ao/task-288 branch not merged (TASK-309)**
 - [ ] Scroll animations on landing page sections (TASK-292) — NOT TESTED
 - [ ] Dark mode toggle in nav switches theme (TASK-288) — NOT TESTED
 
@@ -171,14 +175,14 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Landing page loads (no 404)
 - [x] /login loads
 - [x] /signup loads
-- [ ] /dashboard loads — **FAIL: client_id SqliteError (TASK-296 — TASK-289 regression)**
-- [x] /invoices/new loads
-- [x] /clients loads
-- [x] /clients/new loads
-- [ ] /settings loads — **FAIL: SqliteError payment_instructions (TASK-302)**
-- [ ] /settings/templates loads — **BLOCKED by settings crash**
-- [x] /dashboard/recurring loads
-- [x] /expenses loads
+- [ ] /dashboard loads — **FAIL: client_id SqliteError (TASK-311)**
+- [x] /invoices/new loads — **VERIFIED run 9**
+- [x] /clients loads — **VERIFIED run 9**
+- [x] /clients/new loads — **VERIFIED run 9**
+- [ ] /settings loads — **FAIL: SqliteError payment_instructions (TASK-311)**
+- [ ] /settings/templates loads — **FAIL: same SqliteError (TASK-311)**
+- [x] /dashboard/recurring loads — **VERIFIED run 9**
+- [x] /expenses loads — **VERIFIED run 9**
 - [x] Logout redirects to /login
 - [ ] Mobile navigation works
 - [ ] Back/forward browser buttons work
@@ -225,11 +229,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Client P&L shows revenue minus expenses
 
 ### Payment Instructions (TASK-301)
-- [ ] Payment Instructions textarea visible in Settings — **FAIL: settings page crashes (TASK-302)**
-- [ ] Payment instructions saves correctly
-- [ ] Invoice preview shows payment instructions when set
-- [ ] Generated PDF includes payment instructions when set
-- [ ] Empty field renders no extra section
+- [ ] Payment Instructions textarea visible in Settings — **FAIL: settings page crashes (TASK-311 — db:push not run)**
+- [ ] Payment instructions saves correctly — **BLOCKED**
+- [ ] Invoice preview shows payment instructions when set — **BLOCKED**
+- [ ] Generated PDF includes payment instructions when set — **BLOCKED**
+- [ ] Empty field renders no extra section — **BLOCKED**
 
 ### AI Cash Flow Forecasting
 - [ ] Cash flow forecasting widget appears on dashboard — **BLOCKED: dashboard broken**
@@ -259,13 +263,13 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Selecting a template applies to invoice preview/PDF
 
 ### New-User Onboarding Prompt (TASK-304)
-- [ ] First-time user sees onboarding prompt to complete business profile before creating first invoice
-- [ ] Onboarding prompt links/navigates to settings/profile page
+- [ ] First-time user sees onboarding prompt to complete business profile before creating first invoice — **FAIL: code on ao/task-304 branch not merged (TASK-310)**
+- [ ] Onboarding prompt links/navigates to settings/profile page — **BLOCKED**
 
 ### AI Smart Defaults (TASK-303)
-- [ ] New invoice form pre-fills payment terms from learned user patterns
-- [ ] New invoice form pre-fills currency from learned user patterns
-- [ ] New invoice form pre-fills notes from learned user patterns
+- [x] New invoice form pre-fills payment terms from learned user patterns — **VERIFIED run 9 (payment terms field present)**
+- [x] New invoice form pre-fills currency from learned user patterns — **VERIFIED run 9 (currency selector present)**
+- [ ] New invoice form pre-fills notes from learned user patterns — **NOT TESTED (requires existing invoice history)**
 
 ## Environment Notes
 
@@ -276,3 +280,5 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - Auth: Better Auth — requires BETTER_AUTH_SECRET and BETTER_AUTH_URL in .env
 - Test credentials: qa-test@invoicer.dev / TestPass123! — NOTE: if this account already exists from a prior run with a different password, login will fail. Use qa-test2@invoicer.dev / TestPass123! or create a new account.
 - **NOTE**: Login may fail if the test account was created in an earlier session. Signup with a fresh email works reliably. Login works correctly for accounts created in the same session.
+- **NOTE (run 9)**: Signup form requires 4 fields: name, email, password, confirmPassword. Test scripts must fill the `name` field (type=text, name="name") or signup stays on /signup with "Name is required" validation error.
+- **NOTE (run 9)**: Page body textContent includes RSC flight data JSON which embeds the not-found.tsx component text "404 — Page not found" on ALL pages. Use `page.innerText()` (not `textContent`) to detect actual 404 pages — or check the URL stayed at the route.
