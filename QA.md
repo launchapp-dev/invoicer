@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-28 (run 6) |
-| Result | 2 PASS / 3 FAIL (steps) |
-| Steps Passed | 1 (smoke), partial step 5 (7/10 routes OK), logout OK |
-| Steps Failed | 3 (invoice save), 4 (PDF), dashboard crash |
-| Console Errors | 3 (client_id SqliteError on dashboard/invoice save) + 1 (font 404 on PDF) |
-| Network Errors | 1 (font .woff 404 on PDF generate) |
+| Date | 2026-03-29 (run 7) |
+| Result | 3 PASS / 2 FAIL (steps) |
+| Steps Passed | 1 (smoke), 4 (PDF — FIXED), 5 (navigation/logout/login all OK) |
+| Steps Failed | 3 (save invoice — client_id regression persists), dashboard crash |
+| Console Errors | 3 (client_id SqliteError on dashboard/invoice save) + multiple 500s on /invoices/new |
+| Network Errors | 0 (PDF font 404 FIXED) |
 
 ## Test Results History
 
@@ -23,13 +23,13 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | 4 | 2 | 1 | TASK-239 (/clients 404) FIXED; TASK-240 (auth) FIXED; new CRITICAL: missing @radix-ui/react-popover + cmdk packages crash entire app (TASK-249) |
 | 2026-03-28 | 6 | 1 | 1 | TASK-249 FIXED (app no longer crashes); PDF generation fails — Inter font 404 from Google CDN; .env BETTER_AUTH_URL was :3000 not :3002 (fixed in env); all new features (expenses, templates, brand style, CSV export, share link) present |
 | 2026-03-28 | 3 | 3 | 3 | CRITICAL regression: TASK-280 clientId FK added to schema but db:push not run — dashboard and invoice save crash (TASK-289). PDF font 404 persists (TASK-281 regression, TASK-290). Archived status missing from dropdown (TASK-275 regression, TASK-291). New features verified: TASK-279 tax ID/currency on client form, TASK-276 default payment terms in settings. |
+| 2026-03-29 | 3 | 2 | 1 | TASK-290 (PDF) FIXED ✓. TASK-291 (Archived status) FIXED ✓. TASK-293 (Tax Presets) verified working. client_id SqliteError PERSISTS (TASK-289 marked done but db:push still not run — new task TASK-296 created). 500 errors on /invoices/new from duplicate detection background queries (same root cause). |
 
 ## Known Issues
 
 <!-- QA agent: track active bugs found during E2E testing. Remove when fixed. -->
-- **[2026-03-28] CRITICAL: SqliteError client_id column missing — dashboard + invoice save broken (TASK-289)** — TASK-280 added `client_id` FK to Drizzle schema but `pnpm db:push` was not run. Every route querying invoices crashes. Fix: run `pnpm db:push`.
-- **[2026-03-28] PDF generation fails — Inter font .woff 404 (TASK-290, regression from TASK-281)** — Clicking "Download PDF" shows "Failed to generate PDF" toast. `Failed to load resource: 404 @ https://fonts.gstatic.com/s/inter/v13/...woff`. TASK-281 was marked done but did not fix it. Fix: bundle Inter font locally as .ttf via Font.register().
-- **[2026-03-28] Archived status missing from invoice Status dropdown (TASK-291, regression from TASK-275)** — Status dropdown shows Draft/Sent/Paid/Overdue/Cancelled but no "Archived". TASK-275 marked done but frontend dropdown was not updated.
+- **[2026-03-29] CRITICAL: SqliteError client_id column missing — dashboard + invoice save broken (TASK-296)** — TASK-289 was marked done but `pnpm db:push` was never run. Every route querying invoices crashes. Dashboard shows "Something went wrong", Save Invoice shows toast "table invoices has no column named client_id". Fix: run `pnpm db:push` in `/Users/samishukri/brain/repos/invoicer`.
+- **[2026-03-29] 500 errors on /invoices/new from background duplicate detection queries** — When form data changes, duplicate detection fires background RSC POST requests that hit the broken invoices table and return 500. Same root cause as TASK-296 (client_id missing). Will auto-fix once db:push is run.
 
 ## Regression Tracker
 
@@ -41,6 +41,8 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | Dashboard loads | PASS | FAIL | TASK-280 added client_id FK but pnpm db:push not run — SqliteError (TASK-289) |
 | 2026-03-28 | Save invoice succeeds | PASS | FAIL | Same root cause — client_id column missing from DB (TASK-289) |
 | 2026-03-28 | PDF downloads without errors | PASS | FAIL | TASK-281 marked done but Inter font .woff 404 persists (TASK-290) |
+| 2026-03-29 | PDF downloads without errors | FAIL | PASS | TASK-290 fixed — PDF now downloads successfully with no font 404 |
+| 2026-03-29 | Archived status in invoice dropdown | FAIL | PASS | TASK-291 fixed — Archived now appears in Status dropdown |
 
 ## Test Coverage
 
@@ -61,7 +63,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Add line item works
 - [ ] Remove line item works
 - [x] Auto-calculations update in real-time
-- [ ] Save invoice succeeds — **FAIL: SqliteError client_id column missing (TASK-289)**
+- [ ] Save invoice succeeds — **FAIL: SqliteError client_id column missing (TASK-296)**
 - [ ] Saved invoice appears in dashboard — **BLOCKED by save failure**
 - [x] Payment terms presets available (Net 15, Net 30, Net 60, Due on Receipt, Custom)
 - [ ] Custom payment terms field appears when "Custom" selected
@@ -69,7 +71,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 ### Invoice Dashboard
 - [ ] Dashboard loads with invoice list — **FAIL: SqliteError client_id column missing (TASK-289)**
 - [ ] Search works — **BLOCKED**
-- [ ] Status filter works — **BLOCKED**
+- [ ] Status filter works (including "viewed" and "archived" statuses — TASK-294 fix) — **BLOCKED**
 - [ ] Date range filter works — **BLOCKED**
 - [ ] Sort controls work (date, amount, status, client) — **BLOCKED**
 - [ ] Edit invoice navigates correctly — **BLOCKED**
@@ -84,7 +86,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 ### PDF Generation
 - [x] Generate PDF button exists
-- [ ] PDF downloads without errors — **FAIL: Inter font .woff 404 persists (TASK-290)**
+- [x] PDF downloads without errors — **FIXED (TASK-290)**
 - [ ] PDF contains correct invoice data
 
 ### Live Preview
@@ -93,7 +95,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Preview shows line items and totals
 
 ### Invoice Lifecycle & Status
-- [ ] Archived status option available in invoice Status dropdown — **FAIL: missing from dropdown (TASK-291)**
+- [x] Archived status option available in invoice Status dropdown — **FIXED (TASK-291)**
 - [ ] Invoice can be archived from dashboard actions menu — **BLOCKED: dashboard broken**
 - [ ] Archived invoices shown with "Archived" badge — **BLOCKED**
 - [ ] Auto-overdue: sent/viewed invoices past due date flagged overdue (TASK-277) — **BLOCKED: dashboard broken**
@@ -147,11 +149,20 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Command bar or natural language input exists on dashboard — **BLOCKED: dashboard broken**
 - [ ] AI dialog opens without errors and accepts natural language input — **BLOCKED**
 
+### Landing Page
+- [x] Landing page loads (no 404, no console errors)
+- [x] Invoice preview showcase section visible in hero (TASK-295)
+- [x] Feature grid section present (AI invoice creation, Live PDF preview, Recurring, Client management, Multi-currency, Partial payments)
+- [x] Pricing section present (Free $0/mo and Pro $19/mo tiers) (TASK-287)
+- [x] "Built with AO" badge present in footer (TASK-288)
+- [ ] Scroll animations on landing page sections (TASK-292) — NOT TESTED
+- [ ] Dark mode toggle in nav switches theme (TASK-288) — NOT TESTED
+
 ### Navigation
 - [x] Landing page loads (no 404)
 - [x] /login loads
 - [x] /signup loads
-- [ ] /dashboard loads — **FAIL: client_id SqliteError (TASK-289)**
+- [ ] /dashboard loads — **FAIL: client_id SqliteError (TASK-296 — TASK-289 regression)**
 - [x] /invoices/new loads
 - [x] /clients loads
 - [x] /clients/new loads
@@ -167,9 +178,9 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] Clients nav link present in authenticated layout
 
 ### Console & Network
-- [ ] No console.error messages — **FAIL: client_id SqliteError (x3) + font 404 (x1)**
+- [ ] No console.error messages — **FAIL: client_id SqliteError (x3) on dashboard/save + 500s on /invoices/new**
 - [ ] No uncaught exceptions — **FAIL: dashboard and invoice save throw**
-- [ ] No failed network requests (4xx/5xx) — **FAIL: font .woff 404 on PDF**
+- [ ] No failed network requests (4xx/5xx) — **FAIL: 500s on /invoices/new from duplicate detection queries**
 - [x] No CORS errors
 
 ### Multi-Currency
@@ -177,8 +188,11 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [ ] Other currencies render correctly in preview and PDF
 
 ### Multi-Tax Rate
-- [ ] Multiple tax rates can be added per invoice
-- [ ] Each rate is labeled and calculated independently
+- [x] Multiple tax rates can be added per invoice
+- [x] Each rate is labeled and calculated independently
+- [x] Tax Presets button available on invoice form (TASK-293)
+- [x] Tax presets cover AU, CA, EU VAT, UK, US all 50 states (TASK-293)
+- [x] Selecting a preset adds a correctly calculated tax line
 
 ### File Attachments
 - [x] File attachment button/area exists on invoice form (drag-and-drop + Add files button)
@@ -208,6 +222,16 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 ### Natural Language AI Search
 - [ ] Natural language search input present on dashboard — **BLOCKED: dashboard broken**
 - [ ] Searching "unpaid invoices" returns filtered results
+
+### Invoice Activity Log
+- [ ] Activity log section visible on invoice detail/edit page — **NOT TESTED (TASK-284)**
+- [ ] Status change events appear in activity log — **NOT TESTED**
+- [ ] Payment events appear in activity log — **NOT TESTED**
+- [ ] Edit events appear in activity log — **NOT TESTED**
+
+### AI Tax Rate Auto-Suggest
+- [ ] AI tax rate suggestion appears based on client jurisdiction (TASK-285) — **NOT TESTED (dashboard broken)**
+- [ ] Suggestion auto-fills correct tax rate for client's location — **BLOCKED**
 
 ### Invoice Templates
 - [x] /settings/templates page loads
