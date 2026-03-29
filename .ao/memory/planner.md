@@ -8,20 +8,21 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 |-------|-------|
 | Date | 2026-03-31 (current) |
 | Open PRs | 0 |
-| Queue Depth | 3/8 |
+| Queue Depth | 3/8 (post-enqueue) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 2 (TASK-327, TASK-328; TASK-009 already assigned from prior run—duplicate skip) |
+| New Work Enqueued | 3 (TASK-009, TASK-327, TASK-328; all ready, no dependencies, no duplicate in queue) |
 | Product Review Enqueued | 0 |
-| Ready Tasks | 7 (TASK-009, TASK-327, TASK-328 in queue; 4 blocked by unmerged deps: TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-319→TASK-298/312/288) |
+| Ready Tasks | 7 (3 unblocked in queue; 4 blocked by unmerged deps: TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-319→TASK-298/312/288) |
 | Pipeline Status | ACTIVE (3/8 queued; 4 more ready but blocked by unmerged dependencies) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
-| 2026-03-31 (current) | TASK-327 | triage | E2E bug: NL search for expenses (dependencies: []) |
-| 2026-03-31 (current) | TASK-328 | triage | E2E bug: US state sales tax presets (dependencies: []) |
+| 2026-03-31 (current) | TASK-009 | triage | Add multi-currency support (no dependencies; queue empty post-process) |
+| 2026-03-31 (current) | TASK-327 | triage | E2E bug: NL search for expenses (no dependencies; queue empty post-process) |
+| 2026-03-31 (current) | TASK-328 | triage | E2E bug: US state sales tax presets (no dependencies; queue empty post-process) |
 | 2026-03-29 05:01 | TASK-321 | triage | Expand currency list to 25+ major global currencies (no dependencies) |
 | 2026-03-29 05:01 | TASK-320 | triage | Add tax presets by jurisdiction to invoice form (no dependencies) |
 | 2026-03-29 11:05 | - | - | no enqueue (2 ready tasks still blocked by unmerged deps) |
