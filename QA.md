@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 20) |
-| Result | FAIL — TASK-329 regression: better-sqlite3 NODE_MODULE_VERSION mismatch back. Server running under Node v25.2.1 but binary compiled for Node v22 (ABI 127 vs 141). All auth/DB routes return 500. Landing page: timeout (disk 100% full, only 119MB free). Steps 2–6 blocked. |
-| Steps Passed | 0/6 |
-| Steps Failed | 6/6 |
-| Console Errors | N/A (server 500 before JS loads) |
-| Network Errors | CRITICAL — 500 on /login, /signup, /dashboard; timeout on / |
+| Date | 2026-03-29 (run 21) |
+| Result | PASS — Server restarted under Node v22.17.0. TASK-329 not present. Disk 30% (28GB free). Signup ✓ (qa-test21). Dashboard ✓ ($1,500.00 outstanding). Invoice form ✓ (subtotal $1,500.00). Invoice save ✓ (redirects to /invoices/:id). Preview ✓. All 8 routes 200. Login ✓ (slow ~7s but works). Logout ✓. 0 console errors. 0 network errors. |
+| Steps Passed | 6/6 |
+| Steps Failed | 0/6 |
+| Console Errors | 0 (only 401 from expected login attempt with non-existent account) |
+| Network Errors | 0 |
 
 ## Test Results History
 
@@ -37,6 +37,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | 0 | 2 | 1 | CRITICAL FAIL: Landing page 200 in initial session only. TASK-326 auth loop confirmed still present (login stays on /login). Dev server crashed mid-session. On restart under Node v25.2.1 — ALL pages return 500: better-sqlite3 native binary compiled for NODE_MODULE_VERSION 127 (Node v22) incompatible with MODULE_VERSION 141 (Node v25). TASK-329 created. 8 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324 + TASK-326 + TASK-329. |
 | 2026-03-29 | 6 | 0 | 0 | PASS: Dev server restarted under Node v22.17.0 — both TASK-329 (better-sqlite3 MODULE_VERSION mismatch) and TASK-326 (auth loop) resolved. Login ✓ (qa-test19, existing account). Dashboard ✓ ($1,500 outstanding). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (INV-001 appears in dashboard). PDF preview ✓ (no errors). All 7 routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
 | 2026-03-29 | 0 | 6 | 0 | CRITICAL FAIL: TASK-329 REGRESSION — server restarted under Node v25.2.1 (ABI 141), better-sqlite3 binary compiled for Node v22 (ABI 127). All auth/DB routes return 500. Landing page timeout (disk 100% full, 119MB free). Steps 1–6 blocked. No new tasks created (TASK-329 already in backlog). Escalated TASK-329 to ready. |
+| 2026-03-29 | 6 | 0 | 0 | PASS: Server under Node v22.17.0 — TASK-329 resolved, disk 30% (28GB free). Signup ✓ (qa-test21). Dashboard ✓ ($1,500.00 outstanding). Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). Preview ✓ (INV-001, correct line items). All 8 routes 200. Login ✓ (works after ~7s — slow sign-in response). Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
 
 ## Known Issues
 
@@ -47,7 +48,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - **[2026-03-29] Social proof stats section missing from landing page (TASK-316)** — TASK-313 marked done but no code committed or merged. No ao/task-313 branch exists. Landing page has no "trusted by X" or stats counter section.
 - **[2026-03-29] Client search/sort/pagination missing from /clients page (TASK-317)** — TASK-307 marked done but no code committed or merged. /clients page shows no search input, sort controls, or pagination.
 - **[2026-03-29] @repo/push module-not-found causes console errors on startup (TASK-324)** — Turbopack emits repeated errors: `./src/app/dashboard/settings/notifications/page.tsx Module not found: @repo/push`. File doesn't exist in source tree — likely stale .next cache. /dashboard/settings/notifications returns 404. Fix: `rm -rf .next && pnpm dev`. NOTE: Run 19 showed 0 console errors — may be resolved after server restart.
-- **[2026-03-29] CRITICAL: better-sqlite3 NODE_MODULE_VERSION mismatch — TASK-329 REGRESSION** — RESOLVED run 19 but REGRESSED run 20. Dev server was restarted under Node v25.2.1 instead of v22.17.0. Binary compiled for ABI 127 (Node v22), server needs ABI 141 (Node v25). Fix: `nvm use 22 && pnpm rebuild better-sqlite3 && pnpm dev`. Long-term: add `.nvmrc` pinning Node v22.
+- ~~**[2026-03-29] CRITICAL: better-sqlite3 NODE_MODULE_VERSION mismatch — TASK-329** — RESOLVED run 21 (Node v22.17.0, disk space freed). Recurring issue: always start with `nvm use 22 && pnpm dev`. Long-term fix needed: add `.nvmrc` pinning Node v22.~~
 - ~~**[2026-03-29] CRITICAL: Post-login redirect loop — TASK-326** — RESOLVED run 19: auth works correctly after server restart under Node v22. Root cause was better-sqlite3 crash (TASK-329) preventing session table reads.~~
 
 ## Regression Tracker
@@ -75,6 +76,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | Login with existing credentials | FAIL (run 18) | PASS (run 19) | Dev server restarted under Node v22 — better-sqlite3 crash fixed, auth.api.getSession works, no redirect loop |
 | 2026-03-29 | Landing page loads | FAIL (run 18) | PASS (run 19) | Same fix — Node v22 restart resolved better-sqlite3 mismatch (TASK-329) |
 | 2026-03-29 | All pages load | PASS (run 19) | FAIL (run 20) | TASK-329 REGRESSION — server restarted under Node v25.2.1, better-sqlite3 ABI mismatch. All DB-using routes 500. Landing page timeout (disk full). |
+| 2026-03-29 | All pages load | FAIL (run 20) | PASS (run 21) | TASK-329 resolved again — server started under Node v22.17.0, disk space freed (28GB). All routes return 200. |
 
 ## Test Coverage
 
@@ -313,4 +315,5 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - **CRITICAL NOTE (run 18/19)**: better-sqlite3 native binary must match the Node.js version. The binary was compiled under Node v22 (MODULE_VERSION 127). If the shell switches to Node v25+ (MODULE_VERSION 141), the app crashes with 500 on all pages. Fix: `nvm use 22 && pnpm rebuild better-sqlite3`. Pin Node version with `.nvmrc` to prevent recurrence. (TASK-329 — resolved run 19 by restart under Node v22)
 - **NOTE (run 19)**: App URL confirmed at http://localhost:3002. App must be started with `pnpm dev` under Node v22. Current node: v22.17.0.
 - **CRITICAL NOTE (run 20)**: System disk is 100% full (926GB volume, 119MB free). This causes browser crashes, request timeouts, and server instability. Free disk space before running E2E tests. The landing page timeout in run 20 was caused by this. The many screenshot files in the repo root (step*.png, run*.png) should be cleaned up.
-- **CRITICAL NOTE (run 20)**: TASK-329 REGRESSED. Dev server was restarted under Node v25.2.1 instead of v22.17.0. Always start with `nvm use 22 && pnpm dev`. If pages return 500 with MODULE_VERSION mismatch: `nvm use 22 && pnpm rebuild better-sqlite3 && pnpm dev`.
+- **CRITICAL NOTE (run 20/21)**: TASK-329 recurs whenever server is started under Node v25+. Always start with `nvm use 22 && pnpm dev`. If pages return 500 with MODULE_VERSION mismatch: `nvm use 22 && pnpm rebuild better-sqlite3 && pnpm dev`. Run 21: confirmed fixed again under Node v22.17.0.
+- **NOTE (run 21)**: Login is slow (~7s server-side sign-in response). Works correctly — just needs patience after clicking Sign In.
