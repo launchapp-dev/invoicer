@@ -6,16 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 13:02 |
+| Date | 2026-03-29 13:15 |
 | Open PRs | 0 |
-| Queue Depth | 0/8 (queue empty) |
+| Queue Depth | 0/8 (invoicer queue empty) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Product Review Enqueued | 0 (idle check condition false: 6 ready tasks exist; no trigger) |
-| Skipped (deps) | 6 (all E2E bugs blocked by 9 unmerged dependencies) |
+| Product Review Enqueued | 0 (idle condition NOT met: 6 ready tasks exist; product-review already in brain queue from prior run) |
+| Skipped (deps) | 6 (all E2E bugs blocked by 9 unmerged dependencies verified 2026-03-29 13:15) |
 | Skipped (queued) | 0 |
-| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 9 deps marked done with 0 merged PRs; blocker CRITICAL — unresolved for 5+ prior runs) |
+| Pipeline Status | BLOCKED (6 ready E2E bug tasks all blocked by 9 deps marked done with 0 merged PRs; blocker CRITICAL — unresolved for 6+ runs; re-verified 2026-03-29 13:15: all 9 deps have status=done, merged_prs=0) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -44,6 +44,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 17:45 | - | - | no enqueue (6 ready tasks ALL blocked: verified all 9 blocking deps marked done with 0 merged PRs each; CRITICAL blocker unresolved) |
 | 2026-03-29 18:00 | - | - | no enqueue (same 6 ready tasks still blocked by same 9 unmerged deps; TASK-329 critical blocker is cancelled; no change) |
 | 2026-03-29 13:02 | - | - | no enqueue (all 6 ready E2E bugs blocked by same 9 deps: TASK-325,323,313,307,298,312,288,284,305 all marked done with 0 merged PRs each; idle condition false; blocker unresolved) |
+| 2026-03-29 13:15 | - | - | no enqueue (re-verified: all 6 ready E2E bugs blocked by 9 deps marked done with 0 merged PRs each; blocker persists) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
