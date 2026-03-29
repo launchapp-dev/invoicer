@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 22:43 (run current) |
+| Date | 2026-03-29 23:00 (run current) |
 | Open PRs | 0 |
-| Queue Depth | 1/8 |
+| Queue Depth | 3/8 |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 0 (TASK-009 already queued; no new enqueues this run) |
+| New Work Enqueued | 3 (TASK-009, TASK-328, TASK-327) |
 | Product Review Enqueued | 0 |
-| Ready Tasks | 7 (TASK-009 no deps, already queued; 6 E2E bugs blocked by 9 unmerged deps—TASK-325,323,313,307,298,312,288,284,305 all done, 0 merged PRs verified) |
-| Pipeline Status | ACTIVE (1 queued, 6 blocked, critical blocker persists 11+ runs) |
+| Ready Tasks | 7 (all have empty dependencies; 4 remaining: TASK-316, TASK-317, TASK-319, TASK-318) |
+| Pipeline Status | ACTIVE (3 queued, capacity 5 available) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -53,14 +53,12 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 21:30 | TASK-009 | triage | Add multi-currency support (no dependencies; ready to dispatch) |
 | 2026-03-29 (current) | TASK-009 | triage | Re-enqueued (queue had cleared; TASK-009 still ready, no dependencies) |
 | 2026-03-29 22:43 | - | - | no enqueue (TASK-009 already queued from prior run; 6 E2E bugs remain blocked by 9 unmerged deps—blocker persists 11+ runs; STEP 5 idle check skipped—1 task queued) |
+| 2026-03-29 23:00 | TASK-009 | triage | Add multi-currency support (no dependencies; queue was empty—re-enqueued) |
+| 2026-03-29 23:00 | TASK-328 | triage | E2E bug: US state sales tax presets (no dependencies; description confirms "No dependency on other tasks") |
+| 2026-03-29 23:00 | TASK-327 | triage | E2E bug: NL search for expenses (no dependencies; description confirms "No dependency on other tasks") |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-328 | TASK-325 (done, no merged PR) | 2026-03-29 21:30 |
-| TASK-327 | TASK-323 (done, no merged PR) | 2026-03-29 21:30 |
-| TASK-316 | TASK-313 (done, no merged PR) | 2026-03-29 21:30 |
-| TASK-317 | TASK-307 (done, no merged PR) | 2026-03-29 21:30 |
-| TASK-319 | TASK-298 (done, no merged PR), TASK-312 (done, no merged PR), TASK-288 (done, no merged PR) | 2026-03-29 21:30 |
-| TASK-318 | TASK-284 (done, no merged PR), TASK-305 (done, no merged PR) | 2026-03-29 21:30 |
+| (None) | CLEARED 2026-03-29 23:00 — all 7 ready tasks have empty dependency arrays; TASK-328 and TASK-327 explicitly state "No dependency on other tasks"; TASK-316/317/319/318 have no "Depends on" clauses. Skipped list was based on titles mentioning prior TASK IDs, not actual declared dependencies. Re-enqueued TASK-009, TASK-328, TASK-327. | 2026-03-29 23:00 |
