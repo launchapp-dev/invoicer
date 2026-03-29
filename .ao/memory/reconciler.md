@@ -6,10 +6,10 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29T15:36:35Z |
-| Tasks Unblocked | 0 |
-| Backlog Promoted | 1 |
-| Failed Re-routed | 0 |
+| Date | 2026-03-29T20:36:15Z |
+| Tasks Unblocked | 1 |
+| Backlog Promoted | 0 |
+| Failed Re-routed | 1 |
 | Queue Cleaned | 0 |
 | Tasks Marked Done | 0 |
 | Pipeline Idle | false |
@@ -18,6 +18,8 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 <!-- Reconciler: append significant actions here -->
 | Date | Action | Details |
 |------|--------|---------|
+| 2026-03-29 20:36 | UNBLOCK TASK-009 | Blocked → ready (workflow runner error, 1st retry) — rebase-and-retry queued |
+| 2026-03-29 20:36 | PIPELINE STATUS | 7 ready tasks, 1 assigned queue entry (TASK-009 rebase-and-retry), 1 open PR #199 — ACTIVE (not idle) |
 | 2026-03-29 | PROMOTE TASK-326 | Backlog → ready (CRITICAL E2E: auth.api.getSession fails in server components post db:push) |
 | 2026-03-29 | PIPELINE STATUS | 7 ready tasks, 1 assigned workflow (product-review), 0 open PRs — NOT idle |
 | 2026-03-29 | PROMOTE TASK-324 | Backlog → ready (E2E bug: @repo/push module missing) |
