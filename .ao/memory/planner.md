@@ -6,16 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-31 00:00 |
+| Date | 2026-03-31 05:00 |
 | Open PRs | 0 |
-| Queue Depth | 0/8 |
+| Queue Depth | 1/8 |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
 | Product Review Enqueued | 0 |
-| Skipped (deps) | 2 (TASK-319, TASK-318) |
+| Skipped (deps) | 2 (TASK-319, TASK-298/312/288; TASK-318, TASK-284/305) |
 | Skipped (queued) | 0 |
-| Pipeline Status | BLOCKED (same 2 ready tasks blocked by same 5 unmerged deps for 6+ runs) |
+| Pipeline Status | BLOCKED (same 2 ready tasks blocked by same 5 unmerged deps. TASK-325 already queued from prior run, no new enqueues) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -34,6 +34,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-30 21:15 | - | - | no enqueue (TASK-319, TASK-318 still blocked by 5 tasks marked done but with 0 merged PRs each) |
 | 2026-03-30 23:47 | (ad-hoc) | product-review | Idle pipeline — 2 ready tasks blocked by 5 unmerged deps (TASK-284, 305, 298, 312, 288 all marked done, 0 merged PRs) |
 | 2026-03-31 00:00 | - | - | no enqueue (same 2 tasks still blocked by same 5 unmerged deps; product-review from prior run did not resolve) |
+| 2026-03-31 05:00 | - | - | no enqueue (TASK-325 already queued from prior run; TASK-319/318 still blocked by 5 unmerged deps) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
