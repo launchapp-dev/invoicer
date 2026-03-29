@@ -759,11 +759,15 @@ phases:
     mode: agent
     agent: reviewer
     directive: |
-      Review the PR. Check CI status first.
-      If no blocking issues: leave an APPROVED review via gh pr review --approve.
-      If blocking issues: leave a CHANGES_REQUESTED review via gh pr review --request-changes.
-      Do NOT merge the PR yourself — the verify-pr phase handles merging.
-      Do NOT mark the task as done — verify-pr handles that too.
+      Review the PR diff. Check CI status first.
+      If no blocking issues found: the PR is good to merge. You do NOT need
+      to call gh pr review --approve (GitHub blocks self-reviews). Just state
+      your verdict clearly and exit. The verify-pr phase handles merging.
+      If blocking issues found: leave a CHANGES_REQUESTED review via
+      gh pr review --request-changes --body "<details>". Be specific about
+      what needs fixing.
+      Do NOT merge the PR yourself — verify-pr handles that.
+      Do NOT mark the task as done — verify-pr handles that.
 
   verify-pr:
     mode: command
