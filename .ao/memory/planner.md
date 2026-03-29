@@ -6,7 +6,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 23:47 |
+| Date | 2026-03-30 00:05 |
 | Open PRs | 0 |
 | Queue Depth | 0/8 (empty) |
 | Rework Enqueued | 0 |
@@ -25,10 +25,11 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 11:05 | - | - | no enqueue (2 ready tasks still blocked by unmerged deps) |
 | 2026-03-29 17:23 | - | - | no enqueue (queue empty, 2 ready tasks still blocked by unmerged deps) |
 | 2026-03-29 23:47 | - | - | no enqueue (2 ready tasks blocked by 5 unmerged deps: TASK-284, TASK-305, TASK-298, TASK-312, TASK-288) |
+| 2026-03-30 00:05 | - | - | no enqueue (2 ready tasks blocked by unmerged deps: TASK-298, TASK-312, TASK-288, TASK-284, TASK-305 all marked done but no merged PRs) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-318 | TASK-284 (no merged PR), TASK-305 (no merged PR) | 2026-03-29 23:47 |
-| TASK-319 | TASK-298 (no merged PR), TASK-312 (no merged PR), TASK-288 (no merged PR) | 2026-03-29 23:47 |
+| TASK-318 | TASK-284 (no merged PR), TASK-305 (no merged PR) | 2026-03-30 00:05 |
+| TASK-319 | TASK-298 (no merged PR), TASK-312 (no merged PR), TASK-288 (no merged PR) | 2026-03-30 00:05 |
