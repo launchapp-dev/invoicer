@@ -6,16 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-31 05:00 |
+| Date | 2026-03-31 06:00 |
 | Open PRs | 0 |
-| Queue Depth | 1/8 |
+| Queue Depth | 0/8 → 1/8 |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Product Review Enqueued | 0 |
-| Skipped (deps) | 2 (TASK-319, TASK-298/312/288; TASK-318, TASK-284/305) |
+| Product Review Enqueued | 1 |
+| Skipped (deps) | 6 (all E2E bugs blocked by 6 unmerged dependencies: TASK-325, TASK-323, TASK-313, TASK-307, TASK-284, TASK-305) |
 | Skipped (queued) | 0 |
-| Pipeline Status | BLOCKED (same 2 ready tasks blocked by same 5 unmerged deps. TASK-325 already queued from prior run, no new enqueues) |
+| Pipeline Status | BLOCKED + IDLE (6 ready tasks all blocked by 6 deps marked done with 0 merged PRs each; dispatched product-review) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -35,10 +35,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-30 23:47 | (ad-hoc) | product-review | Idle pipeline — 2 ready tasks blocked by 5 unmerged deps (TASK-284, 305, 298, 312, 288 all marked done, 0 merged PRs) |
 | 2026-03-31 00:00 | - | - | no enqueue (same 2 tasks still blocked by same 5 unmerged deps; product-review from prior run did not resolve) |
 | 2026-03-31 05:00 | - | - | no enqueue (TASK-325 already queued from prior run; TASK-319/318 still blocked by 5 unmerged deps) |
+| 2026-03-31 06:00 | (ad-hoc) | product-review | Idle pipeline — 6 ready E2E bugs blocked by 6 deps (TASK-325, 323, 313, 307, 284, 305 all marked done, 0 merged PRs each) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-318 | TASK-284 (no merged PR), TASK-305 (no merged PR) | 2026-03-30 18:42 |
-| TASK-319 | TASK-298 (no merged PR), TASK-312 (no merged PR), TASK-288 (no merged PR) | 2026-03-30 18:42 |
+| TASK-328 | TASK-325 (done, no merged PR) | 2026-03-31 06:00 |
+| TASK-327 | TASK-323 (done, no merged PR) | 2026-03-31 06:00 |
+| TASK-316 | TASK-313 (done, no merged PR) | 2026-03-31 06:00 |
+| TASK-317 | TASK-307 (done, no merged PR) | 2026-03-31 06:00 |
+| TASK-319 | TASK-284/305 and others (all done, no merged PRs) | 2026-03-31 06:00 |
+| TASK-318 | TASK-284 (done, no merged PR), TASK-305 (done, no merged PR) | 2026-03-31 06:00 |
