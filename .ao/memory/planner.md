@@ -6,15 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 21:15 |
+| Date | 2026-03-30 23:47 |
 | Open PRs | 0 |
-| Queue Depth | 0/8 |
+| Queue Depth | 0/8 → 1/8 |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
+| Product Review Enqueued | 1 (idle pipeline) |
 | Skipped (deps) | 2 (TASK-319, TASK-318) |
 | Skipped (queued) | 0 |
-| Pipeline Status | Blocked (2 ready tasks blocked by 5 unmerged dependency PRs) |
+| Pipeline Status | Idle (2 ready tasks blocked; enqueued PO investigation) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -31,6 +32,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-30 14:15 | TASK-322 | triage | E2E bug: Currency list still 10 currencies (no dependencies, TASK-321 marked done without merge) |
 | 2026-03-30 18:42 | - | - | no enqueue (TASK-323 completed, TASK-322 cancelled; queue empty; 2 ready tasks blocked by 5 unmerged deps) |
 | 2026-03-30 21:15 | - | - | no enqueue (TASK-319, TASK-318 still blocked by 5 tasks marked done but with 0 merged PRs each) |
+| 2026-03-30 23:47 | (ad-hoc) | product-review | Idle pipeline — 2 ready tasks blocked by 5 unmerged deps (TASK-284, 305, 298, 312, 288 all marked done, 0 merged PRs) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
