@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 16) |
-| Result | PASS WITH CONCERNS — 5/6 core steps pass; 1 new bug: @repo/push stale cache error (TASK-324); 5 prior known issues remain |
-| Steps Passed | 5/6 (smoke, auth, invoice creation, PDF, navigation) |
-| Steps Failed | 1 (step 6: console errors + /dashboard/settings/notifications 404) |
-| Console Errors | 1 (repeated @repo/push module-not-found on startup — TASK-324) |
-| Network Errors | 1 (/dashboard/settings/notifications → 404) |
+| Date | 2026-03-29 (run 17) |
+| Result | CRITICAL FAIL — auth regression: post-login redirect loop breaks ALL authenticated access (TASK-326). Smoke/landing PASS. Steps 3-5 blocked. |
+| Steps Passed | 1/6 (smoke/landing only) |
+| Steps Failed | 1 CRITICAL (step 2: auth redirect loop — login stays on /login, all protected pages inaccessible) |
+| Console Errors | 0 (on landing page) |
+| Network Errors | 0 (on landing page) |
 
 ## Test Results History
 
@@ -33,6 +33,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | 6 | 0 | 0 | PASS: Login ✓ (qa-test14, existing account). Dashboard ✓. Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 0 console errors. 0 network errors. No new bugs. TASK-025, TASK-286, TASK-314 done but on unmerged branches. 5 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317. |
 | 2026-03-29 | 6 | 0 | 0 | PASS: Login ✓ (qa-test14, existing account). Dashboard ✓ (2 invoices, $3,000 outstanding). Invoice form ✓ (subtotal $1,500.00 correct, duplicate detection banner shown). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 0 console errors. 0 network errors. No new bugs. 5 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317. |
 | 2026-03-29 | 5 | 1 | 1 | PASS WITH CONCERNS: Signup ✓ (qa-test16). Dashboard ✓ ($1,500 outstanding). Invoice form ✓ (subtotal $1,500.00). Invoice save ✓ (redirects /invoices/:id). PDF ✓ (no errors). Core routes load. Logout ✓. NEW BUG: @repo/push module-not-found errors on startup + /dashboard/settings/notifications 404 (stale .next cache, TASK-324). 5 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317. |
+| 2026-03-29 | 1 | 1 | 1 | CRITICAL FAIL: Landing page ✓. Auth BROKEN: sign-in API returns 200 + sets cookie BUT post-login redirect loops back to /login. auth.api.getSession returns null in server components — all protected routes inaccessible. DB was wiped (pnpm db:push between runs). TASK-326 created. Steps 3-5 blocked. 6 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324. |
 
 ## Known Issues
 
@@ -43,6 +44,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - **[2026-03-29] Social proof stats section missing from landing page (TASK-316)** — TASK-313 marked done but no code committed or merged. No ao/task-313 branch exists. Landing page has no "trusted by X" or stats counter section.
 - **[2026-03-29] Client search/sort/pagination missing from /clients page (TASK-317)** — TASK-307 marked done but no code committed or merged. /clients page shows no search input, sort controls, or pagination.
 - **[2026-03-29] @repo/push module-not-found causes console errors on startup (TASK-324)** — Turbopack emits repeated errors: `./src/app/dashboard/settings/notifications/page.tsx Module not found: @repo/push`. File doesn't exist in source tree — likely stale .next cache. /dashboard/settings/notifications returns 404. Fix: `rm -rf .next && pnpm dev`.
+- **[2026-03-29] CRITICAL: Post-login redirect loop — auth.api.getSession returns null in server components (TASK-326)** — After successful sign-in (API returns 200, cookie is set), dashboard server component calls `auth.api.getSession({ headers: await headers() })` which returns null, causing redirect back to /login. Creates infinite redirect loop. All protected pages inaccessible. Suspected cause: better-auth v1.5.6 drizzleAdapter incompatibility after pnpm db:push recreated tables, OR Next.js 16 headers() incompatibility. CRITICAL — no user can log in.
 
 ## Regression Tracker
 
@@ -63,13 +65,15 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-28 | Dashboard loads | FAIL | PASS | run 10: db:push finally run — client_id column exists, dashboard loads cleanly |
 | 2026-03-28 | Settings page loads | FAIL | PASS | run 10: db:push fixed payment_instructions column too — settings loads cleanly |
 | 2026-03-28 | Save invoice succeeds | PASS (with caveats) | PASS | run 10: confirmed — save redirects to /invoices/:id and invoice appears in dashboard |
+| 2026-03-29 | Login with existing credentials | PASS | FAIL | run 17: auth.api.getSession returns null in server components after pnpm db:push DB wipe — post-login redirect loop (TASK-326) |
+| 2026-03-29 | Dashboard loads | PASS | FAIL | run 17: same root cause — all protected pages redirect to /login (TASK-326) |
 
 ## Test Coverage
 
 ### Auth Flow
 - [x] Landing page loads without errors
 - [x] Signup with email/password works
-- [x] Login with existing credentials works — **FIXED (TASK-240)**
+- [ ] Login with existing credentials works — **BROKEN run 17: post-login redirect loop (TASK-326)**
 - [x] Protected routes redirect to login when unauthenticated
 - [x] Logout redirects to landing/login
 - [ ] Duplicate signup shows appropriate error — **NOT TESTED this run**
