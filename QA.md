@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 8) |
-| Result | 4 PASS / 2 FAIL (steps) |
-| Steps Passed | 1 (smoke), 2 (auth — signup+login), 3 (invoice create+save+partial payment), 4 (PDF) |
-| Steps Failed | 5 (dashboard FAIL client_id, settings FAIL payment_instructions), 6 (console errors) |
-| Console Errors | client_id SqliteError on dashboard (TASK-296 persists) + payment_instructions SqliteError on /settings (NEW — TASK-302) + background 500s on /invoices/new |
-| Network Errors | 0 |
+| Date | 2026-03-29 (run 9) |
+| Result | TBD |
+| Steps Passed | TBD |
+| Steps Failed | TBD |
+| Console Errors | TBD |
+| Network Errors | TBD |
 
 ## Test Results History
 
@@ -257,6 +257,15 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - [x] /settings/templates page loads
 - [x] Multiple invoice templates available for selection (Classic, Modern, Minimal)
 - [ ] Selecting a template applies to invoice preview/PDF
+
+### New-User Onboarding Prompt (TASK-304)
+- [ ] First-time user sees onboarding prompt to complete business profile before creating first invoice
+- [ ] Onboarding prompt links/navigates to settings/profile page
+
+### AI Smart Defaults (TASK-303)
+- [ ] New invoice form pre-fills payment terms from learned user patterns
+- [ ] New invoice form pre-fills currency from learned user patterns
+- [ ] New invoice form pre-fills notes from learned user patterns
 
 ## Environment Notes
 
