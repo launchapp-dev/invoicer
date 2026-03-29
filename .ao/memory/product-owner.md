@@ -8,8 +8,8 @@ the current product state assessment so work is not repeated.
 | Field | Value |
 |-------|-------|
 | Date | 2026-03-29 |
-| Health Check | PASS — pnpm build succeeded, 19 routes compiled (Next.js 16.2.1) |
-| Tasks Created | TASK-322 (currency E2E bug re-re-implementation), TASK-323 (NL search for expenses) |
+| Health Check | PASS — pnpm build succeeded, 19 routes compiled (Next.js 16.2.1), no TypeScript errors |
+| Tasks Created | TASK-325 (US state sales tax presets) |
 | Requirements Created | None |
 | Pipeline Status | 6 active tasks, all medium priority |
 
@@ -23,6 +23,9 @@ the current product state assessment so work is not repeated.
 | 2026-03-29 | Created TASK-322: currency list still 10 (E2E bug) | TASK-321 marked done but no code in main; same pattern as TASK-316/317/318/319 |
 | 2026-03-29 | Created TASK-323: NL search for expenses | VISION section 16 requires NL search across invoices, clients, and expenses; invoices done; expenses has no NL search; no existing task covers this |
 | 2026-03-29 | Did not create NL search for clients | TASK-317 (basic search/sort/pagination) must land first; NL search on top of no search makes no sense |
+| 2026-03-29 | Created TASK-325: US state sales tax presets | VISION explicitly requires US states in tax presets; TASK-320 done but has no US states in COUNTRY_TAX_MAP |
+| 2026-03-29 | Did not re-create currency expansion task | TASK-322 (3rd attempt) was cancelled; re-creating a 4th time likely futile until merge workflow is fixed |
+| 2026-03-29 | Noted TASK-324 is false alarm | @repo/push errors are stale dev Turbopack cache only; prod build is clean, no such imports in source |
 
 ## Requirements Created
 | Date | ID | Title | Status |
@@ -36,6 +39,7 @@ the current product state assessment so work is not repeated.
 | 2026-03-29 | TASK-321 | Expand currency list to 25+ major global currencies | medium |
 | 2026-03-29 | TASK-322 | E2E bug: Currency list still 10 currencies — TASK-321 marked done but no code in main | medium |
 | 2026-03-29 | TASK-323 | Add AI natural language search to expenses page | medium |
+| 2026-03-29 | TASK-325 | Add US state sales tax presets to invoice form | medium |
 
 ## Features Assessed
 | Feature | Status | Last Checked | Notes |
@@ -57,23 +61,28 @@ the current product state assessment so work is not repeated.
 | AI: Reminders | Implemented | 2026-03-29 | AI-drafted reminder messages in invoice-actions sheet |
 | AI: Expenses | Implemented | 2026-03-29 | Full expense manager at /expenses with AI categorization |
 | AI: NL Search | Partial | 2026-03-29 | Works for invoices in dashboard; not implemented for expenses (TASK-323 created) or clients (blocked by TASK-317) |
-| Tax Presets | Implemented | 2026-03-29 | COUNTRY_TAX_MAP in invoice-form.tsx: UK VAT 20%, Germany VAT 19%, France VAT 20%, AU GST 10%, CA GST 5%, NZ GST 15%, India GST 18%, Singapore GST 9%. US states NOT in map — VISION mentions them but acceptable for now |
+| Tax Presets | Partial | 2026-03-29 | COUNTRY_TAX_MAP in invoice-form.tsx: UK VAT 20%, Germany VAT 19%, France VAT 20%, AU GST 10%, CA GST 5%, NZ GST 15%, India GST 18%, Singapore GST 9%. US states NOT in map — TASK-325 created to fix |
 
 ## Current Assessment
 
-**Overall health: Strong.** Build passes (19 routes, Next.js 16.2.1). All major VISION.md features implemented. Product is in a polishing/stabilizing phase.
+**Overall health: Strong.** Build passes (19 routes, Next.js 16.2.1), no TypeScript errors, only expected OAuth warnings. Product is in polishing/stabilizing phase.
 
 **Active pipeline (6 tasks, all medium):**
 - TASK-316 [backlog] — Social proof stats on landing page (E2E bug — code never merged)
 - TASK-317 [backlog] — Client search/sort/pagination (E2E bug — code never merged)
 - TASK-318 [ready] — Invoice audit trail (E2E bug — code never merged)
 - TASK-319 [ready] — Dark mode toggle on landing page (E2E bug — code never merged)
-- TASK-322 [ready] — Currency expansion E2E bug (TASK-321 done but not merged — 3rd attempt)
-- TASK-323 [ready] — NL search for expenses (new feature)
+- TASK-324 [backlog] — @repo/push module error (FALSE ALARM — stale dev cache only; prod build clean; no such imports in source)
+- TASK-325 [ready] — US state sales tax presets (new feature, VISION-required)
 
-**Critical pattern — unmerged work:** TASK-316/317/318/319/321/322 are all re-implementations of "done" tasks that were never merged to main. The planner notes "2 tasks blocked by unmerged deps" every cycle. The merge/land workflow appears broken or tasks are being incorrectly marked done by QA without the branch being merged. **This is the most important systemic issue in the fleet.** If this pattern continues, consider recommending a workflow fix rather than creating more re-implementation tasks.
+**Progress since last run:**
+- TASK-322 cancelled (was 3rd attempt at currency expansion; recurring cancellation pattern)
+- TASK-323 marked done (NL search for expenses) — but code NOT in main (same unmerged pattern)
+- TASK-321 marked done (currency expansion to 25+) — but code NOT in main (still 10 currencies in all 4 constant definitions)
+
+**Critical pattern — unmerged work:** TASK-316/317/318/319/321/323 all represent "done" tasks with no code in main. Currency expansion has been attempted 3 times (TASK-321, cancelled TASK-322 x2). Re-creating these tasks is futile until the merge workflow is fixed. This is the most important systemic issue.
 
 **Next run focus:**
-- Check if TASK-318/319/322 have code in main (watch for the pattern)
-- If currency expansion and audit trail branches still not merged after 2 more cycles, flag the merge workflow for repair
+- Check if TASK-318/319/325 have code in main
 - After TASK-317 (client basic search) lands, create NL search for clients task
+- TASK-324 can likely be cancelled (false alarm - stale dev cache, not a code issue)
