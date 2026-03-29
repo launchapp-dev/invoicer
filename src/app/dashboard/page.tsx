@@ -15,7 +15,7 @@ import { DashboardTable } from "./dashboard-table";
 import { CashFlowWidget } from "./cash-flow-widget";
 import type { InvoiceStatus } from "@/types/invoice";
 
-const VALID_STATUSES: InvoiceStatus[] = ["draft", "sent", "paid", "overdue", "cancelled"];
+const VALID_STATUSES: InvoiceStatus[] = ["draft", "sent", "paid", "overdue", "cancelled", "viewed", "archived"];
 const VALID_SORTS: InvoiceSort[] = ["date_desc", "date_asc", "amount_desc", "amount_asc", "status", "client"];
 
 const LIMIT = 25;
