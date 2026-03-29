@@ -3,7 +3,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import type { CashFlowData } from "@/lib/storage";
-import { getInvoicesByClientId } from "@/lib/storage";
+import { getInvoicesByClientId, listInvoices } from "@/lib/storage";
 
 const LineItemSchema = z.object({
   description: z.string(),
@@ -347,6 +347,62 @@ export async function extractReceiptData(imageBase64: string): Promise<Extracted
     const toolUse = response.content.find((b) => b.type === "tool_use");
     if (!toolUse || toolUse.type !== "tool_use") return null;
     return ExtractedReceiptSchema.parse(toolUse.input);
+  } catch {
+    return null;
+  }
+}
+
+export type SmartDefaults = {
+  paymentTerms?: "net15" | "net30" | "net60" | "due_on_receipt" | "custom";
+  currency?: string;
+  notes?: string;
+};
+
+export async function getSmartDefaults(): Promise<SmartDefaults | null> {
+  try {
+    const recentInvoices = await listInvoices(20, 0);
+    if (recentInvoices.length < 3) return null;
+
+    const termCounts: Record<string, number> = {};
+    const currencyCounts: Record<string, number> = {};
+    const notesCounts: Record<string, number> = {};
+
+    for (const inv of recentInvoices) {
+      if (inv.paymentTerms) {
+        termCounts[inv.paymentTerms] = (termCounts[inv.paymentTerms] || 0) + 1;
+      }
+      if (inv.currency) {
+        currencyCounts[inv.currency] = (currencyCounts[inv.currency] || 0) + 1;
+      }
+      if (inv.notes && inv.notes.trim()) {
+        const trimmed = inv.notes.trim();
+        notesCounts[trimmed] = (notesCounts[trimmed] || 0) + 1;
+      }
+    }
+
+    const result: SmartDefaults = {};
+
+    if (recentInvoices.length >= 5 && Object.keys(termCounts).length > 0) {
+      const topTerm = Object.entries(termCounts).sort((a, b) => b[1] - a[1])[0];
+      result.paymentTerms = topTerm[0] as SmartDefaults["paymentTerms"];
+    }
+
+    const nonUsdEntries = Object.entries(currencyCounts).filter(([c]) => c !== "USD");
+    if (nonUsdEntries.length > 0) {
+      const topNonUsd = nonUsdEntries.sort((a, b) => b[1] - a[1])[0];
+      if (topNonUsd[1] >= 3) {
+        result.currency = topNonUsd[0];
+      }
+    }
+
+    if (Object.keys(notesCounts).length > 0) {
+      const topNotes = Object.entries(notesCounts).sort((a, b) => b[1] - a[1])[0];
+      if (topNotes[1] >= 2) {
+        result.notes = topNotes[0];
+      }
+    }
+
+    return Object.keys(result).length > 0 ? result : null;
   } catch {
     return null;
   }
