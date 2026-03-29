@@ -6,18 +6,20 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29T15:15:00Z |
+| Date | 2026-03-29T15:36:35Z |
 | Tasks Unblocked | 0 |
-| Backlog Promoted | 3 |
+| Backlog Promoted | 1 |
 | Failed Re-routed | 0 |
-| Queue Cleaned | 1 |
-| Tasks Marked Done | 1 |
+| Queue Cleaned | 0 |
+| Tasks Marked Done | 0 |
 | Pipeline Idle | false |
 
 ## Actions Log
 <!-- Reconciler: append significant actions here -->
 | Date | Action | Details |
 |------|--------|---------|
+| 2026-03-29 | PROMOTE TASK-326 | Backlog → ready (CRITICAL E2E: auth.api.getSession fails in server components post db:push) |
+| 2026-03-29 | PIPELINE STATUS | 7 ready tasks, 1 assigned workflow (product-review), 0 open PRs — NOT idle |
 | 2026-03-29 | PROMOTE TASK-324 | Backlog → ready (E2E bug: @repo/push module missing) |
 | 2026-03-29 | PROMOTE TASK-317 | Backlog → ready (E2E bug: Client search/sort/pagination missing) |
 | 2026-03-29 | PROMOTE TASK-316 | Backlog → ready (E2E bug: Social proof stats missing) |
