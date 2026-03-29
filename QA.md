@@ -6,12 +6,12 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (run 15) |
-| Result | PASS — all 6 steps pass; no new bugs; 5 known unmerged-branch failures remain |
-| Steps Passed | 6/6 (smoke, auth, invoice creation, PDF, navigation, console+network) |
-| Steps Failed | 0 (step-level) |
-| Console Errors | 0 (clean across all pages) |
-| Network Errors | 0 (all routes 200) |
+| Date | 2026-03-29 (run 16) |
+| Result | PASS WITH CONCERNS — 5/6 core steps pass; 1 new bug: @repo/push stale cache error (TASK-324); 5 prior known issues remain |
+| Steps Passed | 5/6 (smoke, auth, invoice creation, PDF, navigation) |
+| Steps Failed | 1 (step 6: console errors + /dashboard/settings/notifications 404) |
+| Console Errors | 1 (repeated @repo/push module-not-found on startup — TASK-324) |
+| Network Errors | 1 (/dashboard/settings/notifications → 404) |
 
 ## Test Results History
 
@@ -32,6 +32,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | 6 | 0 | 2 | PASS: Login ✓ (qa-test13, existing account). Dashboard ✓. Invoice form ✓ (subtotal 1,500 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 0 console errors (clean). 0 network errors. 2 new bugs: social proof missing (TASK-316), client search/sort missing (TASK-317). 3 unresolved: TASK-309 + TASK-310 + TASK-672. |
 | 2026-03-29 | 6 | 0 | 0 | PASS: Login ✓ (qa-test14, existing account). Dashboard ✓. Invoice form ✓ (subtotal $1,500.00 correct). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 0 console errors. 0 network errors. No new bugs. TASK-025, TASK-286, TASK-314 done but on unmerged branches. 5 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317. |
 | 2026-03-29 | 6 | 0 | 0 | PASS: Login ✓ (qa-test14, existing account). Dashboard ✓ (2 invoices, $3,000 outstanding). Invoice form ✓ (subtotal $1,500.00 correct, duplicate detection banner shown). Invoice save ✓ (redirects to /invoices/:id). PDF ✓ (no errors). All 8 routes 200. Logout ✓. 0 console errors. 0 network errors. No new bugs. 5 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317. |
+| 2026-03-29 | 5 | 1 | 1 | PASS WITH CONCERNS: Signup ✓ (qa-test16). Dashboard ✓ ($1,500 outstanding). Invoice form ✓ (subtotal $1,500.00). Invoice save ✓ (redirects /invoices/:id). PDF ✓ (no errors). Core routes load. Logout ✓. NEW BUG: @repo/push module-not-found errors on startup + /dashboard/settings/notifications 404 (stale .next cache, TASK-324). 5 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317. |
 
 ## Known Issues
 
@@ -41,6 +42,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 - **[2026-03-29] React hydration mismatch on post-signup initial render (TASK-672)** — `caret-color: transparent` style present server-side but missing client-side in Input components. Appears once on signup redirect; clean on subsequent navigation. Non-breaking.
 - **[2026-03-29] Social proof stats section missing from landing page (TASK-316)** — TASK-313 marked done but no code committed or merged. No ao/task-313 branch exists. Landing page has no "trusted by X" or stats counter section.
 - **[2026-03-29] Client search/sort/pagination missing from /clients page (TASK-317)** — TASK-307 marked done but no code committed or merged. /clients page shows no search input, sort controls, or pagination.
+- **[2026-03-29] @repo/push module-not-found causes console errors on startup (TASK-324)** — Turbopack emits repeated errors: `./src/app/dashboard/settings/notifications/page.tsx Module not found: @repo/push`. File doesn't exist in source tree — likely stale .next cache. /dashboard/settings/notifications returns 404. Fix: `rm -rf .next && pnpm dev`.
 
 ## Regression Tracker
 
