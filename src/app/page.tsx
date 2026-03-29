@@ -478,6 +478,9 @@ export default async function Page() {
             </span>
           </div>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            <Link href="/changelog" className="hover:text-foreground transition-colors">
+              Changelog
+            </Link>
             <Link href="/signup" className="hover:text-foreground transition-colors">
               Sign up
             </Link>
