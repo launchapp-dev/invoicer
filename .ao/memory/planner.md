@@ -6,24 +6,24 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 11:05 |
+| Date | 2026-03-29 05:01 |
 | Open PRs | 0 |
-| Queue Depth | 1 (product-review assigned) |
+| Queue Depth | 2/8 (TASK-321, TASK-320 assigned) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 0 |
+| New Work Enqueued | 2 (TASK-321, TASK-320) |
 | Skipped (deps) | 2 (TASK-318, TASK-319) |
 | Skipped (queued) | 0 |
-| Pipeline Idle | No (1 task in queue, analyzing dependencies) |
+| Pipeline Idle | No (2 tasks enqueued, 2 tasks blocked by unmerged deps) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-29 05:01 | TASK-321 | triage | Expand currency list to 25+ major global currencies (no dependencies) |
+| 2026-03-29 05:01 | TASK-320 | triage | Add tax presets by jurisdiction to invoice form (no dependencies) |
 | 2026-03-29 11:05 | - | - | no enqueue (2 ready tasks still blocked by unmerged deps) |
 | 2026-03-29 04:35 | - | product-review | idle pipeline: 2 ready tasks blocked by unmerged deps |
-| 2026-03-29 04:00 | - | product-review | idle pipeline, scan for work |
-| 2026-03-29 03:36 | - | product-review | idle pipeline, scan for work |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
