@@ -6,16 +6,16 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 20:15 (current) |
+| Date | 2026-03-29 20:30 (current) |
 | Open PRs | 1 (PR #199 "ao/task 011" — CONFLICTING, not task-linked, skipped) |
 | Queue Depth | 1/8 (TASK-009 assigned for rebase-and-retry) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 |
-| Product Review Enqueued | 0 (idle condition NOT met: 6 ready + 1 queued) |
+| Product Review Enqueued | 0 (NOT enqueued again; prior product-review calls have not resolved blocker) |
 | Skipped (deps) | 6 (all E2E bugs blocked by 6 unmerged deps: TASK-325, 323, 313, 307, 284, 305; all marked done, verified 0 merged PRs) |
 | Skipped (queued) | 0 |
-| Pipeline Status | BLOCKED (6 ready E2E bugs all blocked by 6 deps marked done with 0 merged PRs; blocker unresolved 8+ consecutive runs; re-verified 2026-03-29 20:15: all deps still show merged_pr=none) |
+| Pipeline Status | BLOCKED (6 ready E2E bugs all blocked by 6 deps marked done with 0 merged PRs; blocker unresolved 9+ consecutive runs; re-verified 2026-03-29 20:30: all 6 deps still show merged_pr=none; UPSTREAM ISSUE: dependencies marked done without PR merge) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -47,14 +47,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 13:15 | - | - | no enqueue (re-verified: all 6 ready E2E bugs blocked by 9 deps marked done with 0 merged PRs each; blocker persists) |
 | 2026-03-29 (current) | - | - | no enqueue (6 ready E2E bugs blocked by 6 deps: TASK-325,323,313,307,284,305 all done, 0 merged PRs verified; blocker unresolved 7+ runs; idle condition false) |
 | 2026-03-29 20:15 | - | - | no enqueue (same 6 ready E2E bugs blocked by same 6 deps; TASK-009 already assigned for rebase-and-retry since 20:03; PR#199 CONFLICTING but not task-linked per prior memory; blocker persists) |
+| 2026-03-29 20:30 | - | - | no enqueue (re-verified: 6 ready E2E bugs all blocked by same 6 unmerged deps—TASK-325,323,313,307,284,305; all marked done with 0 merged PRs each; UPSTREAM ISSUE: dependencies need PR link + merge before ready tasks can proceed) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-328 | TASK-325 (done, no merged PR) | 2026-03-31 06:00 |
-| TASK-327 | TASK-323 (done, no merged PR) | 2026-03-31 06:00 |
-| TASK-316 | TASK-313 (done, no merged PR) | 2026-03-31 06:00 |
-| TASK-317 | TASK-307 (done, no merged PR) | 2026-03-31 06:00 |
-| TASK-319 | TASK-284/305 and others (all done, no merged PRs) | 2026-03-31 06:00 |
-| TASK-318 | TASK-284 (done, no merged PR), TASK-305 (done, no merged PR) | 2026-03-31 06:00 |
+| TASK-328 | TASK-325 (done, no merged PR) | 2026-03-29 20:30 |
+| TASK-327 | TASK-323 (done, no merged PR) | 2026-03-29 20:30 |
+| TASK-316 | TASK-313 (done, no merged PR) | 2026-03-29 20:30 |
+| TASK-317 | TASK-307 (done, no merged PR) | 2026-03-29 20:30 |
+| TASK-319 | TASK-298 (done, no merged PR), TASK-312 (done, no merged PR), TASK-288 (done, no merged PR) | 2026-03-29 20:30 |
+| TASK-318 | TASK-284 (done, no merged PR), TASK-305 (done, no merged PR) | 2026-03-29 20:30 |
