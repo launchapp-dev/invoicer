@@ -91,6 +91,7 @@ export function InvoiceActions({ invoiceId, status, invoiceNumber, clientName, t
   const [paymentDate, setPaymentDate] = React.useState(() => new Date().toISOString().split("T")[0]);
   const [paymentMethod, setPaymentMethod] = React.useState("");
   const [paymentReference, setPaymentReference] = React.useState("");
+  const [paymentAmount, setPaymentAmount] = React.useState(total);
 
   async function handleDuplicate() {
     setPending(true);
@@ -133,13 +134,14 @@ export function InvoiceActions({ invoiceId, status, invoiceNumber, clientName, t
 
   async function handleRecordPayment(e: React.FormEvent) {
     e.preventDefault();
-    if (!paymentDate || !paymentMethod) return;
+    if (!paymentDate || !paymentMethod || !paymentAmount) return;
     setPending(true);
     try {
       await recordPayment(invoiceId, {
         paidAt: paymentDate,
         paidMethod: paymentMethod,
         paidReference: paymentReference || undefined,
+        amount: paymentAmount,
       });
       setRecordPaymentOpen(false);
       router.refresh();
@@ -350,12 +352,32 @@ export function InvoiceActions({ invoiceId, status, invoiceNumber, clientName, t
         </SheetContent>
       </Sheet>
 
-      <Sheet open={recordPaymentOpen} onOpenChange={setRecordPaymentOpen}>
+      <Sheet open={recordPaymentOpen} onOpenChange={(open) => {
+        setRecordPaymentOpen(open);
+        if (open) {
+          setPaymentDate(new Date().toISOString().split("T")[0]);
+          setPaymentMethod("");
+          setPaymentReference("");
+          setPaymentAmount(total);
+        }
+      }}>
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Record Payment</SheetTitle>
           </SheetHeader>
           <form onSubmit={handleRecordPayment} className="flex flex-col gap-4 mt-4">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="payment-amount">Amount</Label>
+              <Input
+                id="payment-amount"
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={paymentAmount}
+                onChange={(e) => setPaymentAmount(parseFloat(e.target.value) || 0)}
+                required
+              />
+            </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="payment-date">Payment Date</Label>
               <Input
@@ -390,14 +412,14 @@ export function InvoiceActions({ invoiceId, status, invoiceNumber, clientName, t
               />
             </div>
             <SheetFooter className="mt-2">
-              <Button type="submit" disabled={pending || !paymentDate || !paymentMethod}>
+              <Button type="submit" disabled={pending || !paymentDate || !paymentMethod || !paymentAmount}>
                 {pending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Saving…
                   </>
                 ) : (
-                  "Mark as Paid"
+                  "Record Payment"
                 )}
               </Button>
             </SheetFooter>
