@@ -6,20 +6,21 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 48) |
+| Date | 2026-03-30 (cycle 7, run 49) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 1/8 at start (TASK-331 assigned); 1/8 after checks |
+| Queue Depth | 0/8 at start (queue empty); 1/8 after enqueue |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 0 (5 ready tasks: TASK-331 already queued; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps; verified all 7 deps marked done with 0 merged PRs) |
-| Product Review Enqueued | 0 (1 task in queue; 4 ready tasks blocked but not idle) |
-| Ready Tasks | 5 total: TASK-331 (in queue), TASK-316/317/318/319 (all blocked by unmerged deps) |
-| Pipeline Status | PARTIALLY BLOCKED — TASK-331 (build fix, critical) is assigned and executing. 4 E2E bugs (TASK-316/317/318/319) blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL blocker persists 14+ runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. |
+| New Work Enqueued | 1 (TASK-331: critical build fix, no deps; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps) |
+| Product Review Enqueued | 0 (1 task now queued; pipeline not idle) |
+| Ready Tasks | 5 total: TASK-331 (enqueued), TASK-316/317/318/319 (all blocked by unmerged deps) |
+| Pipeline Status | WORKING — TASK-331 (critical build fix) enqueued to triage. 4 E2E bugs (TASK-316/317/318/319) remain blocked by 6 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL BLOCKER persists 14+ runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. Requires product owner intervention to unblock. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 7, run 49) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty |
 | 2026-03-30 (cycle 7, run 48) | - | - | no enqueue (TASK-331 already assigned in queue; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps; blocker persists 14+ runs) |
 | 2026-04-02 (cycle 7, run 43) | TASK-330 | triage | E2E bug: React 19 text input reset (critical; no dependencies; re-enqueued) |
 | 2026-03-30 (cycle 7, run 45) | - | - | no enqueue (TASK-330 already in queue assigned; TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 both done/0PR, TASK-319→TASK-298/312/288 all done/0PR; blocker persists) |
@@ -147,9 +148,9 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-316 | TASK-313 (marked done, no merged PR) | 2026-04-02 (cycle 7, run 43) |
-| TASK-317 | TASK-307 (marked done, no merged PR) | 2026-04-02 (cycle 7, run 43) |
-| TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-04-02 (cycle 7, run 43) |
-| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-04-02 (cycle 7, run 43) |
+| TASK-316 | TASK-313 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 49) |
+| TASK-317 | TASK-307 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 49) |
+| TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-30 (cycle 7, run 49) |
+| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-30 (cycle 7, run 49) |
 | 2026-04-02 (cycle 7, run 43) | - | - | no enqueue (TASK-330 already assigned from prior run; open PRs=0; verified all 4 remaining ready tasks blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 done/0PR, TASK-319→TASK-298/312/288 done/0PR; idle condition false—1 queued + 4 blocked = not idle; blocker persists 30+ hours; root cause: 7 upstream tasks marked done without PR merge) |
 | 2026-04-02 (cycle 7, run 44) | - | - | no enqueue (open PRs=0, queue empty at start; verified all 4 remaining ready tasks blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 done/0PR, TASK-319→TASK-298/312/288 done/0PR; idle condition false—4 ready tasks present but all blocked by 7 unmerged deps; blocker persists 30+ hours; root cause: upstream tasks marked done without PR merge) |
