@@ -6,7 +6,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 49) |
+| Date | 2026-03-30 (cycle 7, run 50) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
 | Queue Depth | 0/8 at start (queue empty); 1/8 after enqueue |
 | Rework Enqueued | 0 (no open PRs with reviews) |
@@ -14,7 +14,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | New Work Enqueued | 1 (TASK-331: critical build fix, no deps; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps) |
 | Product Review Enqueued | 0 (1 task now queued; pipeline not idle) |
 | Ready Tasks | 5 total: TASK-331 (enqueued), TASK-316/317/318/319 (all blocked by unmerged deps) |
-| Pipeline Status | WORKING — TASK-331 (critical build fix) enqueued to triage. 4 E2E bugs (TASK-316/317/318/319) remain blocked by 6 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL BLOCKER persists 14+ runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. Requires product owner intervention to unblock. |
+| Pipeline Status | WORKING — TASK-331 (critical build fix) enqueued to triage. 4 E2E bugs (TASK-316/317/318/319) remain blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL BLOCKER persists 15+ runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. Requires product owner intervention to unblock. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -48,6 +48,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 15:30 | - | - | no enqueue (6 ready tasks STILL blocked: TASK-325,323,313,307 marked done with 0 merged PRs; TASK-284,305,298,312,288 all same) |
 | 2026-03-29 16:05 | - | - | no enqueue (same 6 ready tasks blocked by same 9 deps with 0 merged PRs; new blocker: TASK-329 critical Node v25 MODULE_VERSION mismatch in backlog) |
 | 2026-03-29 16:07 | - | - | no enqueue (same 6 ready tasks all blocked by unmerged deps: TASK-328→TASK-325, TASK-327→TASK-323, TASK-316→TASK-313, TASK-317→TASK-307, TASK-319→TASK-298/312/288, TASK-318→TASK-284/305; all deps marked done with 0 merged PRs) |
+| 2026-03-30 (cycle 7, run 50) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty; 4 other ready tasks blocked by 7 unmerged deps (TASK-313/307/284/305/298/312/288 all marked done with 0 merged PRs) |
 | 2026-03-29 17:45 | - | - | no enqueue (6 ready tasks ALL blocked: verified all 9 blocking deps marked done with 0 merged PRs each; CRITICAL blocker unresolved) |
 | 2026-03-29 18:00 | - | - | no enqueue (same 6 ready tasks still blocked by same 9 unmerged deps; TASK-329 critical blocker is cancelled; no change) |
 | 2026-03-29 13:02 | - | - | no enqueue (all 6 ready E2E bugs blocked by same 9 deps: TASK-325,323,313,307,298,312,288,284,305 all marked done with 0 merged PRs each; idle condition false; blocker unresolved) |
