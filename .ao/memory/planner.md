@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (cycle 7, run 7) |
+| Date | 2026-03-31 (cycle 7, run 8) |
 | Open PRs | 0 |
-| Queue Depth | 0/8 (queue empty) |
-| Rework Enqueued | 0 |
-| Rebase Enqueued | 0 |
-| New Work Enqueued | 0 (all 4 ready tasks blocked by 7 unmerged deps marked done) |
-| Product Review Enqueued | 0 (idle condition false: 4 ready tasks present but all blocked by unmet deps) |
-| Ready Tasks | 4 (TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-319→TASK-298/312/288) |
-| Pipeline Status | BLOCKED (4 ready; 7 unmerged deps all marked done with 0 merged PRs each; blocker persists 15+ hours; no mechanism to proceed without upstream merge) |
+| Queue Depth | 8/8 (FULL) |
+| Rework Enqueued | 0 (—checked; no open PRs with CHANGES_REQUESTED) |
+| Rebase Enqueued | 0 (—no open PRs) |
+| New Work Enqueued | 0 (—queue FULL; cannot enqueue) |
+| Product Review Enqueued | 0 (—not idle; 48 ready tasks present, queue full) |
+| Ready Tasks | 48 |
+| Pipeline Status | BACKED UP (48 ready tasks queued; 8/8 pipeline full; no new work can be dispatched until queue drains) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -101,6 +101,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 (cycle 7, run 5) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps: verified all 7 deps marked done with 0 merged PRs; idle condition false—ready tasks present but all blocked; blocker persists 13+ hours) |
 | 2026-03-29 (cycle 7, run 6) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps marked done with 0 merged PRs each: TASK-313,307,284,305,298,312,288; idle condition false; blocker unresolved 14+ hours; no PO intervention occurred) |
 | 2026-03-29 (cycle 7, run 7) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps marked done with 0 merged PRs each: TASK-313,307,284,305,298,312,288; idle condition false; blocker persists 15+ hours; no mechanism to resolve without upstream PR merge) |
+| 2026-03-31 (cycle 7, run 8) | - | - | no enqueue (queue FULL at 8/8: 3 assigned, 5 pending; 48 ready tasks waiting; pipeline backed up, not idle) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
