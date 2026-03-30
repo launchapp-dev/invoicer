@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-31 (current) |
+| Date | 2026-03-31 (cycle 2) |
 | Open PRs | 0 |
 | Queue Depth | 3/8 (post-enqueue) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 3 (TASK-009, TASK-327, TASK-328; all ready, no dependencies, no duplicate in queue) |
+| New Work Enqueued | 3 (TASK-009, TASK-327, TASK-328; all ready, no dependencies) |
 | Product Review Enqueued | 0 |
-| Ready Tasks | 7 (3 unblocked in queue; 4 blocked by unmerged deps: TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-319→TASK-298/312/288) |
-| Pipeline Status | ACTIVE (3/8 queued; 4 more ready but blocked by unmerged dependencies) |
+| Ready Tasks | 7 (3 queued; 4 blocked by unmerged deps: TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-319→TASK-298/312/288) |
+| Pipeline Status | ACTIVE (3/8 queued; cycle 2 re-enqueue after queue clear) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -82,6 +82,9 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 (current) | TASK-009 | triage | Re-enqueued (queue empty from prior run; verified dependencies via task.get —none; open PRs=0) |
 | 2026-03-29 (current) | TASK-327 | triage | Re-enqueued (queue empty from prior run; verified dependencies via task.get —none; open PRs=0) |
 | 2026-03-29 (current) | TASK-328 | triage | Re-enqueued (queue empty from prior run; verified dependencies via task.get —none; open PRs=0) |
+| 2026-03-31 (cycle 2) | TASK-009 | triage | Re-enqueued (queue cleared from cycle 1; no dependencies; open PRs=0) |
+| 2026-03-31 (cycle 2) | TASK-327 | triage | Re-enqueued (queue cleared from cycle 1; no dependencies; open PRs=0) |
+| 2026-03-31 (cycle 2) | TASK-328 | triage | Re-enqueued (queue cleared from cycle 1; no dependencies; open PRs=0) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
