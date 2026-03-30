@@ -6,21 +6,23 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 12) |
+| Date | 2026-03-30 (cycle 9, run 13) |
 | Open PRs | 1 (PR#201 for TASK-336; no reviews/CHANGES_REQUESTED; mergeStateStatus=CLEAN) |
 | Queue Depth | 0/8 at start; 2/8 after enqueues (TASK-336, TASK-334) |
 | Rework Enqueued | 0 (no CHANGES_REQUESTED reviews on PR#201) |
 | Rebase Enqueued | 0 (PR#201 is CLEAN, not conflicting) |
-| New Work Enqueued | 2 (TASK-336 critical no-deps; TASK-334 medium depends-on-TASK-333-done; triage workflow) |
-| Skipped | 3 (TASK-335 PR#203 merged by Sami 15:03Z, marked done; TASK-333 PR#202 merged by Sami 14:55Z, marked done; TASK-337 blocked by TASK-336 not done) |
+| New Work Enqueued | 2 (TASK-336 critical no-deps; TASK-334 medium depends-on-TASK-333 done with PR#202 merged 14:55Z; triage workflow) |
+| Skipped | 3 (TASK-335 PR#203 merged, skip; TASK-333 PR#202 merged, skip; TASK-337 blocked by TASK-336 PR not merged yet) |
 | Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
 | Ready Tasks | 5 total ready (2 enqueued; 2 done with merged PRs; 1 blocked) |
-| Pipeline Status | WORKING — Queue was 0/8 at start (prior tasks completed/merged); TASK-335 PR#203 merged 15:03Z, TASK-333 PR#202 merged 14:55Z; enqueued TASK-336 (critical bugfix, no deps, PR#201 open), TASK-334 (medium feature, depends on TASK-333 done); queue now 2/8 |
+| Pipeline Status | WORKING — Queue 0/8 at start; verified TASK-333/335 PRs merged; enqueued TASK-336 (critical, no deps, PR#201 open/mergeable), TASK-334 (medium, depends on TASK-333 done ✓); queue now 2/8 (1 pending, 1 assigned) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 13) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc (React 19 DOM reset fix); no dependencies; PR#201 (CLEAN, mergeable, no reviews); status=ready; queue was 0/8 at start; re-enqueued (prior enqueue at run 12 produced PR but not yet merged) |
+| 2026-03-30 (cycle 9, run 13) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (PR#202 merged 14:55Z) ✓; status=ready; queue was 0/8; dependency verified via gh pr list |
 | 2026-03-30 (cycle 9, run 12) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc (React 19 DOM reset fix); no dependencies verified; PR#201 (CLEAN, mergeable, no reviews); status=ready; queue was 0/8 at start (prior tasks completed); started_at=null (never dispatched before) |
 | 2026-03-30 (cycle 9, run 12) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (PR#202 merged 14:55Z by Sami) ✓; no deps check failed earlier but TASK-333 now done; status=ready; queue was 0/8 |
 | 2026-03-30 (cycle 9, run 11) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc (React 19 DOM reset fix); no dependencies verified via task.get; no deps in description; PR#201 (CLEAN, mergeable, no reviews); status=ready; queue was 1/8 (TASK-335 assigned) |
@@ -192,5 +194,6 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-337 | TASK-335 (queued, not done), TASK-336 (ready, not done) — both must be status=done with merged PRs | 2026-03-30 (cycle 9, run 11) |
-| TASK-334 | TASK-333 (ready, not done) — must be status=done with merged PR | 2026-03-30 (cycle 9, run 11) |
+| TASK-337 | TASK-335 (status=ready, PR#203 merged ✓), TASK-336 (status=ready, PR#201 OPEN not merged ✗) — both must have merged PRs; TASK-336 PR not merged yet | 2026-03-30 (cycle 9, run 13) |
+| TASK-335 | NO BLOCKER (status=ready, PR#203 merged ✓ — skip because already done) | 2026-03-30 (cycle 9, run 13) |
+| TASK-333 | NO BLOCKER (status=ready, PR#202 merged ✓ — skip because already done) | 2026-03-30 (cycle 9, run 13) |
