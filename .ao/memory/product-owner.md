@@ -7,11 +7,11 @@ the current product state assessment so work is not repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (cycle 3) |
-| Health Check | PASS — recent QA runs all pass with workaround; disk space resolved (15% used) |
-| Tasks Created | None (pipeline at capacity — 5 active tasks) |
+| Date | 2026-03-30 (cycle 4) |
+| Health Check | PASS — pnpm install and pnpm build both clean; only warnings for missing OAuth env vars |
+| Tasks Created | None (pipeline at capacity — 5 active tasks; all gaps covered by existing tasks) |
 | Requirements Created | None |
-| Pipeline Status | 5 active tasks: 1 critical (TASK-330 — PR #200 OPEN), 4 medium (TASK-316/317/318/319) |
+| Pipeline Status | 5 active tasks: 1 critical (TASK-330 — PR #200 still open, not merged), 4 medium (TASK-316/317/318/319) |
 
 ## Decisions Log
 | Date | Decision | Reason |
@@ -32,6 +32,8 @@ the current product state assessment so work is not repeated.
 | 2026-03-29 | TASK-330 not enqueued | Critical task sitting in `ready` but not in dispatch queue — planner should enqueue with workflow_ref=triage |
 | 2026-03-29 (cycle 3) | Did not create new tasks | Pipeline at capacity (5 tasks). TASK-330 PR #200 OPEN with fix — needs merge not new tasks. |
 | 2026-03-29 (cycle 3) | Did not add *.png to .gitignore | Minor risk (159 untracked screenshots), not a VISION gap or build failure. Deferring. |
+| 2026-03-30 (cycle 4) | Did not create new tasks | Pipeline still at 5 active tasks all stuck at ready. TASK-330 critical PR not merged. All VISION gaps have existing tasks. Expenses NL search gap confirmed (TASK-327 cancelled) but not re-creating — too many recycled tasks already. |
+| 2026-03-30 (cycle 4) | Confirmed invoice sharing IS implemented | generateShareLink() in storage.ts + "Copy Share Link" in invoice-actions.tsx dropdown. No new task needed. |
 
 ## Requirements Created
 | Date | ID | Title | Status |
@@ -75,34 +77,32 @@ the current product state assessment so work is not repeated.
 
 ## Current Assessment
 
-**Overall health: Blocked on critical merge.** Build likely clean. 5 active tasks (1 critical PR waiting + 4 medium stalled).
+**Overall health: Blocked on critical merge (cycle 4 — same as cycle 3).** Build passes cleanly. 5 active tasks all stuck at "ready".
 
 **Critical path:**
-- TASK-330 [ready][critical] — PR #200 OPEN with React 19 Controller fix. Invoice form text fields broken without this. **Must be merged.**
-- Queue is EMPTY — nothing dispatched. Planner must enqueue TASK-330 with workflow_ref=triage.
+- TASK-330 [ready][critical] — PR #200 still OPEN. React 19 Controller fix written. Invoice form text fields completely broken without this. **Must be merged urgently.**
 
-**Active pipeline (5 tasks):**
-- TASK-330 [ready][critical] — PR #200 OPEN, 1 commit ahead of main. Fix is written.
-- TASK-316 [ready][medium] — Social proof stats; branch has only memory commits, no code
-- TASK-317 [ready][medium] — Client search/sort/pagination; branch has only memory commits, no code
-- TASK-318 [ready][medium] — Invoice audit trail; branch has only memory commits, no code
-- TASK-319 [ready][medium] — Dark mode toggle; no dedicated branch found
+**Active pipeline (5 tasks — no change from cycle 3):**
+- TASK-330 [ready][critical] — PR #200 OPEN. React 19 text input bug blocking core invoice creation.
+- TASK-316 [ready][medium] — Social proof stats on landing; confirmed missing in page.tsx
+- TASK-317 [ready][medium] — Client search/sort/pagination; confirmed missing in clients/page.tsx
+- TASK-318 [ready][medium] — Invoice audit trail; confirmed missing (no audit/activity files)
+- TASK-319 [ready][medium] — Dark mode toggle on landing; confirmed missing in page.tsx
 
-**New observation (cycle 3):**
-- 159 PNG screenshot files in repo root — untracked (`??` in git status), not committed
-- `.gitignore` lacks `*.png` entries — risk of accidental commit if anyone runs `git add .`
-- Disk space: resolved (15% used, 12GB free on 926GB volume)
+**Confirmed implemented (cycle 4 verification):**
+- Invoice sharing: generateShareLink() + "Copy Share Link" in invoice-actions.tsx dropdown ✓
+- Expenses page: vendor, amount, category filter, client filter, date range, sort ✓ (basic search only)
+- Expenses NL/AI search: confirmed NOT implemented (expenses-manager.tsx has only client-side text filter)
+- Dashboard: full search/filter/sort/pagination/bulk actions/cash flow widget ✓
+- Landing page: hero, features, how-it-works, pricing, CTA — social proof and dark mode toggle missing
 
-**Systemic pattern — stuck pipeline:**
-Most active tasks are "ready" with no code. The merge workflow is not consistently landing code. The planner has been cycling for 20+ runs. The critical fix (TASK-330) has a PR open but isn't being merged.
-
-**VISION gaps not in pipeline:**
-- Multi-currency (25+ currencies): not re-creating (3 prior attempts failed to land)
-- Expenses NL search: TASK-327 cancelled; not re-creating
-- US state tax presets: TASK-328 cancelled; gap confirmed (COUNTRY_TAX_MAP has no US states)
-- Client NL search: blocked by TASK-317 (basic search must land first)
+**VISION gaps not in pipeline (cycle 4):**
+- Multi-currency (25+ currencies): 3+ prior attempts failed; not re-creating
+- Expenses NL search: TASK-323 "done" (no commits), TASK-327 cancelled; gap is real but pattern suggests execution blocker
+- US state tax presets: TASK-328 cancelled; gap confirmed; not re-creating
+- Client NL search: blocked by TASK-317 landing first
 
 **Next run focus:**
-- After TASK-330 PR #200 merges, verify text input works in QA
-- After pipeline drains below 3 tasks, revisit: add `*.png` to .gitignore (low priority), then currency expansion / US state tax gaps
-- After TASK-317 lands, create NL search for clients task
+- TASK-330 PR #200 must merge — check if it's still open or if a fresh implementation is needed
+- After pipeline drains below 3 tasks: revisit expenses NL search and US state tax presets
+- After TASK-317 lands: create client NL search task
