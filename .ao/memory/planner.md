@@ -170,6 +170,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-04-02 (cycle 7, run 42) | TASK-330 | triage | Enqueued (queue empty at start of run; verified TASK-330 status=ready, no dependencies via ao task get --id TASK-330; open PRs=0; verified all 7 blocking deps for TASK-316/317/318/319 have 0 merged PRs each: TASK-313/307/284/305/298/312/288 all status=done, 0 merged PRs verified via gh pr list; cannot enqueue those 4 tasks; blocker persists 29+ hours) |
 | 2026-03-30 (cycle 7, run 52) | TASK-330 | triage | Enqueued (queue empty at start of run; verified TASK-330 status=ready, no dependencies via ao task get --id TASK-330; open PRs=0) |
 | 2026-03-30 (cycle 7, run 52) | TASK-331 | triage | Enqueued (queue was 1/8 after TASK-330; verified TASK-331 status=ready, no dependencies via ao task get --id TASK-331; open PRs=0; critical build fix for better-sqlite3 NODE_MODULE_VERSION mismatch) |
+| 2026-03-30 (cycle 9, run 5) | TASK-330 | triage | Enqueued (queue empty at start; verified TASK-330 status=ready, no dependencies via task.get; open PRs=0; re-verified TASK-319 blocked by TASK-298/312/288 all done with 0 merged PRs) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
