@@ -7,11 +7,11 @@ the current product state assessment so work is not repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 5) |
-| Health Check | PASS — pnpm install and pnpm build both clean (14 routes built successfully) |
-| Tasks Created | None (pipeline at capacity — 5 active tasks; all gaps covered by existing tasks) |
+| Date | 2026-03-30 (cycle 6) |
+| Health Check | PASS — pnpm install and pnpm build both clean (20 routes built successfully) |
+| Tasks Created | None (pipeline at capacity — 5 active tasks; all stuck due to infrastructure blocker) |
 | Requirements Created | None |
-| Pipeline Status | 5 active tasks: 1 critical (TASK-330 — PR #200 still open, not merged), 4 medium (TASK-316/317/318/319) |
+| Pipeline Status | 5 active tasks: 1 critical (TASK-330 — blocked/workflow runner failure), 4 medium (TASK-316/317/318/319 all ready but stuck — upstream deps marked done with 0 merged PRs) |
 
 ## Decisions Log
 | Date | Decision | Reason |
@@ -35,6 +35,8 @@ the current product state assessment so work is not repeated.
 | 2026-03-30 (cycle 4) | Did not create new tasks | Pipeline still at 5 active tasks all stuck at ready. TASK-330 critical PR not merged. All VISION gaps have existing tasks. Expenses NL search gap confirmed (TASK-327 cancelled) but not re-creating — too many recycled tasks already. |
 | 2026-03-30 (cycle 4) | Confirmed invoice sharing IS implemented | generateShareLink() in storage.ts + "Copy Share Link" in invoice-actions.tsx dropdown. No new task needed. |
 | 2026-03-30 (cycle 5) | Did not create new tasks | Pipeline still at 5 active tasks all stuck at ready. TASK-330 critical PR still not merged. All VISION gaps covered. Build clean. Stall pattern continues. |
+| 2026-03-30 (cycle 6) | Did not create new tasks | Pipeline still at 5 active tasks. TASK-330 blocked (workflow runner failure, not PR issue). 4 medium tasks stuck — planner won't dispatch because upstream dependency tasks marked done with 0 merged PRs (13+ runs). Adding tasks won't unblock infrastructure issue. |
+| 2026-03-30 (cycle 6) | Tax presets CORRECTED — fully implemented | invoice-totals.tsx has 85 presets: all 50 US states, 27 EU countries, UK (2), Canada (6), Australia (1), Singapore. Memory was wrong about "No US states". TASK-325/328 concerns were resolved. |
 
 ## Requirements Created
 | Date | ID | Title | Status |
@@ -74,29 +76,29 @@ the current product state assessment so work is not repeated.
 | AI: Reminders | Implemented | 2026-03-29 | AI-drafted reminder messages in invoice-actions sheet |
 | AI: Expenses | Implemented | 2026-03-29 | Full expense manager at /expenses with AI categorization |
 | AI: NL Search | Partial | 2026-03-29 | Works for invoices in dashboard; not implemented for expenses (TASK-327 cancelled) or clients (blocked by TASK-317) |
-| Tax Presets | Partial | 2026-03-29 | COUNTRY_TAX_MAP: UK/DE/FR/AU/CA/NZ/IN/SG only. No US states. TASK-328 cancelled. |
+| Tax Presets | Implemented | 2026-03-30 | invoice-totals.tsx has 85 presets: all 50 US states, 27 EU VAT countries, UK (2), Canada (6), AU, SG. Fully implemented. |
 
 ## Current Assessment
 
-**Overall health: Blocked on critical merge (cycle 5 — same as cycles 3-4).** Build passes cleanly. 5 active tasks all stuck at "ready". Pipeline stall continues — no tasks have advanced in 3+ cycles.
+**Overall health: Pipeline infrastructure blocked (cycle 6 — 13+ runs stalled).** Build passes cleanly (20 routes). Tax presets verified fully implemented (85 presets). Root cause of pipeline stall: upstream dependency tasks marked "done" with 0 merged PRs — planner will not dispatch downstream ready tasks.
 
 **Critical path:**
-- TASK-330 [ready][critical] — PR #200 still OPEN. React 19 Controller fix written. Invoice form text fields completely broken without this. **Must be merged urgently.**
+- TASK-330 [blocked][critical] — workflow runner failure. React 19 text input bug. Invoice form text fields completely broken.
 
-**Active pipeline (5 tasks — no change from cycle 4):**
-- TASK-330 [ready][critical] — PR #200 OPEN. React 19 text input bug blocking core invoice creation.
+**Active pipeline (5 tasks — same composition, different TASK-330 status):**
+- TASK-330 [blocked][critical] — workflow runner failure. React 19 text input bug blocking core invoice creation.
 - TASK-316 [ready][medium] — Social proof stats on landing; confirmed missing in page.tsx
 - TASK-317 [ready][medium] — Client search/sort/pagination; confirmed missing in clients/page.tsx
 - TASK-318 [ready][medium] — Invoice audit trail; confirmed missing (no audit/activity files)
 - TASK-319 [ready][medium] — Dark mode toggle on landing; confirmed missing in page.tsx
 
-**VISION gaps not in pipeline (cycle 5):**
-- Multi-currency (25+ currencies): 3+ prior attempts failed; not re-creating
-- Expenses NL search: gap is real but multiple task attempts all failed/cancelled
-- US state tax presets: gap confirmed; multiple attempts cancelled; not re-creating
+**VISION gaps not in pipeline (cycle 6):**
+- Multi-currency (25+ currencies): still only 10 in invoice-form.tsx; 3+ prior attempts failed; not re-creating
+- Expenses NL search: gap confirmed (keyword-only); pipeline still > 3 tasks; wait
 - Client NL search: blocked by TASK-317 landing first
+- Tax presets: FULLY IMPLEMENTED — memory was wrong; no task needed
 
 **Next run focus:**
-- TASK-330 PR #200 must merge — check if it's still open or if a fresh implementation is needed
-- After pipeline drains below 3 tasks: revisit expenses NL search and US state tax presets
+- If pipeline drains below 5 tasks: create expenses NL search task
 - After TASK-317 lands: create client NL search task
+- Consider fresh currency expansion task if pipeline clears
