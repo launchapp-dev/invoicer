@@ -6,21 +6,24 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 8) |
-| Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 1/8 at start (TASK-330 assigned/decompose); 4/8 after enqueues |
-| Rework Enqueued | 0 (no open PRs with reviews) |
-| Rebase Enqueued | 0 (no open PRs with conflicts) |
+| Date | 2026-03-30 (cycle 9, run 9) |
+| Open PRs | 1 (PR#201 for TASK-336; no CHANGES_REQUESTED, mergeable) |
+| Queue Depth | 0/8 at start; 3/8 after enqueues |
+| Rework Enqueued | 0 (PR#201 has no reviews yet) |
+| Rebase Enqueued | 0 (PR#201 is mergeable, not conflicting) |
 | New Work Enqueued | 3 (TASK-335 critical, TASK-336 critical, TASK-333 medium; all no dependencies; triage workflow) |
-| Skipped | 2 (TASK-334 blocked by TASK-333; TASK-337 blocked by TASK-335+336) |
+| Skipped | 2 (TASK-334 blocked by TASK-333 not merged; TASK-337 blocked by TASK-335+336 not merged) |
 | Product Review Enqueued | 0 (3 tasks enqueued; pipeline not idle) |
 | Ready Tasks | 5 total ready (3 enqueued; 2 blocked by dependencies) |
-| Pipeline Status | WORKING — Queue at 4/8 after enqueues; TASK-330 decomposed (now blocked/paused); 3 new critical+medium fixes dispatched to triage |
+| Pipeline Status | WORKING — Queue at 3/8 after enqueues; 3 critical+medium fixes re-enqueued to triage (cycle repeating TASK-335/336/333) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 9) | TASK-335 | triage | Critical: Fix invoice-form.tsx text inputs with RHF Controller (React 19 DOM reset fix); no dependencies verified via task.get; queue was empty; 1 open PR (PR#201 for TASK-336); status=pending |
+| 2026-03-30 (cycle 9, run 9) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc; no dependencies verified via task.get; queue was empty; HAS PR#201 (mergeable); status=pending |
+| 2026-03-30 (cycle 9, run 9) | TASK-333 | triage | Medium: Create ThemeToggle client component (src/components/theme-toggle.tsx); no dependencies; queue was empty; 0 PRs; status=pending |
 | 2026-03-30 (cycle 9, run 8) | TASK-335 | triage | Critical: Fix invoice-form.tsx text inputs with RHF Controller (React 19 DOM reset fix); no dependencies verified via task.get; queue at 1/8 (TASK-330 assigned); 0 open PRs; status=pending |
 | 2026-03-30 (cycle 9, run 8) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc; no dependencies verified via task.get; queue at 1/8; 0 open PRs; status=pending |
 | 2026-03-30 (cycle 9, run 8) | TASK-333 | triage | Medium: Create ThemeToggle client component (src/components/theme-toggle.tsx); no dependencies; queue at 1/8; 0 open PRs; status=pending; task description notes "confirm new file with user" per CLAUDE.md—implementer will handle |
