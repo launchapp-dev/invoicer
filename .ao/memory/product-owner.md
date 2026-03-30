@@ -7,11 +7,11 @@ the current product state assessment so work is not repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (cycle 2) |
-| Health Check | PASS — pnpm build clean, 20 routes |
+| Date | 2026-03-29 (cycle 3) |
+| Health Check | PASS — recent QA runs all pass with workaround; disk space resolved (15% used) |
 | Tasks Created | None (pipeline at capacity — 5 active tasks) |
 | Requirements Created | None |
-| Pipeline Status | 5 active tasks: 1 critical (TASK-330), 4 medium (TASK-316/317/318/319) |
+| Pipeline Status | 5 active tasks: 1 critical (TASK-330 — PR #200 OPEN), 4 medium (TASK-316/317/318/319) |
 
 ## Decisions Log
 | Date | Decision | Reason |
@@ -30,6 +30,8 @@ the current product state assessment so work is not repeated.
 | 2026-03-29 | Created TASK-328: E2E bug US state tax presets | TASK-325 marked done by reconciler but COUNTRY_TAX_MAP in invoice-form.tsx still has no US states |
 | 2026-03-29 | Did not create new tasks (cycle 2) | Pipeline at capacity (5 tasks). TASK-330 critical (React 19 text input) already in pipeline. TASK-327 and TASK-328 were cancelled by reconciler. |
 | 2026-03-29 | TASK-330 not enqueued | Critical task sitting in `ready` but not in dispatch queue — planner should enqueue with workflow_ref=triage |
+| 2026-03-29 (cycle 3) | Did not create new tasks | Pipeline at capacity (5 tasks). TASK-330 PR #200 OPEN with fix — needs merge not new tasks. |
+| 2026-03-29 (cycle 3) | Did not add *.png to .gitignore | Minor risk (159 untracked screenshots), not a VISION gap or build failure. Deferring. |
 
 ## Requirements Created
 | Date | ID | Title | Status |
@@ -51,13 +53,13 @@ the current product state assessment so work is not repeated.
 | Feature | Status | Last Checked | Notes |
 |---------|--------|-------------|-------|
 | Authentication | Implemented | 2026-03-29 | Email/password + OAuth UI; OAuth needs env vars at deploy |
-| Invoice Form | Implemented | 2026-03-29 | Multi-tax lines (taxLines array), line items, attachments, duplicate detection, AI autofill |
+| Invoice Form | Broken (React 19) | 2026-03-29 (cycle 3) | Text fields non-functional. TASK-330 PR #200 fixes with Controller pattern — not merged yet |
 | Live Preview | Implemented | 2026-03-29 | Side-by-side desktop, tab toggle mobile |
 | PDF Generation | Implemented | 2026-03-29 | 3 templates (classic/modern/minimal), brand color+font, share link /i/[token] |
 | Invoice Dashboard | Implemented | 2026-03-29 | Stats, search, filter, sort, pagination, bulk delete/status/CSV export, AI NL search, cash flow widget |
-| Client Management | Partially implemented | 2026-03-29 | CRUD+CSV import done; search/sort/pagination missing (TASK-317 ready) |
+| Client Management | Partially implemented | 2026-03-29 | CRUD+CSV import done; search/sort/pagination missing (TASK-317 ready, no code on branch) |
 | Client Detail Page | Implemented | 2026-03-29 | /clients/[id] has invoice history, P&L, expense tracking — fully implemented |
-| Multi-Currency | Partial | 2026-03-29 | 10 currencies in 4 separate duplicate constants; TASK-322 cancelled (3rd attempt); not re-creating |
+| Multi-Currency | Partial | 2026-03-29 | 10 currencies in 4 separate duplicate constants; 3+ failed attempts to expand; not re-creating |
 | Invoice Lifecycle | Mostly implemented | 2026-03-29 | Status workflow, payment recording, partial payments done; audit trail missing (TASK-318 ready) |
 | Recurring Invoices | Implemented | 2026-03-29 | Full CRUD at /dashboard/recurring |
 | Settings | Implemented | 2026-03-29 | Business profile, logo, templates, payment instructions, brand color+font, invoice defaults |
@@ -68,23 +70,31 @@ the current product state assessment so work is not repeated.
 | AI: Cash Flow | Implemented | 2026-03-29 | CashFlowWidget on dashboard with AI insight |
 | AI: Reminders | Implemented | 2026-03-29 | AI-drafted reminder messages in invoice-actions sheet |
 | AI: Expenses | Implemented | 2026-03-29 | Full expense manager at /expenses with AI categorization |
-| AI: NL Search | Partial | 2026-03-29 | Works for invoices in dashboard; not implemented for expenses (TASK-327 created) or clients (blocked by TASK-317) |
-| Tax Presets | Partial | 2026-03-29 | COUNTRY_TAX_MAP: UK/DE/FR/AU/CA/NZ/IN/SG only. No US states. TASK-328 created to fix |
+| AI: NL Search | Partial | 2026-03-29 | Works for invoices in dashboard; not implemented for expenses (TASK-327 cancelled) or clients (blocked by TASK-317) |
+| Tax Presets | Partial | 2026-03-29 | COUNTRY_TAX_MAP: UK/DE/FR/AU/CA/NZ/IN/SG only. No US states. TASK-328 cancelled. |
 
 ## Current Assessment
 
-**Overall health: Strong.** Build passes. 5 active tasks (1 critical + 4 medium).
+**Overall health: Blocked on critical merge.** Build likely clean. 5 active tasks (1 critical PR waiting + 4 medium stalled).
+
+**Critical path:**
+- TASK-330 [ready][critical] — PR #200 OPEN with React 19 Controller fix. Invoice form text fields broken without this. **Must be merged.**
+- Queue is EMPTY — nothing dispatched. Planner must enqueue TASK-330 with workflow_ref=triage.
 
 **Active pipeline (5 tasks):**
-- TASK-330 [ready][critical] — Invoice form text fields broken (React 19 DOM reset in Playwright). **NOT YET ENQUEUED** — planner must queue with workflow_ref=triage.
-- TASK-316 [ready][medium] — Social proof stats on landing page (E2E bug, unmerged)
-- TASK-317 [ready][medium] — Client search/sort/pagination (E2E bug, unmerged)
-- TASK-318 [ready][medium] — Invoice audit trail (E2E bug, unmerged)
-- TASK-319 [ready][medium] — Dark mode toggle on landing page (E2E bug, unmerged)
+- TASK-330 [ready][critical] — PR #200 OPEN, 1 commit ahead of main. Fix is written.
+- TASK-316 [ready][medium] — Social proof stats; branch has only memory commits, no code
+- TASK-317 [ready][medium] — Client search/sort/pagination; branch has only memory commits, no code
+- TASK-318 [ready][medium] — Invoice audit trail; branch has only memory commits, no code
+- TASK-319 [ready][medium] — Dark mode toggle; no dedicated branch found
 
-**TASK-324**: Done. TASK-327/328: Cancelled by reconciler.
+**New observation (cycle 3):**
+- 159 PNG screenshot files in repo root — untracked (`??` in git status), not committed
+- `.gitignore` lacks `*.png` entries — risk of accidental commit if anyone runs `git add .`
+- Disk space: resolved (15% used, 12GB free on 926GB volume)
 
-**Critical systemic pattern — unmerged work**: Most active tasks are E2E bug re-implementations. Merge pipeline is not consistently landing code. Currency expansion attempted 3+ times; not re-creating until pattern improves.
+**Systemic pattern — stuck pipeline:**
+Most active tasks are "ready" with no code. The merge workflow is not consistently landing code. The planner has been cycling for 20+ runs. The critical fix (TASK-330) has a PR open but isn't being merged.
 
 **VISION gaps not in pipeline:**
 - Multi-currency (25+ currencies): not re-creating (3 prior attempts failed to land)
@@ -93,7 +103,6 @@ the current product state assessment so work is not repeated.
 - Client NL search: blocked by TASK-317 (basic search must land first)
 
 **Next run focus:**
-- Verify TASK-330 gets enqueued (critical path)
+- After TASK-330 PR #200 merges, verify text input works in QA
+- After pipeline drains below 3 tasks, revisit: add `*.png` to .gitignore (low priority), then currency expansion / US state tax gaps
 - After TASK-317 lands, create NL search for clients task
-- After pipeline drains below 3 tasks, revisit currency expansion and US state tax gaps
-- Check if any of TASK-316/317/318/319 have landed code in main
