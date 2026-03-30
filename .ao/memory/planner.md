@@ -6,20 +6,23 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 53) |
+| Date | 2026-03-30 (cycle 7, run 54) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start; 2/8 after enqueues |
+| Queue Depth | 0/8 at start; 3/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 2 (TASK-330: critical React 19 input bug, no deps; TASK-331: critical build fix, no deps) |
-| Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 6 total: TASK-330 (enqueued), TASK-331 (enqueued), TASK-316/317/318/319 (blocked by 7 unmerged deps) |
-| Pipeline Status | WORKING — TASK-330 and TASK-331 (both critical) enqueued to triage. 4 E2E bugs remain blocked by 7 upstream tasks marked done with 0 merged PRs (TASK-313/307/284/305/298/312/288). Root cause: dependencies must merge PRs before downstream tasks proceed. |
+| New Work Enqueued | 3 (TASK-330: critical React 19 input bug; TASK-331: critical build fix; TASK-332: medium Next.js warning — all no deps) |
+| Product Review Enqueued | 0 (3 tasks enqueued; pipeline not idle) |
+| Ready Tasks | 7 total: TASK-330/331/332 (enqueued), TASK-316/317/318/319 (blocked by 6 unmerged deps) |
+| Pipeline Status | WORKING — 3 critical/medium tasks enqueued to triage (queue 3/8). 4 E2E bugs remain blocked by 6 upstream tasks marked done with 0 merged PRs (TASK-313/307/284/305/298/312/288). Root cause: dependencies must merge PRs before downstream tasks proceed. Blocker persists 12+ runs. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 7, run 54) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty; verified via task.get |
+| 2026-03-30 (cycle 7, run 54) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty; verified via task.get |
+| 2026-03-30 (cycle 7, run 54) | TASK-332 | triage | Medium Next.js searchParams warning; no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 53) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 53) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 51) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty; verified via task.get |
@@ -155,7 +158,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-316 | TASK-313 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 52) |
-| TASK-317 | TASK-307 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 52) |
-| TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-30 (cycle 7, run 52) |
-| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-30 (cycle 7, run 52) |
+| TASK-316 | TASK-313 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 54) |
+| TASK-317 | TASK-307 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 54) |
+| TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-30 (cycle 7, run 54) |
+| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-30 (cycle 7, run 54) |
