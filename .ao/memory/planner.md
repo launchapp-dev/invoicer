@@ -6,7 +6,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (cycle 7, run 3) |
+| Date | 2026-03-29 (cycle 7, run 4) |
 | Open PRs | 0 |
 | Queue Depth | 0/8 (queue empty) |
 | Rework Enqueued | 0 |
@@ -97,6 +97,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 (cycle 7) | - | - | no enqueue (same 4 ready tasks blocked by same 6 deps marked done with 0 merged PRs each: verified TASK-313 status=done/no PR, TASK-307 status=done/no PR; blocker persists 12+ hours; product-review from prior cycles has not resolved; root cause: upstream tasks marked done without PR creation/merge) |
 | 2026-03-29 (cycle 7, run 2) | - | - | no enqueue (4 ready tasks ALL blocked: re-verified all 7 deps marked done with 0 merged PRs—TASK-313, TASK-307, TASK-298, TASK-312, TASK-288, TASK-284, TASK-305; blocker persists; product-review from cycle 7 did not resolve) |
 | 2026-03-29 (cycle 7, run 3) | - | - | no enqueue (4 ready tasks all blocked by same 7 unmerged deps; idle condition false because 4 ready tasks present; blocker unresolved) |
+| 2026-03-29 (cycle 7, run 4) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps: TASK-313,307,298,312,288,284,305 all done with 0 merged PRs; idle condition false—ready tasks present but blocked; blocker persists 12+ hours) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
