@@ -6,12 +6,12 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-31T08:15:00Z |
+| Date | 2026-03-31T09:45:00Z |
 | Tasks Unblocked | 0 |
 | Backlog Promoted | 0 |
 | Failed Re-routed | 0 |
 | Queue Cleaned | 1 |
-| Tasks Marked Done | 0 |
+| Tasks Marked Done | 2 |
 | Pipeline Idle | false |
 
 ## Actions Log
@@ -41,6 +41,8 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 | 2026-03-30 22:30 | NO-OP RECONCILIATION | 2 ready tasks (TASK-330 invoice form, TASK-319 dark mode), 0 queue, 0 blocked, 0 backlog, 0 open PRs — ACTIVE pipeline, awaiting planner dispatch |
 | 2026-03-31 08:15 | QUEUE AUTO-CLEANED | Dropped 1 stale assigned entry (TASK-330 triage workflow from 13:52 on 2026-03-30, no active workflow for 9+ hours) |
 | 2026-03-31 08:15 | RECONCILIATION COMPLETE | 2 ready tasks (TASK-330 critical invoice form, TASK-319 dark mode), 0 queue, 0 blocked, 0 backlog, 0 open PRs — ACTIVE pipeline |
+| 2026-03-31 09:45 | MARK DONE 2 TASKS | TASK-335 (PR#203 merged) and TASK-333 (PR#202 merged) marked done |
+| 2026-03-31 09:45 | RECONCILIATION COMPLETE | 3 ready (TASK-336 with PR#201 open, TASK-337 QA, TASK-334 dark mode nav), 2 queue (TASK-336 assigned, TASK-019 assigned), 2 blocked parents (TASK-330, TASK-319 awaiting subtasks) — ACTIVE pipeline |
 
 ## Known State Issues
 <!-- Reconciler: track persistent issues that span multiple runs -->
@@ -54,3 +56,5 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 | TASK-316 | N/A | 2026-03-30 (merged ao/task-316) |
 | TASK-318 | N/A | 2026-03-30 (merged ao/task-318) |
 | TASK-317 | N/A | 2026-03-30 (merged ao/task-317) |
+| TASK-335 | 203 | 2026-03-31 (merged fix(invoice-form): convert text inputs to Controller) |
+| TASK-333 | 202 | 2026-03-31 (merged feat(components): add ThemeToggle component) |
