@@ -6,20 +6,22 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 8, run 55) |
+| Date | 2026-03-30 (cycle 8, run 56) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start; 3/8 after enqueues |
+| Queue Depth | 0/8 at start; 2/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 3 (TASK-330: critical React 19 input bug; TASK-331: critical build fix; TASK-332: medium Next.js warning — all no deps; queue was empty from prior run) |
-| Product Review Enqueued | 0 (3 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 7 total: TASK-330/331/332 (enqueued), TASK-316/317/318/319 (blocked by unmerged deps TASK-313/307/284/305/298/312/288) |
-| Pipeline Status | WORKING — Re-enqueued same 3 tasks (queue cleared from prior run); 4 E2E bugs remain blocked by 7 deps marked done with 0 merged PRs. Root cause: upstream tasks need PR merge before downstream can proceed. |
+| New Work Enqueued | 2 (TASK-330: critical React 19 input bug; TASK-319: medium dark mode toggle — both no deps; verified via task.get; queue was empty from prior run) |
+| Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
+| Ready Tasks | 2 total enqueued (TASK-330, TASK-319); 7 other tasks remain blocked by unmerged deps (TASK-316→TASK-313/307, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-331→no deps, status=done) |
+| Pipeline Status | WORKING — Queue now at 2/8; both critical/medium E2E bugs enqueued (TASK-330 was re-enqueued 5+ times, finally proceeding); dark mode toggle (TASK-319) enqueued for first time. TASK-331 (build fix) appears to be done but not in ready queue. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 8, run 56) | TASK-330 | triage | Critical React 19 input bug (invoice form text inputs broken in React 19); no dependencies; queue was empty; verified via task.get; re-enqueued (5+ attempts, still in ready) |
+| 2026-03-30 (cycle 8, run 56) | TASK-319 | triage | Medium E2E bug: dark mode toggle missing from landing page nav; no dependencies; verified via task.get; queue capacity 2/8 |
 | 2026-03-30 (cycle 8, run 55) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty from prior run; verified via task.get |
 | 2026-03-30 (cycle 8, run 55) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 8, run 55) | TASK-332 | triage | Medium Next.js searchParams warning; no dependencies; queue was empty; verified via task.get |
