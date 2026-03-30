@@ -6,12 +6,12 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30T13:05:00Z |
+| Date | 2026-03-30T22:30:00Z |
 | Tasks Unblocked | 0 |
 | Backlog Promoted | 0 |
 | Failed Re-routed | 0 |
-| Queue Cleaned | 1 (auto-cleaned when parents marked done) |
-| Tasks Marked Done | 5 |
+| Queue Cleaned | 0 |
+| Tasks Marked Done | 0 |
 | Pipeline Idle | false |
 
 ## Actions Log
@@ -38,6 +38,7 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 | 2026-03-30 13:05 | MARK DONE 5 TASKS | Merged branches confirmed: TASK-331/332/316/318/317 marked done (in_progress → done) |
 | 2026-03-30 13:05 | QUEUE AUTO-CLEANED | 3 assigned queue entries auto-removed when parent tasks marked done (TASK-330/331/332 triage workflows) |
 | 2026-03-30 13:05 | RECONCILIATION COMPLETE | 2 ready (TASK-330 critical invoice form, TASK-319 dark mode landing), 0 queue, 0 blocked, 0 backlog, 0 open PRs — ACTIVE pipeline |
+| 2026-03-30 22:30 | NO-OP RECONCILIATION | 2 ready tasks (TASK-330 invoice form, TASK-319 dark mode), 0 queue, 0 blocked, 0 backlog, 0 open PRs — ACTIVE pipeline, awaiting planner dispatch |
 
 ## Known State Issues
 <!-- Reconciler: track persistent issues that span multiple runs -->
