@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (cycle 7, run 4) |
+| Date | 2026-03-29 (cycle 7, run 5) |
 | Open PRs | 0 |
 | Queue Depth | 0/8 (queue empty) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
 | New Work Enqueued | 0 (all 4 ready tasks blocked by 7 unmerged deps marked done) |
-| Product Review Enqueued | 0 (idle condition not met: 4 ready tasks present; blocker unresolved 12+ hours) |
+| Product Review Enqueued | 0 (idle condition false: 4 ready tasks present but all blocked by unmet deps) |
 | Ready Tasks | 4 (TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-319→TASK-298/312/288) |
-| Pipeline Status | BLOCKED (4 ready; all dependency-blocked; 12+ hours unresolved; no mechanism to proceed until deps merged) |
+| Pipeline Status | BLOCKED (4 ready; 7 unmerged deps all marked done; blocker persists 13+ hours; no mechanism to proceed) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -98,6 +98,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 (cycle 7, run 2) | - | - | no enqueue (4 ready tasks ALL blocked: re-verified all 7 deps marked done with 0 merged PRs—TASK-313, TASK-307, TASK-298, TASK-312, TASK-288, TASK-284, TASK-305; blocker persists; product-review from cycle 7 did not resolve) |
 | 2026-03-29 (cycle 7, run 3) | - | - | no enqueue (4 ready tasks all blocked by same 7 unmerged deps; idle condition false because 4 ready tasks present; blocker unresolved) |
 | 2026-03-29 (cycle 7, run 4) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps: TASK-313,307,298,312,288,284,305 all done with 0 merged PRs; idle condition false—ready tasks present but blocked; blocker persists 12+ hours) |
+| 2026-03-29 (cycle 7, run 5) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps: verified all 7 deps marked done with 0 merged PRs; idle condition false—ready tasks present but all blocked; blocker persists 13+ hours) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
