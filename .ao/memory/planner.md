@@ -6,20 +6,23 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 54) |
+| Date | 2026-03-30 (cycle 8, run 55) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
 | Queue Depth | 0/8 at start; 3/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 3 (TASK-330: critical React 19 input bug; TASK-331: critical build fix; TASK-332: medium Next.js warning — all no deps) |
+| New Work Enqueued | 3 (TASK-330: critical React 19 input bug; TASK-331: critical build fix; TASK-332: medium Next.js warning — all no deps; queue was empty from prior run) |
 | Product Review Enqueued | 0 (3 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 7 total: TASK-330/331/332 (enqueued), TASK-316/317/318/319 (blocked by 6 unmerged deps) |
-| Pipeline Status | WORKING — 3 critical/medium tasks enqueued to triage (queue 3/8). 4 E2E bugs remain blocked by 6 upstream tasks marked done with 0 merged PRs (TASK-313/307/284/305/298/312/288). Root cause: dependencies must merge PRs before downstream tasks proceed. Blocker persists 12+ runs. |
+| Ready Tasks | 7 total: TASK-330/331/332 (enqueued), TASK-316/317/318/319 (blocked by unmerged deps TASK-313/307/284/305/298/312/288) |
+| Pipeline Status | WORKING — Re-enqueued same 3 tasks (queue cleared from prior run); 4 E2E bugs remain blocked by 7 deps marked done with 0 merged PRs. Root cause: upstream tasks need PR merge before downstream can proceed. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 8, run 55) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty from prior run; verified via task.get |
+| 2026-03-30 (cycle 8, run 55) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty; verified via task.get |
+| 2026-03-30 (cycle 8, run 55) | TASK-332 | triage | Medium Next.js searchParams warning; no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 54) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 54) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 54) | TASK-332 | triage | Medium Next.js searchParams warning; no dependencies; queue was empty; verified via task.get |
