@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 46) |
+| Date | 2026-03-30 (cycle 7, run 47) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
 | Queue Depth | 0/8 at start; 0/8 after checks |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 0 (4 E2E bugs all blocked by unmerged deps: TASK-316→313, 317→307, 318→284/305, 319→298/312/288; all deps marked done with 0 merged PRs) |
-| Product Review Enqueued | 0 (pipeline not idle: 4 ready tasks exist but blocked) |
+| New Work Enqueued | 0 (4 ready tasks all blocked by unmerged deps: TASK-316→313, 317→307, 318→284/305, 319→298/312/288; verified all 7 deps marked done with 0 merged PRs) |
+| Product Review Enqueued | 0 (idle condition false: 4 ready tasks exist, blocked but not idle) |
 | Ready Tasks | 4 total: TASK-316/317/318/319 (all blocked by unmerged deps) |
-| Pipeline Status | BLOCKED — 4 E2E bugs blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). Root cause: upstream tasks need PR creation/merge. Blocker persists 12+ hours. Severity: CRITICAL. |
+| Pipeline Status | BLOCKED — 4 E2E bugs blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL blocker unresolved 13+ runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -105,6 +105,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 (cycle 7, run 5) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps: verified all 7 deps marked done with 0 merged PRs; idle condition false—ready tasks present but all blocked; blocker persists 13+ hours) |
 | 2026-03-29 (cycle 7, run 6) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps marked done with 0 merged PRs each: TASK-313,307,284,305,298,312,288; idle condition false; blocker unresolved 14+ hours; no PO intervention occurred) |
 | 2026-03-29 (cycle 7, run 7) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps marked done with 0 merged PRs each: TASK-313,307,284,305,298,312,288; idle condition false; blocker persists 15+ hours; no mechanism to resolve without upstream PR merge) |
+| 2026-03-30 (cycle 7, run 47) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps: TASK-316→313 done/0PR, TASK-317→307 done/0PR, TASK-318→284/305 both done/0PR, TASK-319→298/312/288 all done/0PR; verified all 7 deps marked done with 0 merged PRs; idle condition false—4 ready tasks present but all blocked; blocker unresolved 16+ hours; CRITICAL: upstream tasks need PR creation/merge to unblock) |
 | 2026-03-31 (cycle 7, run 8) | - | - | no enqueue (queue FULL at 8/8: 3 assigned, 5 pending; 48 ready tasks waiting; pipeline backed up, not idle) |
 | 2026-03-31 (cycle 7, run 9) | - | - | no enqueue (queue DRAINED to 0/8; 3 ready tasks present but ALL blocked by unmerged deps: TASK-318→TASK-284/305 done/0PR, TASK-317→TASK-307 done/0PR, TASK-319→TASK-298/312/288 all done/0PR; blocker persists 15+ hours; cannot dispatch until upstream tasks merged) |
 | 2026-03-31 (cycle 7, run 10) | - | - | no enqueue (verified all 3 ready tasks blocked: TASK-318→TASK-284/305, TASK-317→TASK-307, TASK-319→TASK-298/312/288 all marked done with 0 merged PRs each; idle check false—ready tasks present but blocked; blocker persists 16+ hours; product-review not triggered) |
