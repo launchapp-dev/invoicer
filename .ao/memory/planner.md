@@ -6,20 +6,22 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 3) |
+| Date | 2026-03-30 (cycle 9, run 4) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start; 2/8 after enqueues |
+| Queue Depth | 0/8 at start; 1/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 2 (TASK-330: critical React 19 input bug; TASK-319: medium dark mode toggle bug—both have no formal dependencies; both still in ready status; triage workflow) |
-| Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 2 total ready (TASK-330 and TASK-319 still in ready status; verified via task list; no further ready tasks identified) |
-| Pipeline Status | WORKING — Queue at 2/8 after enqueues; TASK-330 (critical) + TASK-319 (medium) enqueued for triage; both tasks verified ready with empty dependencies array at start of run; queue was 0/8 at start |
+| New Work Enqueued | 1 (TASK-330: critical React 19 input bug; no dependencies verified; triage workflow) |
+| Skipped | TASK-319 blocked by 3 unmerged dependencies: TASK-298, TASK-312, TASK-288 (all marked done but 0 merged PRs each) |
+| Product Review Enqueued | 0 (1 task enqueued; pipeline not idle) |
+| Ready Tasks | 2 total ready (TASK-330 enqueued; TASK-319 blocked by unmerged deps) |
+| Pipeline Status | WORKING — Queue at 1/8 after enqueues; TASK-330 (critical) enqueued for triage; TASK-319 blocked by unmerged dependency chain; queue was 0/8 at start |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 4) | TASK-330 | triage | Critical React 19 input bug (text inputs don't accept keyboard input); no dependencies verified; queue empty at start; verified via task.list |
 | 2026-03-30 (cycle 9, run 3) | TASK-330 | triage | Critical React 19 input bug (text inputs don't accept keyboard input); no dependencies verified via task.list; queue empty at start; re-enqueued status=pending |
 | 2026-03-30 (cycle 9, run 3) | TASK-319 | triage | Medium dark mode toggle bug (missing from landing page nav); no dependencies verified via task.list; queue at 1/8 after TASK-330; enqueued status=pending |
 | 2026-03-30 (cycle 9, run 2) | TASK-330 | triage | Critical React 19 input bug (text inputs don't accept keyboard input); no formal dependencies; queue empty; enqueued status=pending |
@@ -176,4 +178,4 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | TASK-316 | TASK-313 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 54) |
 | TASK-317 | TASK-307 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 54) |
 | TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-30 (cycle 7, run 54) |
-| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-30 (cycle 7, run 54) |
+| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-30 (cycle 9, run 4) |
