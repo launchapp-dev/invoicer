@@ -6,23 +6,26 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 17) |
+| Date | 2026-03-30 (cycle 9, run 18) |
 | Open PRs | 1 (PR#201 for TASK-336; no reviews/CHANGES_REQUESTED; mergeStateStatus=CLEAN) |
-| Queue at start | 0/8 (prior run 16's enqueues consumed) |
-| Queue at end | 3/8 (TASK-335, TASK-336, TASK-333) |
-| Enqueued | TASK-335 (critical, no deps, started=null), TASK-336 (critical, no deps, started=null), TASK-333 (medium, no deps, ready) |
-| Skipped | TASK-337 (blocked by TASK-336 PR#201 not merged; depends on TASK-335 + TASK-336); TASK-334 (blocked by TASK-333 not yet done; depends on TASK-333) |
+| Queue at start | 0/8 (prior run 17's enqueues consumed) |
+| Queue at end | 3/8 (TASK-336, TASK-337, TASK-334) |
+| Enqueued | TASK-336 (critical, no deps, started=null), TASK-337 (critical, no deps, started=null), TASK-334 (medium, depends on TASK-333 ✓ merged PR#202, started=null) |
+| Skipped | none |
 | Rework Enqueued | 0 (no CHANGES_REQUESTED reviews) |
 | Rebase Enqueued | 0 (PR#201 is CLEAN) |
-| New Work Enqueued | 3 (TASK-335 critical—PR#203 merged but task status still "ready" not "done"; TASK-336 critical—PR#201 open/CLEAN, not merged; TASK-333 medium—no deps, ready; all triage workflow) |
+| New Work Enqueued | 3 (TASK-336 critical—PR#201 CLEAN/not merged, no deps; TASK-337 critical—no PR yet, no deps; TASK-334 medium—depends on TASK-333 done/PR#202 merged; all triage workflow) |
 | Product Review Enqueued | 0 (3 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 5 total (3 enqueued; 2 blocked by unmet deps) |
-| Pipeline Status | WORKING — Queue 0/8 at start; all 3 newly enqueued tasks have started_at=null (never dispatched before); re-enqueuing to continue progress; queue now 3/8 (3 pending) |
+| Ready Tasks | 3 total (all 3 enqueued) |
+| Pipeline Status | WORKING — Queue 0/8 at start; run 17 tasks consumed (TASK-335 done, TASK-333 done, TASK-336 still ready); TASK-335 (done/PR#203 merged), TASK-333 (done/PR#202 merged); new queue: TASK-336 assigned, TASK-337 assigned, TASK-334 assigned; queue now 3/8 |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 18) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals (React 19 fix); no dependencies; PR#201 CLEAN/mergeable (not merged); started_at=null; queue 0/8 at start; enqueued |
+| 2026-03-30 (cycle 9, run 18) | TASK-337 | triage | Critical: QA verify text inputs accept keyboard input and totals calculate; no dependencies; status=ready; started_at=null; queue 0/8; enqueued |
+| 2026-03-30 (cycle 9, run 18) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (done/PR#202 merged ✓); status=ready; started_at=null; queue 0/8; enqueued |
 | 2026-03-30 (cycle 9, run 17) | TASK-335 | triage | Critical: Fix invoice-form.tsx text inputs with Controller (React 19 fix); no dependencies; PR#203 MERGED (task status still "ready" not "done"); started_at=null (never dispatched); queue 0/8 at start; re-enqueued |
 | 2026-03-30 (cycle 9, run 17) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals (React 19 fix); no dependencies; PR#201 CLEAN/mergeable (not merged); started_at=null; queue 0/8; re-enqueued |
 | 2026-03-30 (cycle 9, run 17) | TASK-333 | triage | Medium: Create ThemeToggle component (src/components/theme-toggle.tsx); no dependencies; status=ready; no worktree yet (never dispatched); queue 0/8; enqueued |
