@@ -6,21 +6,22 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 44) |
-| Open PRs | 0 (no CHANGES_REQUESTED reviews, no rebase needed) |
-| Queue Depth | 1/8 at start; 1/8 after enqueue check |
-| Rework Enqueued | 0 (no open PRs) |
-| Rebase Enqueued | 0 (no open PRs) |
-| New Work Enqueued | 0 (all 4 ready tasks blocked by unmerged dependencies) |
-| Product Review Enqueued | 0 (pipeline not idle: 1 queued item; no product-review trigger needed) |
-| Ready Tasks | 5 (TASK-330 assigned to queue; 4 blocked: TASK-316→313, TASK-317→307, TASK-318→284/305, TASK-319→298/312/288) |
-| Pipeline Status | BLOCKED — TASK-330 remains in queue (assigned); 4 ready E2E bugs cannot proceed: all 7 upstream dependencies (TASK-313, 307, 284, 305, 298, 312, 288) are status=done but have 0 merged PRs each. Root cause persists: tasks marked done without PR creation/merge. Blocker unresolved for 12+ hours across 44 runs. |
+| Date | 2026-03-30 (cycle 7, run 45) |
+| Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
+| Queue Depth | 1/8 at start; 1/8 after checks (TASK-330 assigned since 09:15:42) |
+| Rework Enqueued | 0 (no open PRs with reviews) |
+| Rebase Enqueued | 0 (no open PRs with conflicts) |
+| New Work Enqueued | 0 (TASK-330 already queued; 4 E2E bugs blocked by 7 unmerged deps) |
+| Product Review Enqueued | 0 (pipeline not idle: 1 queued task) |
+| Ready Tasks | 5 total: TASK-330 (in queue), TASK-316/317/318/319 (all blocked by unmerged deps) |
+| Pipeline Status | CONSTRAINED — TASK-330 active (assigned); 4 E2E bugs blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). Blocker persists: upstream tasks need PR creation/merge before dependent work can proceed. Severity: HIGH — blocks all E2E bug fixes. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
 | 2026-04-02 (cycle 7, run 43) | TASK-330 | triage | E2E bug: React 19 text input reset (critical; no dependencies; re-enqueued) |
+| 2026-03-30 (cycle 7, run 45) | - | - | no enqueue (TASK-330 already in queue assigned; TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 both done/0PR, TASK-319→TASK-298/312/288 all done/0PR; blocker persists) |
 | 2026-03-30 (cycle 7, run 44) | - | - | no enqueue (4 ready tasks all blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 both done/0PR, TASK-319→TASK-298/312/288 all done/0PR; blocker unresolved 12+ hours; TASK-330 remains assigned in queue) |
 | 2026-03-31 (current) | TASK-009 | triage | Add multi-currency support (no dependencies; queue empty post-process) |
 | 2026-03-31 (current) | TASK-327 | triage | E2E bug: NL search for expenses (no dependencies; queue empty post-process) |
