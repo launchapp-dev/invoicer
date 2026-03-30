@@ -53,6 +53,7 @@ src/
     dashboard/
       page.tsx                    — Invoice dashboard (authenticated)
       recurring/page.tsx          — Recurring invoices
+      recurring/recurring-actions.tsx — Recurring invoice actions
       dashboard-stats.tsx         — Stats widget
       dashboard-filters.tsx       — Dashboard filters
       dashboard-table.tsx         — Invoice table
@@ -73,6 +74,7 @@ src/
     settings/
       page.tsx                    — Account settings
       templates/page.tsx          — Invoice templates
+      templates/templates-client.tsx — Invoice templates client component
       settings-form.tsx           — Settings form
     expenses/
       page.tsx                    — Expenses list
@@ -97,7 +99,6 @@ src/
     utils.ts                      — cn() utility (installed by shadcn)
     auth.ts                       — Auth configuration
     auth-client.ts                — Client-side auth utilities
-    db.ts                         — Drizzle DB client
     calculations.ts               — Invoice math (subtotal, tax, total)
     recurring-actions.ts          — Recurring invoice triggers
     expense-storage.ts            — Expense persistence
