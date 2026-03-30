@@ -6,20 +6,22 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 8, run 57) |
+| Date | 2026-03-30 (cycle 8, run 58) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start; 2/8 after enqueues |
+| Queue Depth | 0/8 at start; 1/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 2 (TASK-330: critical React 19 input bug; TASK-319: medium dark mode toggle — both no dependencies verified via ao task list; queue was empty from prior run) |
-| Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 2 total ready tasks enqueued (TASK-330, TASK-319); 4 other tasks remain blocked by unmerged deps (TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305) |
-| Pipeline Status | WORKING — Queue now at 2/8; critical React 19 input bug (TASK-330) and dark mode toggle (TASK-319) both enqueued for immediate triage. 4 remaining ready tasks blocked by 7 unmerged deps. |
+| New Work Enqueued | 1 (TASK-330: critical React 19 input bug; no dependencies) |
+| Product Review Enqueued | 0 (1 task enqueued; pipeline not idle) |
+| Ready Tasks | 2 total ready (TASK-330 enqueued; TASK-319 blocked by unmerged deps: TASK-298, TASK-312, TASK-288 all marked done with 0 merged PRs each) |
+| Pipeline Status | WORKING — Queue at 1/8; TASK-330 enqueued for triage. TASK-319 SKIPPED (dependencies blocked: TASK-298→0PR, TASK-312→0PR, TASK-288→0PR). This is a recurring blocker pattern (run 40-58). |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 8, run 58) | TASK-330 | triage | Critical React 19 input bug (React 19 uncontrolled input reset on re-render); no dependencies; queue empty; enqueued status=pending |
+| 2026-03-30 (cycle 8, run 58) | - | - | SKIPPED TASK-319 (dark mode toggle): blocked by unmerged deps TASK-298, TASK-312, TASK-288 (all marked done but 0 merged PRs each); recurring blocker 19+ runs |
 | 2026-03-30 (cycle 8, run 57) | TASK-330 | triage | Critical React 19 input bug (invoice form text inputs broken in React 19); no dependencies verified via ao task list; queue was empty; enqueued status=pending |
 | 2026-03-30 (cycle 8, run 57) | TASK-319 | triage | Medium E2E bug: dark mode toggle missing from landing page nav; no dependencies verified via ao task list; enqueued status=pending; queue capacity 2/8 |
 | 2026-03-30 (cycle 8, run 56) | TASK-330 | triage | Critical React 19 input bug (invoice form text inputs broken in React 19); no dependencies; queue was empty; verified via task.get; re-enqueued (5+ attempts, still in ready) |
