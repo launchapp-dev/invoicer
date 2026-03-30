@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 (cycle 6) |
+| Date | 2026-03-29 (cycle 7) |
 | Open PRs | 0 |
 | Queue Depth | 0/8 (queue empty) |
 | Rework Enqueued | 0 |
 | Rebase Enqueued | 0 |
-| New Work Enqueued | 0 (4 ready tasks all blocked by 7 unmerged deps) |
+| New Work Enqueued | 0 (4 ready tasks all blocked by unmerged deps) |
 | Product Review Enqueued | 0 |
-| Ready Tasks | 4 (TASK-316→TASK-313 done/0 PR, TASK-317→TASK-307 done/0 PR, TASK-318→TASK-284/305 done/0 PR, TASK-319→TASK-298/312/288 done/0 PR) |
-| Pipeline Status | BLOCKED (4 ready but all dependency-blocked; 12+ hour blocker persists) |
+| Ready Tasks | 4 (TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-319→TASK-298/312/288) |
+| Pipeline Status | BLOCKED (4 ready; all dependency-blocked; 12+ hour blocker persists; product-review workflow has not cleared) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -93,6 +93,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-31 (cycle 4) | TASK-328 | triage | Enqueued (queue empty from cycle 3; no dependencies; task description confirmed; open PRs=0) |
 | 2026-03-29 (cycle 5) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps: TASK-316→313, 317→307, 318→284/305, 319→298/312/288; all deps marked done with 0 merged PRs; cycle 4 tasks 009/327/328 cancelled) |
 | 2026-03-29 (cycle 6) | - | - | no enqueue (4 ready tasks all blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284 done/0PR TASK-305 done/0PR, TASK-319→TASK-298 done/0PR TASK-312 done/0PR TASK-288 done/0PR; all deps marked done but not merged; blocker persists 12+ hours) |
+| 2026-03-29 (cycle 7) | - | - | no enqueue (same 4 ready tasks blocked by same 6 deps marked done with 0 merged PRs each: verified TASK-313 status=done/no PR, TASK-307 status=done/no PR; blocker persists 12+ hours; product-review from prior cycles has not resolved; root cause: upstream tasks marked done without PR creation/merge) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
