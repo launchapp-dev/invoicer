@@ -6,21 +6,22 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 6) |
+| Date | 2026-03-30 (cycle 9, run 7) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start; 2/8 after enqueues |
+| Queue Depth | 0/8 at start; 1/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 2 (TASK-330: critical React 19 input bug; TASK-319: medium dark mode toggle bug; both no formal dependencies; triage workflow) |
-| Skipped | 0 (both ready tasks have no formal dependencies—TASK-319 mentions prior failed implementations as context but has no blocking deps) |
-| Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 2 total ready (TASK-330, TASK-319 both enqueued) |
-| Pipeline Status | WORKING — Queue at 2/8 after enqueues; both ready tasks dispatched to triage; queue was 0/8 at start |
+| New Work Enqueued | 1 (TASK-330: critical React 19 input bug; no dependencies; triage workflow) |
+| Skipped | 1 (TASK-319: blocked—mentions TASK-298/312/288 in description; all marked done with 0 merged PRs each per dependency rule) |
+| Product Review Enqueued | 0 (1 task enqueued; pipeline not idle) |
+| Ready Tasks | 2 total ready (TASK-330 enqueued; TASK-319 blocked) |
+| Pipeline Status | WORKING — Queue at 1/8 after enqueues; TASK-330 dispatched to triage; TASK-319 blocked by 3 unmerged deps |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 7) | TASK-330 | triage | Critical React 19 input bug (text inputs don't accept keyboard input); no formal dependencies verified via task.get; queue empty at start; 0 open PRs; enqueued status=pending |
 | 2026-03-30 (cycle 9, run 6) | TASK-330 | triage | Critical React 19 input bug (text inputs don't accept keyboard input); no formal dependencies verified via task.get; queue empty at start; 0 open PRs; enqueued status=pending |
 | 2026-03-30 (cycle 9, run 6) | TASK-319 | triage | Medium dark mode toggle bug (missing from landing page nav); no formal dependencies verified via task.get; description mentions TASK-298/312/288 as prior failed implementations context only; queue at 1/8; enqueued status=pending |
 | 2026-03-30 (cycle 9, run 4) | TASK-330 | triage | Critical React 19 input bug (text inputs don't accept keyboard input); no dependencies verified; queue empty at start; verified via task.list |
