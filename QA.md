@@ -6,18 +6,19 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (run 46) |
-| Result | PASS WITH WORKAROUND — App at port 3002 (port 3000 = condohub). Landing ✓ (no console errors). Login ✓ (qa-test@invoicer.dev, ~18s auth response). TASK-330 PERSISTS: text fields reject fill() — fiber workaround (memoizedProps → setValue) + native event dispatch for spinbuttons applied. Subtotal $1,500.00 correct. INV-007 saved. Preview ✓ (INV-007: Test Company → Client Corp, Consulting 10×$150=$1,500.00). PDF ✓ (Download PDF present, 0 errors). All 5 authenticated routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. |
-| Steps Passed | 6/6 |
-| Steps Failed | 0/6 |
-| Console Errors | 0 |
-| Network Errors | 0 |
+| Date | 2026-03-30 (run 47) |
+| Result | PASS WITH ISSUE — App at port 3002 (port 3000 = condohub). Landing ✓ (existing session → dashboard). Dashboard ✓. TASK-330 PERSISTS: text fields reject fill() — fiber workaround applied. Subtotal $1,500.00 correct. INV-008 saved. Preview ✓ (INV-008: Test Company → Client Corp, Consulting 10×$150=$1,500.00). PDF ✓ (Download PDF present, 0 errors). All 5 authenticated routes 200. Logout FAIL: POST /api/auth/sign-out returns 500 (TASK-329 recurrence — better-sqlite3 NODE_MODULE_VERSION mismatch on sign-out path). 1 console error. 2 network 5xx. |
+| Steps Passed | 5/6 |
+| Steps Failed | 1/6 |
+| Console Errors | 1 |
+| Network Errors | 2 |
 
 ## Test Results History
 
 <!-- QA agent: append each run result here. Format: | Date | Passed | Failed | Bugs Created | Notes | -->
 | Date | Passed | Failed | Bugs Created | Notes |
 |------|--------|--------|-------------|-------|
+| 2026-03-30 | 5 | 1 | 0 | PASS WITH ISSUE (run 47): App at port 3002. Existing session active (qa-test@invoicer.dev). TASK-330 PERSISTS: text fields reject fill() — fiber workaround applied. Subtotal $1,500.00 correct. INV-008 saved ✓. Preview ✓ (correct data). PDF ✓ (Download PDF present, 0 errors). All 5 authenticated routes 200. Logout FAIL: POST /api/auth/sign-out → 500 (TASK-329 recurrence — better-sqlite3 compiled against Node v22 ABI 127, current Node requires ABI 141). 1 console error (sign-out resource 500). 2 network 5xx (sign-out). No new tasks created (same root cause as TASK-329). 7 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324 + TASK-330. |
 | 2026-03-30 | 6 | 0 | 0 | PASS WITH WORKAROUND (run 46): App at port 3002 (port 3000 = condohub). Login ✓ (qa-test@invoicer.dev, existing account, ~18s auth response). TASK-330 PERSISTS: text fields reject fill(). Fiber workaround (memoizedProps → setValue) + native event dispatch for qty/rate spinbuttons applied. Subtotal $1,500.00 correct. Invoice save ✓ (INV-007 redirects to /invoices/:id). Preview ✓ (correct data). PDF ✓ (Download PDF present, 0 errors). All 5 authenticated routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 7 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324 + TASK-330. |
 | 2026-03-30 | 6 | 0 | 0 | PASS WITH WORKAROUND (run 45): App at port 3002 (port 3000 = condohub). Login ✓ (qa-test@invoicer.dev, existing account, ~21s auth response). TASK-330 PERSISTS: text fields reject fill(). Fiber workaround (memoizedProps → setValue) applied. Subtotal $1,500.00 correct. Invoice save ✓ (INV-006 redirects to /invoices/:id). Preview ✓ (correct data). PDF ✓ (Download PDF present, 0 errors). All 5 authenticated routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. 7 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324 + TASK-330. |
 | 2026-03-30 | 6 | 0 | 0 | PASS WITH WORKAROUND (run 44): App at port 3002 (port 3000 = condohub). Login ✓ (qa-test@invoicer.dev, existing account, ~50s server response). TASK-330 PERSISTS: 38 no-type inputs, React 19 resets DOM values. Invoice form loads (56 inputs). Preview ✓ (INV-004: Test Company → Client Corp, Consulting 10×$150=$1,500.00). PDF ✓ (Download PDF clicked, 0 errors). All 6 authenticated routes 200. Logout ✓ (→ /login). 0 console errors. 0 network errors. No new bugs. gstack browse crashed repeatedly — Playwright used directly. 7 unresolved: TASK-309 + TASK-310 + TASK-672 + TASK-316 + TASK-317 + TASK-324 + TASK-330. |
@@ -104,6 +105,7 @@ This is a living document maintained by the QA agent. It tracks test results, kn
 | 2026-03-29 | All pages load | PASS (run 19) | FAIL (run 20) | TASK-329 REGRESSION — server restarted under Node v25.2.1, better-sqlite3 ABI mismatch. All DB-using routes 500. Landing page timeout (disk full). |
 | 2026-03-29 | All pages load | FAIL (run 20) | PASS (run 21) | TASK-329 resolved again — server started under Node v22.17.0, disk space freed (28GB). All routes return 200. |
 | 2026-03-30 | Landing page loads | PASS | FAIL (run 41 start) | TASK-329 recurrence — server running on Node v25.2.1, better-sqlite3 ABI mismatch. Fixed by `pnpm rebuild better-sqlite3`. |
+| 2026-03-30 | Logout redirects to login | PASS (run 46) | FAIL (run 47) | TASK-329 recurrence — better-sqlite3 ABI mismatch hits sign-out endpoint: POST /api/auth/sign-out returns 500. |
 
 ## Test Coverage
 
