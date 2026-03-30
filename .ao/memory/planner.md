@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-31 (cycle 7, run 14) |
+| Date | 2026-03-31 (cycle 7, run 15) |
 | Open PRs | 0 |
-| Queue Depth | 0→1/8 (queue empty at start; TASK-330 enqueued to triage) |
+| Queue Depth | 1→1/8 (TASK-330 still assigned from prior run; triager working) |
 | Rework Enqueued | 0 (—no open PRs) |
 | Rebase Enqueued | 0 (—no open PRs) |
-| New Work Enqueued | 1 (TASK-330 critical bug; verified no dependencies; enqueued to triage) |
-| Product Review Enqueued | 0 (—not idle; 1 task enqueued) |
-| Ready Tasks | 5 (TASK-330 now queued; TASK-316,317,318,319 remain blocked by 7 unmerged deps) |
-| Pipeline Status | WORKING — TASK-330 (critical React 19 input reset bug) enqueued to triage; 4 E2E bugs blocked by 7 unmerged deps (all marked done with 0 merged PRs; blocker 18+ hours; awaiting upstream merge) |
+| New Work Enqueued | 0 (TASK-330 already queued; TASK-316/317/318/319 all blocked by unmerged deps) |
+| Product Review Enqueued | 0 (—not idle; 1 task queued, 5 ready present) |
+| Ready Tasks | 5 (TASK-330 queued/assigned; TASK-316,317,318,319 blocked by 7 unmerged deps: TASK-313,307,298,312,288,284,305) |
+| Pipeline Status | STALLED — TASK-330 assigned to triager; 4 E2E bugs blocked by 7 unmerged deps (all marked done with 0 merged PRs; blocker persists 17+ hours; root cause: upstream tasks completed without PR merge; awaiting upstream merge before downstream work can proceed) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -108,6 +108,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-31 (cycle 7, run 12) | TASK-330 | triage | Enqueued (queue cleared from prior run; verified no dependencies via task.get; open PRs=0; blocker check: 4 remaining ready tasks all blocked by 7 unmerged deps verified—TASK-316→313 done/0PR, TASK-317→307 done/0PR, TASK-318→284/305 done/0PR, TASK-319→298/312/288 done/0PR; cannot enqueue without upstream merge) |
 | 2026-03-31 (cycle 7, run 13) | TASK-330 | triage | Re-enqueued (queue had cleared from prior run; verified no dependencies; open PRs=0; re-verified 4 ready tasks blocked by 7 unmerged deps: TASK-316→313 done/0PR, TASK-317→307 done/0PR, TASK-318→284/305 done/0PR, TASK-319→298/312/288 done/0PR) |
 | 2026-03-31 (cycle 7, run 14) | TASK-330 | triage | Enqueued (queue empty at start; verified no dependencies via task.get; open PRs=0; verified all 7 blocking deps for TASK-316/317/318/319 marked done with 0 merged PRs each; cannot enqueue those 4 tasks) |
+| 2026-03-31 (cycle 7, run 15) | - | - | no enqueue (TASK-330 already assigned from prior run; re-verified all 7 blocking deps marked done with 0 merged PRs each: TASK-313,307,298,312,288,284,305; idle condition false—queue 1/8, 5 ready tasks present but 4 blocked; blocker persists 17+ hours; root cause: upstream tasks marked done without PR merge) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
