@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 50) |
+| Date | 2026-04-02 (cycle 7, run 45) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start (queue empty); 1/8 after enqueue |
+| Queue Depth | 0/8 at start (queue empty); 2/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 1 (TASK-331: critical build fix, no deps; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps) |
-| Product Review Enqueued | 0 (1 task now queued; pipeline not idle) |
-| Ready Tasks | 5 total: TASK-331 (enqueued), TASK-316/317/318/319 (all blocked by unmerged deps) |
-| Pipeline Status | WORKING — TASK-331 (critical build fix) enqueued to triage. 4 E2E bugs (TASK-316/317/318/319) remain blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL BLOCKER persists 15+ runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. Requires product owner intervention to unblock. |
+| New Work Enqueued | 2 (TASK-330: critical React 19 input bug, no deps; TASK-331: critical build fix, no deps; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps) |
+| Product Review Enqueued | 0 (2 tasks now queued; pipeline not idle) |
+| Ready Tasks | 6 total: TASK-330 (enqueued), TASK-331 (enqueued), TASK-316/317/318/319 (all blocked by unmerged deps) |
+| Pipeline Status | WORKING — TASK-330 and TASK-331 (both critical) enqueued to triage. 4 E2E bugs (TASK-316/317/318/319) remain blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL BLOCKER persists 31+ hours. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. Requires product owner intervention to unblock. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -154,4 +154,6 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-30 (cycle 7, run 49) |
 | TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-30 (cycle 7, run 49) |
 | 2026-04-02 (cycle 7, run 43) | - | - | no enqueue (TASK-330 already assigned from prior run; open PRs=0; verified all 4 remaining ready tasks blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 done/0PR, TASK-319→TASK-298/312/288 done/0PR; idle condition false—1 queued + 4 blocked = not idle; blocker persists 30+ hours; root cause: 7 upstream tasks marked done without PR merge) |
-| 2026-04-02 (cycle 7, run 44) | - | - | no enqueue (open PRs=0, queue empty at start; verified all 4 remaining ready tasks blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 done/0PR, TASK-319→TASK-298/312/288 done/0PR; idle condition false—4 ready tasks present but all blocked by 7 unmerged deps; blocker persists 30+ hours; root cause: upstream tasks marked done without PR merge) |
+| 2026-04-02 (cycle 7, run 44) | - | - | no enqueue (open PRs=0, queue empty at start; verified all 4 remaining ready tasks blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 done/0PR, TASK-319→TASK-298/312/288 done/0PR; idle condition false—4 ready tasks present but all blocked by 7 unmerged deps; blocker persists 30+ hours; root cause: upstream tasks marked done without PR merge)
+| 2026-04-02 (cycle 7, run 45) | TASK-330 | triage | Enqueued (queue empty at start; verified no dependencies via task.get; open PRs=0; verified TASK-330 status=ready)
+| 2026-04-02 (cycle 7, run 45) | TASK-331 | triage | Enqueued (queue at 1/8 from TASK-330; verified no dependencies via task.get; open PRs=0; verified TASK-331 status=ready—critical build fix, no deps; 4 remaining ready tasks all blocked by 7 unmerged deps: TASK-316→313 done/0PR, TASK-317→307 done/0PR, TASK-318→284/305 done/0PR, TASK-319→298/312/288 done/0PR) |
