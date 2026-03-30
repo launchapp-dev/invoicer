@@ -6,20 +6,22 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 52) |
+| Date | 2026-03-30 (cycle 7, run 53) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start (queue empty after prior cycle); 2/8 after enqueues |
+| Queue Depth | 0/8 at start; 2/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 2 (TASK-330: critical React 19 input bug, no deps; TASK-331: critical build fix, no deps; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps) |
-| Product Review Enqueued | 0 (2 tasks now queued; pipeline not idle) |
-| Ready Tasks | 6 total: TASK-330 (enqueued), TASK-331 (enqueued), TASK-316/317/318/319 (all blocked by unmerged deps) |
-| Pipeline Status | WORKING — TASK-330 and TASK-331 (both critical) enqueued to triage. 4 E2E bugs (TASK-316/317/318/319) remain blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL BLOCKER persists from prior runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. |
+| New Work Enqueued | 2 (TASK-330: critical React 19 input bug, no deps; TASK-331: critical build fix, no deps) |
+| Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
+| Ready Tasks | 6 total: TASK-330 (enqueued), TASK-331 (enqueued), TASK-316/317/318/319 (blocked by 7 unmerged deps) |
+| Pipeline Status | WORKING — TASK-330 and TASK-331 (both critical) enqueued to triage. 4 E2E bugs remain blocked by 7 upstream tasks marked done with 0 merged PRs (TASK-313/307/284/305/298/312/288). Root cause: dependencies must merge PRs before downstream tasks proceed. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 7, run 53) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty; verified via task.get |
+| 2026-03-30 (cycle 7, run 53) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 51) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 51) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty; verified via task.get |
 | 2026-03-30 (cycle 7, run 49) | TASK-331 | triage | Critical build fix (better-sqlite3 NODE_MODULE_VERSION mismatch); no dependencies; queue was empty |
