@@ -6,12 +6,12 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30T08:25:00Z |
-| Tasks Unblocked | 1 |
+| Date | 2026-03-30T13:05:00Z |
+| Tasks Unblocked | 0 |
 | Backlog Promoted | 0 |
-| Failed Re-routed | 1 |
-| Queue Cleaned | 0 |
-| Tasks Marked Done | 0 |
+| Failed Re-routed | 0 |
+| Queue Cleaned | 1 (auto-cleaned when parents marked done) |
+| Tasks Marked Done | 5 |
 | Pipeline Idle | false |
 
 ## Actions Log
@@ -35,6 +35,9 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 | 2026-03-30 16:42 | RECONCILIATION COMPLETE | 5 ready tasks (TASK-330 with PR#200 open, TASK-316/317/318/319 triage), 0 queue entries, 0 blocked, 0 backlog, 1 open PR — ACTIVE pipeline |
 | 2026-03-30 08:25 | UNBLOCK TASK-330 | Blocked (workflow runner failed) → ready (1st retry, PR#200 closed without merge, critical invoice form bug) |
 | 2026-03-30 08:25 | PIPELINE STATUS | 5 ready tasks (TASK-330 unblocked, TASK-316/317/318/319 triage), 0 queue, 0 blocked, 0 backlog — ACTIVE (not idle) |
+| 2026-03-30 13:05 | MARK DONE 5 TASKS | Merged branches confirmed: TASK-331/332/316/318/317 marked done (in_progress → done) |
+| 2026-03-30 13:05 | QUEUE AUTO-CLEANED | 3 assigned queue entries auto-removed when parent tasks marked done (TASK-330/331/332 triage workflows) |
+| 2026-03-30 13:05 | RECONCILIATION COMPLETE | 2 ready (TASK-330 critical invoice form, TASK-319 dark mode landing), 0 queue, 0 blocked, 0 backlog, 0 open PRs — ACTIVE pipeline |
 
 ## Known State Issues
 <!-- Reconciler: track persistent issues that span multiple runs -->
@@ -43,3 +46,8 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 <!-- Reconciler: once you verify a task has a merged PR, log it here so you don't re-check -->
 | Task ID | PR # | Verified Date |
 |---------|------|--------------|
+| TASK-331 | N/A | 2026-03-30 (merged ao/task-331) |
+| TASK-332 | N/A | 2026-03-30 (merged ao/task-332) |
+| TASK-316 | N/A | 2026-03-30 (merged ao/task-316) |
+| TASK-318 | N/A | 2026-03-30 (merged ao/task-318) |
+| TASK-317 | N/A | 2026-03-30 (merged ao/task-317) |
