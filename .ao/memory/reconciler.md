@@ -6,10 +6,10 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29T20:36:15Z |
+| Date | 2026-03-30T03:33:38Z |
 | Tasks Unblocked | 1 |
-| Backlog Promoted | 0 |
-| Failed Re-routed | 1 |
+| Backlog Promoted | 1 |
+| Failed Re-routed | 0 |
 | Queue Cleaned | 0 |
 | Tasks Marked Done | 0 |
 | Pipeline Idle | false |
@@ -28,6 +28,9 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 | 2026-03-29 | MARK DONE TASK-325 | Triage workflow completed → marked done (Add US state sales tax presets) |
 | 2026-03-29 | UNBLOCK TASK-315 | Playwright recording smoke test - resumed and set to ready after workflow runner failure |
 | 2026-03-29 | RE-ROUTE TASK-315 | Set to ready for 1st retry (was blocked with workflow runner error) |
+| 2026-03-30 03:33 | UNBLOCK TASK-316 | Blocked (workflow runner error) → ready (1st attempt retry) |
+| 2026-03-30 03:33 | PROMOTE TASK-330 | Backlog → ready (CRITICAL E2E: Invoice form keyboard input broken due to React 19 re-renders) |
+| 2026-03-30 03:33 | PIPELINE STATUS | 5 ready tasks, 0 queue entries, 0 open PRs — ACTIVE (not idle) |
 
 ## Known State Issues
 <!-- Reconciler: track persistent issues that span multiple runs -->
