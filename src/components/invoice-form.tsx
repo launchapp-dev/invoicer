@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import { Sparkles, Plus, TriangleAlert, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -51,7 +51,7 @@ function ContactSection({ prefix, title, clients, onClientSelect, onCurrencyChan
   onClientSelect?: (clientId: string | null) => void;
   onCurrencyChange?: (currency: string) => void;
 }) {
-  const { register, setValue, formState: { errors } } = useFormContext<InvoiceFormValues>();
+  const { setValue, control, formState: { errors } } = useFormContext<InvoiceFormValues>();
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const e = errors[prefix];
 
@@ -128,54 +128,104 @@ function ContactSection({ prefix, title, clients, onClientSelect, onCurrencyChan
         )}
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.name`}>Name</Label>
-          <Input
-            id={`${prefix}.name`}
-            {...register(`${prefix}.name`)}
-            error={!!e?.name}
-            aria-invalid={!!e?.name}
-            aria-describedby={e?.name ? `${prefix}-name-error` : undefined}
+          <Controller
+            control={control}
+            name={`${prefix}.name`}
+            render={({ field }) => (
+              <Input
+                id={`${prefix}.name`}
+                {...field}
+                value={field.value ?? ""}
+                error={!!e?.name}
+                aria-invalid={!!e?.name}
+                aria-describedby={e?.name ? `${prefix}-name-error` : undefined}
+              />
+            )}
           />
           {e?.name && <p id={`${prefix}-name-error`} role="alert" className="text-xs text-destructive">{e.name.message}</p>}
         </div>
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.email`}>Email</Label>
-          <Input
-            id={`${prefix}.email`}
-            type="email"
-            {...register(`${prefix}.email`)}
-            error={!!e?.email}
-            aria-invalid={!!e?.email}
-            aria-describedby={e?.email ? `${prefix}-email-error` : undefined}
+          <Controller
+            control={control}
+            name={`${prefix}.email`}
+            render={({ field }) => (
+              <Input
+                id={`${prefix}.email`}
+                type="email"
+                {...field}
+                value={field.value ?? ""}
+                error={!!e?.email}
+                aria-invalid={!!e?.email}
+                aria-describedby={e?.email ? `${prefix}-email-error` : undefined}
+              />
+            )}
           />
           {e?.email && <p id={`${prefix}-email-error`} role="alert" className="text-xs text-destructive">{e.email.message}</p>}
         </div>
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.address`}>Address</Label>
-          <Input id={`${prefix}.address`} {...register(`${prefix}.address`)} />
+          <Controller
+            control={control}
+            name={`${prefix}.address`}
+            render={({ field }) => (
+              <Input id={`${prefix}.address`} {...field} value={field.value ?? ""} />
+            )}
+          />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor={`${prefix}.city`}>City</Label>
-            <Input id={`${prefix}.city`} {...register(`${prefix}.city`)} />
+            <Controller
+              control={control}
+              name={`${prefix}.city`}
+              render={({ field }) => (
+                <Input id={`${prefix}.city`} {...field} value={field.value ?? ""} />
+              )}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor={`${prefix}.state`}>State</Label>
-            <Input id={`${prefix}.state`} {...register(`${prefix}.state`)} />
+            <Controller
+              control={control}
+              name={`${prefix}.state`}
+              render={({ field }) => (
+                <Input id={`${prefix}.state`} {...field} value={field.value ?? ""} />
+              )}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor={`${prefix}.zip`}>ZIP</Label>
-            <Input id={`${prefix}.zip`} {...register(`${prefix}.zip`)} />
+            <Controller
+              control={control}
+              name={`${prefix}.zip`}
+              render={({ field }) => (
+                <Input id={`${prefix}.zip`} {...field} value={field.value ?? ""} />
+              )}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor={`${prefix}.country`}>Country</Label>
-            <Input id={`${prefix}.country`} {...register(`${prefix}.country`)} />
+            <Controller
+              control={control}
+              name={`${prefix}.country`}
+              render={({ field }) => (
+                <Input id={`${prefix}.country`} {...field} value={field.value ?? ""} />
+              )}
+            />
           </div>
         </div>
         <div className="grid gap-2">
           <Label htmlFor={`${prefix}.taxId`}>Tax ID / VAT No. <span className="text-muted-foreground font-normal">(optional)</span></Label>
-          <Input id={`${prefix}.taxId`} {...register(`${prefix}.taxId`)} placeholder="e.g. GB123456789" />
+          <Controller
+            control={control}
+            name={`${prefix}.taxId`}
+            render={({ field }) => (
+              <Input id={`${prefix}.taxId`} {...field} value={field.value ?? ""} placeholder="e.g. GB123456789" />
+            )}
+          />
         </div>
       </CardContent>
     </Card>
@@ -388,12 +438,19 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
         <CardContent className="grid gap-4 sm:grid-cols-3">
           <div className="grid gap-2">
             <Label htmlFor="invoiceNumber">Invoice Number</Label>
-            <Input
-              id="invoiceNumber"
-              {...register("invoiceNumber")}
-              error={!!errors.invoiceNumber}
-              aria-invalid={!!errors.invoiceNumber}
-              aria-describedby={errors.invoiceNumber ? "invoice-number-error" : undefined}
+            <Controller
+              control={control}
+              name="invoiceNumber"
+              render={({ field }) => (
+                <Input
+                  id="invoiceNumber"
+                  {...field}
+                  value={field.value ?? ""}
+                  error={!!errors.invoiceNumber}
+                  aria-invalid={!!errors.invoiceNumber}
+                  aria-describedby={errors.invoiceNumber ? "invoice-number-error" : undefined}
+                />
+              )}
             />
             {errors.invoiceNumber && (
               <p id="invoice-number-error" role="alert" className="text-xs text-destructive">{errors.invoiceNumber.message}</p>
@@ -401,13 +458,20 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="issueDate">Issue Date</Label>
-            <Input
-              id="issueDate"
-              type="date"
-              {...register("issueDate")}
-              error={!!errors.issueDate}
-              aria-invalid={!!errors.issueDate}
-              aria-describedby={errors.issueDate ? "issue-date-error" : undefined}
+            <Controller
+              control={control}
+              name="issueDate"
+              render={({ field }) => (
+                <Input
+                  id="issueDate"
+                  type="date"
+                  {...field}
+                  value={field.value ?? ""}
+                  error={!!errors.issueDate}
+                  aria-invalid={!!errors.issueDate}
+                  aria-describedby={errors.issueDate ? "issue-date-error" : undefined}
+                />
+              )}
             />
             {errors.issueDate && (
               <p id="issue-date-error" role="alert" className="text-xs text-destructive">{errors.issueDate.message}</p>
@@ -431,14 +495,21 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="dueDate">Due Date</Label>
-            <Input
-              id="dueDate"
-              type="date"
-              {...register("dueDate")}
-              disabled={!!paymentTerms && paymentTerms !== "custom"}
-              error={!!errors.dueDate}
-              aria-invalid={!!errors.dueDate}
-              aria-describedby={errors.dueDate ? "due-date-error" : undefined}
+            <Controller
+              control={control}
+              name="dueDate"
+              render={({ field }) => (
+                <Input
+                  id="dueDate"
+                  type="date"
+                  {...field}
+                  value={field.value ?? ""}
+                  disabled={!!paymentTerms && paymentTerms !== "custom"}
+                  error={!!errors.dueDate}
+                  aria-invalid={!!errors.dueDate}
+                  aria-describedby={errors.dueDate ? "due-date-error" : undefined}
+                />
+              )}
             />
             {errors.dueDate && (
               <p id="due-date-error" role="alert" className="text-xs text-destructive">{errors.dueDate.message}</p>
@@ -594,7 +665,13 @@ export function InvoiceForm({ clients }: { clients?: Client[] }) {
       <Card>
         <CardContent className="pt-6 grid gap-2">
           <Label htmlFor="notes">Notes / Terms</Label>
-          <Textarea id="notes" rows={3} {...register("notes")} placeholder="Payment terms, thank you note, etc." />
+          <Controller
+            control={control}
+            name="notes"
+            render={({ field }) => (
+              <Textarea id="notes" rows={3} {...field} value={field.value ?? ""} placeholder="Payment terms, thank you note, etc." />
+            )}
+          />
         </CardContent>
       </Card>
 

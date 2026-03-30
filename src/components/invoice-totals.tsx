@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useWatch, type Control, type UseFormRegister, type FieldArrayWithId } from "react-hook-form";
+import { useWatch, Controller, type Control, type UseFormRegister, type FieldArrayWithId } from "react-hook-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -229,9 +229,16 @@ export function InvoiceTotals({ control, register, taxLineFields, appendTaxLine,
             <div key={field.id} className="flex items-end gap-3">
               <div className="flex-1 grid gap-1">
                 {index === 0 && <Label>Tax Name</Label>}
-                <Input
-                  placeholder="e.g. GST, VAT"
-                  {...register(`taxLines.${index}.name`)}
+                <Controller
+                  control={control}
+                  name={`taxLines.${index}.name`}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      value={field.value ?? ""}
+                      placeholder="e.g. GST, VAT"
+                    />
+                  )}
                 />
               </div>
               <div className="w-28 grid gap-1">

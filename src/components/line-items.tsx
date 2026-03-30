@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,7 @@ import { calcLineAmount, calcSubtotal, calcTaxAmountFromLines, calcTaxLines, cal
 import type { InvoiceFormValues } from "@/lib/invoice-schema";
 
 export function LineItems() {
-  const { register, watch, setValue } = useFormContext<InvoiceFormValues>();
+  const { control, watch, setValue } = useFormContext<InvoiceFormValues>();
   const { fields, append, remove } = useFieldArray<InvoiceFormValues, "lineItems">({
     name: "lineItems",
   });
@@ -45,10 +45,17 @@ export function LineItems() {
             <div key={field.id} className="grid grid-cols-[1fr_100px_100px_100px_44px] gap-2 items-end mb-2">
               <div className="grid gap-1">
                 {index === 0 && <Label>Description</Label>}
-                <Input
-                  {...register(`lineItems.${index}.description`)}
-                  placeholder="Item description"
-                  aria-label={`Line item ${index + 1} description`}
+                <Controller
+                  control={control}
+                  name={`lineItems.${index}.description`}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      value={field.value ?? ""}
+                      placeholder="Item description"
+                      aria-label={`Line item ${index + 1} description`}
+                    />
+                  )}
                 />
               </div>
               <div className="grid gap-1">
