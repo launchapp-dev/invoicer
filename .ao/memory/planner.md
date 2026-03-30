@@ -6,20 +6,22 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 8, run 56) |
+| Date | 2026-03-30 (cycle 8, run 57) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
 | Queue Depth | 0/8 at start; 2/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 2 (TASK-330: critical React 19 input bug; TASK-319: medium dark mode toggle — both no deps; verified via task.get; queue was empty from prior run) |
+| New Work Enqueued | 2 (TASK-330: critical React 19 input bug; TASK-319: medium dark mode toggle — both no dependencies verified via ao task list; queue was empty from prior run) |
 | Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 2 total enqueued (TASK-330, TASK-319); 7 other tasks remain blocked by unmerged deps (TASK-316→TASK-313/307, TASK-317→TASK-307, TASK-318→TASK-284/305, TASK-331→no deps, status=done) |
-| Pipeline Status | WORKING — Queue now at 2/8; both critical/medium E2E bugs enqueued (TASK-330 was re-enqueued 5+ times, finally proceeding); dark mode toggle (TASK-319) enqueued for first time. TASK-331 (build fix) appears to be done but not in ready queue. |
+| Ready Tasks | 2 total ready tasks enqueued (TASK-330, TASK-319); 4 other tasks remain blocked by unmerged deps (TASK-316→TASK-313, TASK-317→TASK-307, TASK-318→TASK-284/305) |
+| Pipeline Status | WORKING — Queue now at 2/8; critical React 19 input bug (TASK-330) and dark mode toggle (TASK-319) both enqueued for immediate triage. 4 remaining ready tasks blocked by 7 unmerged deps. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 8, run 57) | TASK-330 | triage | Critical React 19 input bug (invoice form text inputs broken in React 19); no dependencies verified via ao task list; queue was empty; enqueued status=pending |
+| 2026-03-30 (cycle 8, run 57) | TASK-319 | triage | Medium E2E bug: dark mode toggle missing from landing page nav; no dependencies verified via ao task list; enqueued status=pending; queue capacity 2/8 |
 | 2026-03-30 (cycle 8, run 56) | TASK-330 | triage | Critical React 19 input bug (invoice form text inputs broken in React 19); no dependencies; queue was empty; verified via task.get; re-enqueued (5+ attempts, still in ready) |
 | 2026-03-30 (cycle 8, run 56) | TASK-319 | triage | Medium E2E bug: dark mode toggle missing from landing page nav; no dependencies; verified via task.get; queue capacity 2/8 |
 | 2026-03-30 (cycle 8, run 55) | TASK-330 | triage | Critical React 19 input bug; no dependencies; queue was empty from prior run; verified via task.get |
