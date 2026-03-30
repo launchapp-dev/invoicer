@@ -146,3 +146,4 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | TASK-317 | TASK-307 (marked done, no merged PR) | 2026-04-02 (cycle 7, run 43) |
 | TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-04-02 (cycle 7, run 43) |
 | TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-04-02 (cycle 7, run 43) |
+| 2026-04-02 (cycle 7, run 43) | - | - | no enqueue (TASK-330 already assigned from prior run; open PRs=0; verified all 4 remaining ready tasks blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 done/0PR, TASK-319→TASK-298/312/288 done/0PR; idle condition false—1 queued + 4 blocked = not idle; blocker persists 30+ hours; root cause: 7 upstream tasks marked done without PR merge) |
