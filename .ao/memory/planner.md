@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 51) |
+| Date | 2026-03-30 (cycle 7, run 52) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start (queue empty); 2/8 after enqueues |
+| Queue Depth | 0/8 at start (queue empty after prior cycle); 2/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
 | New Work Enqueued | 2 (TASK-330: critical React 19 input bug, no deps; TASK-331: critical build fix, no deps; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps) |
 | Product Review Enqueued | 0 (2 tasks now queued; pipeline not idle) |
 | Ready Tasks | 6 total: TASK-330 (enqueued), TASK-331 (enqueued), TASK-316/317/318/319 (all blocked by unmerged deps) |
-| Pipeline Status | WORKING — TASK-330 and TASK-331 (both critical) enqueued to triage. 4 E2E bugs (TASK-316/317/318/319) remain blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL BLOCKER persists 31+ hours. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. Requires product owner intervention to unblock. |
+| Pipeline Status | WORKING — TASK-330 and TASK-331 (both critical) enqueued to triage. 4 E2E bugs (TASK-316/317/318/319) remain blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL BLOCKER persists from prior runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -146,12 +146,14 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-04-01 (cycle 7, run 40) | - | - | no enqueue (TASK-330 already pending in queue from run 39; duplicate check prevented re-enqueue; open PRs=0; re-verified all 7 blocking deps for TASK-316/317/318/319 have 0 merged PRs each: TASK-313 0PR verified via gh pr list, TASK-307 0PR verified; cannot enqueue those 4 tasks; pipeline has 1 queued + 4 blocked = not idle; blocker persists 28+ hours) |
 | 2026-04-01 (cycle 7, run 41) | TASK-330 | triage | Enqueued (queue empty at start of run; verified TASK-330 status=ready, no dependencies via ao task get --id TASK-330; open PRs=0; re-verified all 7 blocking deps for TASK-316/317/318/319 have 0 merged PRs each: TASK-313 0PR, TASK-307 0PR verified via gh pr list; TASK-284 0PR, TASK-305 0PR, TASK-298 0PR, TASK-312 0PR, TASK-288 0PR verified; blocker persists 28+ hours; cannot enqueue those 4 tasks) |
 | 2026-04-02 (cycle 7, run 42) | TASK-330 | triage | Enqueued (queue empty at start of run; verified TASK-330 status=ready, no dependencies via ao task get --id TASK-330; open PRs=0; verified all 7 blocking deps for TASK-316/317/318/319 have 0 merged PRs each: TASK-313/307/284/305/298/312/288 all status=done, 0 merged PRs verified via gh pr list; cannot enqueue those 4 tasks; blocker persists 29+ hours) |
+| 2026-03-30 (cycle 7, run 52) | TASK-330 | triage | Enqueued (queue empty at start of run; verified TASK-330 status=ready, no dependencies via ao task get --id TASK-330; open PRs=0) |
+| 2026-03-30 (cycle 7, run 52) | TASK-331 | triage | Enqueued (queue was 1/8 after TASK-330; verified TASK-331 status=ready, no dependencies via ao task get --id TASK-331; open PRs=0; critical build fix for better-sqlite3 NODE_MODULE_VERSION mismatch) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-316 | TASK-313 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 51) |
-| TASK-317 | TASK-307 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 51) |
-| TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-30 (cycle 7, run 51) |
-| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-30 (cycle 7, run 51) |
+| TASK-316 | TASK-313 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 52) |
+| TASK-317 | TASK-307 (marked done, no merged PR) | 2026-03-30 (cycle 7, run 52) |
+| TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-30 (cycle 7, run 52) |
+| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-30 (cycle 7, run 52) |
