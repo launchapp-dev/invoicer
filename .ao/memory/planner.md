@@ -6,21 +6,24 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 7) |
+| Date | 2026-03-30 (cycle 9, run 8) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start; 1/8 after enqueues |
+| Queue Depth | 1/8 at start (TASK-330 assigned/decompose); 4/8 after enqueues |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 1 (TASK-330: critical React 19 input bug; no dependencies; triage workflow) |
-| Skipped | 1 (TASK-319: blocked—mentions TASK-298/312/288 in description; all marked done with 0 merged PRs each per dependency rule) |
-| Product Review Enqueued | 0 (1 task enqueued; pipeline not idle) |
-| Ready Tasks | 2 total ready (TASK-330 enqueued; TASK-319 blocked) |
-| Pipeline Status | WORKING — Queue at 1/8 after enqueues; TASK-330 dispatched to triage; TASK-319 blocked by 3 unmerged deps |
+| New Work Enqueued | 3 (TASK-335 critical, TASK-336 critical, TASK-333 medium; all no dependencies; triage workflow) |
+| Skipped | 2 (TASK-334 blocked by TASK-333; TASK-337 blocked by TASK-335+336) |
+| Product Review Enqueued | 0 (3 tasks enqueued; pipeline not idle) |
+| Ready Tasks | 5 total ready (3 enqueued; 2 blocked by dependencies) |
+| Pipeline Status | WORKING — Queue at 4/8 after enqueues; TASK-330 decomposed (now blocked/paused); 3 new critical+medium fixes dispatched to triage |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 8) | TASK-335 | triage | Critical: Fix invoice-form.tsx text inputs with RHF Controller (React 19 DOM reset fix); no dependencies verified via task.get; queue at 1/8 (TASK-330 assigned); 0 open PRs; status=pending |
+| 2026-03-30 (cycle 9, run 8) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc; no dependencies verified via task.get; queue at 1/8; 0 open PRs; status=pending |
+| 2026-03-30 (cycle 9, run 8) | TASK-333 | triage | Medium: Create ThemeToggle client component (src/components/theme-toggle.tsx); no dependencies; queue at 1/8; 0 open PRs; status=pending; task description notes "confirm new file with user" per CLAUDE.md—implementer will handle |
 | 2026-03-30 (cycle 9, run 7) | TASK-330 | triage | Critical React 19 input bug (text inputs don't accept keyboard input); no formal dependencies verified via task.get; queue empty at start; 0 open PRs; enqueued status=pending |
 | 2026-03-30 (cycle 9, run 6) | TASK-330 | triage | Critical React 19 input bug (text inputs don't accept keyboard input); no formal dependencies verified via task.get; queue empty at start; 0 open PRs; enqueued status=pending |
 | 2026-03-30 (cycle 9, run 6) | TASK-319 | triage | Medium dark mode toggle bug (missing from landing page nav); no formal dependencies verified via task.get; description mentions TASK-298/312/288 as prior failed implementations context only; queue at 1/8; enqueued status=pending |
