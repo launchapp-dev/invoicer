@@ -219,3 +219,5 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 |---------|-----------|-------------|
 | TASK-336 | HUMAN MERGE NEEDED — PR#201 (CLEAN/MERGEABLE) created 2026-03-30T14:49:05Z but not merged. Further agent enqueues won't help. Waiting for human review/merge. Do NOT re-enqueue until PR is merged | 2026-03-30 (cycle 9, run 23) |
 | TASK-337 | TASK-335 (status=done, PR#203 merged ✓), TASK-336 (status=ready, PR#201 OPEN not merged ✗) — both must have merged PRs; TASK-336 not yet done | 2026-03-30 (cycle 9, run 23) |
+| 2026-03-30 (cycle 9, run 24) | TASK-336 | triage | Enqueued (queue empty at start; verified TASK-336 status=ready, no dependencies via ao task get --id TASK-336; description confirms "Dependencies: None"; open PRs=1 MERGEABLE with no CHANGES_REQUESTED reviews; PR #201 ao/task-336 ready to merge) |
+| 2026-03-30 (cycle 9, run 24) | TASK-334 | triage | Enqueued (queue at 1/8 after TASK-336; verified TASK-334 status=ready, depends on TASK-333 per description; TASK-333 PR#202 merged ✓ 2026-03-30T14:55:06Z; dependency met, can proceed; open PRs=1 MERGEABLE no CHANGES_REQUESTED; both tasks enqueued at priority critical > medium) |
