@@ -12,9 +12,11 @@ A SaaS invoice generator. Users sign up, create invoices, see a live preview, an
 - **@launchapp/design-system** — shadcn registry with Radix UI primitives and `--la-*` CSS tokens
 - **Tailwind CSS v4** — Styling
 - **Auth**: Better Auth — email/password signup/login, session management
-- **Database**: SQLite + Drizzle ORM — invoices stored per-user
+- **Database**: SQLite + Drizzle ORM — users, clients, invoices, expenses, recurring invoices, payments, attachments
 - **React Hook Form + Zod** — Form state and validation
 - **@react-pdf/renderer** — Client-side PDF generation
+- **Anthropic SDK** — AI-assisted invoice generation
+- **Sonner** — Toast notifications
 
 ## Design System — shadcn Registry
 
@@ -42,47 +44,99 @@ All design tokens use the `--la-` prefix (e.g., `--la-primary`, `--la-background
 ```
 src/
   app/
-    layout.tsx              — Root layout
-    page.tsx                — Landing page (unauthenticated)
-    globals.css             — Global styles + --la-* design tokens
+    layout.tsx                    — Root layout
+    page.tsx                      — Landing page (unauthenticated)
+    globals.css                   — Global styles + --la-* design tokens
     (auth)/
-      login/page.tsx        — Login page
-      signup/page.tsx       — Signup page
+      login/page.tsx              — Login page
+      signup/page.tsx             — Signup page
     dashboard/
-      page.tsx              — Invoice dashboard (authenticated)
+      page.tsx                    — Invoice dashboard (authenticated)
+      recurring/page.tsx          — Recurring invoices
+      dashboard-stats.tsx         — Stats widget
+      dashboard-filters.tsx       — Dashboard filters
+      dashboard-table.tsx         — Invoice table
+      invoice-actions.tsx         — Invoice actions menu
+      logout-button.tsx           — Logout button
+      cash-flow-widget.tsx        — Cash flow visualization
+      pagination-controls.tsx     — Table pagination
+      ai-invoice-command.tsx      — AI invoice generation dialog
     invoices/
-      new/page.tsx          — Create invoice
-      [id]/page.tsx         — Edit invoice
-      [id]/preview/page.tsx — Preview/download
+      new/page.tsx                — Create invoice
+      [id]/page.tsx               — Edit invoice
+      [id]/preview/page.tsx       — Preview and PDF download
+    clients/
+      page.tsx                    — Client list
+      [id]/page.tsx               — Edit client
+      new/page.tsx                — Create client
+      csv-import.tsx              — CSV client import
+    settings/
+      page.tsx                    — Account settings
+      templates/page.tsx          — Invoice templates
+      settings-form.tsx           — Settings form
+    expenses/
+      page.tsx                    — Expenses list
+      expenses-manager.tsx        — Expense management
+    i/[token]/
+      page.tsx                    — Public invoice view (share link)
+      public-invoice-view.tsx     — Shared invoice component
+    changelog/page.tsx            — Changelog page
+    api/
+      auth/[...all]/route.ts      — Auth endpoints
+      attachments/route.ts        — Upload attachment
+      attachments/[id]/route.ts   — Serve attachment
   components/
-    ui/                     — shadcn registry components (installed via CLI)
-    invoice-form.tsx        — Invoice form component
-    line-items.tsx          — Line item management
-    ...
+    ui/                           — shadcn registry components (installed via CLI)
+    invoice-form.tsx              — Invoice form with line items
+    line-items.tsx                — Line item row management
+    invoice-attachments.tsx       — Attachment upload/list
+    invoice-totals.tsx            — Summary totals display
+    invoice-pdf.tsx               — PDF document structure
+    invoice-preview.tsx           — PDF preview
   lib/
-    utils.ts                — cn() utility (installed by shadcn)
-    auth.ts                 — Auth configuration
-    db.ts                   — Drizzle DB client
-    calculations.ts         — Invoice math
+    utils.ts                      — cn() utility (installed by shadcn)
+    auth.ts                       — Auth configuration
+    auth-client.ts                — Client-side auth utilities
+    db.ts                         — Drizzle DB client
+    calculations.ts               — Invoice math (subtotal, tax, total)
+    recurring-actions.ts          — Recurring invoice triggers
+    expense-storage.ts            — Expense persistence
+    invoice-schema.ts             — Zod schemas for invoices
+    storage.ts                    — Client-side storage utilities
+    ai.ts                         — Anthropic API integration
   db/
-    schema.ts               — Drizzle schema (users, invoices, line_items)
-    migrations/             — SQL migrations
-  types/
-    invoice.ts              — TypeScript types (Invoice, LineItem, etc.)
+    schema.ts                     — Drizzle schema (user, session, account, verification, userSettings, invoices, clients, expenses, payments, attachments, recurringInvoices)
+    migrations/                   — SQL migrations
 ```
 
 ## Build & Test
 
 ```bash
 pnpm install
-pnpm dev          # Development server on :3000
+pnpm dev          # Development server on :3002
 pnpm build        # Production build
+pnpm start        # Start production server
 pnpm lint         # ESLint
 pnpm db:push      # Push schema to database
 pnpm db:migrate   # Run migrations
+pnpm db:generate  # Generate migration files
 ```
 
 **CRITICAL**: Run `pnpm db:push` in the project root (`/Users/samishukri/brain/repos/invoicer`) after any PR that modifies `src/db/schema.ts` is merged. Skipping this causes `SqliteError: table X has no column named Y` at runtime — the in-memory Drizzle schema diverges from the on-disk SQLite file. This brought down the dashboard and invoice save (TASK-289).
+
+### Database Schema Tables
+
+- **user** — Better Auth user with email, name, image
+- **session** — User sessions (token, expiration, IP, user-agent)
+- **account** — OAuth account links (provider, tokens)
+- **verification** — Email verification tokens
+- **userSettings** — User preferences (business info, branding, currency, theme, invoice templates, payment terms)
+- **invoices** — Invoice records (status, dates, parties, line items as JSON, totals, payment info)
+- **clients** — Client directory (contact info, company, address, preferences)
+- **expenses** — Expense tracking (vendor, amount, category, receipt path)
+- **recurringInvoices** — Scheduled invoice generation (frequency, template, status)
+- **payments** — Payment records (invoice, amount, method, date)
+- **attachments** — Invoice file attachments (invoice, file path, metadata)
 
 ## Working Rules
 
