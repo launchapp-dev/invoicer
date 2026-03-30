@@ -6,10 +6,10 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30T16:42:00Z |
-| Tasks Unblocked | 0 |
+| Date | 2026-03-30T08:25:00Z |
+| Tasks Unblocked | 1 |
 | Backlog Promoted | 0 |
-| Failed Re-routed | 0 |
+| Failed Re-routed | 1 |
 | Queue Cleaned | 0 |
 | Tasks Marked Done | 0 |
 | Pipeline Idle | false |
@@ -33,6 +33,8 @@ It tracks state fixes applied so the same issues aren't re-investigated.
 | 2026-03-30 03:33 | PIPELINE STATUS | 5 ready tasks, 0 queue entries, 0 open PRs — ACTIVE (not idle) |
 | 2026-03-30 04:32 | NO-OP RECONCILIATION | 5 ready tasks, 1 queued (TASK-330 standard workflow), 0 blocked, 0 backlog, 0 failed, 0 open PRs — ACTIVE pipeline |
 | 2026-03-30 16:42 | RECONCILIATION COMPLETE | 5 ready tasks (TASK-330 with PR#200 open, TASK-316/317/318/319 triage), 0 queue entries, 0 blocked, 0 backlog, 1 open PR — ACTIVE pipeline |
+| 2026-03-30 08:25 | UNBLOCK TASK-330 | Blocked (workflow runner failed) → ready (1st retry, PR#200 closed without merge, critical invoice form bug) |
+| 2026-03-30 08:25 | PIPELINE STATUS | 5 ready tasks (TASK-330 unblocked, TASK-316/317/318/319 triage), 0 queue, 0 blocked, 0 backlog — ACTIVE (not idle) |
 
 ## Known State Issues
 <!-- Reconciler: track persistent issues that span multiple runs -->
