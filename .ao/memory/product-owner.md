@@ -7,11 +7,11 @@ the current product state assessment so work is not repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-29 |
-| Health Check | PASS (assumed — last verified build 2026-03-29 pass, only memory commits since) |
-| Tasks Created | TASK-327 (E2E bug: NL search expenses), TASK-328 (E2E bug: US state tax presets) |
+| Date | 2026-03-29 (cycle 2) |
+| Health Check | PASS — pnpm build clean, 20 routes |
+| Tasks Created | None (pipeline at capacity — 5 active tasks) |
 | Requirements Created | None |
-| Pipeline Status | 6 active tasks, all medium priority |
+| Pipeline Status | 5 active tasks: 1 critical (TASK-330), 4 medium (TASK-316/317/318/319) |
 
 ## Decisions Log
 | Date | Decision | Reason |
@@ -28,6 +28,8 @@ the current product state assessment so work is not repeated.
 | 2026-03-29 | Noted TASK-324 is false alarm | @repo/push errors are stale dev Turbopack cache only; prod build is clean, no such imports in source |
 | 2026-03-29 | Created TASK-327: E2E bug NL search for expenses | TASK-323 marked done, branch ao/task-323 has 0 commits — no code written; expenses-manager.tsx has only client-side text filter |
 | 2026-03-29 | Created TASK-328: E2E bug US state tax presets | TASK-325 marked done by reconciler but COUNTRY_TAX_MAP in invoice-form.tsx still has no US states |
+| 2026-03-29 | Did not create new tasks (cycle 2) | Pipeline at capacity (5 tasks). TASK-330 critical (React 19 text input) already in pipeline. TASK-327 and TASK-328 were cancelled by reconciler. |
+| 2026-03-29 | TASK-330 not enqueued | Critical task sitting in `ready` but not in dispatch queue — planner should enqueue with workflow_ref=triage |
 
 ## Requirements Created
 | Date | ID | Title | Status |
@@ -71,22 +73,27 @@ the current product state assessment so work is not repeated.
 
 ## Current Assessment
 
-**Overall health: Strong.** Build passes, product in polishing/stabilizing phase.
+**Overall health: Strong.** Build passes. 5 active tasks (1 critical + 4 medium).
 
-**Active pipeline (6 tasks, all medium, all ready):**
-- TASK-316 [ready] — Social proof stats on landing page (E2E bug, unmerged)
-- TASK-317 [ready] — Client search/sort/pagination (E2E bug, unmerged)
-- TASK-318 [ready] — Invoice audit trail (E2E bug, unmerged)
-- TASK-319 [ready] — Dark mode toggle on landing page (E2E bug, unmerged)
-- TASK-327 [ready] — NL search for expenses (E2E bug, TASK-323 had 0-commit branch)
-- TASK-328 [ready] — US state tax presets (E2E bug, TASK-325 marked done but code absent)
+**Active pipeline (5 tasks):**
+- TASK-330 [ready][critical] — Invoice form text fields broken (React 19 DOM reset in Playwright). **NOT YET ENQUEUED** — planner must queue with workflow_ref=triage.
+- TASK-316 [ready][medium] — Social proof stats on landing page (E2E bug, unmerged)
+- TASK-317 [ready][medium] — Client search/sort/pagination (E2E bug, unmerged)
+- TASK-318 [ready][medium] — Invoice audit trail (E2E bug, unmerged)
+- TASK-319 [ready][medium] — Dark mode toggle on landing page (E2E bug, unmerged)
 
-**TASK-324 status**: Still in backlog, but is a false alarm (stale dev cache). Can be cancelled.
+**TASK-324**: Done. TASK-327/328: Cancelled by reconciler.
 
-**Critical systemic pattern — unmerged work**: All 6 active tasks are E2E bug re-implementations. The merge pipeline is not landing code. Currency expansion has been attempted 3+ times; not re-creating. The reconciler promotes tasks to ready but agents appear to create branches with no commits.
+**Critical systemic pattern — unmerged work**: Most active tasks are E2E bug re-implementations. Merge pipeline is not consistently landing code. Currency expansion attempted 3+ times; not re-creating until pattern improves.
+
+**VISION gaps not in pipeline:**
+- Multi-currency (25+ currencies): not re-creating (3 prior attempts failed to land)
+- Expenses NL search: TASK-327 cancelled; not re-creating
+- US state tax presets: TASK-328 cancelled; gap confirmed (COUNTRY_TAX_MAP has no US states)
+- Client NL search: blocked by TASK-317 (basic search must land first)
 
 **Next run focus:**
-- Check if any of TASK-316/317/318/319/327/328 have code in main
-- After TASK-317 (client basic search) lands, create NL search for clients task
-- TASK-324 can be cancelled (false alarm — stale dev cache)
-- Currency expansion (25+ currencies): only revisit if merge pattern improves
+- Verify TASK-330 gets enqueued (critical path)
+- After TASK-317 lands, create NL search for clients task
+- After pipeline drains below 3 tasks, revisit currency expansion and US state tax gaps
+- Check if any of TASK-316/317/318/319 have landed code in main
