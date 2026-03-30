@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-31 (cycle 7, run 30) |
+| Date | 2026-03-31 (cycle 7, run 31) |
 | Open PRs | 1 (PR #200: TASK-330 fix, MERGEABLE, no reviews) |
-| Queue Depth | 1→2/8 (queue had 1 entry TASK-019; enqueued 1 new task: TASK-330) |
+| Queue Depth | 0→1/8 (queue was empty; enqueued 1 new task: TASK-330) |
 | Rework Enqueued | 0 (no CHANGES_REQUESTED reviews on PR #200) |
 | Rebase Enqueued | 0 (PR #200 MERGEABLE, no conflicts) |
-| New Work Enqueued | 1 (TASK-330 critical E2E bug: form inputs reset on React 19 re-render; verified no dependencies via task.get; queue at 1/8 at start; dependency check passed; re-verified all 7 blocking deps for TASK-316/317/318/319 marked done with 0 merged PRs each) |
+| New Work Enqueued | 1 (TASK-330 critical E2E bug: form inputs reset on React 19 re-render; verified no dependencies via task.get; queue at 0/8 at start; dependency check passed; verified all 4 blocking tasks for TASK-316/317/318/319 have unmet deps marked done with 0 merged PRs each) |
 | Product Review Enqueued | 0 (not idle; 1 new task enqueued) |
 | Ready Tasks | 5 (TASK-330 just enqueued; TASK-316→TASK-313 blocked, TASK-317→TASK-307 blocked, TASK-318→TASK-284/305 blocked, TASK-319→TASK-298/312/288 blocked) |
-| Pipeline Status | WORKING — 2 tasks in queue (TASK-019, TASK-330); 4 E2E bugs blocked by 7 unmerged dependencies; blocker persists 18+ hours; root cause: upstream tasks marked done without PR creation/merge |
+| Pipeline Status | WORKING — 1 task in queue (TASK-330); 4 E2E bugs blocked by 7 unmerged dependencies; blocker persists 18+ hours; root cause: upstream tasks marked done without PR creation/merge |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -124,6 +124,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-31 (cycle 7, run 28) | TASK-330 | triage | Enqueued (queue empty at start; verified TASK-330 status=ready, no dependencies via task.list; open PRs=1 MERGEABLE no CHANGES_REQUESTED reviews; re-verified TASK-316/317/318/319 all blocked by 7 unmerged deps: 0 merged PRs found for TASK-313,307,284,305,298,312,288; cannot enqueue those 4 tasks) |
 | 2026-03-31 (cycle 7, run 29) | TASK-330 | triage | Re-enqueued (queue had cleared from prior run; verified TASK-330 status=ready, no dependencies via task.list; open PRs=1 MERGEABLE no CHANGES_REQUESTED reviews; re-verified TASK-316/317/318/319 blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 done/0PR, TASK-319→TASK-298/312/288 done/0PR; cannot enqueue those 4 tasks; blocker persists 18+ hours) |
 | 2026-03-31 (cycle 7, run 30) | TASK-330 | triage | Enqueued (queue at 1/8 from prior run; verified TASK-330 status=ready, no dependencies via task.get; open PRs=1 MERGEABLE no CHANGES_REQUESTED reviews; re-verified TASK-316/317/318/319 all blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 done/0PR, TASK-319→TASK-298/312/288 done/0PR; cannot enqueue those 4 tasks; blocker persists 18+ hours) |
+| 2026-03-31 (cycle 7, run 31) | TASK-330 | triage | Enqueued (queue empty at start of run; verified TASK-330 status=ready, no dependencies via task.get; open PRs=1 MERGEABLE no CHANGES_REQUESTED reviews; re-verified all 4 remaining ready tasks blocked by 7 unmerged deps: TASK-316→313 done/0PR, TASK-317→307 done/0PR, TASK-318→284/305 done/0PR, TASK-319→298/312/288 done/0PR; cannot enqueue those 4 tasks) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
