@@ -6,8 +6,12 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 14) |
-| Open PRs | 1 (PR#201 for TASK-336; no reviews/CHANGES_REQUESTED; mergeStateStatus=CLEAN) |
+| Date | 2026-03-30 (cycle 9, run 15) |
+| Open PRs | 1 (PR#201 for TASK-336; no reviews/CHANGES_REQUESTED; mergeStateStatus=MERGEABLE/CLEAN) |
+| Queue at start | 0/8 |
+| Queue at end | 2/8 (TASK-336, TASK-334) |
+| Enqueued | TASK-336 (critical, no merged PR), TASK-334 (medium, depends on TASK-333 merged ✓) |
+| Skipped | TASK-335 (already done PR#203 merged), TASK-337 (blocked by TASK-336 not merged), TASK-333 (already done PR#202 merged) |
 | Queue Depth | 0/8 at start; 2/8 after enqueues (TASK-336, TASK-334) |
 | Rework Enqueued | 0 (no CHANGES_REQUESTED reviews on PR#201) |
 | Rebase Enqueued | 0 (PR#201 is CLEAN, not conflicting) |
@@ -154,6 +158,8 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-29 (cycle 7, run 7) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps marked done with 0 merged PRs each: TASK-313,307,284,305,298,312,288; idle condition false; blocker persists 15+ hours; no mechanism to resolve without upstream PR merge) |
 | 2026-03-30 (cycle 7, run 47) | - | - | no enqueue (4 ready tasks all blocked by 7 unmerged deps: TASK-316→313 done/0PR, TASK-317→307 done/0PR, TASK-318→284/305 both done/0PR, TASK-319→298/312/288 all done/0PR; verified all 7 deps marked done with 0 merged PRs; idle condition false—4 ready tasks present but all blocked; blocker unresolved 16+ hours; CRITICAL: upstream tasks need PR creation/merge to unblock) |
 | 2026-03-31 (cycle 7, run 8) | - | - | no enqueue (queue FULL at 8/8: 3 assigned, 5 pending; 48 ready tasks waiting; pipeline backed up, not idle) |
+| 2026-03-30 (cycle 9, run 15) | TASK-336 | triage | Enqueued (queue empty at start; verified TASK-336 status=ready, no dependencies via task.get; open PRs=1 MERGEABLE (PR#201 for TASK-336); TASK-335 PR#203 merged ✓, TASK-337 blocked by TASK-336 not merged ✗; cannot enqueue TASK-337 yet) |
+| 2026-03-30 (cycle 9, run 15) | TASK-334 | triage | Enqueued (queue at 1/8 after TASK-336; verified TASK-334 status=ready, no dependencies via task.get; depends on TASK-333 merged ✓ via description; TASK-333 PR#202 already merged, so TASK-334 can proceed) |
 | 2026-03-31 (cycle 7, run 9) | - | - | no enqueue (queue DRAINED to 0/8; 3 ready tasks present but ALL blocked by unmerged deps: TASK-318→TASK-284/305 done/0PR, TASK-317→TASK-307 done/0PR, TASK-319→TASK-298/312/288 all done/0PR; blocker persists 15+ hours; cannot dispatch until upstream tasks merged) |
 | 2026-03-31 (cycle 7, run 10) | - | - | no enqueue (verified all 3 ready tasks blocked: TASK-318→TASK-284/305, TASK-317→TASK-307, TASK-319→TASK-298/312/288 all marked done with 0 merged PRs each; idle check false—ready tasks present but blocked; blocker persists 16+ hours; product-review not triggered) |
 | 2026-03-31 (cycle 7, run 11) | - | - | no enqueue (TASK-330 already assigned from prior run; verified all 4 remaining ready tasks blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 both done/0PR, TASK-319→TASK-298/312/288 all done/0PR; idle condition false—queue 1/8, ready tasks present but blocked; blocker persists 17+ hours) |
@@ -196,6 +202,6 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-337 | TASK-335 (status=ready, PR#203 merged ✓), TASK-336 (status=ready, PR#201 OPEN not merged ✗) — both must have merged PRs; TASK-336 PR not merged yet | 2026-03-30 (cycle 9, run 13) |
-| TASK-335 | NO BLOCKER (status=ready, PR#203 merged ✓ — skip because already done) | 2026-03-30 (cycle 9, run 13) |
-| TASK-333 | NO BLOCKER (status=ready, PR#202 merged ✓ — skip because already done) | 2026-03-30 (cycle 9, run 13) |
+| TASK-337 | TASK-335 (status=ready, PR#203 merged ✓), TASK-336 (status=ready, PR#201 OPEN not merged ✗) — both must have merged PRs; TASK-336 PR not merged yet | 2026-03-30 (cycle 9, run 15) |
+| TASK-335 | NO BLOCKER (status=ready, PR#203 merged ✓ — skip because already done, don't re-enqueue) | 2026-03-30 (cycle 9, run 15) |
+| TASK-333 | NO BLOCKER (status=ready, PR#202 merged ✓ — skip because already done, don't re-enqueue) | 2026-03-30 (cycle 9, run 15) |
