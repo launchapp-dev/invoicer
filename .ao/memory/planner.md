@@ -6,7 +6,7 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 13) |
+| Date | 2026-03-30 (cycle 9, run 14) |
 | Open PRs | 1 (PR#201 for TASK-336; no reviews/CHANGES_REQUESTED; mergeStateStatus=CLEAN) |
 | Queue Depth | 0/8 at start; 2/8 after enqueues (TASK-336, TASK-334) |
 | Rework Enqueued | 0 (no CHANGES_REQUESTED reviews on PR#201) |
@@ -15,12 +15,14 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | Skipped | 3 (TASK-335 PR#203 merged, skip; TASK-333 PR#202 merged, skip; TASK-337 blocked by TASK-336 PR not merged yet) |
 | Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
 | Ready Tasks | 5 total ready (2 enqueued; 2 done with merged PRs; 1 blocked) |
-| Pipeline Status | WORKING — Queue 0/8 at start; verified TASK-333/335 PRs merged; enqueued TASK-336 (critical, no deps, PR#201 open/mergeable), TASK-334 (medium, depends on TASK-333 done ✓); queue now 2/8 (1 pending, 1 assigned) |
+| Pipeline Status | WORKING — Queue 0/8 at start (prior run's queue entries consumed or dropped); re-enqueued TASK-336 (critical, no deps, PR#201 open/mergeable) and TASK-334 (medium, depends on TASK-333 done ✓ PR#202 merged); queue now 2/8 (2 assigned) |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 14) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc (React 19 DOM reset fix); no dependencies verified; PR#201 (CLEAN, mergeable, no reviews); status=ready; queue was 0/8 at start; re-enqueued (prior queue entries consumed/dropped after run 13) |
+| 2026-03-30 (cycle 9, run 14) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (PR#202 merged 2026-03-30 14:55Z) ✓; status=ready; queue was 0/8 at start; dependency verified via gh pr list; re-enqueued (prior queue entries consumed/dropped) |
 | 2026-03-30 (cycle 9, run 13) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc (React 19 DOM reset fix); no dependencies; PR#201 (CLEAN, mergeable, no reviews); status=ready; queue was 0/8 at start; re-enqueued (prior enqueue at run 12 produced PR but not yet merged) |
 | 2026-03-30 (cycle 9, run 13) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (PR#202 merged 14:55Z) ✓; status=ready; queue was 0/8; dependency verified via gh pr list |
 | 2026-03-30 (cycle 9, run 12) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals recalc (React 19 DOM reset fix); no dependencies verified; PR#201 (CLEAN, mergeable, no reviews); status=ready; queue was 0/8 at start (prior tasks completed); started_at=null (never dispatched before) |
