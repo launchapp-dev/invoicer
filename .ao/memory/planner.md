@@ -6,20 +6,21 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 7, run 47) |
+| Date | 2026-03-30 (cycle 7, run 48) |
 | Open PRs | 0 (no CHANGES_REQUESTED, no conflicting PRs) |
-| Queue Depth | 0/8 at start; 0/8 after checks |
+| Queue Depth | 1/8 at start (TASK-331 assigned); 1/8 after checks |
 | Rework Enqueued | 0 (no open PRs with reviews) |
 | Rebase Enqueued | 0 (no open PRs with conflicts) |
-| New Work Enqueued | 0 (4 ready tasks all blocked by unmerged deps: TASK-316→313, 317→307, 318→284/305, 319→298/312/288; verified all 7 deps marked done with 0 merged PRs) |
-| Product Review Enqueued | 0 (idle condition false: 4 ready tasks exist, blocked but not idle) |
-| Ready Tasks | 4 total: TASK-316/317/318/319 (all blocked by unmerged deps) |
-| Pipeline Status | BLOCKED — 4 E2E bugs blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL blocker unresolved 13+ runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. |
+| New Work Enqueued | 0 (5 ready tasks: TASK-331 already queued; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps; verified all 7 deps marked done with 0 merged PRs) |
+| Product Review Enqueued | 0 (1 task in queue; 4 ready tasks blocked but not idle) |
+| Ready Tasks | 5 total: TASK-331 (in queue), TASK-316/317/318/319 (all blocked by unmerged deps) |
+| Pipeline Status | PARTIALLY BLOCKED — TASK-331 (build fix, critical) is assigned and executing. 4 E2E bugs (TASK-316/317/318/319) blocked by 7 upstream tasks marked done but with 0 merged PRs each (TASK-313, 307, 284, 305, 298, 312, 288). CRITICAL blocker persists 14+ runs. Root cause: upstream tasks must create and merge PRs before downstream tasks can proceed. |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 7, run 48) | - | - | no enqueue (TASK-331 already assigned in queue; TASK-316→313, 317→307, 318→284/305, 319→298/312/288 all blocked by unmerged deps; blocker persists 14+ runs) |
 | 2026-04-02 (cycle 7, run 43) | TASK-330 | triage | E2E bug: React 19 text input reset (critical; no dependencies; re-enqueued) |
 | 2026-03-30 (cycle 7, run 45) | - | - | no enqueue (TASK-330 already in queue assigned; TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 both done/0PR, TASK-319→TASK-298/312/288 all done/0PR; blocker persists) |
 | 2026-03-30 (cycle 7, run 44) | - | - | no enqueue (4 ready tasks all blocked: TASK-316→TASK-313 done/0PR, TASK-317→TASK-307 done/0PR, TASK-318→TASK-284/305 both done/0PR, TASK-319→TASK-298/312/288 all done/0PR; blocker unresolved 12+ hours; TASK-330 remains assigned in queue) |
