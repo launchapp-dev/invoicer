@@ -6,15 +6,15 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-31 (cycle 7, run 17) |
+| Date | 2026-03-31 (cycle 7, run 18) |
 | Open PRs | 1 (PR #200: TASK-330 fix, MERGEABLE, no reviews) |
 | Queue Depth | 0→1/8 (queue empty at start; enqueued 1 task) |
 | Rework Enqueued | 0 (no CHANGES_REQUESTED reviews) |
-| Rebase Enqueued | 0 (no conflicting PRs) |
+| Rebase Enqueued | 0 (PR #200 mergeable, no rebase needed) |
 | New Work Enqueued | 1 (TASK-330 critical E2E bug: form inputs reset on React 19 re-render; no dependencies) |
 | Product Review Enqueued | 0 (not idle; 1 task enqueued) |
-| Ready Tasks | 5 (TASK-330 now queued; TASK-316/317/318/319 blocked by 7 unmerged deps: TASK-313/307/298/312/288/284/305) |
-| Pipeline Status | WORKING — TASK-330 re-enqueued for triage; 4 E2E bugs blocked by 7 deps marked done with 0 merged PRs; blocker persists (root cause: upstream tasks completed without PR merge) |
+| Ready Tasks | 5 (TASK-330 queued; TASK-316/317/318/319 blocked by 7 unmerged deps: TASK-313/307/298/312/288/284/305 all marked done with 0 merged PRs) |
+| Pipeline Status | WORKING — 1 task enqueued (TASK-330); 4 E2E bugs blocked by 7 unmerged dependencies; root cause: upstream tasks completed without PR merge/integration |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
@@ -111,12 +111,13 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 | 2026-03-31 (cycle 7, run 15) | - | - | no enqueue (TASK-330 already assigned from prior run; re-verified all 7 blocking deps marked done with 0 merged PRs each: TASK-313,307,298,312,288,284,305; idle condition false—queue 1/8, 5 ready tasks present but 4 blocked; blocker persists 17+ hours; root cause: upstream tasks marked done without PR merge) |
 | 2026-03-31 (cycle 7, run 16) | TASK-330 | triage | Enqueued (queue empty at start; verified no dependencies; open PRs=1, no CHANGES_REQUESTED reviews; PR #200 MERGEABLE) |
 | 2026-03-31 (cycle 7, run 17) | TASK-330 | triage | Re-enqueued (queue had cleared from run 16; task still ready, no dependencies; PR #200 still open and MERGEABLE; 4 remaining ready tasks all blocked by 7 unmerged deps) |
+| 2026-03-31 (cycle 7, run 18) | TASK-330 | triage | Enqueued (queue empty at start; verified no dependencies via task.get; open PRs=1 MERGEABLE with no reviews; verified 4 ready tasks all blocked by 7 unmerged deps—TASK-316→313, TASK-317→307, TASK-318→284/305, TASK-319→298/312/288 all done with 0 merged PRs each) |
 
 ## Skipped Tasks (unmet deps)
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-316 | TASK-313 (marked done, no merged PR) | 2026-03-31 (cycle 7, run 11) |
-| TASK-317 | TASK-307 (marked done, no merged PR) | 2026-03-31 (cycle 7, run 11) |
-| TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-31 (cycle 7, run 11) |
-| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-31 (cycle 7, run 11) |
+| TASK-316 | TASK-313 (marked done, no merged PR) | 2026-03-31 (cycle 7, run 18) |
+| TASK-317 | TASK-307 (marked done, no merged PR) | 2026-03-31 (cycle 7, run 18) |
+| TASK-318 | TASK-284, TASK-305 (both marked done, no merged PRs) | 2026-03-31 (cycle 7, run 18) |
+| TASK-319 | TASK-298, TASK-312, TASK-288 (all marked done, no merged PRs) | 2026-03-31 (cycle 7, run 18) |
