@@ -6,23 +6,25 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 19) |
+| Date | 2026-03-30 (cycle 9, run 20) |
 | Open PRs | 1 (PR#201 for TASK-336; no reviews/CHANGES_REQUESTED; mergeStateStatus=CLEAN) |
-| Queue at start | 0/8 (prior run 18's enqueues consumed) |
-| Queue at end | 2/8 (TASK-336, TASK-334) |
-| Enqueued | TASK-336 (critical, no deps, PR#201 CLEAN/not merged, started=null), TASK-334 (medium, depends on TASK-333 done/PR#202 merged ✓, started=null) |
-| Skipped | TASK-337 (critical QA task blocked by TASK-336 not done/no merged PR) |
-| Rework Enqueued | 0 (no CHANGES_REQUESTED reviews) |
-| Rebase Enqueued | 0 (PR#201 is CLEAN) |
+| Queue at start | 0/8 (prior run 19's enqueues consumed/processed) |
+| Queue at end | 3/8 (TASK-336, TASK-334, +1 leftover from prior queue) |
+| Enqueued | TASK-336 (critical, no deps, PR#201 CLEAN/not merged), TASK-334 (medium, depends on TASK-333 done/PR#202 merged ✓) |
+| Skipped | TASK-337 (critical QA task blocked by TASK-336 PR#201 not merged; can enqueue once TASK-336's PR merges) |
+| Rework Enqueued | 0 (no CHANGES_REQUESTED reviews on PR#201) |
+| Rebase Enqueued | 0 (PR#201 is CLEAN/mergeable) |
 | New Work Enqueued | 2 (TASK-336 critical—no deps, PR#201 CLEAN/not merged; TASK-334 medium—depends on TASK-333 done/PR#202 merged ✓; both triage workflow) |
 | Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 3 total; 2 enqueued; 1 skipped |
-| Pipeline Status | WORKING — Queue 0/8 at start; prior run 18 enqueues (TASK-336, TASK-337, TASK-334) consumed; ready list refreshed: same 3 remain; TASK-335 status=done/PR#203 merged, TASK-333 status=done/PR#202 merged; TASK-336 status=ready (no PR#), TASK-337 blocked by TASK-336, TASK-334 deps satisfied; enqueued TASK-336, TASK-334; queue now 2/8 |
+| Ready Tasks | 3 total; 2 enqueued; 1 blocked (TASK-337 waiting for TASK-336 PR merge) |
+| Pipeline Status | WORKING — Queue 0/8 at start (prior tasks processed); 3 ready tasks; 2 enqueued (TASK-336 + TASK-334); 1 blocked by unmerged dependency; queue now 3/8 |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 20) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals (React 19 fix); no dependencies; PR#201 CLEAN/mergeable (not merged); prior enqueue from run 19 was processed/dequeued; re-enqueued at run 20; queue 0/8 at start |
+| 2026-03-30 (cycle 9, run 20) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (done/PR#202 merged ✓); prior enqueue from run 19 was processed/dequeued; re-enqueued at run 20; status=ready; queue 0/8 at start |
 | 2026-03-30 (cycle 9, run 19) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals (React 19 fix); no dependencies; PR#201 CLEAN/mergeable (not merged); started_at=null; queue 0/8 at start; enqueued |
 | 2026-03-30 (cycle 9, run 19) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (done/PR#202 merged ✓); status=ready; started_at=null; queue 0/8; enqueued |
 | 2026-03-30 (cycle 9, run 18) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals (React 19 fix); no dependencies; PR#201 CLEAN/mergeable (not merged); started_at=null; queue 0/8 at start; enqueued |
