@@ -6,23 +6,24 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 ## Last Run
 | Field | Value |
 |-------|-------|
-| Date | 2026-03-30 (cycle 9, run 22) |
-| Open PRs | 1 (PR#201 for TASK-336; no reviews/CHANGES_REQUESTED; mergeStateStatus=CLEAN, mergeable=MERGEABLE) |
-| Queue at start | 0/8 (empty; prior queue entries consumed by daemon) |
-| Queue at end | 3/8 (2 pending: TASK-336, TASK-334; 1 assigned from daemon auto-dispatch) |
-| Enqueued | TASK-336 (critical, no dependencies; PR#201 CLEAN/mergeable), TASK-334 (medium, depends on TASK-333 done/PR#202 merged ✓) |
-| Skipped | TASK-337 (critical QA task blocked by TASK-336 ready/not done/PR#201 not merged—dependency not met) |
+| Date | 2026-03-30 (cycle 9, run 23) |
+| Open PRs | 1 (PR#201 for TASK-336; no reviews/CHANGES_REQUESTED; mergeStateStatus=CLEAN, mergeable=MERGEABLE, created 2026-03-30T14:49:05Z, not merged) |
+| Queue at start | 0/8 (empty; prior queue entries TASK-336, TASK-334 consumed/dequeued by daemon; both back to ready status, no PRs created for TASK-334) |
+| Queue at end | 2/8 (1 pending: TASK-334; 1 assigned from daemon auto-dispatch) |
+| Enqueued | TASK-334 (medium, depends on TASK-333 done/PR#202 merged ✓); NOT re-enqueued TASK-336 (already has CLEAN/MERGEABLE PR#201 waiting for human merge—further enqueues wasteful, needs human action) |
+| Skipped | TASK-336 (critical, has PR#201 CLEAN/mergeable but unmerged; skipped re-enqueue to avoid wasteful loop—PR needs human review/merge), TASK-337 (critical QA blocked by TASK-336 PR unmerged—dependency not met) |
 | Rework Enqueued | 0 (no CHANGES_REQUESTED reviews on PR#201) |
 | Rebase Enqueued | 0 (PR#201 is CLEAN/mergeable) |
-| New Work Enqueued | 2 (TASK-336 critical no deps, TASK-334 medium depends on TASK-333 done/PR#202 merged ✓; both triage workflow) |
-| Product Review Enqueued | 0 (2 tasks enqueued; pipeline not idle) |
-| Ready Tasks | 3 total; 2 enqueued (TASK-336 critical, TASK-334 medium); 1 blocked (TASK-337 waiting for TASK-336 done/PR merge) |
-| Pipeline Status | WORKING — Queue 0/8 at start; 3 ready tasks; 2 enqueued (TASK-336, TASK-334); 1 skipped (TASK-337 blocked); queue now 3/8 |
+| New Work Enqueued | 1 (TASK-334 medium depends on TASK-333 done/PR#202 merged ✓; triage workflow) |
+| Product Review Enqueued | 0 (1 task enqueued; pipeline not idle) |
+| Ready Tasks | 3 total; 1 enqueued (TASK-334); 2 skipped (TASK-336 waiting for human merge, TASK-337 blocked by TASK-336) |
+| Pipeline Status | WORKING — Queue 0/8 at start; 3 ready tasks; 1 enqueued (TASK-334); 2 skipped (TASK-336 has PR awaiting merge, TASK-337 blocked); queue now 2/8 |
 
 ## Recently Enqueued
 <!-- Planner: track what you enqueued recently to avoid re-enqueuing -->
 | Date | Task ID | Workflow | Reason |
 |------|---------|---------|--------|
+| 2026-03-30 (cycle 9, run 23) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (done/PR#202 merged 2026-03-30T14:55:40Z ✓); status=ready; queue 0/8 at start (prior enqueues dequeued by daemon; TASK-334 never started); no PR exists yet; enqueued (not duplicate) |
 | 2026-03-30 (cycle 9, run 22) | TASK-336 | triage | Critical: Fix line-items.tsx description input + totals; no dependencies verified; PR#201 (CLEAN, mergeable); status=ready; queue 0/8 at start (prior queue entries consumed); enqueued (not duplicate) |
 | 2026-03-30 (cycle 9, run 22) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (done/PR#202 merged ✓); status=ready; queue 1/8 after TASK-336; enqueued (not duplicate) |
 | 2026-03-30 (cycle 9, run 21) | TASK-334 | triage | Medium: Add ThemeToggle to landing page nav; depends on TASK-333 (done/PR#202 merged ✓); status=ready; queue 2/8 at start; enqueued (not duplicate); TASK-336 already assigned in queue—skipped re-enqueue |
@@ -216,4 +217,5 @@ It tracks what was enqueued and skipped so decisions aren't repeated.
 <!-- Planner: track tasks you skipped due to dependencies so you re-check efficiently -->
 | Task ID | Blocked By | Last Checked |
 |---------|-----------|-------------|
-| TASK-337 | TASK-335 (status=done, PR#203 merged ✓), TASK-336 (status=ready, PR#201 OPEN not merged ✗) — both must have merged PRs; TASK-336 not yet done | 2026-03-30 (cycle 9, run 19) |
+| TASK-336 | HUMAN MERGE NEEDED — PR#201 (CLEAN/MERGEABLE) created 2026-03-30T14:49:05Z but not merged. Further agent enqueues won't help. Waiting for human review/merge. Do NOT re-enqueue until PR is merged | 2026-03-30 (cycle 9, run 23) |
+| TASK-337 | TASK-335 (status=done, PR#203 merged ✓), TASK-336 (status=ready, PR#201 OPEN not merged ✗) — both must have merged PRs; TASK-336 not yet done | 2026-03-30 (cycle 9, run 23) |
